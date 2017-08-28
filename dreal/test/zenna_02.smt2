@@ -1,0 +1,7 @@
+(set-logic QF_NRA)
+(declare-fun omega0 () Real)
+(assert (>= omega0 0.3999996185302735))
+(assert (<= omega0 0.39999985694885254))
+(assert (> (+ (* (- 1 0) omega0) 0) 0.4))
+(check-sat)
+(exit)

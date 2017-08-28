@@ -1,0 +1,17 @@
+# -*- python -*-
+# This file contains rules for Bazel; see https://bazel.io/ .
+
+cc_library(
+    name = "easyloggingpp",
+    srcs = ["src/easylogging++.cc"],
+    hdrs = ["src/easylogging++.h"],
+    defines = [
+        "ELPP_THREAD_SAFE",
+        "ELPP_NO_DEFAULT_LOG_FILE",
+        "ELPP_DISABLE_DEFAULT_CRASH_HANDLING",
+    ],
+    includes = [
+        "src",
+    ],
+    visibility = ["//visibility:public"],
+)

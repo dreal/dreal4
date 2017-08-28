@@ -1,0 +1,5 @@
+(set-logic QF_NRA)
+(declare-fun x () Real [0, 6.28])
+(minimize (sin x))
+(check-sat)
+(exit)

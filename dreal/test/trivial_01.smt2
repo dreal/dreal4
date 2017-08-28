@@ -1,0 +1,5 @@
+(set-logic QF_NRA)
+(declare-fun v0 () Real)
+(assert (= 0 0))
+(check-sat)
+(exit)

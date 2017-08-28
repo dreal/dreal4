@@ -1,0 +1,8 @@
+(set-logic QF_NRA)
+(declare-fun x () Real)
+(declare-fun y () Real)
+(assert (<= x 15.0))
+(assert (<= -15.0 x))
+(assert (> 0 (abs x)))
+(check-sat)
+(exit)

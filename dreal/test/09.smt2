@@ -1,0 +1,16 @@
+(set-logic QF_NRA)
+(set-info :precision 0.01)
+(declare-fun x () Real)
+(declare-fun y () Real)
+(assert (< 0.01 x))
+(assert (< x 1.42))
+(assert (< 0.0 y))
+(assert (< y 0.147))
+(assert
+        (and
+                (= x (arccos y))
+                (= y (log x))
+        )
+)
+(check-sat)
+(exit)

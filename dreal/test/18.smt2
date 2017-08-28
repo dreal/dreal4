@@ -1,0 +1,10 @@
+(set-logic QF_NRA)
+(declare-fun x () Int)
+(declare-fun y () Int)
+(assert
+ (and (> x 2)
+      (< y 10)
+      (= (+ x (* 2 y))
+         7)))
+(check-sat)
+(exit)

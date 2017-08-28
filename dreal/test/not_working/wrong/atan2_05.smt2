@@ -1,0 +1,15 @@
+(set-logic QF_NRA)
+(declare-fun x () Real)
+(declare-fun y () Real)
+(declare-fun z () Real)
+(assert
+ (and
+  (< 0.99 y)
+  (< y    1.01)
+  (= x 0)
+  (= z (arctan2 y x))
+  ;;  (< 1.57079 z)
+  ;;  (< z 1.57080)
+  ))
+(check-sat)
+(exit)

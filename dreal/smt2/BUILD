@@ -1,0 +1,100 @@
+# -*- python -*-
+# This file contains rules for Bazel; see https://bazel.io/ .
+
+load("//:tools/cpplint.bzl", "cpplint")
+load(
+    "//tools:dreal.bzl",
+    "dreal_cc_library",
+)
+load("//:tools/third_party/kythe/tools/build_rules/lexyacc.bzl", "genlex", "genyacc")
+
+package(default_visibility = ["//visibility:public"])
+
+genyacc(
+    name = "parser",
+    srcs = ["parser.yy"],
+    outs = [
+        "parser.yy.cc",
+        "parser.yy.hh",
+        # Do not sort the above two.
+        "location.hh",
+        "position.hh",
+        "stack.hh",
+    ],
+)
+
+genlex(
+    name = "scanner",
+    srcs = [
+        "scanner.ll",
+        ":parser",
+    ],
+    out = "scanner.ll.cc",
+)
+
+dreal_cc_library(
+    name = "sort",
+    srcs = [
+        "sort.cc",
+    ],
+    hdrs = [
+        "sort.h",
+    ],
+)
+
+dreal_cc_library(
+    name = "logic",
+    srcs = [
+        "logic.cc",
+    ],
+    hdrs = [
+        "logic.h",
+    ],
+)
+
+dreal_cc_library(
+    name = "command",
+    srcs = [
+        "command.cc",
+        "command_cell.cc",
+        "command_cell.h",
+    ],
+    hdrs = [
+        "command.h",
+    ],
+    deps = [
+        ":logic",
+        "//dreal/util:symbolic",
+    ],
+)
+
+dreal_cc_library(
+    name = "driver",
+    srcs = [
+        "driver.cc",
+        ":parser",
+        ":scanner",
+    ],
+    hdrs = [
+        "driver.h",
+        "scanner.h",
+    ],
+    deps = [
+        ":command",
+        ":logic",
+        ":sort",
+        "//dreal/solver",
+        "//dreal/util:logging",
+        "//dreal/util:symbolic",
+    ],
+)
+
+filegroup(
+    name = "headers",
+    srcs = [
+        "logic.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cpplint()

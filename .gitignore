@@ -1,0 +1,4 @@
+bazel-*
+logs/
+compile_commands.json
+.DS_Store

@@ -1,0 +1,119 @@
+# -*- python -*-
+# This file contains rules for Bazel; see https://bazel.io/ .
+
+load("//:tools/cpplint.bzl", "cpplint")
+load(
+    "//tools:dreal.bzl",
+    "dreal_cc_googletest",
+    "dreal_cc_library",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+# ---------
+# Libraries
+# ---------
+
+dreal_cc_library(
+    name = "contractor",
+    srcs = [
+        "contractor.cc",
+        "contractor_cell.cc",
+        "contractor_cell.h",
+        "contractor_fixpoint.cc",
+        "contractor_fixpoint.h",
+        "contractor_forall.h",
+        "contractor_ibex_fwdbwd.cc",
+        "contractor_ibex_fwdbwd.h",
+        "contractor_ibex_polytope.cc",
+        "contractor_ibex_polytope.h",
+        "contractor_id.cc",
+        "contractor_id.h",
+        "contractor_integer.cc",
+        "contractor_integer.h",
+        "contractor_join.cc",
+        "contractor_join.h",
+        "contractor_seq.cc",
+        "contractor_seq.h",
+        "generic_contractor_generator.cc",
+    ],
+    hdrs = [
+        "contractor.h",
+        "generic_contractor_generator.h",
+    ],
+    # Without the following, we have dyld problem in OSX (bazel issue).
+    linkstatic = 1,
+    deps = [
+        ":contractor_status",
+        "//dreal/util:ibex_converter",
+        "//dreal/util:logging",
+        "//dreal/util:math",
+        "//dreal/util:nnfizer",
+        "//dreal/util:symbolic",
+        "@clp//:clp",
+        "@ibex//:ibex",
+    ],
+)
+
+dreal_cc_library(
+    name = "contractor_status",
+    srcs = [
+        "contractor_status.cc",
+    ],
+    hdrs = [
+        "contractor_status.h",
+    ],
+    deps = [
+        "//dreal/util:box",
+        "//dreal/util:symbolic",
+        "@clp//:clp",
+        "@ibex//:ibex",
+    ],
+)
+
+# -----
+# Tests
+# -----
+dreal_cc_googletest(
+    name = "contractor_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "contractor_fixpoint_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "contractor_ibex_fwdbwd_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "contractor_id_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "contractor_integer_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "contractor_seq_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+cpplint()

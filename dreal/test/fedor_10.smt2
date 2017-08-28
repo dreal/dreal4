@@ -1,0 +1,7 @@
+(set-logic QF_NRA)
+(declare-fun x () Real)
+(assert (< 2.0 x))
+(assert (< x 3.0))
+(assert (= (log x) 0.999999))
+(check-sat)
+(exit)

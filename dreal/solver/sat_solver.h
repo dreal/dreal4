@@ -1,0 +1,92 @@
+#pragma once
+
+#include <memory>
+#include <set>
+#include <unordered_map>
+#include <vector>
+#include <experimental/optional>
+
+#include "./picosat.h"
+
+#include "dreal/util/cnfizer.h"
+#include "dreal/util/predicate_abstractor.h"
+#include "dreal/util/symbolic.h"
+
+namespace dreal {
+
+class SatSolver {
+ public:
+  /// Constructs a SatSolver using @p cnfizer and @p predicate_abstractor.
+  SatSolver(Cnfizer* cnfizer, PredicateAbstractor* predicate_abstractor);
+
+  /// Constructs a SatSolver using @p cnfizer,  @p predicate_abstractor, and @p
+  /// clauses.
+  SatSolver(Cnfizer* cnfizer, PredicateAbstractor* predicate_abstractor,
+            const std::vector<Formula>& clauses);
+
+  ~SatSolver();
+
+  /// Adds a formula @p f to the solver.
+  ///
+  /// @note If @p f is a clause, please use AddClause function. This
+  /// function does not assume anything about @p f and perform
+  /// pre-processings (CNFize and PredicateAbstraction).
+  void AddFormula(const Formula& f);
+
+  /// Adds a formula @p f to the solver.
+  ///
+  /// @pre @p f is a clause. That is, it is either a literal (b or ¬b)
+  /// or a disjunction of literals (l₁ ∨ ... ∨ lₙ).
+  void AddClause(const Formula& f);
+
+  /// Given a @p formulas = {f₁, ..., fₙ}, adds a clause (¬f₁ ∨ ... ∨ ¬ fₙ) to
+  /// the solver.
+  void AddLearnedClause(const std::set<Formula>& formulas);
+
+  /// Adds a vector of formulas @p formulas to the solver.
+  ///
+  /// @pre Each formula fᵢ ∈ formulas is a clause.
+  void AddClauses(const std::vector<Formula>& formulas);
+
+  /// Checks the satisfiability of the current configuration.
+  /// If SAT, it returns true. The witness, satisfying model is provided by
+  /// model(). If UNSAT, it returns false.
+  bool CheckSat();
+
+  void Pop();
+
+  void Push();
+
+  const std::vector<Formula>& model() const { return model_; }
+
+ private:
+  // Returns a corresponding literal ID of @p var. It maintains two
+  // maps `lit_to_var_` and `var_to_lit_` to keep track of the
+  // relationship between Variable ⇔ Literal (in SAT).
+  void MakeSatVar(const Variable& var);
+
+  // Add a symbolic formula @p f to @p clause.
+  //
+  // @pre @p f is either a Boolean variable or a negation of Boolean
+  // variable.
+  void AddLiteral(const Formula& f);
+
+  // Add a clause @p f to sat solver.
+  void DoAddClause(const Formula& f);
+
+  PicoSAT* const sat_{};
+  Cnfizer& cnfizer_;
+  PredicateAbstractor& predicate_abstractor_;
+  Formula f_cnf_;
+  std::vector<Formula> model_;
+
+  // Map symbolic::Variable → intiable (in SAT)
+  std::unordered_map<Variable, int, hash_value<Variable>> to_sat_var_;
+  // Map intiable → symbolic::Variable
+  std::unordered_map<int, Variable> to_sym_var_;
+
+  // Stats
+  int num_of_check_sat_{0};
+};
+
+}  // namespace dreal

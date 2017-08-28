@@ -1,0 +1,58 @@
+# Default to an optimized build.
+build -c opt
+
+# Default build options.
+# build --experimental_action_listener=//tools/actions:generate_compile_commands_listener
+build --strip=never
+build --crosstool_top=//tools:default-toolchain
+# Only show warnings from the project, not from externals.
+build --output_filter="^//"
+
+# Default test options.
+test --test_output=errors
+
+### Cpplint. ###
+# By default, cpplint tests are run as part of `bazel test` alongside all of
+# the other compilation and test targets.  This is a convenience shortcut to
+# only do the cpplint testing and nothing else.
+test:cpplint --build_tests_only
+test:cpplint --test_tag_filters=cpplint
+
+### Debug symbols on OS X. ###
+# See https://github.com/bazelbuild/bazel/issues/2537
+build:apple_debug --spawn_strategy=standalone
+build:apple_debug --genrule_strategy=standalone
+build:apple_debug --compilation_mode=dbg
+
+# We don't actually use APPLE_DEBUG in code. It's just here to invalidate any
+# sandboxed .o files that might be in cache if a developer tried to build
+# with --compilation_mode=dbg instead of --config=apple_debug.
+build:apple_debug --copt="-DAPPLE_DEBUG"
+
+### ASan build. ###
+build:asan --action_env=ASAN_OPTIONS
+build:asan --copt -fsanitize=address
+build:asan --copt -O1
+build:asan --copt -fno-omit-frame-pointer
+build:asan --linkopt -fsanitize=address
+
+### LSan build. ###
+build:lsan --action_env=LSAN_OPTIONS
+build:lsan --copt -fsanitize=leak
+build:lsan --copt -O1
+build:lsan --copt -fno-omit-frame-pointer
+build:lsan --linkopt -fsanitize=leak
+
+### TSan build. ###
+build:tsan --action_env=TSAN_OPTIONS
+build:tsan --copt -fsanitize=thread
+build:tsan --copt -O1
+build:tsan --copt -fno-omit-frame-pointer
+build:tsan --linkopt -fsanitize=thread
+
+### UBSan build. ###
+build:ubsan --action_env=UBSAN_OPTIONS
+build:ubsan --copt -fsanitize=undefined
+build:ubsan --copt -O1
+build:ubsan --copt -fno-omit-frame-pointer
+build:ubsan --linkopt -fsanitize=undefined
