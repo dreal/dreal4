@@ -1,5 +1,7 @@
 dReal: An SMT Solver for Nonlinear Theories of Reals
 
+[![Build Status](https://travis-ci.org/dreal/dreal3-apache2.svg?branch=master)](https://travis-ci.org/dreal/dreal3-apache2)
+
 Required Packages
 =================
 

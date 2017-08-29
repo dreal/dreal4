@@ -1,0 +1,68 @@
+sudo: required
+dist: trusty
+language: cpp
+
+env:
+  global:
+    - /usr/local/bin:$PATH
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - COMPILER="--compiler=gcc-6" BUILD_TYPE="-c dbg"
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - COMPILER="--compiler=gcc-5" BUILD_TYPE="-c dbg"
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env:
+        - COMPILER="--compiler=gcc-4.9" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            g++-4.9
+            clang++-3.9
+      env:
+        - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
+
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
+      env:
+        - COMPILER="" BUILD_TYPE="-c dbg"
+
+install:
+  - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
+      sudo add-apt-repository ppa:dreal/dreal -y;
+      sudo apt update;
+      sudo apt install autoconf automake bison coinor-libclp-dev flex libtool pkg-config libibex-dev;
+      wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel_0.5.4-linux-x86_64.deb;
+      sudo dpkg -i bazel_0.5.4-linux-x86_64.deb;
+    fi
+  - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+      brew install autoconf bazel libtool pkg-config dreal-deps/ibex/ibex || true;
+    fi
+
+script:
+  - bazel test //... ${COMPILER} ${BUILD_TYPE}
