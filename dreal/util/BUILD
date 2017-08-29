@@ -7,6 +7,7 @@ load(
     "dreal_cc_googletest",
     "dreal_cc_library",
 )
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -236,6 +237,15 @@ filegroup(
         "symbolic.h",
     ],
     visibility = ["//visibility:public"],
+)
+
+pkg_tar(
+    name = "pkg-headers",
+    srcs = [
+        ":headers",
+    ],
+    extension = "tar.gz",
+    package_dir = "usr/include/dreal/util",
 )
 
 cpplint()
