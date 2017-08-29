@@ -2,6 +2,7 @@
 # This file contains rules for Bazel; see https://bazel.io/ .
 
 load("//:tools/cpplint.bzl", "cpplint")
+load("//tools:dreal.bzl", "dreal_cc_googletest")
 
 cc_test(
     name = "ibex_test",
@@ -11,11 +12,10 @@ cc_test(
     ],
 )
 
-cc_test(
+dreal_cc_googletest(
     name = "ibex_bitset_test",
     srcs = ["ibex_test.cc"],
     deps = [
-        "@gtest//:main",
         "@ibex//:ibex",
     ],
 )
@@ -33,20 +33,10 @@ cc_test(
     ],
 )
 
-# cc_test(
-#     name = "minisat_test",
-#     srcs = ["minisat_test.cc"],
-#     deps = [
-#         "@gtest//:main",
-#         "@minisat//:minisat",
-#     ],
-# )
-
-cc_test(
+dreal_cc_googletest(
     name = "picosat_test",
     srcs = ["picosat_test.cc"],
     deps = [
-        "@gtest//:main",
         "@picosat",
     ],
 )
