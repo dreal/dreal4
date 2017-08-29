@@ -66,3 +66,19 @@ pkg_tar(
         ":solver-bin",
     ],
 )
+
+load("//tools:dreal.bzl", "dreal_cc_library")
+
+# External users need to include only this target and `dreal.h` header.
+dreal_cc_library(
+    name = "dreal",
+    hdrs = [
+        "dreal.h",
+    ],
+    srcs = [],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//dreal/solver:solver",
+        "//dreal/util:box",
+    ],
+)
