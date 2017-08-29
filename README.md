@@ -1,5 +1,6 @@
 dReal: An SMT Solver for Nonlinear Theories of Reals
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Build Status](https://travis-ci.org/dreal/dreal3-apache2.svg?branch=master)](https://travis-ci.org/dreal/dreal3-apache2)
 
 Required Packages
@@ -21,13 +22,14 @@ The following packages are required to build dReal:
    and [libtool](https://www.gnu.org/software/libtool/)
 
 dReal is using the following external libraries:
- - [Clp](https://projects.coin-or.org/Clp)
- - [Drake](http://drake.mit.edu)
- - [IBEX](https://github.com/ibex-team/ibex-lib)
- - [PicoSat SAT solver](http://fmv.jku.at/picosat)
- - [ezOptionParser](http://ezoptionparser.sourceforge.net)
- - [spdlog](https://github.com/gabime/spdlog)
- - [Google Test](https://github.com/google/googletest)
+
+ - [Clp](https://projects.coin-or.org/Clp) - [EPL 1.0](https://opensource.org/licenses/eclipse-1.0)
+ - [Drake](http://drake.mit.edu) - [BSD 3-Clause](https://raw.githubusercontent.com/RobotLocomotion/drake/master/LICENSE.TXT)
+ - [IBEX](https://github.com/ibex-team/ibex-lib) - [LGPL3](https://raw.githubusercontent.com/ibex-team/ibex-lib/master/LICENSE)
+ - [PicoSat SAT solver](http://fmv.jku.at/picosat) - [MIT](http://fmv.jku.at/picosat/LICENSE)
+ - [ezOptionParser](http://ezoptionparser.sourceforge.net) - [MIT](https://raw.githubusercontent.com/dreal-deps/ezoptionparser/master/MIT-LICENSE)
+ - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
+ - [Google Test](https://github.com/google/googletest) - [BSD 3-Clause](https://raw.githubusercontent.com/google/googletest/master/googletest/LICENSE)
 
 How to Build
 ============
@@ -38,8 +40,7 @@ Install Prerequsites
 macOS:
 
 ```bash
-brew install autoconf automake bazel libtool pkg-config
-brew install dreal-deps/ibex/ibex  # install ibex+clp
+brew install autoconf automake bazel libtool pkg-config dreal-deps/ibex/ibex
 ```
 
 Ubuntu
@@ -47,19 +48,16 @@ Ubuntu
 ```bash
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
-sudo apt install autoconf automake bison coinor-libclp-dev \
-                 flex libtool pkg-config libibex-dev
+sudo apt install autoconf automake bison coinor-libclp-dev flex libtool pkg-config libibex-dev
 ```
 
-Build
------
-
-To build:
+Build and Test
+--------------
 
 ```bash
 bazel build //...
-bazel test //...
-./bazel-bin/dreal/dreal <smt2_file>
+bazel test //...                     # Run all tests
+./bazel-bin/dreal/dreal <smt2_file>  # Run .smt2 file
 ```
 
 By default, it builds a release build. To build a debug-build, run
@@ -76,5 +74,5 @@ run:
 
 ```bash
 pip install protobuf    # required to run only once
-./generate_compile_commands.sh
+./scripts/generate_compile_commands.sh
 ```
