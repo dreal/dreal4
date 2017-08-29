@@ -7,16 +7,11 @@ workspace(name = "dreal")
 
 load("//tools:github.bzl", "github_archive")
 
-local_repository(
-    name = "kythe",
-    path = "tools/third_party/kythe",
-)
-
-load("@kythe//tools/build_rules/config:pkg_config.bzl", "pkg_config_package")
-
-pkg_config_package(
-    name = "ibex",
-    modname = "ibex",
+github_archive(
+    name = "io_kythe", # Apache-2.0
+    repository = "dreal-deps/kythe",
+    commit = "749b36e4249250710bd8f29f26c7cb2e720562bc",
+    sha256 = "87ff317ab7ac658eb48f2c0abdd9f407bf4f1b87b8bff6e15bf3f56d54548975",
 )
 
 # Necessary for buildifier.

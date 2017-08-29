@@ -1,9 +1,14 @@
 # -*- python -*-
 load("//tools:github.bzl", "github_archive")
+load("@io_kythe//tools/build_rules/config:pkg_config.bzl", "pkg_config_package")
 
 # Necessary for buildifier.
 
 def dreal_workspace():
+    pkg_config_package(
+        name = "ibex",
+        modname = "ibex",
+    )
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",
