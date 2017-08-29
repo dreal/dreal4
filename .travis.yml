@@ -50,7 +50,7 @@ matrix:
       osx_image: xcode8.3
       compiler: clang
       env:
-        - COMPILER="" BUILD_TYPE="-c dbg"
+        - COMPILER="" BUILD_TYPE="-c opt"
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
