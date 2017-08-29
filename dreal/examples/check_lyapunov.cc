@@ -5,8 +5,8 @@
 #include <experimental/optional>
 
 #include "dreal/solver/context.h"
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 namespace {

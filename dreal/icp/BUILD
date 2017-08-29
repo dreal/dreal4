@@ -25,7 +25,7 @@ dreal_cc_library(
         "//dreal/contractor",
         "//dreal/util:box",
         "//dreal/util:evaluator",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -38,7 +38,7 @@ dreal_cc_library(
         "variable_selector.h",
     ],
     deps = [
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 

@@ -5,8 +5,8 @@
 #include <gtest/gtest.h>
 
 #include "dreal/contractor/contractor_status.h"
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 namespace {

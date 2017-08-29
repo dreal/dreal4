@@ -49,7 +49,7 @@ dreal_cc_library(
         "//dreal/util:logging",
         "//dreal/util:math",
         "//dreal/util:nnfizer",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
         "@ibex//:ibex",
     ],
 )
@@ -64,7 +64,7 @@ dreal_cc_library(
     ],
     deps = [
         "//dreal/util:box",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
         "@ibex//:ibex",
     ],
 )

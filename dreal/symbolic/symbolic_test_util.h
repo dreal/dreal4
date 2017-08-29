@@ -3,8 +3,8 @@
 /// This is the header file that we consolidate Drake's symbolic test
 /// predicates originally defined in
 /// "drake/common/test/symbolic_test_util.h". Other files in dreal
-/// should include "dreal/util/symbolic_test_util.h" and have
-/// "//dreal/util:symbolic_test_util" in BUILD file.
+/// should include "dreal/symbolic/symbolic_test_util.h" and have
+/// "//dreal/symbolic:symbolic_test_util" in BUILD file.
 #pragma once
 
 #include "symbolic/test/symbolic_test_util.h"

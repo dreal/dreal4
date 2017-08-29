@@ -14,22 +14,6 @@ PACKAGE_FILE=`pwd`/bazel-bin/package.tar.gz
 cd `mktemp -d`
 tar xvfz $PACKAGE_FILE  # unpack dreal package
 
-# Download/uncompress drake-symbolic
-curl -L https://github.com/dreal-deps/drake-symbolic/archive/master.tar.gz | tar xvz
-
-# Copy drake-symbolic headers to usr/include
-mkdir usr/include/symbolic
-cp drake-symbolic-master/symbolic/symbolic_expression.h \
-   drake-symbolic-master/symbolic/symbolic_expression_visitor.h \
-   drake-symbolic-master/symbolic/symbolic_formula.h \
-   drake-symbolic-master/symbolic/symbolic_formula_visitor.h \
-   drake-symbolic-master/symbolic/symbolic_variable.h \
-   drake-symbolic-master/symbolic/symbolic_variables.h \
-   drake-symbolic-master/symbolic/symbolic_environment.h \
-   drake-symbolic-master/symbolic/hash.h \
-   usr/include/symbolic
-
-
 # Change install name
 chmod +w usr/lib/libdreal.so
 install_name_tool -id @rpath/libdreal.so usr/lib/libdreal.so

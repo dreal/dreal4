@@ -5,13 +5,13 @@
 ///
 /// Other files in dreal should include this file and should NOT
 /// include files in drake/common directory. Similarly, BUILD files
-/// should only have a dependency "//dreal/util:symbolic", not
+/// should only have a dependency "//dreal/symbolic:symbolic", not
 /// "@drake_symbolic//:symbolic".
 ///
 /// Test cases which need predicates defined in
 /// "drake/common/test/symbolic_test_util.h" file should include
-/// "dreal/util/symbolic_test_util.h" file and include
-/// "//dreal/util:symbolic_test_util" in BUILD file.
+/// "dreal/symbolic/symbolic_test_util.h" file and include
+/// "//dreal/symbolic:symbolic_test_util" in BUILD file.
 ///
 #pragma once
 

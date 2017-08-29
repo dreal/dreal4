@@ -7,9 +7,9 @@
 
 #include "minisat/core/Solver.h"
 
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/cnfizer.h"
 #include "dreal/util/predicate_abstractor.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 

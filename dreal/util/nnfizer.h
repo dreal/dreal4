@@ -1,5 +1,5 @@
 #pragma once
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
 

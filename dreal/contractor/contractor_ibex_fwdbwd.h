@@ -7,8 +7,8 @@
 
 #include "dreal/contractor/contractor.h"
 #include "dreal/contractor/contractor_cell.h"
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 

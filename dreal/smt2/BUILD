@@ -62,7 +62,7 @@ dreal_cc_library(
     ],
     deps = [
         ":logic",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -83,7 +83,7 @@ dreal_cc_library(
         ":sort",
         "//dreal/solver",
         "//dreal/util:logging",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 

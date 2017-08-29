@@ -1,7 +1,7 @@
 #pragma once
 
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 

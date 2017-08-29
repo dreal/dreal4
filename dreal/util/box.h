@@ -8,7 +8,7 @@
 
 #include "./ibex.h"
 
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
 

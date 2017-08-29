@@ -4,7 +4,7 @@
 #include <string>
 
 #include "dreal/smt2/command.h"
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
 

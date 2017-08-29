@@ -46,7 +46,7 @@ dreal_cc_library(
         "//dreal/util:nnfizer",
         "//dreal/util:predicate_abstractor",
         "//dreal/util:scoped_vector",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -62,7 +62,7 @@ dreal_cc_library(
         "//dreal/util:cnfizer",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
         "@picosat//:picosat",
     ],
 )
@@ -78,7 +78,7 @@ dreal_cc_library(
     deps = [
         "//dreal/util:box",
         "//dreal/util:logging",
-        "//dreal/util:symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 

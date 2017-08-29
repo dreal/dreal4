@@ -24,7 +24,7 @@ dreal_cc_library(
     ],
     deps = [
         ":logging",
-        ":symbolic",
+        "//dreal/symbolic:symbolic",
         "@ibex//:ibex",
     ],
 )
@@ -38,7 +38,7 @@ dreal_cc_library(
         "cnfizer.h",
     ],
     deps = [
-        ":symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -54,7 +54,7 @@ dreal_cc_library(
         ":box",
         ":ibex_converter",
         ":logging",
-        ":symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -80,7 +80,7 @@ dreal_cc_library(
         ":box",
         ":logging",
         ":math",
-        ":symbolic",
+        "//dreal/symbolic:symbolic",
         "@ibex//:ibex",
     ],
 )
@@ -117,7 +117,7 @@ dreal_cc_library(
         "nnfizer.h",
     ],
     deps = [
-        ":symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -130,7 +130,7 @@ dreal_cc_library(
         "predicate_abstractor.h",
     ],
     deps = [
-        ":symbolic",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -151,30 +151,6 @@ dreal_cc_library(
     ],
     hdrs = [
         "scoped_vector.h",
-    ],
-)
-
-dreal_cc_library(
-    name = "symbolic",
-    srcs = [
-        "symbolic.cc",
-    ],
-    hdrs = [
-        "symbolic.h",
-    ],
-    deps = [
-        "@drake_symbolic",
-    ],
-)
-
-dreal_cc_library(
-    name = "symbolic_test_util",
-    testonly = 1,
-    hdrs = [
-        "symbolic_test_util.h",
-    ],
-    deps = [
-        ":symbolic",
     ],
 )
 
@@ -199,7 +175,7 @@ dreal_cc_googletest(
     name = "nnfizer_test",
     deps = [
         ":nnfizer",
-        "//dreal/util:symbolic_test_util",
+        "//dreal/symbolic:symbolic_test_util",
     ],
 )
 
@@ -207,7 +183,7 @@ dreal_cc_googletest(
     name = "predicate_abstractor_test",
     deps = [
         ":predicate_abstractor",
-        "//dreal/util:symbolic_test_util",
+        "//dreal/symbolic:symbolic_test_util",
     ],
 )
 
@@ -218,13 +194,6 @@ dreal_cc_googletest(
     ],
 )
 
-dreal_cc_googletest(
-    name = "symbolic_test",
-    deps = [
-        ":symbolic",
-    ],
-)
-
 # ----------------------
 # Header files to expose
 # ----------------------
@@ -232,7 +201,6 @@ filegroup(
     name = "headers",
     srcs = [
         "box.h",
-        "symbolic.h",
     ],
     visibility = ["//visibility:public"],
 )

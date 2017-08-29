@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 using std::cout;
 using std::endl;

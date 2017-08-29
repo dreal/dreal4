@@ -5,7 +5,7 @@
 #include "dreal/smt2/command.h"
 #include "dreal/smt2/logic.h"
 #include "dreal/smt2/sort.h"
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 /* void yyerror(SmtPrsr parser, const char *); */
 #define YYMAXDEPTH 1024 * 1024

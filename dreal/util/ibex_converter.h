@@ -6,8 +6,8 @@
 
 #include "./ibex.h"
 
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 /// Visitor class which converts a symbolic Formula into

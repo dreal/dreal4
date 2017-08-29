@@ -7,8 +7,8 @@ def dreal_workspace():
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",
-        commit = "62e18f9e0e8ecee56513901a603a7b05afedc937",
-        sha256 = "2a6b1a896ddbe002a882164e70204d626434a1bb902c0bee21c8d3d20e6598fa",
+        commit = "e2839d782acb739c4e8221d720914900bda7eff4",
+        sha256 = "8bfb7065fd687058ba1ffc9b556ccc6623491f2848864358e433095cb6593584",
     )
     github_archive(
         name = "ezoptionparser", # MIT

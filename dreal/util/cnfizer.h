@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
 

@@ -6,10 +6,10 @@
 
 #include "./ibex.h"
 
+#include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/ibex_converter.h"
 #include "dreal/util/logging.h"
-#include "dreal/util/symbolic.h"
 
 namespace dreal {
 

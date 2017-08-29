@@ -1,4 +1,4 @@
-#include "dreal/util/symbolic.h"
+#include "dreal/symbolic/symbolic.h"
 
 #include <algorithm>
 #include <iterator>
