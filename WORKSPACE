@@ -19,12 +19,6 @@ pkg_config_package(
     modname = "ibex",
 )
 
-# TODO(soonho): clp dependency should be embedded in ibex.
-pkg_config_package(
-    name = "clp",
-    modname = "clp",
-)
-
 # Necessary for buildifier.
 github_archive(
     name = "io_bazel_rules_go", # Apache 2.0

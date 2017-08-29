@@ -7,7 +7,6 @@ cc_test(
     name = "ibex_test",
     srcs = ["ibex_test.cc"],
     deps = [
-        "@clp//:clp",
         "@ibex//:ibex",
     ],
 )
@@ -16,7 +15,6 @@ cc_test(
     name = "ibex_bitset_test",
     srcs = ["ibex_test.cc"],
     deps = [
-        "@clp//:clp",
         "@gtest//:main",
         "@ibex//:ibex",
     ],
@@ -31,7 +29,6 @@ cc_test(
         "DiscreteBoundary-0100.bch",
     ],
     deps = [
-        "@clp//:clp",
         "@ibex//:ibex",
     ],
 )
