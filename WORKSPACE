@@ -8,10 +8,10 @@ workspace(name = "dreal")
 load("//tools:github.bzl", "github_archive")
 
 github_archive(
-    name = "io_kythe", # Apache-2.0
+    name = "io_kythe_dreal", # Apache-2.0
     repository = "dreal-deps/kythe",
-    commit = "749b36e4249250710bd8f29f26c7cb2e720562bc",
-    sha256 = "87ff317ab7ac658eb48f2c0abdd9f407bf4f1b87b8bff6e15bf3f56d54548975",
+    commit = "333ddf386fda81fb3f9962e54eb30a67b14315db",
+    sha256 = "63d59334434f6d84c89da46d04305736fa58c29282f9d9372580dc0957a61b70",
 )
 
 # Necessary for buildifier.

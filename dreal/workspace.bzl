@@ -1,6 +1,6 @@
 # -*- python -*-
 load("//tools:github.bzl", "github_archive")
-load("@io_kythe//tools/build_rules/config:pkg_config.bzl", "pkg_config_package")
+load("@io_kythe_dreal//tools/build_rules/config:pkg_config.bzl", "pkg_config_package")
 
 # Necessary for buildifier.
 
