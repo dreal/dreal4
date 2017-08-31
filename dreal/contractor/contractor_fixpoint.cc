@@ -12,7 +12,8 @@ namespace dreal {
 
 ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
                                        vector<Contractor> contractors)
-    : ContractorCell{ibex::BitSet::empty(ComputeInputSize(contractors))},
+    : ContractorCell{Contractor::Kind::FIXPOINT,
+                     ibex::BitSet::empty(ComputeInputSize(contractors))},
       term_cond_{move(term_cond)},
       contractors_{move(contractors)} {
   assert(contractors_.size() > 0);

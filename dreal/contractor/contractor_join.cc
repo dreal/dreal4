@@ -9,7 +9,8 @@ using std::vector;
 namespace dreal {
 
 ContractorJoin::ContractorJoin(vector<Contractor> contractors)
-    : ContractorCell{ibex::BitSet::empty(ComputeInputSize(contractors))},
+    : ContractorCell{Contractor::Kind::JOIN,
+                     ibex::BitSet::empty(ComputeInputSize(contractors))},
       contractors_{move(contractors)} {
   assert(contractors_.size() > 0);
   ibex::BitSet& input{get_mutable_input()};

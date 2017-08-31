@@ -2,13 +2,27 @@
 
 #include <utility>
 
+#include "dreal/contractor/contractor_fixpoint.h"
+#include "dreal/contractor/contractor_forall.h"
+#include "dreal/contractor/contractor_ibex_fwdbwd.h"
+#include "dreal/contractor/contractor_ibex_polytope.h"
+#include "dreal/contractor/contractor_id.h"
+#include "dreal/contractor/contractor_integer.h"
+#include "dreal/contractor/contractor_join.h"
+#include "dreal/contractor/contractor_seq.h"
+
 using std::move;
 using std::ostream;
+using std::shared_ptr;
+using std::static_pointer_cast;
 using std::vector;
 
 namespace dreal {
 
-ContractorCell::ContractorCell(ibex::BitSet input) : input_{move(input)} {}
+ContractorCell::ContractorCell(const Contractor::Kind kind, ibex::BitSet input)
+    : kind_{kind}, input_{move(input)} {}
+
+Contractor::Kind ContractorCell::kind() const { return kind_; }
 
 const ibex::BitSet& ContractorCell::input() const { return input_; }
 
@@ -34,6 +48,36 @@ int ComputeInputSize(const vector<Contractor>& contractors) {
 
 ostream& operator<<(ostream& os, const ContractorCell& c) {
   return c.display(os);
+}
+
+shared_ptr<ContractorId> to_id(const Contractor& contractor) {
+  assert(is_id(contractor));
+  return static_pointer_cast<ContractorId>(contractor.ptr_);
+}
+shared_ptr<ContractorInteger> to_integer(const Contractor& contractor) {
+  assert(is_integer(contractor));
+  return static_pointer_cast<ContractorInteger>(contractor.ptr_);
+}
+shared_ptr<ContractorSeq> to_seq(const Contractor& contractor) {
+  assert(is_seq(contractor));
+  return static_pointer_cast<ContractorSeq>(contractor.ptr_);
+}
+shared_ptr<ContractorIbexFwdbwd> to_ibex_fwdbwd(const Contractor& contractor) {
+  assert(is_ibex_fwdbwd(contractor));
+  return static_pointer_cast<ContractorIbexFwdbwd>(contractor.ptr_);
+}
+shared_ptr<ContractorIbexPolytope> to_ibex_polytope(
+    const Contractor& contractor) {
+  assert(is_ibex_polytope(contractor));
+  return static_pointer_cast<ContractorIbexPolytope>(contractor.ptr_);
+}
+shared_ptr<ContractorFixpoint> to_fixpoint(const Contractor& contractor) {
+  assert(is_fixpoint(contractor));
+  return static_pointer_cast<ContractorFixpoint>(contractor.ptr_);
+}
+shared_ptr<ContractorJoin> to_join(const Contractor& contractor) {
+  assert(is_join(contractor));
+  return static_pointer_cast<ContractorJoin>(contractor.ptr_);
 }
 
 }  // namespace dreal

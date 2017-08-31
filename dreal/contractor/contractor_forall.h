@@ -45,7 +45,8 @@ class ContractorForall : public ContractorCell {
   /// @pre delta1 > delta2 > 0.0
   ContractorForall(Variables quantified_variables, Formula f, const Box& box,
                    double delta1, double delta2, bool use_polytope)
-      : ContractorCell{ibex::BitSet::empty(box.size())},
+      : ContractorCell{Contractor::Kind::FORALL,
+                       ibex::BitSet::empty(box.size())},
         quantified_variables_{std::move(quantified_variables)},
         f_{std::move(f)},
         strengthend_neg_f_{
@@ -173,6 +174,15 @@ Contractor make_contractor_forall(Variables quantified_variables, Formula f,
   return Contractor{std::make_shared<ContractorForall<ContextType>>(
       std::move(quantified_variables), std::move(f), box, delta1, delta2,
       use_polytope)};
+}
+
+/// Converts @p contractor to ContractorForall.
+template <typename ContextType>
+std::shared_ptr<ContractorForall<ContextType>> to_forall(
+    const Contractor& contractor) {
+  assert(is_forall(contractor));
+  return std::static_pointer_cast<ContractorForall<ContextType>>(
+      contractor.ptr_);
 }
 
 }  // namespace dreal

@@ -45,7 +45,8 @@ struct ExprCtrDeleter {
 //---------------------------------------
 ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
                                                const Box& box)
-    : ContractorCell{ibex::BitSet::empty(box.size())},
+    : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
+                     ibex::BitSet::empty(box.size())},
       formulas_{move(formulas)},
       ibex_converter_{box} {
   DREAL_LOG_DEBUG("ContractorIbexPolytope::ContractorIbexPolytope");

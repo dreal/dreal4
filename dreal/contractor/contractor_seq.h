@@ -19,6 +19,8 @@ class ContractorSeq : public ContractorCell {
   void Prune(ContractorStatus* cs) const override;
   std::ostream& display(std::ostream& os) const override;
 
+  const std::vector<Contractor>& contractors() const;
+
  private:
   std::vector<Contractor> contractors_;
 };

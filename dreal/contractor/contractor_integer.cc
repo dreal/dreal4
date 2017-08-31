@@ -9,7 +9,8 @@ using std::ostream;
 namespace dreal {
 
 ContractorInteger::ContractorInteger(const Box& box)
-    : ContractorCell{ibex::BitSet::empty(box.size())} {
+    : ContractorCell{Contractor::Kind::INTEGER,
+                     ibex::BitSet::empty(box.size())} {
   ibex::BitSet& input{get_mutable_input()};
   for (int i = 0; i < box.size(); ++i) {
     if (box.variable(i).get_type() == Variable::Type::INTEGER) {

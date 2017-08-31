@@ -32,7 +32,8 @@ namespace dreal {
 // Implementation of ContractorIbexFwdbwd
 //---------------------------------------
 ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box)
-    : ContractorCell{ibex::BitSet::empty(box.size())},
+    : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
+                     ibex::BitSet::empty(box.size())},
       f_{move(f)},
       ibex_converter_{box} {
   // Build num_ctr and ctc_.
