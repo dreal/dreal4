@@ -10,20 +10,9 @@ if echo "$@" | grep -q _cpplint ; then
     exit $?
 fi
 
-# If travis job id is set, upload it to coveralls.
-if [ -z ${TRAVIS_JOB_ID+x} ]; then
-    kcov \
-        --include-path=$WORKSPACE \
-        --exclude-pattern=thirdParty,externals \
-        $WORKSPACE/bazel-kcov \
-        --replace-src-path=/proc/self/cwd:$WORKSPACE \
-        "$@"
-else
-    kcov \
-        --include-path=$WORKSPACE \
-        --exclude-pattern=thirdParty,externals \
-        $WORKSPACE/bazel-kcov \
-        --coveralls-id=${TRAVIS_JOB_ID} \
-        --replace-src-path=/proc/self/cwd:$WORKSPACE \
-        "$@"
-fi
+kcov \
+    --include-path=$WORKSPACE \
+    --exclude-pattern=thirdParty,externals \
+    $WORKSPACE/bazel-kcov \
+    --replace-src-path=/proc/self/cwd:$WORKSPACE \
+    "$@"
