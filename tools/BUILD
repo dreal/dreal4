@@ -13,6 +13,11 @@ py_binary(
     srcs = ["cmake_configure_file.py"],
 )
 
+sh_binary(
+    name = "kcov",
+    srcs = ["kcov.sh"],
+)
+
 # === CROSSTOOL rules ===
 
 # The default toolchain selector for the project.

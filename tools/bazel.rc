@@ -56,3 +56,12 @@ build:ubsan --copt -fsanitize=undefined
 build:ubsan --copt -O1
 build:ubsan --copt -fno-omit-frame-pointer
 build:ubsan --linkopt -fsanitize=undefined
+
+### Kcov coverage build. ###
+build:kcov --copt -g
+build:kcov --copt -O0
+test:kcov --spawn_strategy=standalone
+test:kcov --run_under //tools:kcov
+test:kcov --local_test_jobs=1
+test:kcov --test_tag_filters=-cpplint,-gurobi,-pycodestyle
+test:kcov --nocache_test_results
