@@ -54,15 +54,13 @@ GTEST_TEST(BoxTest, BisectInt) {
   EXPECT_FALSE(p.second.empty());
 }
 
-GTEST_TEST(BoxTest, DISABLED_is_nothrow_move_constructible) {
-#if 0
+GTEST_TEST(BoxTest, is_nothrow_move_constructible) {
   static_assert(std::is_nothrow_move_constructible<Box::Interval>::value,
                 "Box::Interval should be nothrow_move_constructible.");
   static_assert(std::is_nothrow_move_constructible<Box::IntervalVector>::value,
                 "Box::IntervalVector should be nothrow_move_constructible.");
   static_assert(std::is_nothrow_move_constructible<Box>::value,
                 "Box should be nothrow_move_constructible.");
-#endif
 }
 
 }  // namespace
