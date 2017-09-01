@@ -41,9 +41,10 @@ class Box {
   ~Box() = default;
 
   /// Adds @p v to the box.
-  void Add(const Variable v);
+  void Add(const Variable& v);
+
   /// Adds @p v to the box and sets its domain using @p lb and @p ub.
-  void Add(const Variable v, double lb, double ub);
+  void Add(const Variable& v, double lb, double ub);
 
   /// Checks if this box is empty.
   bool empty() const;
@@ -56,10 +57,13 @@ class Box {
 
   /// Returns @p i -th interval in the box.
   Interval& operator[](int i);
+
   /// Returns an interval associated with @p var.
   Interval& operator[](const Variable& var);
+
   /// Returns @p i -th interval in the box.
   const Interval& operator[](int i) const;
+
   /// Returns an interval associated with @p var.
   const Interval& operator[](const Variable& var) const;
 
@@ -84,6 +88,7 @@ class Box {
   /// Bisects the box at @p i -th dimension.
   /// @throws std::runtime if @p i -th dimension is not bisectable.
   std::pair<Box, Box> bisect(int i) const;
+
   /// Bisects the box at @p the dimension represented by @p var.
   /// @throws std::runtime if @p i -th dimension is not bisectable.
   std::pair<Box, Box> bisect(const Variable& var) const;
@@ -105,9 +110,12 @@ class Box {
   std::pair<Box, Box> bisect_continuous(int i) const;
 
   std::shared_ptr<std::vector<Variable>> variables_;
+
   ibex::IntervalVector values_;
+
   std::shared_ptr<std::unordered_map<Variable, int, hash_value<Variable>>>
       var_to_idx_;
+
   std::shared_ptr<std::unordered_map<int, Variable>> idx_to_var_;
 
   friend std::ostream& operator<<(std::ostream& os, const Box& box);
@@ -116,6 +124,7 @@ class Box {
 std::ostream& operator<<(std::ostream& os, const Box& box);
 
 bool operator==(const Box& b1, const Box& b2);
+
 bool operator!=(const Box& b1, const Box& b2);
 
 std::ostream& DisplayDiff(std::ostream& os,

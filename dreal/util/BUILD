@@ -24,6 +24,7 @@ dreal_cc_library(
     ],
     deps = [
         ":logging",
+        ":math",
         "//dreal/symbolic",
         "@ibex//:ibex",
     ],

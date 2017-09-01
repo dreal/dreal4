@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "dreal/util/logging.h"
+#include "dreal/util/math.h"
 
 using std::ceil;
 using std::equal;
@@ -50,10 +51,15 @@ Box::Box(const Variables& variables)
   }
 }
 
-void Box::Add(const Variable v) {
+void Box::Add(const Variable& v) {
+  // Duplicate variables are not allowed.
   assert(find_if(variables_->begin(), variables_->end(),
                  [&v](const Variable& var) { return v.equal_to(var); }) ==
          variables_->end());
+
+  // Boolean variables are not allowed.
+  assert(v.get_type() != Variable::Type::BOOLEAN);
+
   if (!variables_.unique()) {
     // If the components of this box is shared by more than one
     // entity, we need to clone this before adding the variable `v`
@@ -71,9 +77,18 @@ void Box::Add(const Variable v) {
   values_.resize(size());
 }
 
-void Box::Add(const Variable v, const double lb, const double ub) {
-  assert(lb <= ub);
+void Box::Add(const Variable& v, const double lb, const double ub) {
   Add(v);
+
+  assert(lb <= ub);
+
+  // Binary variable => lb, ub ∈ [0, 1].
+  assert(v.get_type() != Variable::Type::BINARY || (0.0 <= lb && ub <= 1.0));
+
+  // Integer variable => lb, ub ∈ Z.
+  assert(v.get_type() != Variable::Type::INTEGER ||
+         (is_integer(lb) && is_integer(ub)));
+
   values_[(*var_to_idx_)[v]] = Interval{lb, ub};
 }
 
@@ -133,12 +148,13 @@ pair<Box, Box> Box::bisect(const int i) const {
       return bisect_continuous(i);
     case Variable::Type::INTEGER:
       return bisect_int(i);
-    case Variable::Type::BOOLEAN:
-      throw runtime_error("Boolean variable is not supported in Box::Bisect.");
     case Variable::Type::BINARY:
-      throw runtime_error("Binary variable is not supported in Box::Bisect.");
+      return bisect_int(i);
+    case Variable::Type::BOOLEAN:
+      throw runtime_error("should not be reachable.");  // LCOV_EXCL_LINE
   }
-  throw runtime_error("should not be reachable.");
+
+  throw runtime_error("should not be reachable.");  // LCOV_EXCL_LINE
 }
 
 pair<Box, Box> Box::bisect(const Variable& var) const {
@@ -154,7 +170,8 @@ pair<Box, Box> Box::bisect(const Variable& var) const {
 }
 
 pair<Box, Box> Box::bisect_int(const int i) const {
-  assert(idx_to_var_->at(i).get_type() == Variable::Type::INTEGER);
+  assert(idx_to_var_->at(i).get_type() == Variable::Type::INTEGER ||
+         idx_to_var_->at(i).get_type() == Variable::Type::BINARY);
   Box b1{*this};
   Box b2{*this};
   const Interval intv_i{values_[i]};
