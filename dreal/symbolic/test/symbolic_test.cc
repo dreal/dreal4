@@ -1,6 +1,7 @@
 #include "dreal/symbolic/symbolic.h"
 
 #include <iostream>
+#include <type_traits>
 
 #include <gtest/gtest.h>
 
@@ -20,6 +21,15 @@ class FormulaHelper : public ::testing::Test {
 TEST_F(FormulaHelper, Imply) {}
 
 TEST_F(FormulaHelper, Iff) {}
+
+GTEST_TEST(Symbolic, is_nothrow_move_constructible) {
+  static_assert(std::is_nothrow_move_constructible<Variable>::value,
+                "Formula should be nothrow_move_constructible.");
+  static_assert(std::is_nothrow_move_constructible<Expression>::value,
+                "Formula should be nothrow_move_constructible.");
+  static_assert(std::is_nothrow_move_constructible<Formula>::value,
+                "Formula should be nothrow_move_constructible.");
+}
 
 }  // namespace
 }  // namespace dreal
