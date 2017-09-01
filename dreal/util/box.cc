@@ -28,6 +28,17 @@ using std::vector;
 
 namespace dreal {
 
+Box::Box()
+    : variables_{make_shared<vector<Variable>>()},
+      // We have this hack here because it is not allowed to have a
+      // zero interval vector. Note that because of this special case,
+      // `variables_->size() == values_.size()` do not hold. We should
+      // rely on `values_.size()`.
+      values_{1},
+      var_to_idx_{
+          make_shared<unordered_map<Variable, int, hash_value<Variable>>>()},
+      idx_to_var_{make_shared<unordered_map<int, Variable>>()} {}
+
 Box::Box(const Variables& variables)
     : variables_{make_shared<vector<Variable>>()},
       values_{static_cast<int>(variables.size())},
@@ -38,14 +49,6 @@ Box::Box(const Variables& variables)
     Add(var);
   }
 }
-
-Box::Box()
-    : variables_{make_shared<vector<Variable>>()},
-      // TODO(soonho): fix this hack.
-      values_{1},
-      var_to_idx_{
-          make_shared<unordered_map<Variable, int, hash_value<Variable>>>()},
-      idx_to_var_{make_shared<unordered_map<int, Variable>>()} {}
 
 void Box::Add(const Variable v) {
   assert(find_if(variables_->begin(), variables_->end(),
@@ -80,11 +83,17 @@ void Box::set_empty() { values_.set_empty(); }
 
 int Box::size() const { return variables_->size(); }
 
-Box::Interval& Box::operator[](const int i) { return values_[i]; }
+Box::Interval& Box::operator[](const int i) {
+  assert(i < size());
+  return values_[i];
+}
 Box::Interval& Box::operator[](const Variable& var) {
   return values_[(*var_to_idx_)[var]];
 }
-const Box::Interval& Box::operator[](const int i) const { return values_[i]; }
+const Box::Interval& Box::operator[](const int i) const {
+  assert(i < size());
+  return values_[i];
+}
 const Box::Interval& Box::operator[](const Variable& var) const {
   return values_[(*var_to_idx_)[var]];
 }
@@ -101,7 +110,7 @@ Box::IntervalVector& Box::get_mutable_interval_vector() { return values_; }
 pair<double, int> Box::MaxDiam() const {
   double max_diam{0.0};
   int idx{-1};
-  for (int i{0}; i < values_.size(); ++i) {
+  for (size_t i{0}; i < variables_->size(); ++i) {
     const double diam_i{values_[i].diam()};
     if (diam_i > max_diam && values_[i].is_bisectable()) {
       max_diam = diam_i;
@@ -179,7 +188,6 @@ Box& Box::InplaceUnion(const Box& b) {
 }
 
 std::ostream& operator<<(std::ostream& os, const Box& box) {
-  assert(box.size() == static_cast<int>(box.values_.size()));
   int i{0};
   for (const Variable& var : *(box.variables_)) {
     const Box::Interval interval{box.values_[i++]};

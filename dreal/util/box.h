@@ -25,6 +25,21 @@ class Box {
   /// Constructs a box from @p variables.
   explicit Box(const Variables& variables);
 
+  /// Default copy constructor.
+  Box(const Box&) = default;
+
+  /// Default move constructor.
+  Box(Box&&) = default;
+
+  /// Default copy assign operator.
+  Box& operator=(const Box&) = default;
+
+  /// Default move assign operator.
+  Box& operator=(Box&&) = default;
+
+  /// Default destructor.
+  ~Box() = default;
+
   /// Adds @p v to the box.
   void Add(const Variable v);
   /// Adds @p v to the box and sets its domain using @p lb and @p ub.
