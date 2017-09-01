@@ -26,16 +26,26 @@ class ContractorForall;
 /// Abstract base class of contractors.
 class ContractorCell {
  public:
-  /// Default constructor.
-  // TODO(soonho): revisit this hack.
-  // TODO(soonho): explain why we need it.
-  ContractorCell() : kind_{Contractor::Kind::ID}, input_{1} {};
-
-  // Default destructor.
-  virtual ~ContractorCell() = default;
-
   /// Constructs a cell with @p kind and @p input.
   ContractorCell(Contractor::Kind kind, ibex::BitSet input);
+
+  /// Deleted default constructor.
+  ContractorCell() = delete;
+
+  /// Deleted copy constructor.
+  ContractorCell(const ContractorCell&) = delete;
+
+  /// Deleted move constructor.
+  ContractorCell(ContractorCell&&) = delete;
+
+  /// Deleted copy assign operator.
+  void operator=(const ContractorCell&) = delete;
+
+  /// Deleted move assign operator.
+  void operator=(ContractorCell&&) = delete;
+
+  /// Default destructor.
+  virtual ~ContractorCell() = default;
 
   /// Returns its kind.
   Contractor::Kind kind() const;
@@ -53,7 +63,7 @@ class ContractorCell {
   virtual std::ostream& display(std::ostream& os) const = 0;
 
  private:
-  Contractor::Kind kind_;
+  const Contractor::Kind kind_;
   ibex::BitSet input_;
 };
 

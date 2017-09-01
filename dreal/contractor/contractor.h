@@ -43,6 +43,21 @@ class Contractor {
   /// Constructs an idempotent contractor.
   Contractor();
 
+  /// Default copy constructor.
+  Contractor(const Contractor&) = default;
+
+  /// Default move constructor.
+  Contractor(Contractor&&) = default;
+
+  /// Default copy assign operator.
+  Contractor& operator=(const Contractor&) = default;
+
+  /// Default move assign operator.
+  Contractor& operator=(Contractor&&) = default;
+
+  /// Default destructor.
+  ~Contractor() = default;
+
   /// Returns the input vector of this contractor. `input()[i] = true`
   /// means that this contractor depends on the value of `box[i]`.
   const ibex::BitSet& input() const;

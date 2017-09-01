@@ -12,7 +12,8 @@
 
 namespace dreal {
 
-/// Fixpoint contractor: Fixpoint apply C₁, ..., Cₙ.
+/// Fixpoint contractor: apply C₁, ..., Cₙ until it reaches a fixpoint
+/// (technically, until it satisfies a given termination condition).
 class ContractorFixpoint : public ContractorCell {
  public:
   /// Deletes default constructor.
