@@ -23,9 +23,9 @@ dreal_cc_library(
     ],
     deps = [
         "//dreal/contractor",
+        "//dreal/symbolic",
         "//dreal/util:box",
         "//dreal/util:evaluator",
-        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -38,7 +38,7 @@ dreal_cc_library(
         "variable_selector.h",
     ],
     deps = [
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
     ],
 )
 
@@ -47,6 +47,7 @@ dreal_cc_library(
 # -----
 dreal_cc_googletest(
     name = "icp_test",
+    tags = ["unittest"],
     deps = [
         ":icp",
     ],
@@ -54,6 +55,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "variable_selector_test",
+    tags = ["unittest"],
     deps = [
         ":variable_selector",
     ],

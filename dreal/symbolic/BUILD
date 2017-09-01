@@ -37,6 +37,7 @@ dreal_cc_library(
 
 dreal_cc_googletest(
     name = "symbolic_test",
+    tags = ["unittest"],
     deps = [
         ":symbolic",
     ],

@@ -23,6 +23,7 @@ def dreal_smt2_tests(data):
                 prefix + smt2,
                 prefix + smt2 + ".expected",
             ],
+            tags = ["smt2"],
             srcs = ["test.py"],
             data = ["//dreal:dreal",
                     ":smt2"],

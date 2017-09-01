@@ -17,8 +17,8 @@ pkg_tar(
         "//dreal:pkg-sharedlib",
         "//dreal/smt2:pkg-headers",
         "//dreal/solver:pkg-headers",
-        "//dreal/util:pkg-headers",
         "//dreal/symbolic:pkg-headers",
+        "//dreal/util:pkg-headers",
     ],
 )
 

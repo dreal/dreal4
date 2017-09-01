@@ -24,7 +24,7 @@ dreal_cc_library(
     ],
     deps = [
         ":logging",
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
         "@ibex//:ibex",
     ],
 )
@@ -38,7 +38,7 @@ dreal_cc_library(
         "cnfizer.h",
     ],
     deps = [
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
     ],
 )
 
@@ -54,7 +54,7 @@ dreal_cc_library(
         ":box",
         ":ibex_converter",
         ":logging",
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
     ],
 )
 
@@ -80,7 +80,7 @@ dreal_cc_library(
         ":box",
         ":logging",
         ":math",
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
         "@ibex//:ibex",
     ],
 )
@@ -117,7 +117,7 @@ dreal_cc_library(
         "nnfizer.h",
     ],
     deps = [
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
     ],
 )
 
@@ -130,7 +130,7 @@ dreal_cc_library(
         "predicate_abstractor.h",
     ],
     deps = [
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
     ],
 )
 
@@ -159,6 +159,7 @@ dreal_cc_library(
 # -----
 dreal_cc_googletest(
     name = "box_test",
+    tags = ["unittest"],
     deps = [
         ":box",
     ],
@@ -166,6 +167,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "cnfizer_test",
+    tags = ["unittest"],
     deps = [
         ":cnfizer",
     ],
@@ -173,6 +175,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "nnfizer_test",
+    tags = ["unittest"],
     deps = [
         ":nnfizer",
         "//dreal/symbolic:symbolic_test_util",
@@ -181,6 +184,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "predicate_abstractor_test",
+    tags = ["unittest"],
     deps = [
         ":predicate_abstractor",
         "//dreal/symbolic:symbolic_test_util",
@@ -189,6 +193,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "scoped_vector_test",
+    tags = ["unittest"],
     deps = [
         ":scoped_vector",
     ],

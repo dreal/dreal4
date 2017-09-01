@@ -45,11 +45,11 @@ dreal_cc_library(
     linkstatic = 1,
     deps = [
         ":contractor_status",
+        "//dreal/symbolic",
         "//dreal/util:ibex_converter",
         "//dreal/util:logging",
         "//dreal/util:math",
         "//dreal/util:nnfizer",
-        "//dreal/symbolic:symbolic",
         "@ibex//:ibex",
     ],
 )
@@ -63,8 +63,8 @@ dreal_cc_library(
         "contractor_status.h",
     ],
     deps = [
+        "//dreal/symbolic",
         "//dreal/util:box",
-        "//dreal/symbolic:symbolic",
         "@ibex//:ibex",
     ],
 )

@@ -40,13 +40,13 @@ dreal_cc_library(
         "//dreal/icp",
         "//dreal/smt2:logic",
         "//dreal/smt2:sort",
+        "//dreal/symbolic",
         "//dreal/util:box",
         "//dreal/util:cnfizer",
         "//dreal/util:logging",
         "//dreal/util:nnfizer",
         "//dreal/util:predicate_abstractor",
         "//dreal/util:scoped_vector",
-        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -59,10 +59,10 @@ dreal_cc_library(
         "sat_solver.h",
     ],
     deps = [
+        "//dreal/symbolic",
         "//dreal/util:cnfizer",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
-        "//dreal/symbolic:symbolic",
         "@picosat//:picosat",
     ],
 )
@@ -76,9 +76,9 @@ dreal_cc_library(
         "assertion_filter.h",
     ],
     deps = [
+        "//dreal/symbolic",
         "//dreal/util:box",
         "//dreal/util:logging",
-        "//dreal/symbolic:symbolic",
     ],
 )
 
@@ -87,6 +87,7 @@ dreal_cc_library(
 # -----
 dreal_cc_googletest(
     name = "sat_solver_test",
+    tags = ["unittest"],
     deps = [
         ":sat_solver",
         "//dreal/util:logging",
@@ -95,6 +96,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "theory_solver_test",
+    tags = ["unittest"],
     deps = [
         ":solver",
         "//dreal/util:logging",

@@ -7,6 +7,7 @@ load("//tools:dreal.bzl", "dreal_cc_googletest")
 cc_test(
     name = "ibex_test",
     srcs = ["ibex_test.cc"],
+    tags = ["external"],
     deps = [
         "@ibex//:ibex",
     ],
@@ -15,6 +16,7 @@ cc_test(
 dreal_cc_googletest(
     name = "ibex_bitset_test",
     srcs = ["ibex_test.cc"],
+    tags = ["external"],
     deps = [
         "@ibex//:ibex",
     ],
@@ -28,6 +30,7 @@ cc_test(
     data = [
         "DiscreteBoundary-0100.bch",
     ],
+    tags = ["external"],
     deps = [
         "@ibex//:ibex",
     ],
@@ -36,6 +39,7 @@ cc_test(
 dreal_cc_googletest(
     name = "picosat_test",
     srcs = ["picosat_test.cc"],
+    tags = ["external"],
     deps = [
         "@picosat",
     ],
@@ -44,6 +48,7 @@ dreal_cc_googletest(
 cc_test(
     name = "spdlog_test",
     srcs = ["spdlog_test.cc"],
+    tags = ["external"],
     deps = [
         "@spdlog//:spdlog",
     ],
