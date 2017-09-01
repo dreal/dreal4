@@ -74,7 +74,8 @@ install:
       brew install autoconf bazel libtool pkg-config dreal-deps/ibex/ibex || true;
     fi
   - if [ "${COV}" == "ON" ]; then
-      git clone https://github.com/SimonKagstrom/kcov;
+      sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
+      git clone https://github.com/SimonKagstrom/kcov --depth 1;
       cd kcov;
       mkdir build;
       cd build;
