@@ -80,7 +80,7 @@ install:
       cd build;
       cmake ../;
       sudo make install;
-      cd ../../
+      cd ../../;
     fi
 
 script:
