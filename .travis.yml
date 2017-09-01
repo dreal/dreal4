@@ -65,4 +65,8 @@ install:
     fi
 
 script:
-  - bazel test //... ${COMPILER} ${BUILD_TYPE}
+  - bazel test //... ${COMPILER} ${BUILD_TYPE} \
+      --batch \
+      --host_jvm_args=-Xmx500m \
+      --host_jvm_args=-Xms500m \
+      --local_resources=400,1,1.0
