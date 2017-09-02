@@ -40,6 +40,7 @@ dreal_cc_googletest(
     tags = ["unittest"],
     deps = [
         ":symbolic",
+        ":symbolic_test_util",
     ],
 )
 
