@@ -59,7 +59,7 @@ matrix:
             clang++-3.9
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
-        - COV="ON" COV_OPTION="--config=kcov --copt=-O2 --test_tag_filters=unittest"
+        - COV="ON" COV_OPTION="--config=kcov --test_tag_filters=unittest"
     - os: osx
       osx_image: xcode8.3
       compiler: clang

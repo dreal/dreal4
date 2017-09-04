@@ -60,11 +60,11 @@ bool is_clause(const Formula& f);
 /// Checks if @p is in CNF form.
 bool is_cnf(const Formula& f);
 
-/// Strengthen the input formula $p f by @p delta.
+/// Strengthen the input formula @p f by @p delta.
 /// @pre delta > 0
 Formula DeltaStrengthen(const Formula& f, double delta);
 
-/// Weaken the input formula $p f by @p delta.
+/// Weaken the input formula @p f by @p delta.
 /// @pre delta > 0
 Formula DeltaWeaken(const Formula& f, double delta);
 
