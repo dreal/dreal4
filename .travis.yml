@@ -18,6 +18,15 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
+            - g++-7
+      env:
+        - COMPILER="--compiler=gcc-7" BUILD_TYPE="-c dbg"
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
             - g++-6
       env:
         - COMPILER="--compiler=gcc-6" BUILD_TYPE="-c dbg"
@@ -49,6 +58,16 @@ matrix:
             clang++-3.9
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            g++-4.9
+            clang++-4.0
+      env:
+        - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:

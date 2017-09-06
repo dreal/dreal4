@@ -9,10 +9,12 @@ Required Packages
 
 The following packages are required to build dReal:
 
- - C++14-compatible compilers
-   (i.e. [g++-6](https://gcc.gnu.org/gcc-6),
+ - C++14-compatible compilers (i.e.
+   [g++-7](https://gcc.gnu.org/gcc-7),
+   [g++-6](https://gcc.gnu.org/gcc-6),
    [g++-5](https://gcc.gnu.org/gcc-5),
    [g++-4.9](https://gcc.gnu.org/gcc-4.9),
+   [clang++-4.0](http://releases.llvm.org/4.0.0/tools/clang/docs),
    [clang++-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs),
    [Apple clang++](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html))
  - [Bazel](https://bazel.build)
