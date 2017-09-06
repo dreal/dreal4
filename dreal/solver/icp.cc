@@ -1,4 +1,4 @@
-#include "dreal/icp/icp.h"
+#include "dreal/solver/icp.h"
 
 #include <utility>
 
@@ -42,7 +42,7 @@ bool Icp::CheckSat(ContractorStatus* cs) {
       // loop if |fᵢ(B)| ≤ δ for all fᵢ.
       bool delta_check = true;
       for (const Evaluator& evaluator : evaluators_) {
-        const Box::Interval eval_result{evaluator.Eval(current_box)};
+        const Box::Interval eval_result{evaluator(current_box)};
         if (eval_result.diam() > precision_) {
           DREAL_LOG_DEBUG(
               "Icp::CheckSat() Found an interval >= precision({2}):\n{0} -> "

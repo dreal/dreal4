@@ -44,22 +44,6 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
-    name = "evaluator",
-    srcs = [
-        "evaluator.cc",
-    ],
-    hdrs = [
-        "evaluator.h",
-    ],
-    deps = [
-        ":box",
-        ":ibex_converter",
-        ":logging",
-        "//dreal/symbolic",
-    ],
-)
-
-dreal_cc_library(
     name = "filesystem",
     srcs = [
         "filesystem.cc",

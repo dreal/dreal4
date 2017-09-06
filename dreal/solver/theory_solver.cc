@@ -6,9 +6,9 @@
 #include <utility>
 
 #include "dreal/contractor/contractor_forall.h"
-#include "dreal/icp/icp.h"
 #include "dreal/solver/context.h"
-#include "dreal/util/evaluator.h"
+#include "dreal/solver/evaluator.h"
+#include "dreal/solver/icp.h"
 #include "dreal/util/logging.h"
 
 namespace dreal {
@@ -99,23 +99,13 @@ vector<Evaluator> TheorySolver::BuildEvaluator(
     const vector<Formula>& assertions) {
   vector<Evaluator> evaluators;
   for (const Formula& f : assertions) {
-    if (is_forall(f)) {
-      // TODO(soonho): remove this hack. See #32.
-      Expression sum = 0;
-      for (const Variable& v : box_.variables()) {
-        sum += v;
-      }
-      // For now, we are adding (∑x = 0.0).
-      evaluators.emplace_back(sum == 0.0, box_.variables());
+    auto it = evaluator_cache_.find(f);
+    if (it == evaluator_cache_.end()) {
+      DREAL_LOG_DEBUG("TheorySolver::BuildEvaluator: {}", f);
+      evaluators.emplace_back(f, box_.variables(), config_.precision());
+      evaluator_cache_.emplace_hint(it, f, evaluators.back());
     } else {
-      auto it = evaluator_cache_.find(f);
-      if (it == evaluator_cache_.end()) {
-        DREAL_LOG_DEBUG("TheorySolver::BuildEvaluator: {}", f);
-        evaluators.emplace_back(f, box_.variables());
-        evaluator_cache_.emplace_hint(it, f, evaluators.back());
-      } else {
-        evaluators.push_back(it->second);
-      }
+      evaluators.push_back(it->second);
     }
   }
   return evaluators;

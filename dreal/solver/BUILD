@@ -26,10 +26,16 @@ dreal_cc_library(
     name = "solver",
     srcs = [
         "context.cc",
+        "evaluator.cc",
+        "evaluator_cell.cc",
+        "evaluator_cell.h",
+        "icp.cc",
         "theory_solver.cc",
     ],
     hdrs = [
         "context.h",
+        "evaluator.h",
+        "icp.h",
         "theory_solver.h",
     ],
     deps = [
@@ -37,12 +43,12 @@ dreal_cc_library(
         ":config",
         ":sat_solver",
         "//dreal/contractor",
-        "//dreal/icp",
         "//dreal/smt2:logic",
         "//dreal/smt2:sort",
         "//dreal/symbolic",
         "//dreal/util:box",
         "//dreal/util:cnfizer",
+        "//dreal/util:ibex_converter",
         "//dreal/util:logging",
         "//dreal/util:nnfizer",
         "//dreal/util:predicate_abstractor",
@@ -85,6 +91,14 @@ dreal_cc_library(
 # -----
 # Tests
 # -----
+dreal_cc_googletest(
+    name = "icp_test",
+    tags = ["unittest"],
+    deps = [
+        ":solver",
+    ],
+)
+
 dreal_cc_googletest(
     name = "sat_solver_test",
     tags = ["unittest"],

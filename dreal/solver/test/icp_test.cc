@@ -1,4 +1,4 @@
-#include "dreal/icp/icp.h"
+#include "dreal/solver/icp.h"
 
 #include <gtest/gtest.h>
 

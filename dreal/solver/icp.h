@@ -3,9 +3,9 @@
 #include <vector>
 
 #include "dreal/contractor/contractor.h"
+#include "dreal/solver/evaluator.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/evaluator.h"
 
 namespace dreal {
 
