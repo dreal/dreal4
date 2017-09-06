@@ -13,8 +13,12 @@ class ContractorSeq : public ContractorCell {
  public:
   /// Delete default constructor.
   ContractorSeq() = delete;
+
   /// Constructor a sequential contractor from a {C₁, ..., Cₙ}.
   explicit ContractorSeq(std::vector<Contractor> contractors);
+
+  /// Default destructor.
+  ~ContractorSeq() override = default;
 
   void Prune(ContractorStatus* cs) const override;
   std::ostream& display(std::ostream& os) const override;

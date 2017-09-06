@@ -19,6 +19,9 @@ class ContractorFixpoint : public ContractorCell {
   /// Deletes default constructor.
   ContractorFixpoint() = delete;
 
+  /// Default destructor.
+  ~ContractorFixpoint() = default;
+
   /// Constructs a fixpoint contractor with a termination condition
   /// (Box × Box → Bool) and a sequence of Contractors {C₁, ..., Cₙ}.
   ContractorFixpoint(TerminationCondition term_cond,

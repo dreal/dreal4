@@ -10,6 +10,10 @@ namespace dreal {
 class ContractorInteger : public ContractorCell {
  public:
   explicit ContractorInteger(const Box& box);
+
+  /// Default destructor.
+  ~ContractorInteger() override = default;
+
   void Prune(ContractorStatus* cs) const override;
   std::ostream& display(std::ostream& os) const override;
 

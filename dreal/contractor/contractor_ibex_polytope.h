@@ -18,6 +18,9 @@ class ContractorIbexPolytope : public ContractorCell {
   /// Constructs IbexPolytope contractor using @p f and @p vars.
   ContractorIbexPolytope(std::vector<Formula> formulas, const Box& box);
 
+  /// Default destructor.
+  ~ContractorIbexPolytope() override = default;
+
   void Prune(ContractorStatus* cs) const override;
   std::ostream& display(std::ostream& os) const override;
 

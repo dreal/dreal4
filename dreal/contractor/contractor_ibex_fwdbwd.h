@@ -20,7 +20,8 @@ class ContractorIbexFwdbwd : public ContractorCell {
 
   /// Constructs IbexFwdbwd contractor using @p f and @p box.
   ContractorIbexFwdbwd(Formula f, const Box& box);
-  ~ContractorIbexFwdbwd();
+
+  ~ContractorIbexFwdbwd() override = default;
 
   void Prune(ContractorStatus* cs) const override;
 

@@ -86,6 +86,9 @@ class ContractorForall : public ContractorCell {
     }
   }
 
+  /// Default destructor.
+  ~ContractorForall() override = default;
+
   void Prune(ContractorStatus* cs) const override {
     Box& current_box = cs->get_mutable_box();
     while (true) {

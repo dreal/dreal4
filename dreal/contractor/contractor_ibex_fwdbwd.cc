@@ -52,8 +52,6 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box)
   }
 }
 
-ContractorIbexFwdbwd::~ContractorIbexFwdbwd() {}
-
 void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
   if (ctc_) {
     Box::IntervalVector& iv{
