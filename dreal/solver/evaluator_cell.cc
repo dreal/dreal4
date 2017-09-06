@@ -59,7 +59,7 @@ Box::Interval EvaluatorForall::operator()(const Box& box) const {
   for (const Variable& v : box.variables()) {
     context_.SetInterval(v, box[v].lb(), box[v].ub());
   }
-  const auto result{context_.CheckSat()};
+  const auto result = context_.CheckSat();
   DREAL_LOG_DEBUG("EvaluatorForall::operator({})", box);
   if (result) {
     DREAL_LOG_DEBUG("EvaluatorForall::operator()  --  CE found: ", *result);
