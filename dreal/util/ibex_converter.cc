@@ -132,6 +132,9 @@ const ExprNode* IbexConverter::VisitMultiplication(const Expression& e) {
       if (is_integer(v)) {
         ret = &(*ret * pow(*Visit(base), static_cast<int>(v)));
       }
+      if (v == 0.5) {
+        ret = &(*ret * sqrt(*Visit(base)));
+      }
     } else {
       ret = &(*ret * pow(*Visit(base), *Visit(exponent)));
     }
@@ -166,6 +169,9 @@ const ExprNode* IbexConverter::VisitPow(const Expression& e) {
     const double v{get_constant_value(exponent)};
     if (is_integer(v)) {
       return &pow(*Visit(base), static_cast<int>(v));
+    }
+    if (v == 0.5) {
+      return VisitSqrt(base);
     }
   }
   return &pow(*Visit(base), *Visit(exponent));
