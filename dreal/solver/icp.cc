@@ -42,12 +42,13 @@ bool Icp::CheckSat(ContractorStatus* cs) {
       // loop if |fᵢ(B)| ≤ δ for all fᵢ.
       bool delta_check = true;
       for (const Evaluator& evaluator : evaluators_) {
-        const Box::Interval eval_result{evaluator(current_box)};
-        if (eval_result.diam() > precision_) {
+        const EvaluationResult result{evaluator(current_box)};
+        const Box::Interval& evaluation{result.evaluation()};
+        if (evaluation.diam() > precision_) {
           DREAL_LOG_DEBUG(
               "Icp::CheckSat() Found an interval >= precision({2}):\n{0} -> "
               "{1}",
-              evaluator, eval_result, precision_);
+              evaluator, evaluation, precision_);
           delta_check = false;
           break;
         }

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "dreal/solver/context.h"
+#include "dreal/solver/evaluator.h"
 #include "dreal/util/box.h"
 #include "dreal/util/ibex_converter.h"
 
@@ -15,7 +16,7 @@ class EvaluatorCell {
   virtual ~EvaluatorCell() = default;
 
   /// Evaluates the constraint/formula with @p box.
-  virtual Box::Interval operator()(const Box& box) const = 0;
+  virtual EvaluationResult operator()(const Box& box) const = 0;
 
   virtual std::ostream& Display(std::ostream& os) const = 0;
 };
@@ -29,13 +30,13 @@ class EvaluatorQuantifierFree : public EvaluatorCell {
   EvaluatorQuantifierFree(const Formula& f,
                           const std::vector<Variable>& variables);
 
-  Box::Interval operator()(const Box& box) const override;
+  EvaluationResult operator()(const Box& box) const override;
 
   std::ostream& Display(std::ostream& os) const override;
 
  private:
-  std::shared_ptr<IbexConverter> ibex_converter_;
-  std::shared_ptr<const ibex::ExprCtr> expr_ctr_;
+  const std::shared_ptr<IbexConverter> ibex_converter_;
+  RelationalOperator op_{};
   std::shared_ptr<ibex::Function> func_;
 };
 
@@ -47,7 +48,7 @@ class EvaluatorForall : public EvaluatorCell {
   EvaluatorForall(const Formula& f, const std::vector<Variable>& variables,
                   double delta);
 
-  Box::Interval operator()(const Box& box) const override;
+  EvaluationResult operator()(const Box& box) const override;
 
   std::ostream& Display(std::ostream& os) const override;
 

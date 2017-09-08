@@ -1,12 +1,24 @@
 #include "dreal/solver/evaluator.h"
 
+#include <utility>
+
 #include "dreal/solver/evaluator_cell.h"
 
 namespace dreal {
 
 using std::make_shared;
+using std::move;
 using std::ostream;
 using std::vector;
+
+EvaluationResult::EvaluationResult(Type type, Box::Interval evaluation)
+    : type_{type}, evaluation_{std::move(evaluation)} {}
+
+EvaluationResult::Type EvaluationResult::type() const { return type_; }
+
+const Box::Interval& EvaluationResult::evaluation() const {
+  return evaluation_;
+}
 
 Evaluator::Evaluator(const Formula& f, const vector<Variable>& variables,
                      const double delta) {
@@ -17,7 +29,7 @@ Evaluator::Evaluator(const Formula& f, const vector<Variable>& variables,
   }
 }
 
-Box::Interval Evaluator::operator()(const Box& box) const {
+EvaluationResult Evaluator::operator()(const Box& box) const {
   return (*ptr_)(box);
 }
 

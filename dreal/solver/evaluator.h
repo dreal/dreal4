@@ -13,6 +13,33 @@ namespace dreal {
 // Forward declaration.
 class EvaluatorCell;
 
+/// Represents the evaluation result of a constraint given a box.
+class EvaluationResult {
+ public:
+  enum class Type {
+    VALID,    ///< Any point in the box satisfies the constraint.
+    UNSAT,    ///< There is no point in the box satisfying the constraint.
+    UNKNOWN,  ///< It is unknown. It may indicate that there is a
+              /// point in the box satisfying the constraint.
+  };
+
+  /// Constructs an EvaluationResult with @p type and @p evaluation.
+  EvaluationResult(Type type, Box::Interval evaluation);
+
+  /// Returns the type of this result.
+  Type type() const;
+
+  /// Returns the interval evaluation of this result.
+  const Box::Interval& evaluation() const;
+
+ private:
+  Type type_;
+
+  // Given e₁ rop e₂, it keeps the result of the interval evaluation of (e₁ -
+  // e₂) over a box.
+  Box::Interval evaluation_;
+};
+
 /// Class to evaluate a symbolic formula with a box.
 class Evaluator {
  public:
@@ -35,7 +62,7 @@ class Evaluator {
   Evaluator& operator=(Evaluator&&) = default;
 
   /// Evaluates the constraint/formula with @p box.
-  Box::Interval operator()(const Box& box) const;
+  EvaluationResult operator()(const Box& box) const;
 
  private:
   std::shared_ptr<EvaluatorCell> ptr_;

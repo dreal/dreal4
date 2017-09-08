@@ -92,6 +92,14 @@ dreal_cc_library(
 # Tests
 # -----
 dreal_cc_googletest(
+    name = "evaluator_test",
+    tags = ["unittest"],
+    deps = [
+        ":solver",
+    ],
+)
+
+dreal_cc_googletest(
     name = "icp_test",
     tags = ["unittest"],
     deps = [
