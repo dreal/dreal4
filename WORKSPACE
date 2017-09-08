@@ -1,9 +1,32 @@
+
 # -*- python -*-
 
 # This file marks a workspace root for the Bazel build system. see
 # http://bazel.io/ .
 
 workspace(name = "dreal")
+
+# Buildifier setup -- BEGIN
+http_archive(
+    name = "io_bazel_rules_go",  # Apache 2.0
+    sha256 = "1e8e662ab93eca94beb6c690b8fd41347835e8ce0f3c4f71708af4b6673dd171",
+    strip_prefix = "rules_go-2e319588571f20fdaaf83058b690abd32f596e89",
+    urls = [
+        "http://mirror.bazel.build/github.com/bazelbuild/rules_go/archive/2e319588571f20fdaaf83058b690abd32f596e89.tar.gz",
+        "https://github.com/bazelbuild/rules_go/archive/2e319588571f20fdaaf83058b690abd32f596e89.tar.gz",
+    ],
+)
+load(
+    "@io_bazel_rules_go//go:def.bzl",
+    "go_rules_dependencies",
+    "go_register_toolchains",
+    "go_repository",
+)
+load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_repositories")
+go_rules_dependencies()
+go_register_toolchains()
+go_proto_repositories()
+# Buildifier setup -- END
 
 load("//tools:github.bzl", "github_archive")
 
@@ -12,34 +35,6 @@ github_archive(
     repository = "dreal-deps/kythe",
     commit = "333ddf386fda81fb3f9962e54eb30a67b14315db",
     sha256 = "63d59334434f6d84c89da46d04305736fa58c29282f9d9372580dc0957a61b70",
-)
-
-# Necessary for buildifier.
-github_archive(
-    name = "io_bazel_rules_go", # Apache 2.0
-    repository = "bazelbuild/rules_go",
-    commit = "0.4.2",
-    sha256 = "713c4dd4cfafdf34ed4bdd15eaffc66b15a73dcfbae54a3f109b360c54ecc096",
-)
-
-# Necessary for buildifier.
-load("@io_bazel_rules_go//go:def.bzl", "go_repositories", "new_go_repository")
-
-# Necessary for buildifier.
-go_repositories()
-
-# Necessary for buildifier.
-new_go_repository(
-    name = "org_golang_x_tools",
-    commit = "3d92dd60033c312e3ae7cac319c792271cf67e37",
-    importpath = "golang.org/x/tools",
-)
-
-github_archive(
-    name = "com_github_bazelbuild_buildtools", # Apache 2.0
-    repository = "bazelbuild/buildtools",
-    commit = "45633988bb2b956f77c1075c4bc551ea3d7798b3", # 0.4.5
-    sha256 = "73772adde342f221ad5bc8c4ba7643b00f66ed76a978af4aae5d2c0af6d47e68",
 )
 
 github_archive(
