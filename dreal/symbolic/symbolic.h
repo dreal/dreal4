@@ -16,6 +16,7 @@
 #pragma once
 
 #include <functional>
+#include <ostream>
 #include <set>
 
 #include "symbolic/symbolic_environment.h"
@@ -67,5 +68,21 @@ Formula DeltaStrengthen(const Formula& f, double delta);
 /// Weaken the input formula @p f by @p delta.
 /// @pre delta > 0
 Formula DeltaWeaken(const Formula& f, double delta);
+
+/// Represents relational operators.
+enum class RelationalOperator {
+  EQ,   ///< =
+  NEQ,  ///< !=
+  GT,   ///< >
+  GEQ,  ///< >=
+  LT,   ///< <
+  LEQ,  ///< <=
+};
+
+/// Negates @p op.
+RelationalOperator operator!(RelationalOperator op);
+
+/// Outputs @p op to @p os.
+std::ostream& operator<<(std::ostream& os, RelationalOperator op);
 
 }  // namespace dreal

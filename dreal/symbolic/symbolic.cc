@@ -8,6 +8,7 @@ namespace dreal {
 
 using std::function;
 using std::inserter;
+using std::ostream;
 using std::runtime_error;
 using std::set;
 using std::transform;
@@ -209,6 +210,52 @@ Formula DeltaStrengthen(const Formula& f, const double delta) {
 Formula DeltaWeaken(const Formula& f, const double delta) {
   assert(delta > 0);
   return DeltaStrengthenVisitor{}.Strengthen(f, -delta);
+}
+
+RelationalOperator operator!(const RelationalOperator op) {
+  switch (op) {
+    case RelationalOperator::EQ:
+      return RelationalOperator::NEQ;
+
+    case RelationalOperator::NEQ:
+      return RelationalOperator::EQ;
+
+    case RelationalOperator::GT:
+      return RelationalOperator::LEQ;
+
+    case RelationalOperator::GEQ:
+      return RelationalOperator::LT;
+
+    case RelationalOperator::LT:
+      return RelationalOperator::GEQ;
+
+    case RelationalOperator::LEQ:
+      return RelationalOperator::GT;
+  }
+  throw runtime_error("Should not be reachable.");
+}
+
+ostream& operator<<(ostream& os, const RelationalOperator op) {
+  switch (op) {
+    case RelationalOperator::EQ:
+      return os << "=";
+
+    case RelationalOperator::NEQ:
+      return os << "≠";
+
+    case RelationalOperator::GT:
+      return os << ">";
+
+    case RelationalOperator::GEQ:
+      return os << "≥";
+
+    case RelationalOperator::LT:
+      return os << "<";
+
+    case RelationalOperator::LEQ:
+      return os << "≤";
+  }
+  throw runtime_error("Should not be reachable.");
 }
 
 }  // namespace dreal
