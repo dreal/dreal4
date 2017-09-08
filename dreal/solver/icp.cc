@@ -54,9 +54,27 @@ bool Icp::CheckSat(ContractorStatus* cs) {
         }
       }
       if (delta_check) {
-        // Great, we find a box which is smaller enough!
-        DREAL_LOG_DEBUG("Icp::CheckSat() Found a delta-box:\n{}", current_box);
-        return true;
+        // Evaluate all constraints under the current box to confirm the
+        // delta-sat solution.
+        bool unsat_by_evaluation{false};
+        for (const Evaluator& evaluator : evaluators_) {
+          const EvaluationResult result{evaluator(current_box)};
+          if (result.type() == EvaluationResult::Type::UNSAT) {
+            DREAL_LOG_DEBUG("Current box:\n{}\nRejected by {}", current_box,
+                            evaluator);
+            unsat_by_evaluation = true;
+            break;
+          }
+        }
+        if (unsat_by_evaluation) {
+          current_box.set_empty();
+          continue;
+        } else {
+          // Great, we find a box which is smaller enough!
+          DREAL_LOG_DEBUG("Icp::CheckSat() Found a delta-box:\n{}",
+                          current_box);
+          return true;
+        }
       }
 
       pair<double, int> max_diam_and_idx{current_box.MaxDiam()};

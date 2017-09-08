@@ -117,7 +117,6 @@ bool TheorySolver::CheckSat(const vector<Formula>& assertions) {
   contractor_status_ = ContractorStatus(box_);
 
   // Icp Step
-  const vector<Evaluator> evaluators{BuildEvaluator(assertions)};
   Icp icp(BuildContractor(assertions), BuildEvaluator(assertions),
           config_.precision());
   icp.CheckSat(&contractor_status_);
@@ -126,27 +125,8 @@ bool TheorySolver::CheckSat(const vector<Formula>& assertions) {
     return false;
   } else {
     status_ = Status::SAT;
+    return true;
   }
-
-  if (status_ == Status::SAT) {
-    // Evaluate all constraints under the current box to confirm the
-    // delta-sat solution.
-    //
-    // If there is a violation, report the case to users, add the violated
-    // constraint as a used constraint, make the current box empty,
-    // and switch the result to be unsat.
-    for (const Evaluator& evaluator : evaluators) {
-      const EvaluationResult result{evaluator(contractor_status_.box())};
-      if (result.type() == EvaluationResult::Type::UNSAT) {
-        DREAL_LOG_DEBUG("Current box:\n{}\nRejected by {}",
-                        contractor_status_.box(), evaluator);
-        contractor_status_.get_mutable_box().set_empty();
-        status_ = Status::UNSAT;
-        return false;
-      }
-    }
-  }
-  return status_ == Status::SAT;
 }
 
 Box TheorySolver::GetModel() const {
