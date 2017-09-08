@@ -171,7 +171,7 @@ const ExprNode* IbexConverter::VisitPow(const Expression& e) {
       return &pow(*Visit(base), static_cast<int>(v));
     }
     if (v == 0.5) {
-      return VisitSqrt(base);
+      return &sqrt(*Visit(base));
     }
   }
   return &pow(*Visit(base), *Visit(exponent));
