@@ -65,6 +65,15 @@ const ExprCtr* IbexConverter::Convert(const Formula& f) {
   return expr_ctr;
 }
 
+const ExprNode* IbexConverter::Convert(const Expression& e) {
+  DREAL_LOG_DEBUG("IbexConverter::Convert({})", e);
+  const ExprNode* expr_node{Visit(e.Substitute(expression_substitution_))};
+  if (expr_node) {
+    need_to_delete_variables_ = false;
+  }
+  return expr_node;
+}
+
 const ibex::Array<const ibex::ExprSymbol>& IbexConverter::variables() const {
   return var_array_;
 }

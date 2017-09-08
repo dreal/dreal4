@@ -36,18 +36,26 @@ class IbexConverter {
   /// `ibex::ExprSymbol*` in `symbolic_var_to_ibex_var_`.
   ~IbexConverter();
 
-  // Convert @p f into the corresponding IBEX data structure,
-  // ibex::ExprCtr*.
-  //
-  // @note It is caller's responsibility to delete the return value.
-  // @note So far, it is always the case that the returned value is
-  // used to construct an `ibex::Function` object. Simply deleting
-  // `ibex::ExprCtr` does not destruct the included `ibex::ExprNode`
-  // objects. However, `ibex::Function`'s destructor does the job. As
-  // a result, we should not call `ibex::cleanup` function explicitly
-  // with the return value of this method.
+  /// Convert @p f into the corresponding IBEX data structure,
+  /// ibex::ExprCtr*.
+  ///
+  /// @note It is caller's responsibility to delete the return value.
+  /// @note So far, it is always the case that the returned value is
+  /// used to construct an `ibex::Function` object. Simply deleting
+  /// `ibex::ExprCtr` does not destruct the included `ibex::ExprNode`
+  /// objects. However, `ibex::Function`'s destructor does the job. As
+  /// a result, we should not call `ibex::cleanup` function explicitly
+  /// with the return value of this method.
   const ibex::ExprCtr* Convert(const Formula& f);
+
+  /// Convert @p e into the corresponding IBEX data structure,
+  /// ibex::ExprNode*.
+  ///
+  /// @note See the above note in `Convert(const Formula& f)`.
+  const ibex::ExprNode* Convert(const Expression& e);
+
   const ibex::Array<const ibex::ExprSymbol>& variables() const;
+
   void set_need_to_delete_variables(bool value);
 
  private:
