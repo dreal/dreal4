@@ -534,22 +534,29 @@ toolchain {
   target_system_name: "local"
   toolchain_identifier: "local_darwin"
 
+  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
+  cxx_builtin_include_directory: "/Library/Developer/CommandLineTools"
+  cxx_builtin_include_directory: "/usr/local/include"
+  cxx_builtin_include_directory: "/usr/include"
+  cxx_builtin_include_directory: "/System/Library/Frameworks"
+  cxx_builtin_include_directory: "/Library/Frameworks"
+
+  linker_flag: "-headerpad_max_install_names"
+  linker_flag: "-lstdc++"
+  linker_flag: "-undefined"
+  linker_flag: "dynamic_lookup"
+  objcopy_embed_flag: "-I"
+  objcopy_embed_flag: "binary"
+
   tool_path { name: "ar" path: "/usr/bin/libtool" }
   tool_path { name: "compat-ld" path: "/usr/bin/ld" }
   tool_path { name: "cpp" path: "/usr/bin/cpp" }
   tool_path { name: "dwp" path: "/usr/bin/dwp" }
   tool_path { name: "gcc" path: "third_party/bazel/tools/cpp/osx_cc_wrapper.sh" }
-  linker_flag: "-lstdc++"
-  linker_flag: "-undefined"
-  linker_flag: "dynamic_lookup"
-  linker_flag: "-headerpad_max_install_names"
-  cxx_builtin_include_directory: "/"
   tool_path { name: "gcov" path: "/usr/bin/gcov" }
   tool_path { name: "ld" path: "/usr/bin/ld" }
   tool_path { name: "nm" path: "/usr/bin/nm" }
   tool_path { name: "objcopy" path: "/usr/bin/objcopy" }
-  objcopy_embed_flag: "-I"
-  objcopy_embed_flag: "binary"
   tool_path { name: "objdump" path: "/usr/bin/objdump" }
   tool_path { name: "strip" path: "/usr/bin/strip" }
 
