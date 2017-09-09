@@ -131,9 +131,6 @@ dreal_cc_library(
 
 dreal_cc_library(
     name = "scoped_vector",
-    srcs = [
-        "scoped_vector.cc",
-    ],
     hdrs = [
         "scoped_vector.h",
     ],
