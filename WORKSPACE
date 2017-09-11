@@ -9,7 +9,7 @@ workspace(name = "dreal")
 # Buildifier setup -- BEGIN
 http_archive(
     name = "io_bazel_rules_go",  # Apache 2.0
-    sha256 = "1e8e662ab93eca94beb6c690b8fd41347835e8ce0f3c4f71708af4b6673dd171",
+    sha256 = "84dc11091f5209bf24f1ee710ff0c645f86016bfdbbb11fb831580e95f1975c6",
     strip_prefix = "rules_go-2e319588571f20fdaaf83058b690abd32f596e89",
     urls = [
         "http://mirror.bazel.build/github.com/bazelbuild/rules_go/archive/2e319588571f20fdaaf83058b690abd32f596e89.tar.gz",
@@ -34,7 +34,7 @@ github_archive(
     name = "io_kythe_dreal", # Apache-2.0
     repository = "dreal-deps/kythe",
     commit = "333ddf386fda81fb3f9962e54eb30a67b14315db",
-    sha256 = "63d59334434f6d84c89da46d04305736fa58c29282f9d9372580dc0957a61b70",
+    sha256 = "9e8db92c3eb605be5a74daf6f0621298a487b6b2e4f279e68ddf8b513826491b",
 )
 
 github_archive(
