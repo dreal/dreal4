@@ -102,6 +102,7 @@ pkg_tar(
     ],
     extension = "tar.gz",
     package_dir = "usr/include/dreal/smt2",
+    tags = ["manual"],
 )
 
 cpplint()

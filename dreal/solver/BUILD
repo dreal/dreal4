@@ -144,6 +144,7 @@ pkg_tar(
     ],
     extension = "tar.gz",
     package_dir = "usr/include/dreal/solver",
+    tags = ["manual"],
 )
 
 cpplint()

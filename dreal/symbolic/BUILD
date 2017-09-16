@@ -63,6 +63,7 @@ pkg_tar(
     ],
     extension = "tar.gz",
     package_dir = "usr/include/dreal/symbolic",
+    tags = ["manual"],
 )
 
 cpplint()
