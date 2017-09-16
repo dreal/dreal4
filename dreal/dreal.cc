@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -56,7 +57,8 @@ void MainProgram::PrintUsage() {
 }
 
 void MainProgram::AddOptions() {
-  opt_.overview = "dReal v4 : delta-complete SMT solver";
+  opt_.overview =
+      "dReal v" + Context::version() + " : delta-complete SMT solver";
   opt_.syntax = "dreal [OPTIONS] <.smt2 file>";
 
   opt_.add("" /* Default */, false /* Required? */,
@@ -205,7 +207,6 @@ int MainProgram::Run() {
   if (!is_options_all_valid) {
     return 1;
   }
-  // TODO(soonho): Set up version string.
   const string& filename{*args_[0]};
   if (!dreal::file_exists(filename)) {
     cerr << "File not found: " << filename << "\n" << endl;

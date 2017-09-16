@@ -330,4 +330,6 @@ const Variable& Context::lookup_variable(const string& name) {
 const Config& Context::config() const { return impl_->config(); }
 Config& Context::get_mutable_config() { return impl_->get_mutable_config(); }
 
+string Context::version() { return DREAL_VERSION_STRING; }
+
 }  // namespace dreal

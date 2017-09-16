@@ -4,6 +4,7 @@
 exports_files([
     "CPPLINT.cfg",
     ".clang-format",
+    "VERSION",
 ])
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
@@ -43,7 +44,7 @@ pkg_deb(
     maintainer = "Soonho Kong <soonho.kong@gmail.com>",
     package = "dreal",
     tags = ["manual"],
-    version = "4.17.09",
+    version_file = "VERSION",
 )
 
 load("//tools:dreal.bzl", "dreal_cc_library")

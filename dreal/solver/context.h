@@ -11,6 +11,7 @@
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/version.h"
 
 namespace dreal {
 
@@ -71,6 +72,8 @@ class Context {
   const Config& config() const;
 
   Config& get_mutable_config();
+
+  static std::string version();
 
  private:
   // This header is exposed to external users as a part of API. We use

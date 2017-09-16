@@ -18,6 +18,14 @@ sh_binary(
     srcs = ["kcov.sh"],
 )
 
+sh_binary(
+    name = "generate_version_header",
+    srcs = [
+        "generate_version_header.sh",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 # === CROSSTOOL rules ===
 
 # The default toolchain selector for the project.

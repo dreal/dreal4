@@ -42,6 +42,7 @@ dreal_cc_library(
         ":assertion_filter",
         ":config",
         ":sat_solver",
+        "//dreal:version_header",
         "//dreal/contractor",
         "//dreal/smt2:logic",
         "//dreal/smt2:sort",

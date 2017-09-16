@@ -2,8 +2,30 @@
 # This file contains rules for Bazel; see https://bazel.io/ .
 
 load("//:tools/cpplint.bzl", "cpplint")
-load("//tools:dreal.bzl", "dreal_cc_binary")
+load("//tools:dreal.bzl", "dreal_cc_binary", "dreal_cc_library")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+
+genrule(
+    name = "generate_version_header",
+    srcs = [
+        "//:VERSION",
+    ],
+    outs = [
+        "version.h",
+    ],
+    cmd = "$(location //tools:generate_version_header) $(location //:VERSION) > $@",
+    tools = [
+        "//tools:generate_version_header",
+    ],
+)
+
+dreal_cc_library(
+    name = "version_header",
+    hdrs = [
+        "version.h",
+    ],
+    visibility = [":__subpackages__"],
+)
 
 dreal_cc_binary(
     name = "dreal",
@@ -37,6 +59,7 @@ filegroup(
     name = "headers",
     srcs = [
         "dreal.h",
+        "version.h",
     ],
     visibility = ["//visibility:public"],
 )
