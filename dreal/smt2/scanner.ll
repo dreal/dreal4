@@ -156,6 +156,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 "and"                   { return Parser::token::TK_AND; }
 "or"                    { return Parser::token::TK_OR; }
 "not"                   { return Parser::token::TK_NOT; }
+"ite"                   { return Parser::token::TK_ITE; }
 
  /* gobble up white-spaces */
 [ \t\r]+ {
