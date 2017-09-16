@@ -26,6 +26,22 @@ sh_binary(
     visibility = ["//visibility:public"],
 )
 
+sh_binary(
+    name = "generate_pkg_file_osx",
+    srcs = [
+        "generate_pkg_file_osx.sh",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "generate_pkg_file_ubuntu",
+    srcs = [
+        "generate_pkg_file_ubuntu.sh",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 # === CROSSTOOL rules ===
 
 # The default toolchain selector for the project.

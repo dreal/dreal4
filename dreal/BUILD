@@ -65,7 +65,7 @@ filegroup(
 )
 
 pkg_tar(
-    name = "pkg-headers",
+    name = "package_headers",
     srcs = [
         ":headers",
     ],
@@ -76,7 +76,7 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "pkg-bin",
+    name = "package_bin",
     srcs = [
         ":dreal",
     ],
@@ -89,7 +89,7 @@ pkg_tar(
 )
 
 pkg_tar(
-    name = "pkg-sharedlib",
+    name = "package_sharedlib",
     srcs = [
         ":libdreal.so",
     ],

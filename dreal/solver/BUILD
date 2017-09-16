@@ -139,7 +139,7 @@ filegroup(
 )
 
 pkg_tar(
-    name = "pkg-headers",
+    name = "package_headers",
     srcs = [
         ":headers",
     ],
