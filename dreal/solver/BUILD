@@ -143,7 +143,7 @@ pkg_tar(
         ":headers",
     ],
     extension = "tar.gz",
-    package_dir = "usr/include/dreal/solver",
+    package_dir = "/usr/include/dreal/solver",
     tags = ["manual"],
 )
 

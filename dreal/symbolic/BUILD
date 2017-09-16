@@ -62,7 +62,7 @@ pkg_tar(
         ":headers",
     ],
     extension = "tar.gz",
-    package_dir = "usr/include/dreal/symbolic",
+    package_dir = "/usr/include/dreal/symbolic",
     tags = ["manual"],
 )
 

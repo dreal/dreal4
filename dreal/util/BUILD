@@ -198,7 +198,7 @@ pkg_tar(
         ":headers",
     ],
     extension = "tar.gz",
-    package_dir = "usr/include/dreal/util",
+    package_dir = "/usr/include/dreal/util",
     tags = ["manual"],
 )
 
