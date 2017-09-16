@@ -6,7 +6,7 @@ exports_files([
     ".clang-format",
 ])
 
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
 
 pkg_tar(
     name = "package-tar",
@@ -21,6 +21,29 @@ pkg_tar(
         "//dreal/symbolic:pkg-headers",
         "//dreal/util:pkg-headers",
     ],
+)
+
+pkg_deb(
+    name = "package-deb",
+    architecture = "amd64",
+    built_using = "bazel (0.5.4)",
+    data = ":package-tar",
+    depends = [
+        "autoconf",
+        "automake",
+        "bison",
+        "coinor-libclp-dev",
+        "flex",
+        "libtool",
+        "pkg-config",
+        "libibex-dev",
+    ],
+    description = "SMT solver for nonlinear theories",
+    homepage = "http://dreal.github.io",
+    maintainer = "Soonho Kong <soonho.kong@gmail.com>",
+    package = "dreal",
+    tags = ["manual"],
+    version = "4.17.09",
 )
 
 load("//tools:dreal.bzl", "dreal_cc_library")
