@@ -18,11 +18,7 @@ The following packages are required to build dReal:
    [clang++-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs),
    [Apple clang++](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html))
  - [Bazel](https://bazel.build)
- - [Flex](https://www.gnu.org/software/flex)
-   and [Bison](https://www.gnu.org/software/bison)
- - [Autoconf](http://www.gnu.org/software/autoconf/autoconf.html),
-   [Automake](https://www.gnu.org/software/automake/),
-   and [libtool](https://www.gnu.org/software/libtool/)
+ - [Flex](https://www.gnu.org/software/flex) and [Bison](https://www.gnu.org/software/bison)
 
 dReal is using the following external libraries:
 
@@ -34,6 +30,25 @@ dReal is using the following external libraries:
  - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
  - [Google Test](https://github.com/google/googletest) - [BSD 3-Clause](https://raw.githubusercontent.com/google/googletest/master/googletest/LICENSE)
 
+How to Install
+==============
+
+macOS (tested on 10.12.6):
+
+```bash
+brew install dreal/dreal/dreal
+```
+
+Ubuntu (tested on 16.04.3 LTS):
+```bash
+sudo apt install -y software-properties-common  # for add-apt-repository
+sudo add-apt-repository ppa:dreal/dreal -y
+sudo apt update
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev
+wget https://dl.bintray.com/dreal/dreal/dreal_4.17.09_amd64.deb
+dpkg -i dreal_4.17.09_amd64.deb
+```
+
 How to Build
 ============
 
@@ -43,7 +58,7 @@ Install Prerequsites
 macOS:
 
 ```bash
-brew install autoconf automake bazel libtool pkg-config dreal-deps/ibex/ibex
+brew install bazel pkg-config dreal-deps/ibex/ibex
 ```
 
 Ubuntu
@@ -51,7 +66,7 @@ Ubuntu
 ```bash
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
-sudo apt install autoconf automake bison coinor-libclp-dev flex libtool pkg-config libibex-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev
 ```
 
 Build and Test
