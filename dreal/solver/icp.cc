@@ -22,7 +22,7 @@ bool Icp::CheckSat(ContractorStatus* cs) {
   stack.push_back(cs->box());
 
   // `current_box` always points to the box in the cs by reference.
-  Box& current_box{cs->get_mutable_box()};
+  Box& current_box{cs->mutable_box()};
 
   bool flip = false;  // To decide which box to add first after branching.
   while (!stack.empty()) {

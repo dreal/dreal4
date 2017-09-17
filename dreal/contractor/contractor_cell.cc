@@ -26,7 +26,7 @@ Contractor::Kind ContractorCell::kind() const { return kind_; }
 
 const ibex::BitSet& ContractorCell::input() const { return input_; }
 
-ibex::BitSet& ContractorCell::get_mutable_input() { return input_; }
+ibex::BitSet& ContractorCell::mutable_input() { return input_; }
 
 // Returns max(c₁.input().max(), ..., cₙ.input().max()).
 // This is used in ContractorSeq and ContractorFixpoint to find the size of its

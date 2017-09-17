@@ -22,17 +22,17 @@ class ContractorStatus {
   /// Returns the embedded box.
   const Box& box() const;
   /// Returns the embedded box.
-  Box& get_mutable_box();
+  Box& mutable_box();
 
   /// Returns the output.
   const ibex::BitSet& output() const;
   /// Returns the output.
-  ibex::BitSet& get_mutable_output();
+  ibex::BitSet& mutable_output();
 
   /// Returns the used constraints.
   const std::set<Formula>& used_constraints() const;
   /// Returns the used constraints.
-  std::set<Formula>& get_mutable_used_constraints();
+  std::set<Formula>& mutable_used_constraints();
 
   /// Add a formula @p f into the used constraints.
   void AddUsedConstraint(Formula f);

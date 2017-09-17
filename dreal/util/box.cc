@@ -120,7 +120,7 @@ const Variable& Box::variable(const int i) const { return (*idx_to_var_)[i]; }
 int Box::index(const Variable& var) const { return (*var_to_idx_)[var]; }
 
 const Box::IntervalVector& Box::interval_vector() const { return values_; }
-Box::IntervalVector& Box::get_mutable_interval_vector() { return values_; }
+Box::IntervalVector& Box::mutable_interval_vector() { return values_; }
 
 pair<double, int> Box::MaxDiam() const {
   double max_diam{0.0};

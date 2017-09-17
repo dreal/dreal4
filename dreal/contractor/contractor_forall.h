@@ -77,7 +77,7 @@ class ContractorForall : public ContractorCell {
     }
 
     // Build input.
-    ibex::BitSet& input{get_mutable_input()};
+    ibex::BitSet& input{mutable_input()};
     for (const Variable& v : f_.GetFreeVariables()) {
       // Add v if v ∈ (vars(f) - quantified_variables).
       if (quantified_variables_.include(v)) {
@@ -90,7 +90,7 @@ class ContractorForall : public ContractorCell {
   ~ContractorForall() override = default;
 
   void Prune(ContractorStatus* cs) const override {
-    Box& current_box = cs->get_mutable_box();
+    Box& current_box = cs->mutable_box();
     while (true) {
       // 1. Find Counterexample.
       for (const Variable& exist_var : current_box.variables()) {
@@ -108,21 +108,20 @@ class ContractorForall : public ContractorCell {
         ContractorStatus contractor_status(*counterexample);
         // 1.1.1. Set up exist_var parts for pruning
         for (const Variable& exist_var : current_box.variables()) {
-          contractor_status.get_mutable_box()[exist_var] =
-              current_box[exist_var];
+          contractor_status.mutable_box()[exist_var] = current_box[exist_var];
         }
         // 1.1.2. Set up universal_var parts from
         // counterexample. Narrow down the forall variables part by
         // taking the mid-points of counterexample.
         for (const Variable& forall_var : quantified_variables_) {
-          contractor_status.get_mutable_box()[forall_var] =
+          contractor_status.mutable_box()[forall_var] =
               (*counterexample)[forall_var].mid();
         }
         contractor_.Prune(&contractor_status);
         if (contractor_status.box().empty()) {
           // If the pruning result is empty, there is nothing more to do. Exit
           // the loop.
-          cs->get_mutable_output().fill(0, cs->box().size() - 1);
+          cs->mutable_output().fill(0, cs->box().size() - 1);
           current_box.set_empty();
           break;
         } else {
@@ -130,7 +129,7 @@ class ContractorForall : public ContractorCell {
           bool changed = false;
           for (int i = 0; i < cs->box().size(); ++i) {
             if (cs->box()[i] != contractor_status.box()[i]) {
-              cs->get_mutable_output().add(i);
+              cs->mutable_output().add(i);
               current_box[i] = contractor_status.box()[i];
               changed = true;
             }

@@ -11,7 +11,7 @@ namespace dreal {
 ContractorInteger::ContractorInteger(const Box& box)
     : ContractorCell{Contractor::Kind::INTEGER,
                      ibex::BitSet::empty(box.size())} {
-  ibex::BitSet& input{get_mutable_input()};
+  ibex::BitSet& input{mutable_input()};
   for (int i = 0; i < box.size(); ++i) {
     if (box.variable(i).get_type() == Variable::Type::INTEGER) {
       int_indexes_.push_back(i);
@@ -22,7 +22,7 @@ ContractorInteger::ContractorInteger(const Box& box)
 
 void ContractorInteger::Prune(ContractorStatus* contractor_status) const {
   if (!int_indexes_.empty()) {
-    Box& box{contractor_status->get_mutable_box()};
+    Box& box{contractor_status->mutable_box()};
     for (const int idx : int_indexes_) {
       Box::Interval& iv{box[idx]};
       if (iv.is_degenerated()) {
@@ -33,11 +33,11 @@ void ContractorInteger::Prune(ContractorStatus* contractor_status) const {
         const double new_ub{std::floor(iv.ub())};
         if (new_lb <= new_ub) {
           iv = Box::Interval{new_lb, new_ub};
-          contractor_status->get_mutable_output().add(idx);
+          contractor_status->mutable_output().add(idx);
         } else {
           // [new_lb, new_ub] = empty
           box.set_empty();
-          contractor_status->get_mutable_output().fill(
+          contractor_status->mutable_output().fill(
               0, contractor_status->box().size() - 1);
           return;
         }

@@ -13,7 +13,7 @@ ContractorJoin::ContractorJoin(vector<Contractor> contractors)
                      ibex::BitSet::empty(ComputeInputSize(contractors))},
       contractors_{move(contractors)} {
   assert(contractors_.size() > 0);
-  ibex::BitSet& input{get_mutable_input()};
+  ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
   }
@@ -21,7 +21,7 @@ ContractorJoin::ContractorJoin(vector<Contractor> contractors)
 
 void ContractorJoin::Prune(ContractorStatus* cs) const {
   ContractorStatus saved_original{*cs};
-  cs->get_mutable_box().set_empty();
+  cs->mutable_box().set_empty();
   for (const Contractor& contractor : contractors_) {
     ContractorStatus state_i{saved_original};
     contractor.Prune(&state_i);

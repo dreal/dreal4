@@ -77,7 +77,7 @@ class Box {
   const IntervalVector& interval_vector() const;
 
   /// Returns the interval vector of the box.
-  IntervalVector& get_mutable_interval_vector();
+  IntervalVector& mutable_interval_vector();
 
   /// Returns the index associated with @p var.
   int index(const Variable& var) const;

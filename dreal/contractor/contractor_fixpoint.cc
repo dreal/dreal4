@@ -17,7 +17,7 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
       term_cond_{move(term_cond)},
       contractors_{move(contractors)} {
   assert(contractors_.size() > 0);
-  ibex::BitSet& input{get_mutable_input()};
+  ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
   }
@@ -50,7 +50,7 @@ ostream& ContractorFixpoint::display(ostream& os) const {
 //       term_cond_{move(term_cond)},
 //       contractors_{move(contractors)} {
 //   assert(contractors_.size() > 0);
-//   ibex::BitSet& input{get_mutable_input()};
+//   ibex::BitSet& input{mutable_input()};
 //   for (const Contractor& c : contractors_) {
 //     input.union_with(c.input());
 //   }

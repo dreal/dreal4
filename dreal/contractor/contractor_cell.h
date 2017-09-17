@@ -54,7 +54,7 @@ class ContractorCell {
   const ibex::BitSet& input() const;
 
   /// Returns its input.
-  ibex::BitSet& get_mutable_input();
+  ibex::BitSet& mutable_input();
 
   /// Performs pruning on @p cs.
   virtual void Prune(ContractorStatus* cs) const = 0;

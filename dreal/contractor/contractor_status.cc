@@ -13,11 +13,11 @@ ContractorStatus::ContractorStatus(Box box)
 
 const Box& ContractorStatus::box() const { return box_; }
 
-Box& ContractorStatus::get_mutable_box() { return box_; }
+Box& ContractorStatus::mutable_box() { return box_; }
 
 const ibex::BitSet& ContractorStatus::output() const { return output_; }
 
-ibex::BitSet& ContractorStatus::get_mutable_output() { return output_; }
+ibex::BitSet& ContractorStatus::mutable_output() { return output_; }
 
 void ContractorStatus::AddUsedConstraint(Formula f) {
   used_constraints_.emplace(std::move(f));
@@ -31,7 +31,7 @@ const set<Formula>& ContractorStatus::used_constraints() const {
   return used_constraints_;
 }
 
-set<Formula>& ContractorStatus::get_mutable_used_constraints() {
+set<Formula>& ContractorStatus::mutable_used_constraints() {
   return used_constraints_;
 }
 

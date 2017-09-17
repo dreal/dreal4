@@ -13,7 +13,7 @@ ContractorSeq::ContractorSeq(vector<Contractor> contractors)
                      ibex::BitSet::empty(ComputeInputSize(contractors))},
       contractors_{move(contractors)} {
   assert(contractors_.size() > 0);
-  ibex::BitSet& input{get_mutable_input()};
+  ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
   }

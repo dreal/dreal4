@@ -77,7 +77,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
   ctc_ = make_unique<ibex::CtcPolytopeHull>(*linear_relax_combo_);
 
   // Build input.
-  ibex::BitSet& input{get_mutable_input()};
+  ibex::BitSet& input{mutable_input()};
   for (const Formula& f : formulas_) {
     for (const Variable& var : f.GetFreeVariables()) {
       input.add(box.index(var));
@@ -87,8 +87,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
 
 void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
   if (ctc_) {
-    Box::IntervalVector& iv{
-        cs->get_mutable_box().get_mutable_interval_vector()};
+    Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
     static Box::IntervalVector old_iv{iv};
     old_iv = iv;
     DREAL_LOG_TRACE("ContractorIbexPolytope::Prune");
@@ -97,11 +96,11 @@ void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
     // Update output.
     if (iv.is_empty()) {
       changed = true;
-      cs->get_mutable_output().fill(0, cs->box().size() - 1);
+      cs->mutable_output().fill(0, cs->box().size() - 1);
     } else {
       for (int i = 0; i < old_iv.size(); ++i) {
         if (old_iv[i] != iv[i]) {
-          cs->get_mutable_output().add(i);
+          cs->mutable_output().add(i);
           changed = true;
         }
       }
