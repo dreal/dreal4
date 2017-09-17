@@ -5,31 +5,69 @@
 
 namespace dreal {
 
-/// Represents an optional value in dReal. There are three ways that
-/// an option can have its value -- by default, by command-line
-/// argument, and by file (.smt2). We want to make sure that a value
-/// set by command-line cannot be changed unless the update is
-/// requested from another command-line.
+/// Represents an optional value in dReal. There are four ways that an
+/// option can have its value -- by default, by a command-line
+/// argument, by a set-info/set-option command from a .smt2 file, and
+/// a manual update in a code. We define an order in these types and
+/// make sure that an update is executed only if it is requested by
+/// the same type or a higher type. For example, a value set by
+/// command-line cannot be changed by an updated requested from a file.
 template <typename T>
 class OptionValue {
  public:
   enum class Type {
-    DEFAULT,
-    FROM_COMMAND_LINE,
-    FROM_FILE,
+    DEFAULT,            ///< Default value
+    FROM_FILE,          ///< Updated by a set-option/set-info in a file
+    FROM_COMMAND_LINE,  ///< Updated by a command-line argument
+    FROM_CODE,          ///< Explicitly updated by a code
   };
 
   /// Constructs an option value with @p value.
   explicit OptionValue(T value)
       : value_{std::move(value)}, type_{Type::DEFAULT} {}
 
+  /// Default copy constructor.
+  OptionValue(const OptionValue&) = default;
+
+  /// Default move constructor.
+  OptionValue(OptionValue&&) = default;
+
+  /// Default copy assign operator.
+  OptionValue& operator=(const OptionValue&) = default;
+
+  /// Default move assign operator.
+  OptionValue& operator=(OptionValue&&) = default;
+
+  /// Default destructor.
+  ~OptionValue() = default;
+
+  /// Copy-assign operator for T.
+  ///
+  /// Note: It sets value with `Type::FROM_CODE` type.
+  OptionValue& operator=(const T& value) {
+    value_ = value;
+    type_ = Type::FROM_CODE;
+    return *this;
+  }
+
+  /// Move-assign operator for T.
+  ///
+  /// Note: It sets value with `Type::FROM_CODE` type.
+  OptionValue& operator=(T&& value) {
+    value_ = std::move(value);
+    type_ = Type::FROM_CODE;
+    return *this;
+  }
+
   /// Returns the value.
   const T& get() const { return value_; }
 
   /// Sets the value to @p value which is given by a command-line argument.
   void set_from_command_line(const T& value) {
-    value_ = value;
-    type_ = Type::FROM_COMMAND_LINE;
+    if (type_ != Type::FROM_CODE) {
+      value_ = value;
+      type_ = Type::FROM_COMMAND_LINE;
+    }
   }
 
   /// Sets the value to @p value which is provided from a file.
@@ -45,6 +83,7 @@ class OptionValue {
         return;
 
       case Type::FROM_COMMAND_LINE:
+      case Type::FROM_CODE:
         // No operation.
         return;
     }
