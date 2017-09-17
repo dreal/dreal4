@@ -33,13 +33,24 @@ dReal is using the following external libraries:
 How to Install
 ==============
 
-macOS (tested on 10.12.6):
+macOS 10.12.6:
 
 ```bash
 brew install dreal/dreal/dreal
 ```
 
-Ubuntu (tested on 16.04.3 LTS):
+Ubuntu 14.04.5 LTS:
+```bash
+sudo add-apt-repository ppa:dreal/dreal -y
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+sudo apt update
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev
+sudo apt upgrade libstdc++6
+wget https://dl.bintray.com/dreal/dreal/dreal_4.17.09_amd64.deb
+dpkg -i dreal_4.17.09_amd64.deb
+```
+
+Ubuntu 16.04.3 LTS:
 ```bash
 sudo apt install -y software-properties-common  # for add-apt-repository
 sudo add-apt-repository ppa:dreal/dreal -y
