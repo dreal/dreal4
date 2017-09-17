@@ -107,6 +107,16 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "option_value",
+    hdrs = [
+        "option_value.h",
+    ],
+    deps = [
+        "//dreal/symbolic",
+    ],
+)
+
+dreal_cc_library(
     name = "predicate_abstractor",
     srcs = [
         "predicate_abstractor.cc",
@@ -165,6 +175,14 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "option_value_test",
+    tags = ["unittest"],
+    deps = [
+        ":option_value",
+    ],
+)
+
+dreal_cc_googletest(
     name = "predicate_abstractor_test",
     tags = ["unittest"],
     deps = [
@@ -188,6 +206,7 @@ filegroup(
     name = "headers",
     srcs = [
         "box.h",
+        "option_value.h",
     ],
     visibility = ["//visibility:public"],
 )
