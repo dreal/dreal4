@@ -18,6 +18,7 @@ dreal_cc_library(
     hdrs = [
         "config.h",
     ],
+    deps = ["//dreal/util:option_value"],
 )
 
 # We combine context and theory_solver in a single target because they

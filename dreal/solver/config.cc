@@ -1,20 +1,20 @@
 #include "dreal/solver/config.h"
 
 namespace dreal {
-double Config::precision() const { return precision_; }
-void Config::set_precision(const double precision) { precision_ = precision; }
+double Config::precision() const { return precision_.get(); }
+OptionValue<double>& Config::mutable_precision() { return precision_; }
 
-bool Config::produce_models() const { return produce_models_; }
-void Config::set_produce_models(const bool produce_models) {
-  produce_models_ = produce_models;
+bool Config::produce_models() const { return produce_models_.get(); }
+OptionValue<bool>& Config::mutable_produce_models() { return produce_models_; }
+
+bool Config::use_polytope() const { return use_polytope_.get(); }
+OptionValue<bool>& Config::mutable_use_polytope() { return use_polytope_; }
+
+bool Config::use_polytope_in_forall() const {
+  return use_polytope_in_forall_.get();
 }
-
-bool Config::use_polytope() const { return use_polytope_; }
-void Config::set_use_polytope(const bool value) { use_polytope_ = value; }
-
-bool Config::use_polytope_in_forall() const { return use_polytope_in_forall_; }
-void Config::set_use_polytope_in_forall(const bool value) {
-  use_polytope_in_forall_ = value;
+OptionValue<bool>& Config::mutable_use_polytope_in_forall() {
+  return use_polytope_in_forall_;
 }
 
 }  // namespace dreal

@@ -47,7 +47,7 @@ class Context::Impl {
   void SetOption(const std::string& key, const std::string& val);
   const Variable& lookup_variable(const std::string& name);
   const Config& config() const { return config_; }
-  Config& get_mutable_config() { return config_; }
+  Config& mutable_config() { return config_; }
 
  private:
   Box& box() { return boxes_.last(); }
@@ -217,7 +217,7 @@ void Context::Impl::SetInfo(const string& key, const string& val) {
   DREAL_LOG_DEBUG("Context::SetInfo({} ↦ {})", key, val);
   info_[key] = val;
   if (key == ":precision") {
-    config_.set_precision(stod(val));
+    config_.mutable_precision().set_from_file(stod(val));
   }
 }
 
@@ -237,18 +237,18 @@ void Context::Impl::SetOption(const string& key, const string& val) {
   option_[key] = val;
   if (key == ":polytope") {
     if (val == "true") {
-      config_.set_use_polytope(true);
+      config_.mutable_use_polytope().set_from_file(true);
     } else if (val == "false") {
-      config_.set_use_polytope(false);
+      config_.mutable_use_polytope().set_from_file(false);
     } else {
       throw runtime_error("Fail to interpret the option: " + key + " = " + val);
     }
   }
   if (key == ":forall-polytope") {
     if (val == "true") {
-      config_.set_use_polytope_in_forall(true);
+      config_.mutable_use_polytope_in_forall().set_from_file(true);
     } else if (val == "false") {
-      config_.set_use_polytope_in_forall(false);
+      config_.mutable_use_polytope_in_forall().set_from_file(false);
     } else {
       throw runtime_error("Fail to interpret the option: " + key + " = " + val);
     }
@@ -328,7 +328,7 @@ const Variable& Context::lookup_variable(const string& name) {
 }
 
 const Config& Context::config() const { return impl_->config(); }
-Config& Context::get_mutable_config() { return impl_->get_mutable_config(); }
+Config& Context::mutable_config() { return impl_->mutable_config(); }
 
 string Context::version() { return DREAL_VERSION_STRING; }
 

@@ -61,24 +61,28 @@ void MainProgram::AddOptions() {
       "dReal v" + Context::version() + " : delta-complete SMT solver";
   opt_.syntax = "dreal [OPTIONS] <.smt2 file>";
 
+  // NOTE: Make sure to match the default values specified here with the ones
+  // specified in dreal/solver/config.h.
   opt_.add("" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
            "Display usage instructions.", "-h", "-help", "--help", "--usage");
 
+  const double d[1] = {0.0};
+  ez::ezOptionValidator* const precision_option_validator =
+      new ez::ezOptionValidator(ez::ezOptionValidator::D,
+                                ez::ezOptionValidator::GT, d, 1);
+
   opt_.add("0.001" /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
-           "Set precision (default = 0.001)\n"
-           "this overrides the value specified in input files",
-           "--precision");
+           "Precision (default = 0.001)\n", "--precision",
+           precision_option_validator);
 
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
-           "Produce models if delta-sat\n"
-           "this overrides the value specified in input files",
-           "--produce-models", "--model");
+           "Produce models if delta-sat\n", "--produce-models", "--model");
 
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
@@ -180,25 +184,31 @@ void MainProgram::ExtractOptions() {
   DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --debug-parsing = {}",
                   driver_.trace_parsing_);
   // --precision
-  opt_.get("--precision")->getDouble(precision);
-  driver_.context_.get_mutable_config().set_precision(precision);
-  DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --precision = {}",
-                  driver_.context_.config().precision());
+  if (opt_.isSet("--precision")) {
+    opt_.get("--precision")->getDouble(precision);
+    driver_.context_.mutable_config().mutable_precision().set_from_command_line(
+        precision);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --precision = {}",
+                    driver_.context_.config().precision());
+  }
   // --produce-model
-  driver_.context_.get_mutable_config().set_produce_models(
-      opt_.isSet("--produce-models"));
+  driver_.context_.mutable_config()
+      .mutable_produce_models()
+      .set_from_command_line(opt_.isSet("--produce-models"));
   DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --produce-models = {}",
                   driver_.context_.config().produce_models());
 
   // --polytope
-  driver_.context_.get_mutable_config().set_use_polytope(
-      opt_.isSet("--polytope"));
+  driver_.context_.mutable_config()
+      .mutable_use_polytope()
+      .set_from_command_line(opt_.isSet("--polytope"));
   DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --polytope = {}",
                   driver_.context_.config().use_polytope());
 
   // --forall-polytope
-  driver_.context_.get_mutable_config().set_use_polytope_in_forall(
-      opt_.isSet("--forall-polytope"));
+  driver_.context_.mutable_config()
+      .mutable_use_polytope_in_forall()
+      .set_from_command_line(opt_.isSet("--forall-polytope"));
   DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --forall-polytope = {}",
                   driver_.context_.config().use_polytope_in_forall());
 }

@@ -177,7 +177,7 @@ EvaluatorForall::EvaluatorForall(const Formula& f,
   // than δ so that a branching will happen. If no counterexample is
   // found, it should return 0.0 so that no branching will take place
   // because of this constraint.
-  context_.get_mutable_config().set_precision(delta);
+  context_.mutable_config().mutable_precision() = delta;
   for (const Variable& exist_var : variables) {
     context_.DeclareVariable(exist_var);
   }

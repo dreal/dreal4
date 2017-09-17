@@ -71,7 +71,7 @@ class Context {
 
   const Config& config() const;
 
-  Config& get_mutable_config();
+  Config& mutable_config();
 
   static std::string version();
 

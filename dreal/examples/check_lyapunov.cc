@@ -20,7 +20,7 @@ using std::vector;
 // Checks the delta-satisfiability of formula `f`.
 optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
   Context context;
-  context.get_mutable_config().set_precision(delta);
+  context.mutable_config().mutable_precision() = delta;
   for (const Variable& v : f.GetFreeVariables()) {
     context.DeclareVariable(v);
   }

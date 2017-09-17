@@ -59,7 +59,7 @@ class ContractorForall : public ContractorCell {
 
     // Setup context:
     // 1. Add exist/forall variables.
-    context_for_counterexample_.get_mutable_config().set_precision(delta2);
+    context_for_counterexample_.mutable_config().mutable_precision() = delta2;
     for (const Variable& exist_var : box.variables()) {
       context_for_counterexample_.DeclareVariable(exist_var);
     }

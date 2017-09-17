@@ -20,9 +20,9 @@ namespace {
 // Checks the delta-satisfiability of formula `f`.
 optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
   Context context;
-  Config& config{context.get_mutable_config()};
-  config.set_precision(delta);
-  config.set_use_polytope_in_forall(true);
+  Config& config{context.mutable_config()};
+  config.mutable_precision() = delta;
+  config.mutable_use_polytope_in_forall() = true;
   for (const Variable& v : f.GetFreeVariables()) {
     context.DeclareVariable(v);
   }
