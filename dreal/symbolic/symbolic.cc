@@ -12,6 +12,7 @@ using std::ostream;
 using std::runtime_error;
 using std::set;
 using std::transform;
+using std::vector;
 
 Formula imply(const Formula& f1, const Formula& f2) { return !f1 || f2; }
 
@@ -210,6 +211,14 @@ Formula DeltaStrengthen(const Formula& f, const double delta) {
 Formula DeltaWeaken(const Formula& f, const double delta) {
   assert(delta > 0);
   return DeltaStrengthenVisitor{}.Strengthen(f, -delta);
+}
+
+Formula make_conjunction(const vector<Formula>& formulas) {
+  return make_conjunction(set<Formula>(formulas.begin(), formulas.end()));
+}
+
+Formula make_disjunction(const vector<Formula>& formulas) {
+  return make_disjunction(set<Formula>(formulas.begin(), formulas.end()));
 }
 
 RelationalOperator operator!(const RelationalOperator op) {

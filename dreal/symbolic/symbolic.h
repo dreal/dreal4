@@ -18,6 +18,7 @@
 #include <functional>
 #include <ostream>
 #include <set>
+#include <vector>
 
 #include "symbolic/symbolic_environment.h"
 #include "symbolic/symbolic_expression.h"
@@ -62,6 +63,18 @@ Formula DeltaStrengthen(const Formula& f, double delta);
 /// Weaken the input formula @p f by @p delta.
 /// @pre delta > 0
 Formula DeltaWeaken(const Formula& f, double delta);
+
+/// Make conjunction of @p formulas.
+///
+/// @note This is different from the one in Drake's symbolic
+/// library. It takes `std::vector<Formula>` while Drake's version
+/// takes `std::set<Formula>`.
+Formula make_conjunction(const std::vector<Formula>& formulas);
+
+/// @note This is different from the one in Drake's symbolic
+/// library. It takes `std::vector<Formula>` while Drake's version
+/// takes `std::set<Formula>`.
+Formula make_disjunction(const std::vector<Formula>& formulas);
 
 /// Represents relational operators.
 enum class RelationalOperator {
