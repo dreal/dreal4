@@ -534,10 +534,11 @@ toolchain {
   target_system_name: "local"
   toolchain_identifier: "local_darwin"
 
-  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
-  cxx_builtin_include_directory: "/Library/Developer/CommandLineTools"
-  cxx_builtin_include_directory: "/usr/local/include"
   cxx_builtin_include_directory: "/usr/include"
+  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
+  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+  cxx_builtin_include_directory: "/opt/local/include"
+  cxx_builtin_include_directory: "/Library/Developer/CommandLineTools"
   cxx_builtin_include_directory: "/System/Library/Frameworks"
   cxx_builtin_include_directory: "/Library/Frameworks"
 
