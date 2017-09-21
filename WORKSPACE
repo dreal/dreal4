@@ -1,4 +1,3 @@
-
 # -*- python -*-
 
 # This file marks a workspace root for the Bazel build system. see
@@ -33,8 +32,8 @@ load("//tools:github.bzl", "github_archive")
 github_archive(
     name = "io_kythe_dreal", # Apache-2.0
     repository = "dreal-deps/kythe",
-    commit = "333ddf386fda81fb3f9962e54eb30a67b14315db",
-    sha256 = "9e8db92c3eb605be5a74daf6f0621298a487b6b2e4f279e68ddf8b513826491b",
+    commit = "beea4d79aac45e6a50774052254f8b74c4fa1b9c",
+    sha256 = "81b93528a95f7ee60b2711cf46de8387018ba9d87ea568e8d347d337f3a1eb7b",
 )
 
 github_archive(
