@@ -3,8 +3,9 @@
 read VERSION < $1
 
 cat <<EOF
-libdir=/usr/local/Cellar/dreal/${VERSION}/lib
-includedir=/usr/local/Cellar/dreal/${VERSION}/include
+cellar=`brew --cellar`
+libdir=\${cellar}/dreal/${VERSION}/lib
+includedir=\${cellar}/dreal/${VERSION}/include
 
 Name: dReal
 Description: SMT Solver for Nonlinear Theories
