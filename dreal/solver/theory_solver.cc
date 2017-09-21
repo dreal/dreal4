@@ -16,7 +16,7 @@ namespace dreal {
 using std::move;
 using std::numeric_limits;
 using std::runtime_error;
-using std::set;
+using std::unordered_set;
 using std::unordered_set;
 using std::vector;
 
@@ -135,9 +135,10 @@ Box TheorySolver::GetModel() const {
   return contractor_status_.box();
 }
 
-const set<Formula>& TheorySolver::GetUsedConstraints() const {
+const unordered_set<Formula, hash_value<Formula>> TheorySolver::GetExplanation()
+    const {
   assert(status_ == Status::UNSAT);
-  return contractor_status_.used_constraints();
+  return contractor_status_.explanation();
 }
 
 }  // namespace dreal

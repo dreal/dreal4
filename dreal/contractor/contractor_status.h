@@ -1,6 +1,5 @@
 #pragma once
 
-#include <set>
 #include <unordered_set>
 #include <vector>
 
@@ -29,10 +28,8 @@ class ContractorStatus {
   /// Returns the output.
   ibex::BitSet& mutable_output();
 
-  /// Returns the used constraints.
-  const std::set<Formula>& used_constraints() const;
-  /// Returns the used constraints.
-  std::set<Formula>& mutable_used_constraints();
+  /// Returns the explanation, a list of formula responsible for the unsat.
+  const std::unordered_set<Formula, hash_value<Formula>> explanation() const;
 
   /// Add a formula @p f into the used constraints.
   void AddUsedConstraint(Formula f);
@@ -60,7 +57,13 @@ class ContractorStatus {
   // changed after running the contractor.
   ibex::BitSet output_;
 
-  std::set<Formula> used_constraints_;
+  // A set of constraints used during pruning processes. This is an
+  // over-approximation of an explanation.
+  std::unordered_set<Formula, hash_value<Formula>> used_constraints_;
+
+  // A list of formula detected unsat result. That is, the constraint(s)
+  // responsible for an empty box. This is used to generate an explanation.
+  std::vector<Formula> unsat_witness_;
 };
 
 /// Returns a join of @p contractor_status1 and @p contractor_status2.

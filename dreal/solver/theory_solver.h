@@ -39,7 +39,7 @@ class TheorySolver {
 
   /// Gets a list of used constraints.
   /// @pre status_ is UNSAT.
-  const std::set<Formula>& GetUsedConstraints() const;
+  const std::unordered_set<Formula, hash_value<Formula>> GetExplanation() const;
 
  private:
   Contractor BuildContractor(const std::vector<Formula>& assertions);

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-#include <set>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 #include <experimental/optional>
 
@@ -41,7 +41,8 @@ class SatSolver {
 
   /// Given a @p formulas = {f₁, ..., fₙ}, adds a clause (¬f₁ ∨ ... ∨ ¬ fₙ) to
   /// the solver.
-  void AddLearnedClause(const std::set<Formula>& formulas);
+  void AddLearnedClause(
+      const std::unordered_set<Formula, hash_value<Formula>>& formulas);
 
   /// Adds a vector of formulas @p formulas to the solver.
   ///

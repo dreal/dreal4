@@ -9,7 +9,7 @@ namespace dreal {
 using std::experimental::make_optional;
 using std::experimental::optional;
 using std::runtime_error;
-using std::set;
+using std::unordered_set;
 using std::vector;
 
 SatSolver::SatSolver(Cnfizer* const cnfizer,
@@ -35,7 +35,8 @@ void SatSolver::AddFormula(const Formula& f) {
   AddClauses(cnfizer_.Convert(predicate_abstractor_.Convert(f)));
 }
 
-void SatSolver::AddLearnedClause(const set<Formula>& formulas) {
+void SatSolver::AddLearnedClause(
+    const unordered_set<Formula, hash_value<Formula>>& formulas) {
   for (const Formula& f : formulas) {
     AddLiteral(!predicate_abstractor_.Convert(f));
   }

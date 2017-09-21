@@ -6,6 +6,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <unordered_set>
 #include <utility>
 
 #include "dreal/solver/assertion_filter.h"
@@ -24,6 +25,7 @@ using std::runtime_error;
 using std::set;
 using std::stod;
 using std::string;
+using std::unordered_set;
 using std::vector;
 
 namespace dreal {
@@ -85,9 +87,9 @@ void Context::Impl::Assert(const Formula& f) {
   const vector<Formula> clauses{
       cnfizer_.Convert(predicate_abstractor_.Convert(f))};
   for (const Formula& f_i : clauses) {
+    DREAL_LOG_DEBUG("Context::Assert: {} is added.", f_i);
     stack_.push_back(f_i);
   }
-  DREAL_LOG_DEBUG("Context::Assert: {} is added.", f);
 }
 
 optional<Box> Context::Impl::CheckSat() {
@@ -121,13 +123,16 @@ optional<Box> Context::Impl::CheckSat() {
       } else {
         // UNSAT from TheorySolver.
         DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = UNSAT");
-        const set<Formula> used_constraints{theory_solver.GetUsedConstraints()};
-        if (used_constraints.empty()) {
+        const unordered_set<Formula, hash_value<Formula>> explanation{
+            theory_solver.GetExplanation()};
+        if (explanation.empty()) {
           return {};
         } else {
-          DREAL_LOG_DEBUG("Context::CheckSat() - used_constraints.size() = {}",
-                          used_constraints.size());
-          sat_solver_.AddLearnedClause(used_constraints);
+          DREAL_LOG_DEBUG(
+              "Context::CheckSat() - size of explanation = {} - stack "
+              "size = {}",
+              explanation.size(), stack_.get_vector().size());
+          sat_solver_.AddLearnedClause(explanation);
         }
       }
     } else {
