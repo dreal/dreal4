@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+set -e
+
 read VERSION < $1
 
-if [ -z ${HOMEBREW_CELLAR+x} ]; then
+if type "brew" > /dev/null; then
+    # brew is available, so use it.
     echo "cellar=`brew --cellar`"
 else
-    # We're inside of homebrew installation where this variable is set.
-    echo "cellar=${HOMEBREW_CELLAR}"
+    # brew is not available. We need to replace this later.
+    echo "cellar=HOMEBREW_CELLAR"
 fi
 
 cat <<EOF
