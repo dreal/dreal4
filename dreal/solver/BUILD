@@ -95,7 +95,7 @@ dreal_cc_library(
 # -----
 dreal_cc_googletest(
     name = "evaluator_test",
-    tags = ["unittest"],
+    tags = ["unit"],
     deps = [
         ":solver",
     ],
@@ -103,7 +103,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "icp_test",
-    tags = ["unittest"],
+    tags = ["unit"],
     deps = [
         ":solver",
     ],
@@ -111,7 +111,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "sat_solver_test",
-    tags = ["unittest"],
+    tags = ["unit"],
     deps = [
         ":sat_solver",
         "//dreal/util:logging",
@@ -120,7 +120,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "theory_solver_test",
-    tags = ["unittest"],
+    tags = ["unit"],
     deps = [
         ":solver",
         "//dreal/util:logging",

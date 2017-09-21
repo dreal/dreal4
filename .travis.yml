@@ -15,73 +15,67 @@ matrix:
     - compiler: gcc
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-7']
       env:
         - COMPILER="--compiler=gcc-7" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-6
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-6']
       env:
         - COMPILER="--compiler=gcc-6" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-5
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-5']
       env:
         - COMPILER="--compiler=gcc-5" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.9
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9']
       env:
         - COMPILER="--compiler=gcc-4.9" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            g++-4.9
-            clang++-3.9
-      env:
-        - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
-    - compiler: clang
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-4.0
-            - ubuntu-toolchain-r-test
-          packages:
-            g++-4.9
-            clang++-4.0
+          sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang++-5.0']
       env:
         - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            g++-4.9
-            clang++-3.9
+          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang++-4.0']
+      env:
+        - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang++-3.9']
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
-        - COV="ON" COV_OPTION="--config=kcov --test_tag_filters=unittest"
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang++-3.9']
+      env:
+        - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
+        - COV="ON" COV_OPTION="--config=kcov --test_tag_filters=unit"
     - os: osx
       osx_image: xcode8.3
+      compiler: clang
+      env:
+        - COMPILER="" BUILD_TYPE="-c opt"
+    - os: osx
+      osx_image: xcode9
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt"
@@ -90,12 +84,12 @@ install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
       sudo add-apt-repository ppa:dreal/dreal -y;
       sudo apt update;
-      sudo apt install autoconf automake bison coinor-libclp-dev flex libtool pkg-config libibex-dev;
+      sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev;
       wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel_0.5.4-linux-x86_64.deb;
       sudo dpkg -i bazel_0.5.4-linux-x86_64.deb;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-      brew install autoconf bazel libtool pkg-config dreal-deps/ibex/ibex || true;
+      brew install bazel pkg-config dreal-deps/ibex/ibex || true;
     fi
   - if [ "${COV}" == "ON" ]; then
       sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
