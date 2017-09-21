@@ -46,7 +46,7 @@ matrix:
           sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
           packages: ['g++-4.9', 'clang-5.0']
       env:
-        - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
+        - COMPILER="--compiler=clang-5.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
