@@ -44,28 +44,28 @@ matrix:
       addons:
         apt:
           sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang++-5.0']
+          packages: ['g++-4.9', 'clang-5.0']
       env:
         - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang++-4.0']
+          packages: ['g++-4.9', 'clang-4.0']
       env:
         - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang++-3.9']
+          packages: ['g++-4.9', 'clang-3.9']
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang++-3.9']
+          packages: ['g++-4.9', 'clang-3.9']
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov --test_tag_filters=unit"
