@@ -11,7 +11,7 @@
 
 namespace dreal {
 
-using drake::symbolic::test::FormulaEqual;
-using drake::symbolic::test::VarEqual;
+// NOLINTNEXTLINE(build/namespaces)
+using namespace drake::symbolic::test;
 
 }  // namespace dreal

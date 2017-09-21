@@ -31,14 +31,8 @@ namespace dreal {
 
 using drake::hash_value;
 
-using drake::symbolic::Expression;
-using drake::symbolic::ExpressionSubstitution;
-using drake::symbolic::Formula;
-using drake::symbolic::FormulaKind;
-using drake::symbolic::Variable;
-using drake::symbolic::Variables;
-using drake::symbolic::VisitExpression;
-using drake::symbolic::VisitFormula;
+// NOLINTNEXTLINE(build/namespaces)
+using namespace drake::symbolic;
 
 /// Returns a formula @p f1 ⇒ @p f2.
 Formula imply(const Formula& f1, const Formula& f2);
