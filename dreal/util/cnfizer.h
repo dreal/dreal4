@@ -14,11 +14,6 @@ class Cnfizer {
   /// Convert @p f into an equi-satisfiable formula @c f' in CNF.
   std::vector<Formula> Convert(const Formula& f);
 
-  /// Convert @p formulas, into an equi-satisfiable formula @c f' in
-  /// CNF. It treats the vector of formulas as a conjunction of
-  /// formulas.
-  std::vector<Formula> Convert(const std::vector<Formula>& formulas);
-
  private:
   Formula Visit(const Formula& f);
   Formula VisitFalse(const Formula& f);

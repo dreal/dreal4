@@ -57,21 +57,6 @@ vector<Formula> Cnfizer::Convert(const Formula& f) {
   return ret;
 }
 
-vector<Formula> Cnfizer::Convert(const vector<Formula>& formulas) {
-  map_.clear();
-  static vector<Formula> ret;
-  ret.clear();
-  for (const Formula& f : formulas) {
-    // Visit each formula `f` in `formulas`.
-    ret.push_back(Visit(f));
-  }
-  // Cnfize the relations from the above visits.
-  for (auto const& p : map_) {
-    Cnfize(p.first, p.second, &ret);
-  }
-  return ret;
-}
-
 Formula Cnfizer::Visit(const Formula& f) {
   // TODO(soonho): use cache.
   return VisitFormula<Formula>(this, f);
