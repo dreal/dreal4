@@ -2,8 +2,14 @@
 
 read VERSION < $1
 
+if [ -z ${HOMEBREW_CELLAR+x} ]; then
+    echo "cellar=`brew --cellar`"
+else
+    # We're inside of homebrew installation where this variable is set.
+    echo "cellar=${HOMEBREW_CELLAR}"
+fi
+
 cat <<EOF
-cellar=`brew --cellar`
 libdir=\${cellar}/dreal/${VERSION}/lib
 includedir=\${cellar}/dreal/${VERSION}/include
 
