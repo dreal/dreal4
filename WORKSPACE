@@ -1,3 +1,5 @@
+go_proto_repositories()
+
 # -*- python -*-
 
 # This file marks a workspace root for the Bazel build system. see
@@ -6,13 +8,13 @@
 workspace(name = "dreal")
 
 # Buildifier setup -- BEGIN
+# 0.5.5
 http_archive(
-    name = "io_bazel_rules_go",  # Apache 2.0
-    sha256 = "84dc11091f5209bf24f1ee710ff0c645f86016bfdbbb11fb831580e95f1975c6",
-    strip_prefix = "rules_go-2e319588571f20fdaaf83058b690abd32f596e89",
+    name = "io_bazel_rules_go", # Apache-2.0
+    strip_prefix = "rules_go-e1c4b58c05e4a6ab67392daf28f3d57e4902f581",
     urls = [
-        "http://mirror.bazel.build/github.com/bazelbuild/rules_go/archive/2e319588571f20fdaaf83058b690abd32f596e89.tar.gz",
-        "https://github.com/bazelbuild/rules_go/archive/2e319588571f20fdaaf83058b690abd32f596e89.tar.gz",
+        "http://mirror.bazel.build/github.com/bazelbuild/rules_go/archive/e1c4b58c05e4a6ab67392daf28f3d57e4902f581.tar.gz",
+        "https://github.com/bazelbuild/rules_go/archive/e1c4b58c05e4a6ab67392daf28f3d57e4902f581.tar.gz",
     ],
 )
 load(
@@ -21,10 +23,8 @@ load(
     "go_register_toolchains",
     "go_repository",
 )
-load("@io_bazel_rules_go//proto:go_proto_library.bzl", "go_proto_repositories")
 go_rules_dependencies()
 go_register_toolchains()
-go_proto_repositories()
 # Buildifier setup -- END
 
 load("//tools:github.bzl", "github_archive")
