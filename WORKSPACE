@@ -1,5 +1,3 @@
-go_proto_repositories()
-
 # -*- python -*-
 
 # This file marks a workspace root for the Bazel build system. see
