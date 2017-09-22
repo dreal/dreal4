@@ -25,7 +25,7 @@ namespace dreal {
 ///
 /// Approach: Find a counterexample (a₁, ..., aₙ, b₁, ..., bₘ) such
 /// that ¬φ(a₁, ..., aₙ, b₁, ..., bₘ) holds while (a₁, ..., aₙ) ∈ B.
-/// We do this by computing Solve((¬φ)⁻ᵟ¹, δ₂) where δ₁ > δ₂.
+/// We do this by computing Solve(strengthen(¬φ, ε), δ) where ε > δ.
 ///
 ///  - Case 1: No CE found.
 ///            This means that any point in B satisfies the quantified
@@ -39,50 +39,48 @@ namespace dreal {
 template <typename ContextType>
 class ContractorForall : public ContractorCell {
  public:
-  /// Constructs Forall contractor using @p f and @p box. @p delta1 is
-  /// used to strengthen ¬φ and @p delta2 is used to solve (¬φ)⁻ᵟ¹.
+  /// Constructs Forall contractor using @p f and @p box. @p epsilon is
+  /// used to strengthen ¬φ and @p delta is used to solve (¬φ)⁻ᵟ¹.
   ///
-  /// @pre delta1 > delta2 > 0.0
-  ContractorForall(Variables quantified_variables, Formula f, const Box& box,
-                   double delta1, double delta2, bool use_polytope)
+  /// @pre epsilon > delta > 0.0
+  ContractorForall(Formula f, const Box& box, double epsilon, double delta,
+                   bool use_polytope)
       : ContractorCell{Contractor::Kind::FORALL,
                        ibex::BitSet::empty(box.size())},
-        quantified_variables_{std::move(quantified_variables)},
         f_{std::move(f)},
-        strengthend_neg_f_{
-            Nnfizer{}.Convert(DeltaStrengthen(!f_, delta1), use_polytope)},
+        strengthend_negated_nested_f_{Nnfizer{}.Convert(
+            DeltaStrengthen(!get_quantified_formula(f_), epsilon),
+            use_polytope)},
         contractor_{GenericContractorGenerator{}.Generate(
-            f_, ExtendBox(box, quantified_variables_), use_polytope)} {
-    assert(delta1 > 0.0);
-    assert(delta2 > 0.0);
-    assert(delta1 > delta2);
+            get_quantified_formula(f_),
+            ExtendBox(box, get_quantified_variables(f_)), use_polytope)} {
+    assert(epsilon > 0.0);
+    assert(delta > 0.0);
+    assert(epsilon > delta);
 
     // Setup context:
     // 1. Add exist/forall variables.
-    context_for_counterexample_.mutable_config().mutable_precision() = delta2;
+    context_for_counterexample_.mutable_config().mutable_precision() = delta;
     for (const Variable& exist_var : box.variables()) {
       context_for_counterexample_.DeclareVariable(exist_var);
     }
-    for (const Variable& forall_var : quantified_variables_) {
+    for (const Variable& forall_var : get_quantified_variables(f_)) {
       context_for_counterexample_.DeclareVariable(forall_var);
     }
-    // 2. Assert (¬φ)⁻ᵟ¹.
-    if (is_conjunction(strengthend_neg_f_)) {
+    // 2. Assert strengthen(¬φ, ε).
+    if (is_conjunction(strengthend_negated_nested_f_)) {
       // Optimizations
-      for (const Formula& f : get_operands(strengthend_neg_f_)) {
+      for (const Formula& f : get_operands(strengthend_negated_nested_f_)) {
         context_for_counterexample_.Assert(f);
       }
     } else {
-      context_for_counterexample_.Assert(strengthend_neg_f_);
+      context_for_counterexample_.Assert(strengthend_negated_nested_f_);
     }
 
     // Build input.
     ibex::BitSet& input{mutable_input()};
     for (const Variable& v : f_.GetFreeVariables()) {
-      // Add v if v ∈ (vars(f) - quantified_variables).
-      if (quantified_variables_.include(v)) {
-        input.add(box.index(v));
-      }
+      input.add(box.index(v));
     }
   }
 
@@ -113,7 +111,7 @@ class ContractorForall : public ContractorCell {
         // 1.1.2. Set up universal_var parts from
         // counterexample. Narrow down the forall variables part by
         // taking the mid-points of counterexample.
-        for (const Variable& forall_var : quantified_variables_) {
+        for (const Variable& forall_var : get_quantified_variables(f_)) {
           contractor_status.mutable_box()[forall_var] =
               (*counterexample)[forall_var].mid();
         }
@@ -145,12 +143,10 @@ class ContractorForall : public ContractorCell {
         break;
       }
     }
-    cs->AddUsedConstraint(forall(quantified_variables_, f_));
+    cs->AddUsedConstraint(f_);
   }
 
-  std::ostream& display(std::ostream& os) const override {
-    return os << "Forall(" << quantified_variables_ << ", " << f_ << ")";
-  }
+  std::ostream& display(std::ostream& os) const override { return os << f_; }
 
  private:
   static Box ExtendBox(Box box, const Variables& vars) {
@@ -160,9 +156,8 @@ class ContractorForall : public ContractorCell {
     return box;
   }
 
-  const Variables quantified_variables_;
-  const Formula f_;                  // quantified formula φ.
-  const Formula strengthend_neg_f_;  // (¬φ)⁻ᵟ¹.
+  const Formula f_;                             // ∀X.φ
+  const Formula strengthend_negated_nested_f_;  // (¬φ)⁻ᵟ¹
   // To compute `B' = Contract(φ(x₁, ..., xₙ, b₁, ..., bₘ), B)`.
   Contractor contractor_;
   // Context to do `Solve(¬φ', δ₂)`.
@@ -170,12 +165,10 @@ class ContractorForall : public ContractorCell {
 };
 
 template <typename ContextType>
-Contractor make_contractor_forall(Variables quantified_variables, Formula f,
-                                  const Box& box, double delta1, double delta2,
-                                  bool use_polytope) {
+Contractor make_contractor_forall(Formula f, const Box& box, double epsilon,
+                                  double delta, bool use_polytope) {
   return Contractor{std::make_shared<ContractorForall<ContextType>>(
-      std::move(quantified_variables), std::move(f), box, delta1, delta2,
-      use_polytope)};
+      std::move(f), box, epsilon, delta, use_polytope)};
 }
 
 /// Converts @p contractor to ContractorForall.

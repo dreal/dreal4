@@ -77,10 +77,11 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
         ctcs.emplace_back(it->second);
       }
     } else {
+      // We should have `inner_delta < epsilon < delta`.
+      const double epsilon = config_.precision() * 0.99;
+      const double inner_delta = epsilon * 0.99;
       const Contractor ctc{make_contractor_forall<Context>(
-          get_quantified_variables(f), get_quantified_formula(f), box_,
-          config_.precision(), config_.precision() / 2,
-          config_.use_polytope_in_forall())};
+          f, box_, epsilon, inner_delta, config_.use_polytope_in_forall())};
       ctcs.emplace_back(make_contractor_fixpoint(termination_condition, {ctc}));
     }
   }

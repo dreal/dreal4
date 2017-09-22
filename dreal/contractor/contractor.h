@@ -86,8 +86,7 @@ class Contractor {
       TerminationCondition term_cond,
       const std::vector<Contractor>& contractors);
   template <typename ContextType>
-  friend Contractor make_contractor_forall(Variables quantified_variables,
-                                           Formula f, const Box& box,
+  friend Contractor make_contractor_forall(Formula f, const Box& box,
                                            double delta1, double delta2,
                                            bool use_polytope);
   friend Contractor make_contractor_join(std::vector<Contractor> vec);
@@ -163,9 +162,8 @@ Contractor make_contractor_join(std::vector<Contractor> vec);
 /// @note the implementation is at `dreal/contractor/contractor_forall.h` file.
 /// @see ContractorForall.
 template <typename ContextType>
-Contractor make_contractor_forall(Variables quantified_variables, Formula f,
-                                  const Box& box, double delta1, double delta2,
-                                  bool use_polytope);
+Contractor make_contractor_forall(Formula f, const Box& box, double delta1,
+                                  double delta2, bool use_polytope);
 
 std::ostream& operator<<(std::ostream& os, const Contractor& ctc);
 
