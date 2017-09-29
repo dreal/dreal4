@@ -390,7 +390,7 @@ toolchain {
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/4.9"
   cxx_builtin_include_directory: "/usr/include/c++/4.9/backward"
   cxx_builtin_include_directory: "/usr/local/include"
-  cxx_builtin_include_directory: "/usr/lib/llvm-5.0/lib/clang/5.0.0/include"
+  cxx_builtin_include_directory: "/usr/lib/llvm-5.0/lib/clang/5.0.1/include"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu"
   cxx_builtin_include_directory: "/usr/include"
   cxx_flag: "-std=c++14"
