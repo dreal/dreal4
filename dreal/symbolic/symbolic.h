@@ -18,6 +18,7 @@
 #include <functional>
 #include <ostream>
 #include <set>
+#include <string>
 #include <vector>
 
 #include "symbolic/symbolic_environment.h"
@@ -75,6 +76,16 @@ Formula make_conjunction(const std::vector<Formula>& formulas);
 /// library. It takes `std::vector<Formula>` while Drake's version
 /// takes `std::set<Formula>`.
 Formula make_disjunction(const std::vector<Formula>& formulas);
+
+/// Creates a vector of variables of @p type whose size is @p
+/// size. The variables are numbered with @p prefix. For example,
+/// `CreateVector("x", 5)` returns `[x0, x1, x2, x3, x4]`.
+///
+/// @pre @p prefix must not be an empty string.
+/// @pre @p size >= 1.
+std::vector<Variable> CreateVector(
+    const std::string& prefix, int size,
+    Variable::Type type = Variable::Type::CONTINUOUS);
 
 /// Represents relational operators.
 enum class RelationalOperator {

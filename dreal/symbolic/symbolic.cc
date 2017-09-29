@@ -11,6 +11,8 @@ using std::inserter;
 using std::ostream;
 using std::runtime_error;
 using std::set;
+using std::string;
+using std::to_string;
 using std::transform;
 using std::vector;
 
@@ -219,6 +221,17 @@ Formula make_conjunction(const vector<Formula>& formulas) {
 
 Formula make_disjunction(const vector<Formula>& formulas) {
   return make_disjunction(set<Formula>(formulas.begin(), formulas.end()));
+}
+
+vector<Variable> CreateVector(const string& prefix, const int size,
+                              const Variable::Type type) {
+  assert(prefix.length() > 0);
+  assert(size >= 1);
+  vector<Variable> v;
+  for (int i = 0; i < size; ++i) {
+    v.emplace_back(prefix + to_string(i), type);
+  }
+  return v;
 }
 
 RelationalOperator operator!(const RelationalOperator op) {
