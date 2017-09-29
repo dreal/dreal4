@@ -9,6 +9,8 @@
 
 using std::cout;
 using std::endl;
+using std::to_string;
+using std::vector;
 
 namespace dreal {
 namespace {
@@ -70,6 +72,22 @@ TEST_F(FormulaHelper, Iff) {
       FormulaEqual,
       f.Substitute(b1_, Formula::False()).Substitute(b2_, Formula::False()),
       Formula::True());
+}
+
+TEST_F(FormulaHelper, CreateVectorContinuous) {
+  const vector<Variable> v{CreateVector("x", 5)};
+  for (int i = 0; i < 5; ++i) {
+    EXPECT_EQ(v[i].get_name(), "x" + to_string(i));
+    EXPECT_EQ(v[i].get_type(), Variable::Type::CONTINUOUS);
+  }
+}
+
+TEST_F(FormulaHelper, CreateVectorInteger) {
+  const vector<Variable> v{CreateVector("y", 10, Variable::Type::INTEGER)};
+  for (int i = 0; i < 10; ++i) {
+    EXPECT_EQ(v[i].get_name(), "y" + to_string(i));
+    EXPECT_EQ(v[i].get_type(), Variable::Type::INTEGER);
+  }
 }
 
 GTEST_TEST(Symbolic, is_nothrow_move_constructible) {
