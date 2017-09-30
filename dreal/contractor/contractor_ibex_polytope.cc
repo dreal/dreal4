@@ -1,13 +1,7 @@
 #include "dreal/contractor/contractor_ibex_polytope.h"
 
-#include <algorithm>
-#include <cmath>
-#include <limits>
 #include <memory>
-#include <numeric>
 #include <sstream>
-#include <stdexcept>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -18,7 +12,6 @@ using std::make_unique;
 using std::move;
 using std::ostream;
 using std::ostringstream;
-using std::runtime_error;
 using std::unique_ptr;
 using std::vector;
 

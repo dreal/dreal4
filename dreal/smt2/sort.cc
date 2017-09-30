@@ -1,13 +1,13 @@
 #include "dreal/smt2/sort.h"
 
-#include <ostream>
-#include <stdexcept>
+#include "dreal/util/exception.h"
 
 namespace dreal {
 
-using std::runtime_error;
+using std::ostream;
+using std::string;
 
-Sort ParseSort(const std::string& s) {
+Sort ParseSort(const string& s) {
   if (s == "Real") {
     return Sort::Real;
   }
@@ -17,10 +17,10 @@ Sort ParseSort(const std::string& s) {
   if (s == "Bool") {
     return Sort::Bool;
   }
-  throw runtime_error(s + " is not {Real, Int, Bool}.");
+  throw DREAL_RUNTIME_ERROR(s + " is not {Real, Int, Bool}.");
 }
 
-std::ostream& operator<<(std::ostream& os, const Sort& sort) {
+ostream& operator<<(ostream& os, const Sort& sort) {
   switch (sort) {
     case Sort::Bool:
       return os << "Bool";
@@ -29,6 +29,6 @@ std::ostream& operator<<(std::ostream& os, const Sort& sort) {
     case Sort::Real:
       return os << "Real";
   }
-  throw runtime_error("Should not be reachable");
+  DREAL_UNREACHABLE();
 }
 }  // namespace dreal

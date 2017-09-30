@@ -1,17 +1,16 @@
 #include "dreal/contractor/generic_contractor_generator.h"
 
-#include <stdexcept>
 #include <utility>
 #include <vector>
 
 #include "dreal/contractor/contractor.h"
+#include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/nnfizer.h"
 
 namespace dreal {
 
 using std::move;
-using std::runtime_error;
 using std::vector;
 
 Contractor GenericContractorGenerator::Generate(const Formula& f,
@@ -28,7 +27,7 @@ Contractor GenericContractorGenerator::Visit(const Formula& f, const Box& box,
 
 Contractor GenericContractorGenerator::VisitFalse(const Formula&, const Box&,
                                                   const bool) const {
-  throw runtime_error{"GenericContractorGenerator: 'False' is detected."};
+  throw DREAL_RUNTIME_ERROR("GenericContractorGenerator: 'False' is detected.");
 }
 
 Contractor GenericContractorGenerator::VisitTrue(const Formula&, const Box&,
@@ -38,8 +37,8 @@ Contractor GenericContractorGenerator::VisitTrue(const Formula&, const Box&,
 
 Contractor GenericContractorGenerator::VisitVariable(const Formula&, const Box&,
                                                      const bool) const {
-  throw runtime_error{
-      "GenericContractorGenerator: Boolean variable is detected."};
+  throw DREAL_RUNTIME_ERROR(
+      "GenericContractorGenerator: Boolean variable is detected.");
 }
 
 Contractor GenericContractorGenerator::VisitEqualTo(
@@ -129,12 +128,13 @@ Contractor GenericContractorGenerator::VisitNegation(const Formula& f,
                                                      const Box&,
                                                      const bool) const {
   DREAL_LOG_DEBUG("GenericContractorGenerator::{}", f);
-  throw runtime_error{"GenericContractorGenerator: Negation is detected."};
+  throw DREAL_RUNTIME_ERROR(
+      "GenericContractorGenerator: Negation is detected.");
 }
 
 Contractor GenericContractorGenerator::VisitForall(const Formula&, const Box&,
                                                    const bool) const {
-  throw runtime_error{"GenericContractorGenerator: Forall is detected."};
+  throw DREAL_RUNTIME_ERROR("GenericContractorGenerator: Forall is detected.");
 }
 
 }  // namespace dreal

@@ -1,12 +1,6 @@
 #include "dreal/contractor/contractor_ibex_fwdbwd.h"
 
-#include <algorithm>
-#include <cmath>
-#include <limits>
-#include <memory>
-#include <numeric>
 #include <sstream>
-#include <stdexcept>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -14,15 +8,9 @@
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 
-using std::accumulate;
-using std::make_unique;
 using std::move;
-using std::numeric_limits;
 using std::ostream;
 using std::ostringstream;
-using std::runtime_error;
-using std::shared_ptr;
-using std::unique_ptr;
 using std::unordered_map;
 using std::vector;
 

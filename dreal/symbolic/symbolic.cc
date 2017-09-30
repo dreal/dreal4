@@ -2,14 +2,14 @@
 
 #include <algorithm>
 #include <iterator>
-#include <stdexcept>
+
+#include "dreal/util/exception.h"
 
 namespace dreal {
 
 using std::function;
 using std::inserter;
 using std::ostream;
-using std::runtime_error;
 using std::set;
 using std::string;
 using std::to_string;
@@ -49,7 +49,7 @@ bool is_atomic(const Formula& f) {
     case FormulaKind::Not:
       return is_variable(get_operand(f));
   }
-  throw runtime_error{"Should be unreachable."};
+  DREAL_UNREACHABLE();
 }
 
 bool is_clause(const Formula& f) {
@@ -69,7 +69,7 @@ bool is_clause(const Formula& f) {
                [](const Formula& formula) { return is_atomic(formula); })};
     return result;
   }
-  throw runtime_error{"Should be unreachable."};
+  DREAL_UNREACHABLE();
 }
 
 bool is_cnf(const Formula& f) {
@@ -86,7 +86,7 @@ bool is_cnf(const Formula& f) {
                [](const Formula& formula) { return is_clause(formula); })};
     return result;
   }
-  throw runtime_error{"Should be unreachable."};
+  DREAL_UNREACHABLE();
 }
 
 namespace {
@@ -192,8 +192,8 @@ class DeltaStrengthenVisitor {
     return !Visit(get_operand(f), -delta);
   }
   Formula VisitForall(const Formula&, const double) const {
-    throw runtime_error{
-        "DeltaStrengthenVisitor: forall formula is not supported."};
+    throw DREAL_RUNTIME_ERROR(
+        "DeltaStrengthenVisitor: forall formula is not supported.");
   }
 
   // Makes VisitFormula a friend of this class so that it can use private
@@ -254,7 +254,7 @@ RelationalOperator operator!(const RelationalOperator op) {
     case RelationalOperator::LEQ:
       return RelationalOperator::GT;
   }
-  throw runtime_error("Should not be reachable.");
+  DREAL_UNREACHABLE();
 }
 
 ostream& operator<<(ostream& os, const RelationalOperator op) {
@@ -277,7 +277,7 @@ ostream& operator<<(ostream& os, const RelationalOperator op) {
     case RelationalOperator::LEQ:
       return os << "≤";
   }
-  throw runtime_error("Should not be reachable.");
+  DREAL_UNREACHABLE();
 }
 
 }  // namespace dreal

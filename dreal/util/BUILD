@@ -23,6 +23,7 @@ dreal_cc_library(
         "box.h",
     ],
     deps = [
+        ":exception",
         ":logging",
         ":math",
         "//dreal/symbolic",
@@ -39,7 +40,18 @@ dreal_cc_library(
         "cnfizer.h",
     ],
     deps = [
+        ":exception",
         "//dreal/symbolic",
+    ],
+)
+
+dreal_cc_library(
+    name = "exception",
+    hdrs = [
+        "exception.h",
+    ],
+    deps = [
+        "@fmt",
     ],
 )
 
@@ -63,6 +75,7 @@ dreal_cc_library(
     ],
     deps = [
         ":box",
+        ":exception",
         ":logging",
         ":math",
         "//dreal/symbolic",
@@ -144,6 +157,7 @@ dreal_cc_library(
     hdrs = [
         "scoped_vector.h",
     ],
+    deps = [":exception"],
 )
 
 # -----

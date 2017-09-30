@@ -3,20 +3,18 @@
 #include <algorithm>
 #include <limits>
 #include <sstream>
-#include <stdexcept>
 #include <utility>
 
+#include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 
 namespace dreal {
 
-using std::make_unique;
 using std::nextafter;
 using std::numeric_limits;
 using std::ostringstream;
 using std::pair;
-using std::runtime_error;
 using std::vector;
 
 using ibex::ExprCtr;
@@ -96,7 +94,7 @@ const ExprNode* IbexConverter::VisitVariable(const Expression& e) {
       oss << v << " ";
     }
     oss << ".";
-    throw runtime_error(oss.str());
+    throw DREAL_RUNTIME_ERROR(oss.str());
   }
   return it->second;
 }
@@ -235,13 +233,13 @@ const ExprNode* IbexConverter::VisitMax(const Expression& e) {
 }
 
 const ExprNode* IbexConverter::VisitIfThenElse(const Expression&) {
-  throw runtime_error{
-      "IbexConverter: If-then-else expression is not supported yet."};
+  throw DREAL_RUNTIME_ERROR(
+      "IbexConverter: If-then-else expression is not supported yet.");
 }
 
 const ExprNode* IbexConverter::VisitUninterpretedFunction(const Expression&) {
-  throw runtime_error{
-      "IbexConverter: Uninterpreted function is not supported."};
+  throw DREAL_RUNTIME_ERROR(
+      "IbexConverter: Uninterpreted function is not supported.");
 }
 
 // Visits @p e and converts it into ibex::ExprNode.
@@ -250,7 +248,7 @@ const ExprCtr* IbexConverter::Visit(const Formula& f, const bool polarity) {
 }
 
 const ExprCtr* IbexConverter::VisitFalse(const Formula&, const bool) {
-  throw runtime_error{"IbexConverter: 'False' is detected."};
+  throw DREAL_RUNTIME_ERROR("IbexConverter: 'False' is detected.");
 }
 
 const ExprCtr* IbexConverter::VisitTrue(const Formula&, const bool) {
@@ -258,7 +256,7 @@ const ExprCtr* IbexConverter::VisitTrue(const Formula&, const bool) {
 }
 
 const ExprCtr* IbexConverter::VisitVariable(const Formula&, const bool) {
-  throw runtime_error{"IbexConverter: Boolean variable is detected."};
+  throw DREAL_RUNTIME_ERROR("IbexConverter: Boolean variable is detected.");
 }
 
 const ExprCtr* IbexConverter::VisitEqualTo(const Formula& f,
@@ -316,11 +314,11 @@ const ExprCtr* IbexConverter::VisitLessThanOrEqualTo(const Formula& f,
 }
 
 const ExprCtr* IbexConverter::VisitConjunction(const Formula&, const bool) {
-  throw runtime_error{"IbexConverter: A conjunction is detected."};
+  throw DREAL_RUNTIME_ERROR("IbexConverter: A conjunction is detected.");
 }
 
 const ExprCtr* IbexConverter::VisitDisjunction(const Formula&, const bool) {
-  throw runtime_error{"IbexConverter: A conjunction is detected."};
+  throw DREAL_RUNTIME_ERROR("IbexConverter: A conjunction is detected.");
 }
 
 const ExprCtr* IbexConverter::VisitNegation(const Formula& f,
@@ -329,7 +327,8 @@ const ExprCtr* IbexConverter::VisitNegation(const Formula& f,
 }
 
 const ExprCtr* IbexConverter::VisitForall(const Formula&, const bool) {
-  throw runtime_error{"IbexConverter: forall constraint is not supported."};
+  throw DREAL_RUNTIME_ERROR(
+      "IbexConverter: forall constraint is not supported.");
 }
 
 }  // namespace dreal

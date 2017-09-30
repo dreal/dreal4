@@ -2,7 +2,6 @@
 
 #include <limits>
 #include <memory>
-#include <stdexcept>
 #include <utility>
 
 #include "dreal/contractor/contractor_forall.h"
@@ -15,8 +14,6 @@ namespace dreal {
 
 using std::move;
 using std::numeric_limits;
-using std::runtime_error;
-using std::unordered_set;
 using std::unordered_set;
 using std::vector;
 

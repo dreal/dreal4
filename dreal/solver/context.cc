@@ -4,15 +4,13 @@
 #include <ostream>
 #include <set>
 #include <sstream>
-#include <stdexcept>
-#include <string>
 #include <unordered_set>
-#include <utility>
 
 #include "dreal/solver/assertion_filter.h"
 #include "dreal/solver/sat_solver.h"
 #include "dreal/solver/theory_solver.h"
 #include "dreal/util/cnfizer.h"
+#include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/predicate_abstractor.h"
 #include "dreal/util/scoped_vector.h"
@@ -21,7 +19,6 @@ using std::experimental::optional;
 using std::isfinite;
 using std::move;
 using std::ostringstream;
-using std::runtime_error;
 using std::set;
 using std::stod;
 using std::string;
@@ -246,7 +243,8 @@ void Context::Impl::SetOption(const string& key, const string& val) {
     } else if (val == "false") {
       config_.mutable_use_polytope().set_from_file(false);
     } else {
-      throw runtime_error("Fail to interpret the option: " + key + " = " + val);
+      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: " + key + " = " +
+                                val);
     }
   }
   if (key == ":forall-polytope") {
@@ -255,7 +253,8 @@ void Context::Impl::SetOption(const string& key, const string& val) {
     } else if (val == "false") {
       config_.mutable_use_polytope_in_forall().set_from_file(false);
     } else {
-      throw runtime_error("Fail to interpret the option: " + key + " = " + val);
+      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: " + key + " = " +
+                                val);
     }
   }
 }
@@ -263,7 +262,7 @@ void Context::Impl::SetOption(const string& key, const string& val) {
 const Variable& Context::Impl::lookup_variable(const string& name) {
   const auto it = name_to_var_map_.find(name);
   if (it == name_to_var_map_.cend()) {
-    throw runtime_error(name + " is not found in the context.");
+    throw DREAL_RUNTIME_ERROR(name + " is not found in the context.");
   }
   return it->second;
 }
@@ -294,7 +293,7 @@ void Context::Pop(int n) {
   if (n <= 0) {
     ostringstream oss;
     oss << "Context::Pop(n) called with n = " << n << " which is not positive.";
-    throw runtime_error(oss.str());
+    throw DREAL_RUNTIME_ERROR(oss.str());
   }
   while (n-- > 0) {
     impl_->Pop();
@@ -307,7 +306,7 @@ void Context::Push(int n) {
     ostringstream oss;
     oss << "Context::Push(n) called with n = " << n
         << " which is not positive.";
-    throw runtime_error(oss.str());
+    throw DREAL_RUNTIME_ERROR(oss.str());
   }
   while (n-- > 0) {
     impl_->Push();

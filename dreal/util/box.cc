@@ -5,9 +5,9 @@
 #include <functional>
 #include <limits>
 #include <sstream>
-#include <stdexcept>
 #include <utility>
 
+#include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 
@@ -23,7 +23,6 @@ using std::numeric_limits;
 using std::ostream;
 using std::ostringstream;
 using std::pair;
-using std::runtime_error;
 using std::unordered_map;
 using std::vector;
 
@@ -141,7 +140,7 @@ pair<Box, Box> Box::bisect(const int i) const {
     ostringstream oss;
     oss << "Variable " << var << " = " << values_[i]
         << " is not bisectable but Box::bisect is called.";
-    throw runtime_error(oss.str());
+    throw DREAL_RUNTIME_ERROR(oss.str());
   }
   switch (var.get_type()) {
     case Variable::Type::CONTINUOUS:
@@ -151,10 +150,9 @@ pair<Box, Box> Box::bisect(const int i) const {
     case Variable::Type::BINARY:
       return bisect_int(i);
     case Variable::Type::BOOLEAN:
-      throw runtime_error("should not be reachable.");  // LCOV_EXCL_LINE
+      DREAL_UNREACHABLE();
   }
-
-  throw runtime_error("should not be reachable.");  // LCOV_EXCL_LINE
+  DREAL_UNREACHABLE();
 }
 
 pair<Box, Box> Box::bisect(const Variable& var) const {
@@ -164,7 +162,7 @@ pair<Box, Box> Box::bisect(const Variable& var) const {
   } else {
     ostringstream oss;
     oss << "Variable " << var << " is not found in this box.";
-    throw runtime_error(oss.str());
+    throw DREAL_RUNTIME_ERROR(oss.str());
   }
   return bisect((*var_to_idx_)[var]);
 }

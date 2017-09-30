@@ -4,8 +4,9 @@
 #include <iostream>
 #include <iterator>
 #include <set>
-#include <stdexcept>
 #include <string>
+
+#include "dreal/util/exception.h"
 
 namespace dreal {
 
@@ -13,7 +14,6 @@ using std::back_inserter;
 using std::copy;
 using std::cout;
 using std::endl;
-using std::runtime_error;
 using std::set;
 using std::shared_ptr;
 using std::string;
@@ -131,7 +131,7 @@ void Cnfize(const Variable& b, const Formula& f, vector<Formula>* clauses) {
     case FormulaKind::Not:
       return CnfizeNegation(b, f, clauses);
   }
-  throw runtime_error{"Cnfize: Should be unreachable."};
+  DREAL_UNREACHABLE();
 }
 
 // Add f to clauses if f is not true.

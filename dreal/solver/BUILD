@@ -50,6 +50,7 @@ dreal_cc_library(
         "//dreal/symbolic",
         "//dreal/util:box",
         "//dreal/util:cnfizer",
+        "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:logging",
         "//dreal/util:nnfizer",
@@ -69,6 +70,7 @@ dreal_cc_library(
     deps = [
         "//dreal/symbolic",
         "//dreal/util:cnfizer",
+        "//dreal/util:exception",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
         "@picosat//:picosat",

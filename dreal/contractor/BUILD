@@ -46,6 +46,7 @@ dreal_cc_library(
     deps = [
         ":contractor_status",
         "//dreal/symbolic",
+        "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:logging",
         "//dreal/util:math",

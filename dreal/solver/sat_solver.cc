@@ -1,14 +1,12 @@
 #include "dreal/solver/sat_solver.h"
 
-#include <stdexcept>
-
+#include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
 namespace dreal {
 
 using std::experimental::make_optional;
 using std::experimental::optional;
-using std::runtime_error;
 using std::unordered_set;
 using std::vector;
 
@@ -95,7 +93,7 @@ bool SatSolver::CheckSat() {
   } else {
     assert(ret == PICOSAT_UNKNOWN);
     DREAL_LOG_CRITICAL("PICOSAT returns PICOSAT_UNKNOWN.");
-    throw runtime_error("PICOSAT returns PICOSAT_UNKNOWN.");
+    throw DREAL_RUNTIME_ERROR("PICOSAT returns PICOSAT_UNKNOWN.");
   }
 }
 

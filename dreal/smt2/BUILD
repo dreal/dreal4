@@ -38,6 +38,9 @@ dreal_cc_library(
     hdrs = [
         "sort.h",
     ],
+    deps = [
+        "//dreal/util:exception",
+    ],
 )
 
 dreal_cc_library(
@@ -47,6 +50,9 @@ dreal_cc_library(
     ],
     hdrs = [
         "logic.h",
+    ],
+    deps = [
+        "//dreal/util:exception",
     ],
 )
 
