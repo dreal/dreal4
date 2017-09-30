@@ -12,5 +12,5 @@ Description: SMT Solver for Nonlinear Theories
 Version: 4.17.09
 Requires: ibex
 Libs: -L\${libdir} -ldreal
-Cflags: -I\${includedir} -I\${includedir}/dreal
+Cflags: -I\${includedir}
 EOF

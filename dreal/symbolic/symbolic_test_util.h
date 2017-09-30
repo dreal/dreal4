@@ -7,7 +7,7 @@
 /// "//dreal/symbolic:symbolic_test_util" in BUILD file.
 #pragma once
 
-#include "symbolic/test/symbolic_test_util.h"
+#include "dreal/symbolic/test/symbolic_test_util.h"
 
 namespace dreal {
 

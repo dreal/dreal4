@@ -12,8 +12,8 @@ def dreal_workspace():
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",
-        commit = "e2839d782acb739c4e8221d720914900bda7eff4",
-        sha256 = "8bfb7065fd687058ba1ffc9b556ccc6623491f2848864358e433095cb6593584",
+        commit = "41a25688eeb503fae4ea458f876d4a329b665a09",
+        sha256 = "a773ef09e451dfcb36451de548c063e045751c917f61e59aa73ad68ac69ba2c2",
     )
     github_archive(
         name = "ezoptionparser", # MIT
