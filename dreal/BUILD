@@ -43,6 +43,12 @@ dreal_cc_binary(
 
 cc_binary(
     name = "libdreal.so",
+    linkopts = select({
+        "@dreal//tools:linux": [],
+        "@//conditions:default": [
+            "-Wl,-install_name,@rpath/libdreal.so",
+        ],
+    }),
     linkshared = 1,
     visibility = ["//visibility:public"],
     deps = [
