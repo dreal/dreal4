@@ -28,8 +28,11 @@ dreal_cc_library(
     srcs = [
         "context.cc",
         "evaluator.cc",
-        "evaluator_cell.cc",
         "evaluator_cell.h",
+        "evaluator_forall.cc",
+        "evaluator_forall.h",
+        "evaluator_quantifier_free.cc",
+        "evaluator_quantifier_free.h",
         "icp.cc",
         "theory_solver.cc",
     ],

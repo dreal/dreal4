@@ -46,9 +46,6 @@ class Evaluator {
   // No default constructor.
   Evaluator() = delete;
 
-  Evaluator(const Formula& f, const std::vector<Variable>& variables,
-            double delta);
-
   /// Default copy constructor.
   Evaluator(const Evaluator&) = default;
 
@@ -65,6 +62,9 @@ class Evaluator {
   EvaluationResult operator()(const Box& box) const;
 
  private:
+  // Constructs an Evaluator from `ptr`.
+  explicit Evaluator(std::shared_ptr<EvaluatorCell> ptr);
+
   std::shared_ptr<EvaluatorCell> ptr_;
 
   friend std::ostream& operator<<(std::ostream& os, const Evaluator& evaluator);
@@ -72,9 +72,17 @@ class Evaluator {
   friend Evaluator make_evaluator_quantifier_free(
       const Formula& f, const std::vector<Variable>& variables);
 
-  friend Evaluator make_evaluator_forall(
-      const Formula& f, const std::vector<Variable>& variables);
+  friend Evaluator make_evaluator_forall(const Formula& f,
+                                         const std::vector<Variable>& variables,
+                                         double epsilon, double delta);
 };
+
+Evaluator make_evaluator_quantifier_free(
+    const Formula& f, const std::vector<Variable>& variables);
+
+Evaluator make_evaluator_forall(const Formula& f,
+                                const std::vector<Variable>& variable,
+                                double epsilon, double delta);
 
 std::ostream& operator<<(std::ostream& os, const Evaluator& evaluator);
 

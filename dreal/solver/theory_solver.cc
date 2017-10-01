@@ -96,11 +96,20 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
 vector<Evaluator> TheorySolver::BuildEvaluator(
     const vector<Formula>& assertions) {
   vector<Evaluator> evaluators;
+  const double delta = config_.precision();
+  const double epsilon = 0.99 * delta;
+  const double inner_delta = 0.99 * epsilon;
   for (const Formula& f : assertions) {
     auto it = evaluator_cache_.find(f);
     if (it == evaluator_cache_.end()) {
       DREAL_LOG_DEBUG("TheorySolver::BuildEvaluator: {}", f);
-      evaluators.emplace_back(f, box_.variables(), config_.precision());
+      if (is_forall(f)) {
+        evaluators.push_back(
+            make_evaluator_forall(f, box_.variables(), epsilon, inner_delta));
+      } else {
+        evaluators.push_back(
+            make_evaluator_quantifier_free(f, box_.variables()));
+      }
       evaluator_cache_.emplace_hint(it, f, evaluators.back());
     } else {
       evaluators.push_back(it->second);

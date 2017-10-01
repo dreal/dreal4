@@ -28,7 +28,7 @@ class EvaluatorTest : public ::testing::Test {
 };
 
 TEST_F(EvaluatorTest, Gt) {
-  Evaluator evaluator{gt_, {x_, y_}, 0.001};
+  Evaluator evaluator{make_evaluator_quantifier_free(gt_, {x_, y_})};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{evaluator(box_).evaluation()};
@@ -37,7 +37,7 @@ TEST_F(EvaluatorTest, Gt) {
 }
 
 TEST_F(EvaluatorTest, Gte) {
-  Evaluator evaluator{gte_, {x_, y_}, 0.001};
+  Evaluator evaluator{make_evaluator_quantifier_free(gte_, {x_, y_})};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{evaluator(box_).evaluation()};
@@ -46,7 +46,7 @@ TEST_F(EvaluatorTest, Gte) {
 }
 
 TEST_F(EvaluatorTest, Lt) {
-  Evaluator evaluator{lt_, {x_, y_}, 0.001};
+  Evaluator evaluator{make_evaluator_quantifier_free(lt_, {x_, y_})};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{evaluator(box_).evaluation()};
@@ -55,7 +55,7 @@ TEST_F(EvaluatorTest, Lt) {
 }
 
 TEST_F(EvaluatorTest, Lte) {
-  Evaluator evaluator{lte_, {x_, y_}, 0.001};
+  Evaluator evaluator{make_evaluator_quantifier_free(lte_, {x_, y_})};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{evaluator(box_).evaluation()};
@@ -64,7 +64,7 @@ TEST_F(EvaluatorTest, Lte) {
 }
 
 TEST_F(EvaluatorTest, Eq) {
-  Evaluator evaluator{eq_, {x_, y_}, 0.001};
+  Evaluator evaluator{make_evaluator_quantifier_free(eq_, {x_, y_})};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{evaluator(box_).evaluation()};
@@ -73,7 +73,7 @@ TEST_F(EvaluatorTest, Eq) {
 }
 
 TEST_F(EvaluatorTest, Neq) {
-  Evaluator evaluator{neq_, {x_, y_}, 0.001};
+  Evaluator evaluator{make_evaluator_quantifier_free(neq_, {x_, y_})};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{evaluator(box_).evaluation()};
