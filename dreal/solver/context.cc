@@ -158,13 +158,14 @@ void Context::Impl::Minimize(const Expression& f) {
   // Given e = f(x) and the current constraints ϕᵢ which
   // involves x. it constructs a universally quantified formula ψ:
   //
-  //    ψ = ∀y. (⋀ⱼ ϕᵢ(y)) → f(x) ≤ f(y).
+  //    ψ = ∀y. (⋀ᵢ ϕᵢ(y)) → (f(x) ≤ f(y))
+  //      = ∀y. ¬(⋀ᵢ ϕᵢ(y)) ∨ (f(x) ≤ f(y))
+  //      = ∀y. (∨ᵢ ¬ϕᵢ(y)) ∨ (f(x) ≤ f(y)).
   //
-
   // To construct ϕᵢ(y), we need to traverse both `box()` and
   // `stack_` because some of the asserted formulas are translated
   // and applied into `box()`.
-  set<Formula> phi_set;
+  set<Formula> set_of_negated_phi;  // Collects ¬ϕᵢ(y).
   ExpressionSubstitution subst;  // Maps xᵢ ↦ yᵢ to build f(y₁, ..., yₙ).
   Variables quantified_variables;  // {y₁, ... yₙ}
   const Variables x_vars{f.GetVariables()};
@@ -173,28 +174,28 @@ void Context::Impl::Minimize(const Expression& f) {
     const Variable y_i{x_i.get_name() + "_", x_i.get_type()};
     quantified_variables.insert(y_i);
     subst.emplace(x_i, y_i);
-    // If `box()[x_i]` has a finite bound, let's add that information in phi_set
-    // as a constraint on y_i.
+    // If `box()[x_i]` has a finite bound, let's add that information in
+    // set_of_negated_phi as a constraint on y_i.
     const Box::Interval& bound_on_x_i{box()[x_i]};
     const double lb_x_i{bound_on_x_i.lb()};
     const double ub_x_i{bound_on_x_i.ub()};
     if (isfinite(lb_x_i)) {
-      phi_set.insert(lb_x_i <= y_i);
+      set_of_negated_phi.insert(!(lb_x_i <= y_i));
     }
     if (isfinite(ub_x_i)) {
-      phi_set.insert(y_i <= ub_x_i);
+      set_of_negated_phi.insert(!(y_i <= ub_x_i));
     }
   }
   for (const Formula& constraint : stack_) {
     if (!intersect(x_vars, constraint.GetFreeVariables()).empty()) {
       // Case : xᵢ ∈ vars(constraint)
       // We need to collect constraint[xᵢ ↦ yᵢ].
-      phi_set.insert(constraint.Substitute(subst));
+      set_of_negated_phi.insert(!constraint.Substitute(subst));
     }
   }
-  const Formula phi{make_conjunction(phi_set)};  // ⋀ⱼ ϕ(y)
+  const Formula phi{make_disjunction(set_of_negated_phi)};  // ∨ᵢ ¬ϕᵢ(y)
   const Formula psi{
-      forall(quantified_variables, imply(phi, f <= f.Substitute(subst)))};
+      forall(quantified_variables, phi || (f <= f.Substitute(subst)))};
   return Assert(psi);
 }
 
