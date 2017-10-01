@@ -71,7 +71,30 @@ Formula Cnfizer::VisitGreaterThan(const Formula& f) { return f; }
 Formula Cnfizer::VisitGreaterThanOrEqualTo(const Formula& f) { return f; }
 Formula Cnfizer::VisitLessThan(const Formula& f) { return f; }
 Formula Cnfizer::VisitLessThanOrEqualTo(const Formula& f) { return f; }
-Formula Cnfizer::VisitForall(const Formula& f) { return f; }
+Formula Cnfizer::VisitForall(const Formula& f) {
+  // Given: f := ∀y. φ(x, y), this process CNFizes φ(x, y) and push the
+  // universal quantifier over conjunctions:
+  //
+  //     = ∀y. (clause₁(x, y) ∧ ... ∧ clauseₙ(x, y))
+  //     = (∀y. clause₁(x, y)) ∧ ... ∧ (∀y. clauseₙ(x, y))
+  const Variables& quantified_variables{get_quantified_variables(f)};  // y
+  const Formula& quantified_formula{get_quantified_formula(f)};  // φ(x, y)
+  Cnfizer cnfizer;
+  // clause₁(x, y) ∧ ... ∧ clauseₙ(x, y)
+  vector<Formula> quantified_formula_in_cnf{
+      cnfizer.Convert(quantified_formula)};
+  for (Formula& clause : quantified_formula_in_cnf) {
+    assert(is_clause(clause));
+    if (!intersect(clause.GetFreeVariables(), quantified_variables).empty()) {
+      clause = forall(quantified_variables, clause);
+    }
+  }
+  static size_t id{0};
+  const Variable bvar{string("forall") + to_string(id++),
+                      Variable::Type::BOOLEAN};
+  map_.emplace(bvar, make_conjunction(quantified_formula_in_cnf));
+  return Formula{bvar};
+}
 
 Formula Cnfizer::VisitConjunction(const Formula& f) {
   // Introduce a new Boolean variable, `bvar` for `f` and record the
@@ -115,15 +138,25 @@ namespace {
 void Cnfize(const Variable& b, const Formula& f, vector<Formula>* clauses) {
   switch (f.get_kind()) {
     case FormulaKind::False:
+      DREAL_UNREACHABLE();
     case FormulaKind::True:
+      DREAL_UNREACHABLE();
     case FormulaKind::Var:
+      DREAL_UNREACHABLE();
     case FormulaKind::Eq:
+      DREAL_UNREACHABLE();
     case FormulaKind::Neq:
+      DREAL_UNREACHABLE();
     case FormulaKind::Gt:
+      DREAL_UNREACHABLE();
     case FormulaKind::Geq:
+      DREAL_UNREACHABLE();
     case FormulaKind::Lt:
+      DREAL_UNREACHABLE();
     case FormulaKind::Leq:
+      DREAL_UNREACHABLE();
     case FormulaKind::Forall:
+      DREAL_UNREACHABLE();
     case FormulaKind::And:
       return CnfizeConjunction(b, f, clauses);
     case FormulaKind::Or:
