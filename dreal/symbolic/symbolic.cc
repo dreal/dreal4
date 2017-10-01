@@ -46,8 +46,10 @@ bool is_atomic(const Formula& f) {
     case FormulaKind::And:
     case FormulaKind::Or:
       return false;
-    case FormulaKind::Not:
-      return is_variable(get_operand(f));
+    case FormulaKind::Not: {
+      const Formula& negated_formula{get_operand(f)};
+      return is_variable(negated_formula) || is_relational(negated_formula);
+    }
   }
   DREAL_UNREACHABLE();
 }
