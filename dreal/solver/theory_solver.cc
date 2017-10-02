@@ -65,23 +65,26 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
 
   vector<Contractor> ctcs;
   for (const Formula& f : assertions) {
-    if (!is_forall(f)) {
-      auto it = ibex_contractor_cache_.find(f);
-      if (it == ibex_contractor_cache_.end()) {
-        DREAL_LOG_DEBUG("TheorySolver::BuildContractor: {}", f);
-        const Contractor ctc{make_contractor_ibex_fwdbwd(f, box_)};
-        ibex_contractor_cache_.emplace_hint(it, f, ctc);
-        ctcs.emplace_back(move(ctc));
+    auto it = contractor_cache_.find(f);
+    if (it == contractor_cache_.end()) {
+      // There is no contractor for `f`, build one.
+      DREAL_LOG_DEBUG("TheorySolver::BuildContractor: {}", f);
+      if (is_forall(f)) {
+        // We should have `inner_delta < epsilon < delta`.
+        const double epsilon = config_.precision() * 0.99;
+        const double inner_delta = epsilon * 0.99;
+        const Contractor ctc{make_contractor_forall<Context>(
+            f, box_, epsilon, inner_delta, config_.use_polytope_in_forall())};
+        ctcs.emplace_back(
+            make_contractor_fixpoint(termination_condition, {ctc}));
       } else {
-        ctcs.emplace_back(it->second);
+        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, box_));
       }
+      // Add it to the cache.
+      contractor_cache_.emplace_hint(it, f, ctcs.back());
     } else {
-      // We should have `inner_delta < epsilon < delta`.
-      const double epsilon = config_.precision() * 0.99;
-      const double inner_delta = epsilon * 0.99;
-      const Contractor ctc{make_contractor_forall<Context>(
-          f, box_, epsilon, inner_delta, config_.use_polytope_in_forall())};
-      ctcs.emplace_back(make_contractor_fixpoint(termination_condition, {ctc}));
+      // Cache hit!
+      ctcs.emplace_back(it->second);
     }
   }
   // Add integer contractor.
@@ -91,7 +94,6 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
     // Add polytope contractor.
     ctcs.push_back(make_contractor_ibex_polytope(assertions, box_));
   }
-
   return make_contractor_fixpoint(termination_condition, move(ctcs));
 }
 

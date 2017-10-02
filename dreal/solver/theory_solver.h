@@ -52,7 +52,7 @@ class TheorySolver {
   // const Nnfizer nnfizer_;
 
   std::unordered_map<Formula, Contractor, hash_value<Formula>>
-      ibex_contractor_cache_;
+      contractor_cache_;
   std::unordered_map<Formula, Evaluator, hash_value<Formula>> evaluator_cache_;
 
   // stat
