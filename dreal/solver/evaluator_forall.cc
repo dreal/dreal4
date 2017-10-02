@@ -27,6 +27,7 @@ vector<Variable> Add(vector<Variable> vars1, const Variables& vars2) {
 // evaluators.
 vector<EvaluatorQuantifierFree> BuildEvaluators(
     const Formula& f, const vector<Variable>& variables) {
+  DREAL_LOG_DEBUG("BuildEvaluators");
   const Formula& quantified_formula{get_quantified_formula(f)};
   assert(is_clause(quantified_formula));
   const set<Formula>& disjuncts{get_operands(quantified_formula)};
@@ -55,6 +56,10 @@ EvaluatorForall::EvaluatorForall(const Formula& f,
     context_.DeclareVariable(forall_var);
   }
   context_.Assert(DeltaStrengthen(!get_quantified_formula(f), epsilon));
+}
+
+EvaluatorForall::~EvaluatorForall() {
+  DREAL_LOG_DEBUG("EvaluatorForall()::~EvaluatorForall()");
 }
 
 EvaluationResult EvaluatorForall::operator()(const Box& box) const {

@@ -21,7 +21,9 @@ TheorySolver::TheorySolver(const Config& config, const Box& box)
     : config_{config}, box_{box}, contractor_status_{box} {}
 
 TheorySolver::~TheorySolver() {
-  DREAL_LOG_DEBUG("# of TheorySolver::CheckSat() = {}", num_check_sat);
+  DREAL_LOG_DEBUG(
+      "TheorySolver::~TheorySolver() - # of TheorySolver::CheckSat() = {}",
+      num_check_sat);
 }
 
 Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {

@@ -13,6 +13,7 @@ using std::vector;
 namespace {
 
 using std::make_pair;
+using std::make_shared;
 
 // Decomposes a formula `f = e₁ rop e₂` into `(rop, e₁ - e₂)`.
 pair<RelationalOperator, Expression> Decompose(const Formula& f) {
@@ -66,12 +67,16 @@ pair<RelationalOperator, Expression> Decompose(const Formula& f) {
 
 EvaluatorQuantifierFree::EvaluatorQuantifierFree(
     const Formula& f, const vector<Variable>& variables)
-    : ibex_converter_{new IbexConverter{variables}} {
+    : ibex_converter_{make_shared<IbexConverter>(variables)} {
   const pair<RelationalOperator, Expression> result{Decompose(f)};
   op_ = result.first;
-  func_.reset(new ibex::Function(ibex_converter_->variables(),
-                                 *ibex_converter_->Convert(result.second)));
+  func_ = make_shared<ibex::Function>(ibex_converter_->variables(),
+                                      *ibex_converter_->Convert(result.second));
   assert(func_);
+}
+
+EvaluatorQuantifierFree::~EvaluatorQuantifierFree() {
+  DREAL_LOG_DEBUG("EvaluatorQuantifierFree::~EvaluatorQuantifierFree()");
 }
 
 EvaluationResult EvaluatorQuantifierFree::operator()(const Box& box) const {

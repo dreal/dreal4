@@ -37,10 +37,10 @@ namespace dreal {
 ///
 class EvaluatorForall : public EvaluatorCell {
  public:
-  ~EvaluatorForall() override = default;
-
   EvaluatorForall(const Formula& f, const std::vector<Variable>& variables,
                   double epsilon, double delta);
+
+  ~EvaluatorForall() override;
 
   EvaluationResult operator()(const Box& box) const override;
 

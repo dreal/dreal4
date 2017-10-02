@@ -17,7 +17,7 @@ namespace dreal {
 /// evaluation to evaluate QF-formulas.
 class EvaluatorQuantifierFree : public EvaluatorCell {
  public:
-  ~EvaluatorQuantifierFree() override = default;
+  ~EvaluatorQuantifierFree() override;
 
   EvaluatorQuantifierFree(const Formula& f,
                           const std::vector<Variable>& variables);
