@@ -7,6 +7,9 @@
 #pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
 #endif
 
+/* ignore harmless bug in old versions of flex */
+#pragma GCC diagnostic ignored "-Wsign-compare"
+
 #include <string>
 
 #include "dreal/smt2/scanner.h"
