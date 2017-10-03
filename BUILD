@@ -56,7 +56,7 @@ pkg_tar(
 pkg_deb(
     name = "package_debian",
     architecture = "amd64",
-    built_using = "bazel (0.5.4)",
+    built_using = "bazel (0.6.0)",
     data = ":archive",
     depends = [
         "bison",
