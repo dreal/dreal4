@@ -16,13 +16,11 @@ namespace dreal {
 
 class SatSolver {
  public:
-  /// Constructs a SatSolver using @p cnfizer and @p predicate_abstractor.
-  SatSolver(Cnfizer* cnfizer, PredicateAbstractor* predicate_abstractor);
+  /// Constructs a SatSolver.
+  SatSolver();
 
-  /// Constructs a SatSolver using @p cnfizer,  @p predicate_abstractor, and @p
-  /// clauses.
-  SatSolver(Cnfizer* cnfizer, PredicateAbstractor* predicate_abstractor,
-            const std::vector<Formula>& clauses);
+  /// Constructs a SatSolver while asserting @p clauses.
+  explicit SatSolver(const std::vector<Formula>& clauses);
 
   ~SatSolver();
 
@@ -33,27 +31,20 @@ class SatSolver {
   /// pre-processings (CNFize and PredicateAbstraction).
   void AddFormula(const Formula& f);
 
-  /// Adds a formula @p f to the solver.
-  ///
-  /// @pre @p f is a clause. That is, it is either a literal (b or ¬b)
-  /// or a disjunction of literals (l₁ ∨ ... ∨ lₙ).
-  void AddClause(const Formula& f);
+  /// Adds formulas @p formulas to the solver.
+  void AddFormulas(const std::vector<Formula>& formulas);
 
   /// Given a @p formulas = {f₁, ..., fₙ}, adds a clause (¬f₁ ∨ ... ∨ ¬ fₙ) to
   /// the solver.
   void AddLearnedClause(
       const std::unordered_set<Formula, hash_value<Formula>>& formulas);
 
-  /// Adds a vector of formulas @p formulas to the solver.
-  ///
-  /// @pre Each formula fᵢ ∈ formulas is a clause.
-  void AddClauses(const std::vector<Formula>& formulas);
-
   /// Checks the satisfiability of the current configuration.
   /// If SAT, it returns true. The witness, satisfying model is provided by
   /// model(). If UNSAT, it returns false.
   bool CheckSat();
 
+  // TODO(soonho): Push/Pop cnfizer and predicate_abstractor?
   void Pop();
 
   void Push();
@@ -61,6 +52,17 @@ class SatSolver {
   const std::vector<Formula>& model() const { return model_; }
 
  private:
+  // Adds a formula @p f to the solver.
+  //
+  // @pre @p f is a clause. That is, it is either a literal (b or ¬b)
+  // or a disjunction of literals (l₁ ∨ ... ∨ lₙ).
+  void AddClause(const Formula& f);
+
+  // Adds a vector of formulas @p formulas to the solver.
+  //
+  // @pre Each formula fᵢ ∈ formulas is a clause.
+  void AddClauses(const std::vector<Formula>& formulas);
+
   // Returns a corresponding literal ID of @p var. It maintains two
   // maps `lit_to_var_` and `var_to_lit_` to keep track of the
   // relationship between Variable ⇔ Literal (in SAT).
@@ -75,15 +77,18 @@ class SatSolver {
   // Add a clause @p f to sat solver.
   void DoAddClause(const Formula& f);
 
+  // Member variables
+  // ----------------
+  // Pointer to the PicoSat solver.
   PicoSAT* const sat_{};
-  Cnfizer& cnfizer_;
-  PredicateAbstractor& predicate_abstractor_;
-  Formula f_cnf_;
+  Cnfizer cnfizer_;
+  PredicateAbstractor predicate_abstractor_;
   std::vector<Formula> model_;
 
-  // Map symbolic::Variable → intiable (in SAT)
+  // Map symbolic::Variable → int (Variable type in PicoSat).
   std::unordered_map<Variable, int, hash_value<Variable>> to_sat_var_;
-  // Map intiable → symbolic::Variable
+
+  // Map intiable → symbolic::Variable.
   std::unordered_map<int, Variable> to_sym_var_;
 
   // Stats

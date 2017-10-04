@@ -52,12 +52,10 @@ dreal_cc_library(
         "//dreal/smt2:sort",
         "//dreal/symbolic",
         "//dreal/util:box",
-        "//dreal/util:cnfizer",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:logging",
         "//dreal/util:nnfizer",
-        "//dreal/util:predicate_abstractor",
         "//dreal/util:scoped_vector",
     ],
 )

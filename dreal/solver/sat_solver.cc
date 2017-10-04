@@ -10,16 +10,9 @@ using std::experimental::optional;
 using std::unordered_set;
 using std::vector;
 
-SatSolver::SatSolver(Cnfizer* const cnfizer,
-                     PredicateAbstractor* const predicate_abstractor)
-    : sat_(picosat_init()),
-      cnfizer_{*cnfizer},
-      predicate_abstractor_{*predicate_abstractor} {}
+SatSolver::SatSolver() : sat_{picosat_init()} {}
 
-SatSolver::SatSolver(Cnfizer* const cnfizer,
-                     PredicateAbstractor* const predicate_abstractor,
-                     const vector<Formula>& clauses)
-    : SatSolver{cnfizer, predicate_abstractor} {
+SatSolver::SatSolver(const vector<Formula>& clauses) : SatSolver{} {
   AddClauses(clauses);
 }
 
@@ -30,7 +23,17 @@ SatSolver::~SatSolver() {
 
 void SatSolver::AddFormula(const Formula& f) {
   DREAL_LOG_DEBUG("SatSolver::AddFormula({})", f);
-  AddClauses(cnfizer_.Convert(predicate_abstractor_.Convert(f)));
+  vector<Formula> clauses{cnfizer_.Convert(f)};
+  for (Formula& clause : clauses) {
+    clause = predicate_abstractor_.Convert(clause);
+  }
+  AddClauses(clauses);
+}
+
+void SatSolver::AddFormulas(const vector<Formula>& formulas) {
+  for (const Formula& f : formulas) {
+    AddFormula(f);
+  }
 }
 
 void SatSolver::AddLearnedClause(

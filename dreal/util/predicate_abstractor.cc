@@ -48,9 +48,7 @@ Formula PredicateAbstractor::VisitTrue(const Formula& f) {
 }
 
 Formula PredicateAbstractor::VisitVariable(const Formula& f) {
-  const Variable& var{get_variable(f)};
-  assert(var.get_type() == Variable::Type::BOOLEAN);
-  Add(var, f);
+  // Nothing to do for Boolean variables.
   return f;
 }
 

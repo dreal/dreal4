@@ -9,10 +9,8 @@
 #include "dreal/solver/assertion_filter.h"
 #include "dreal/solver/sat_solver.h"
 #include "dreal/solver/theory_solver.h"
-#include "dreal/util/cnfizer.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
-#include "dreal/util/predicate_abstractor.h"
 #include "dreal/util/scoped_vector.h"
 
 using std::experimental::optional;
@@ -31,6 +29,7 @@ namespace dreal {
 class Context::Impl {
  public:
   Impl();
+  ~Impl() { DREAL_LOG_DEBUG("Context::Impl::~Impl()"); }
   explicit Impl(Config config);
   void Assert(const Formula& f);
   std::experimental::optional<Box> CheckSat();
@@ -57,19 +56,14 @@ class Context::Impl {
   std::unordered_map<std::string, std::string> info_;
   std::unordered_map<std::string, std::string> option_;
 
-  ScopedVector<Box> boxes_;
-  ScopedVector<Formula> stack_;
-  PredicateAbstractor predicate_abstractor_;
-  Cnfizer cnfizer_;
+  ScopedVector<Box> boxes_;  // Stack of boxes. The top one is the current box.
+  ScopedVector<Formula> stack_;  // Stack of asserted formulas.
   SatSolver sat_solver_;
 };
 
-Context::Impl::Impl() : sat_solver_{&cnfizer_, &predicate_abstractor_} {
-  boxes_.push_back(Box{});
-}
+Context::Impl::Impl() { boxes_.push_back(Box{}); }
 
-Context::Impl::Impl(Config config)
-    : config_{move(config)}, sat_solver_{&cnfizer_, &predicate_abstractor_} {
+Context::Impl::Impl(Config config) : config_{move(config)} {
   boxes_.push_back(Box{});
 }
 
@@ -79,14 +73,7 @@ void Context::Impl::Assert(const Formula& f) {
     DREAL_LOG_DEBUG("Box=\n{}", box());
     return;
   }
-
-  // Predicate abstract & CNFize.
-  const vector<Formula> clauses{
-      cnfizer_.Convert(predicate_abstractor_.Convert(f))};
-  for (const Formula& f_i : clauses) {
-    DREAL_LOG_DEBUG("Context::Assert: {} is added.", f_i);
-    stack_.push_back(f_i);
-  }
+  stack_.push_back(f);
 }
 
 optional<Box> Context::Impl::CheckSat() {
@@ -106,7 +93,7 @@ optional<Box> Context::Impl::CheckSat() {
     return box();
   }
 
-  sat_solver_.AddClauses(stack_.get_vector());
+  sat_solver_.AddFormulas(stack_.get_vector());
   TheorySolver theory_solver{config_, box()};
   while (true) {
     if (sat_solver_.CheckSat()) {
@@ -123,6 +110,7 @@ optional<Box> Context::Impl::CheckSat() {
         const unordered_set<Formula, hash_value<Formula>> explanation{
             theory_solver.GetExplanation()};
         if (explanation.empty()) {
+          DREAL_LOG_DEBUG("Context::CheckSat() - Empty Explanation => UNSAT");
           return {};
         } else {
           DREAL_LOG_DEBUG(
@@ -204,7 +192,6 @@ void Context::Impl::Pop() {
   stack_.pop();
   boxes_.pop();
   sat_solver_.Pop();
-  // TODO(soonho): Pop cnfizer/predicate_abstractor_.
 }
 
 void Context::Impl::Push() {
@@ -213,7 +200,6 @@ void Context::Impl::Push() {
   boxes_.push();
   boxes_.push_back(boxes_.last());
   stack_.push();
-  // TODO(soonho): Push cnfizer/predicate_abstractor_.
 }
 
 void Context::Impl::SetInfo(const string& key, const string& val) {
