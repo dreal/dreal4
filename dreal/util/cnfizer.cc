@@ -89,11 +89,16 @@ Formula Cnfizer::VisitForall(const Formula& f) {
       clause = forall(quantified_variables, clause);
     }
   }
-  static size_t id{0};
-  const Variable bvar{string("forall") + to_string(id++),
-                      Variable::Type::BOOLEAN};
-  map_.emplace(bvar, make_conjunction(quantified_formula_in_cnf));
-  return Formula{bvar};
+  assert(quantified_formula_in_cnf.size() > 0);
+  if (quantified_formula_in_cnf.size() == 1) {
+    return quantified_formula_in_cnf[0];
+  } else {
+    static size_t id{0};
+    const Variable bvar{string("forall") + to_string(id++),
+                        Variable::Type::BOOLEAN};
+    map_.emplace(bvar, make_conjunction(quantified_formula_in_cnf));
+    return Formula{bvar};
+  }
 }
 
 Formula Cnfizer::VisitConjunction(const Formula& f) {
