@@ -9,8 +9,8 @@ libdir=\${prefix}/lib
 
 Name: dReal
 Description: SMT Solver for Nonlinear Theories
-Version: 4.17.09
-Requires: ibex
+Version: ${VERSION}
+Requires: ibex, nlopt
 Libs: -L\${libdir} -ldreal
 Cflags: -I\${includedir}
 EOF

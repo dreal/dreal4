@@ -7,6 +7,10 @@ def dreal_workspace():
         name = "ibex",
         modname = "ibex",
     )
+    pkg_config_package(
+        name = "nlopt",
+        modname = "nlopt",
+    )
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",

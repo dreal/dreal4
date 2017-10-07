@@ -19,7 +19,7 @@ includedir=\${cellar}/dreal/${VERSION}/include
 Name: dReal
 Description: SMT Solver for Nonlinear Theories
 Version: ${VERSION}
-Requires: ibex
+Requires: ibex, nlopt
 Libs: -L\${libdir} -ldreal
 Cflags: -I\${includedir}
 EOF

@@ -23,6 +23,7 @@ The following packages are required to build dReal:
  - [Flex](https://www.gnu.org/software/flex) and [Bison](https://www.gnu.org/software/bison)
  - [Clp](https://projects.coin-or.org/Clp)
  - [IBEX](https://github.com/ibex-team/ibex-lib)
+ - [NLopt](https://nlopt.readthedocs.io/en/latest)
 
 dReal is using the following external packages:
 
@@ -47,7 +48,7 @@ Ubuntu 14.04 LTS:
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libnlopt-dev
 sudo apt upgrade libstdc++6
 wget https://dl.bintray.com/dreal/dreal/dreal_4.17.09.4_amd64.deb
 dpkg -i dreal_4.17.09.4_amd64.deb
@@ -58,7 +59,7 @@ Ubuntu 16.04 LTS:
 sudo apt install -y software-properties-common  # for add-apt-repository
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libnlopt-dev
 wget https://dl.bintray.com/dreal/dreal/dreal_4.17.09.4_amd64.deb
 dpkg -i dreal_4.17.09.4_amd64.deb
 ```
@@ -72,7 +73,7 @@ Install Prerequsites
 macOS 10.12 (Sierra) / 10.13 (High Sierra):
 
 ```bash
-brew install bazel pkg-config dreal-deps/ibex/ibex
+brew install bazel pkg-config dreal-deps/ibex/ibex nlopt
 ```
 
 Ubuntu 14.04 LTS / 16.04 LTS
@@ -80,7 +81,7 @@ Ubuntu 14.04 LTS / 16.04 LTS
 ```bash
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libnlopt-dev
 ```
 
 Build and Test

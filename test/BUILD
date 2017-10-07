@@ -37,6 +37,15 @@ cc_test(
 )
 
 dreal_cc_googletest(
+    name = "nlopt_test",
+    srcs = ["nlopt_test.cc"],
+    tags = ["extlib"],
+    deps = [
+        "@nlopt",
+    ],
+)
+
+dreal_cc_googletest(
     name = "picosat_test",
     srcs = ["picosat_test.cc"],
     tags = ["extlib"],
