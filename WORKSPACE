@@ -5,26 +5,6 @@
 
 workspace(name = "dreal")
 
-# Buildifier setup -- BEGIN
-# 0.5.5
-http_archive(
-    name = "io_bazel_rules_go", # Apache-2.0
-    strip_prefix = "rules_go-e1c4b58c05e4a6ab67392daf28f3d57e4902f581",
-    urls = [
-        "http://mirror.bazel.build/github.com/bazelbuild/rules_go/archive/e1c4b58c05e4a6ab67392daf28f3d57e4902f581.tar.gz",
-        "https://github.com/bazelbuild/rules_go/archive/e1c4b58c05e4a6ab67392daf28f3d57e4902f581.tar.gz",
-    ],
-)
-load(
-    "@io_bazel_rules_go//go:def.bzl",
-    "go_rules_dependencies",
-    "go_register_toolchains",
-    "go_repository",
-)
-go_rules_dependencies()
-go_register_toolchains()
-# Buildifier setup -- END
-
 load("//tools:github.bzl", "github_archive")
 
 github_archive(

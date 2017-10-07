@@ -3,11 +3,6 @@
 
 package(default_visibility = ["//visibility:public"])
 
-alias(
-    name = "buildifier",
-    actual = "@com_github_bazelbuild_buildtools//buildifier",
-)
-
 py_binary(
     name = "cmake_configure_file",
     srcs = ["cmake_configure_file.py"],
