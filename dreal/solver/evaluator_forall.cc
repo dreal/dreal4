@@ -34,6 +34,9 @@ vector<EvaluatorQuantifierFree> BuildEvaluators(
   vector<EvaluatorQuantifierFree> evaluators;
   evaluators.reserve(disjuncts.size());
   for (const Formula& disjunct : disjuncts) {
+    DREAL_LOG_DEBUG("BuildEvaluators: disjunct = {}", disjunct);
+    assert(is_relational(disjunct) ||
+           (is_negation(disjunct) && is_relational(get_operand(disjunct))));
     evaluators.emplace_back(disjunct, variables);
   }
   return evaluators;

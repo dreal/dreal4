@@ -1,4 +1,4 @@
-#include "dreal/util/cnfizer.h"
+#include "dreal/util/tseitin_cnfizer.h"
 
 #include <algorithm>
 #include <iostream>
@@ -31,11 +31,11 @@ void CnfizeDisjunction(const Variable& b, const Formula& f,
                        vector<Formula>* clauses);
 }  // namespace
 
-// The main function of the Cnfizer:
+// The main function of the TseitinCnfizer:
 //  - It visits each node and introduce a Boolean variable `b` for
 //    each subterm `f`, and keep the relation `b ⇔ f`.
 //  - Then it cnfizes each `b ⇔ f` and make a conjunction of them.
-vector<Formula> Cnfizer::Convert(const Formula& f) {
+vector<Formula> TseitinCnfizer::Convert(const Formula& f) {
   map_.clear();
   vector<Formula> ret;
   const Formula head{Visit(f)};
@@ -57,21 +57,23 @@ vector<Formula> Cnfizer::Convert(const Formula& f) {
   return ret;
 }
 
-Formula Cnfizer::Visit(const Formula& f) {
+Formula TseitinCnfizer::Visit(const Formula& f) {
   // TODO(soonho): use cache.
   return VisitFormula<Formula>(this, f);
 }
 
-Formula Cnfizer::VisitFalse(const Formula& f) { return f; }
-Formula Cnfizer::VisitTrue(const Formula& f) { return f; }
-Formula Cnfizer::VisitVariable(const Formula& f) { return f; }
-Formula Cnfizer::VisitEqualTo(const Formula& f) { return f; }
-Formula Cnfizer::VisitNotEqualTo(const Formula& f) { return f; }
-Formula Cnfizer::VisitGreaterThan(const Formula& f) { return f; }
-Formula Cnfizer::VisitGreaterThanOrEqualTo(const Formula& f) { return f; }
-Formula Cnfizer::VisitLessThan(const Formula& f) { return f; }
-Formula Cnfizer::VisitLessThanOrEqualTo(const Formula& f) { return f; }
-Formula Cnfizer::VisitForall(const Formula& f) {
+Formula TseitinCnfizer::VisitFalse(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitTrue(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitVariable(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitEqualTo(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitNotEqualTo(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitGreaterThan(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitGreaterThanOrEqualTo(const Formula& f) {
+  return f;
+}
+Formula TseitinCnfizer::VisitLessThan(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitLessThanOrEqualTo(const Formula& f) { return f; }
+Formula TseitinCnfizer::VisitForall(const Formula& f) {
   // Given: f := ∀y. φ(x, y), this process CNFizes φ(x, y) and push the
   // universal quantifier over conjunctions:
   //
@@ -79,29 +81,32 @@ Formula Cnfizer::VisitForall(const Formula& f) {
   //     = (∀y. clause₁(x, y)) ∧ ... ∧ (∀y. clauseₙ(x, y))
   const Variables& quantified_variables{get_quantified_variables(f)};  // y
   const Formula& quantified_formula{get_quantified_formula(f)};  // φ(x, y)
-  Cnfizer cnfizer;
   // clause₁(x, y) ∧ ... ∧ clauseₙ(x, y)
-  vector<Formula> quantified_formula_in_cnf{
-      cnfizer.Convert(quantified_formula)};
-  for (Formula& clause : quantified_formula_in_cnf) {
+  const set<Formula> clauses{
+      get_clauses(naive_cnfizer_.Convert(quantified_formula))};
+  const set<Formula> new_clauses{map(clauses, [&quantified_variables](
+                                                  const Formula& clause) {
     assert(is_clause(clause));
     if (!intersect(clause.GetFreeVariables(), quantified_variables).empty()) {
-      clause = forall(quantified_variables, clause);
+      return forall(quantified_variables, clause);
+    } else {
+      return clause;
     }
-  }
-  assert(quantified_formula_in_cnf.size() > 0);
-  if (quantified_formula_in_cnf.size() == 1) {
-    return quantified_formula_in_cnf[0];
+  })};
+
+  assert(new_clauses.size() > 0);
+  if (new_clauses.size() == 1) {
+    return *(new_clauses.begin());
   } else {
     static size_t id{0};
     const Variable bvar{string("forall") + to_string(id++),
                         Variable::Type::BOOLEAN};
-    map_.emplace(bvar, make_conjunction(quantified_formula_in_cnf));
+    map_.emplace(bvar, make_conjunction(new_clauses));
     return Formula{bvar};
   }
 }
 
-Formula Cnfizer::VisitConjunction(const Formula& f) {
+Formula TseitinCnfizer::VisitConjunction(const Formula& f) {
   // Introduce a new Boolean variable, `bvar` for `f` and record the
   // relation `bvar ⇔ f`.
   static size_t id{0};
@@ -114,7 +119,7 @@ Formula Cnfizer::VisitConjunction(const Formula& f) {
   return Formula{bvar};
 }
 
-Formula Cnfizer::VisitDisjunction(const Formula& f) {
+Formula TseitinCnfizer::VisitDisjunction(const Formula& f) {
   static size_t id{0};
   const set<Formula>& transformed_operands{
       map(get_operands(f),
@@ -125,7 +130,7 @@ Formula Cnfizer::VisitDisjunction(const Formula& f) {
   return Formula{bvar};
 }
 
-Formula Cnfizer::VisitNegation(const Formula& f) {
+Formula TseitinCnfizer::VisitNegation(const Formula& f) {
   const Formula& operand{get_operand(f)};
   if (is_atomic(operand)) {
     return f;
@@ -229,6 +234,6 @@ void CnfizeDisjunction(const Variable& b, const Formula& f,
   for (const Formula neg_b_i : negated_operands) {
     Add(neg_b_i || b, clauses);
   }
-}  // namespace
+}
 }  // namespace
 }  // namespace dreal

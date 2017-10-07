@@ -32,15 +32,31 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
-    name = "cnfizer",
+    name = "tseitin_cnfizer",
     srcs = [
-        "cnfizer.cc",
+        "tseitin_cnfizer.cc",
     ],
     hdrs = [
-        "cnfizer.h",
+        "tseitin_cnfizer.h",
     ],
     deps = [
         ":exception",
+        ":naive_cnfizer",
+        "//dreal/symbolic",
+    ],
+)
+
+dreal_cc_library(
+    name = "naive_cnfizer",
+    srcs = [
+        "naive_cnfizer.cc",
+    ],
+    hdrs = [
+        "naive_cnfizer.h",
+    ],
+    deps = [
+        ":exception",
+        ":nnfizer",
         "//dreal/symbolic",
     ],
 )
@@ -172,10 +188,10 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
-    name = "cnfizer_test",
+    name = "tseitin_cnfizer_test",
     tags = ["unit"],
     deps = [
-        ":cnfizer",
+        ":tseitin_cnfizer",
         "//dreal/symbolic:symbolic_test_util",
     ],
 )

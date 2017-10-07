@@ -54,6 +54,12 @@ bool is_atomic(const Formula& f);
 /// Checks if @p f is a clause.
 bool is_clause(const Formula& f);
 
+/// Returns the set of clauses in f.
+///
+/// @pre @p f is in CNF. That is, @p f is either a single clause or a
+/// conjunction of clauses.
+std::set<Formula> get_clauses(const Formula& f);
+
 /// Checks if @p is in CNF form.
 bool is_cnf(const Formula& f);
 

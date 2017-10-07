@@ -74,6 +74,20 @@ bool is_clause(const Formula& f) {
   DREAL_UNREACHABLE();
 }
 
+set<Formula> get_clauses(const Formula& f) {
+  if (is_conjunction(f)) {
+#ifndef NDEBUG
+    for (const Formula& clause : get_operands(f)) {
+      assert(is_clause(clause));
+    }
+#endif
+    return get_operands(f);
+  } else {
+    assert(is_clause(f));
+    return {f};
+  }
+}
+
 bool is_cnf(const Formula& f) {
   if (is_atomic(f)) {
     return true;

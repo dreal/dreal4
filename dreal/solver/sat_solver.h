@@ -9,8 +9,8 @@
 #include "./picosat.h"
 
 #include "dreal/symbolic/symbolic.h"
-#include "dreal/util/cnfizer.h"
 #include "dreal/util/predicate_abstractor.h"
+#include "dreal/util/tseitin_cnfizer.h"
 
 namespace dreal {
 
@@ -81,7 +81,7 @@ class SatSolver {
   // ----------------
   // Pointer to the PicoSat solver.
   PicoSAT* const sat_{};
-  Cnfizer cnfizer_;
+  TseitinCnfizer cnfizer_;
   PredicateAbstractor predicate_abstractor_;
   std::vector<Formula> model_;
 

@@ -70,10 +70,10 @@ dreal_cc_library(
     ],
     deps = [
         "//dreal/symbolic",
-        "//dreal/util:cnfizer",
         "//dreal/util:exception",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
+        "//dreal/util:tseitin_cnfizer",
         "@picosat//:picosat",
     ],
 )

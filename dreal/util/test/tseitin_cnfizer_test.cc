@@ -1,4 +1,4 @@
-#include "dreal/util/cnfizer.h"
+#include "dreal/util/tseitin_cnfizer.h"
 
 #include <iostream>
 #include <set>
@@ -31,7 +31,7 @@ bool IsSatisfiable(const Formula& f) {
          IsSatisfiable(f.Substitute(first_var, Formula::False()));
 }
 
-class CnfizerTest : public ::testing::Test {
+class TseitinCnfizerTest : public ::testing::Test {
  protected:
   ::testing::AssertionResult CnfChecker(const Formula& f) {
     const vector<Formula> clauses{cnfizer_.Convert(f)};
@@ -73,10 +73,10 @@ class CnfizerTest : public ::testing::Test {
   const Variable b2_{"b2", Variable::Type::BOOLEAN};
   const Variable b3_{"b3", Variable::Type::BOOLEAN};
 
-  Cnfizer cnfizer_;
+  TseitinCnfizer cnfizer_;
 };
 
-TEST_F(CnfizerTest, Test) {
+TEST_F(TseitinCnfizerTest, Test) {
   vector<Formula> formulas;
   formulas.push_back(Formula{b1_});
   formulas.push_back(!b1_);

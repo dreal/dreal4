@@ -4,12 +4,12 @@
 #include <vector>
 
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/naive_cnfizer.h"
 
 namespace dreal {
-
 /// Transforms a symbolic formula @p f into an equi-satisfiable CNF
-/// formula by introducing extra Boolean variables.
-class Cnfizer {
+/// formula by introducing extra Boolean variables (Tseitin transformation).
+class TseitinCnfizer {
  public:
   /// Convert @p f into an equi-satisfiable formula @c f' in CNF.
   std::vector<Formula> Convert(const Formula& f);
@@ -32,9 +32,12 @@ class Cnfizer {
 
   std::unordered_map<Variable, Formula, hash_value<Variable>> map_;
 
+  // To transform nested formulas inside of universal quantifications.
+  const NaiveCnfizer naive_cnfizer_{};
+
   // Makes VisitFormula a friend of this class so that it can use private
   // operator()s.
-  friend Formula drake::symbolic::VisitFormula<Formula, Cnfizer>(
-      Cnfizer*, const Formula&);
+  friend Formula drake::symbolic::VisitFormula<Formula, TseitinCnfizer>(
+      TseitinCnfizer*, const Formula&);
 };
 }  // namespace dreal
