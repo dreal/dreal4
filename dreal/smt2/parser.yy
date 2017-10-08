@@ -33,7 +33,7 @@
 %name-prefix="dreal"
 
 /* set the parser's class identifier */
-%define "parser_class_name" "Parser"
+%define "parser_class_name" "Smt2Parser"
 
 /* keep track of the current position within the input */
 %locations
@@ -46,7 +46,7 @@
 /* The driver is passed by reference to the parser and to the scanner. This
  * provides a simple but effective pure interface, not relying on global
  * variables. */
-%parse-param { class Driver& driver }
+%parse-param { class Smt2Driver& driver }
 
 /* verbose error messages */
 %error-verbose
@@ -104,7 +104,7 @@
  * object. it defines the yylex() function call to pull the next token from the
  * current lexer object of the driver context. */
 #undef yylex
-#define yylex driver.lexer_->lex
+#define yylex driver.scanner_->lex
 
 %}
 
@@ -422,8 +422,7 @@ expr:           DOUBLE { $$ = new Expression{$1}; }
         ;
 
 %% /*** Additional Code ***/
-void dreal::Parser::error(const Parser::location_type& l,
-                         const std::string& m)
-{
+void dreal::Smt2Parser::error(const Smt2Parser::location_type& l,
+                              const std::string& m) {
     driver.error(l, m);
 }

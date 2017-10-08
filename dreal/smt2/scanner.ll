@@ -15,8 +15,8 @@
 #include "dreal/smt2/scanner.h"
 
 /* import the parser's token type into a local typedef */
-typedef dreal::Parser::token token;
-typedef dreal::Parser::token_type token_type;
+typedef dreal::Smt2Parser::token token;
+typedef dreal::Smt2Parser::token_type token_type;
 
 /* By default yylex returns int, we use token_type. Unfortunately yyterminate
  * by default returns 0, which is not of token_type. */
@@ -84,82 +84,82 @@ simple_symbol   {sym_begin}{sym_continue}*
     yylloc->lines(yyleng); yylloc->step();
 }
 
-"!"                     { return Parser::token::TK_EXCLAMATION; }
-"BINARY"                { return Parser::token::TK_BINARY; }
-"DECIMAL"               { return Parser::token::TK_DECIMAL; }
-"HEXADECIMAL"           { return Parser::token::TK_HEXADECIMAL; }
-"NUMERAL"               { return Parser::token::TK_NUMERAL; }
-"STRING"                { return Parser::token::TK_STRING; }
-"_"                     { return Parser::token::TK_UNDERSCORE; }
-"as"                    { return Parser::token::TK_AS; }
-"exists"                { return Parser::token::TK_EXISTS; }
-"forall"                { return Parser::token::TK_FORALL; }
-"let"                   { return Parser::token::TK_LET; }
-"par"                   { return Parser::token::TK_PAR; }
+"!"                     { return Smt2Parser::token::TK_EXCLAMATION; }
+"BINARY"                { return Smt2Parser::token::TK_BINARY; }
+"DECIMAL"               { return Smt2Parser::token::TK_DECIMAL; }
+"HEXADECIMAL"           { return Smt2Parser::token::TK_HEXADECIMAL; }
+"NUMERAL"               { return Smt2Parser::token::TK_NUMERAL; }
+"STRING"                { return Smt2Parser::token::TK_STRING; }
+"_"                     { return Smt2Parser::token::TK_UNDERSCORE; }
+"as"                    { return Smt2Parser::token::TK_AS; }
+"exists"                { return Smt2Parser::token::TK_EXISTS; }
+"forall"                { return Smt2Parser::token::TK_FORALL; }
+"let"                   { return Smt2Parser::token::TK_LET; }
+"par"                   { return Smt2Parser::token::TK_PAR; }
 
-"assert"                { return Parser::token::TK_ASSERT; }
-"check-sat"             { return Parser::token::TK_CHECK_SAT; }
-"check-sat-assuming"    { return Parser::token::TK_CHECK_SAT_ASSUMING; }
-"declare-const"         { return Parser::token::TK_DECLARE_CONST; }
-"declare-fun"           { return Parser::token::TK_DECLARE_FUN; }
-"declare-sort"          { return Parser::token::TK_DECLARE_SORT; }
-"define-fun"            { return Parser::token::TK_DEFINE_FUN; }
-"define-fun-rec"        { return Parser::token::TK_DEFINE_FUN_REC; }
-"define-sort"           { return Parser::token::TK_DEFINE_SORT; }
-"echo"                  { return Parser::token::TK_ECHO; }
-"exit"                  { return Parser::token::TK_EXIT; }
-"get-assertions"        { return Parser::token::TK_GET_ASSERTIONS; }
-"get-assignment"        { return Parser::token::TK_GET_ASSIGNMENT; }
-"get-info"              { return Parser::token::TK_GET_INFO; }
-"get-model"             { return Parser::token::TK_GET_MODEL; }
-"get-option"            { return Parser::token::TK_GET_OPTION; }
-"get-proof"             { return Parser::token::TK_GET_PROOF; }
-"get-unsat-assumptions" { return Parser::token::TK_GET_UNSAT_ASSUMPTIONS; }
-"get-unsat-core"        { return Parser::token::TK_GET_UNSAT_CORE; }
-"get-value"             { return Parser::token::TK_GET_VALUE; }
-"pop"                   { return Parser::token::TK_POP; }
-"push"                  { return Parser::token::TK_PUSH; }
-"reset"                 { return Parser::token::TK_RESET; }
-"reset-assertions"      { return Parser::token::TK_RESET_ASSERTIONS; }
-"set-info"              { return Parser::token::TK_SET_INFO; }
-"set-logic"             { return Parser::token::TK_SET_LOGIC; }
-"set-option"            { return Parser::token::TK_SET_OPTION; }
+"assert"                { return Smt2Parser::token::TK_ASSERT; }
+"check-sat"             { return Smt2Parser::token::TK_CHECK_SAT; }
+"check-sat-assuming"    { return Smt2Parser::token::TK_CHECK_SAT_ASSUMING; }
+"declare-const"         { return Smt2Parser::token::TK_DECLARE_CONST; }
+"declare-fun"           { return Smt2Parser::token::TK_DECLARE_FUN; }
+"declare-sort"          { return Smt2Parser::token::TK_DECLARE_SORT; }
+"define-fun"            { return Smt2Parser::token::TK_DEFINE_FUN; }
+"define-fun-rec"        { return Smt2Parser::token::TK_DEFINE_FUN_REC; }
+"define-sort"           { return Smt2Parser::token::TK_DEFINE_SORT; }
+"echo"                  { return Smt2Parser::token::TK_ECHO; }
+"exit"                  { return Smt2Parser::token::TK_EXIT; }
+"get-assertions"        { return Smt2Parser::token::TK_GET_ASSERTIONS; }
+"get-assignment"        { return Smt2Parser::token::TK_GET_ASSIGNMENT; }
+"get-info"              { return Smt2Parser::token::TK_GET_INFO; }
+"get-model"             { return Smt2Parser::token::TK_GET_MODEL; }
+"get-option"            { return Smt2Parser::token::TK_GET_OPTION; }
+"get-proof"             { return Smt2Parser::token::TK_GET_PROOF; }
+"get-unsat-assumptions" { return Smt2Parser::token::TK_GET_UNSAT_ASSUMPTIONS; }
+"get-unsat-core"        { return Smt2Parser::token::TK_GET_UNSAT_CORE; }
+"get-value"             { return Smt2Parser::token::TK_GET_VALUE; }
+"pop"                   { return Smt2Parser::token::TK_POP; }
+"push"                  { return Smt2Parser::token::TK_PUSH; }
+"reset"                 { return Smt2Parser::token::TK_RESET; }
+"reset-assertions"      { return Smt2Parser::token::TK_RESET_ASSERTIONS; }
+"set-info"              { return Smt2Parser::token::TK_SET_INFO; }
+"set-logic"             { return Smt2Parser::token::TK_SET_LOGIC; }
+"set-option"            { return Smt2Parser::token::TK_SET_OPTION; }
 
-"+"                     { return Parser::token::TK_PLUS; }
-"-"                     { return Parser::token::TK_MINUS; }
-"*"                     { return Parser::token::TK_TIMES; }
-"/"                     { return Parser::token::TK_DIV; }
-"="                     { return Parser::token::TK_EQ; }
-"<="                    { return Parser::token::TK_LTE; }
-">="                    { return Parser::token::TK_GTE; }
-"<"                     { return Parser::token::TK_LT; }
-">"                     { return Parser::token::TK_GT; }
-"exp"                   { return Parser::token::TK_EXP; }
-"log"                   { return Parser::token::TK_LOG; }
-"abs"                   { return Parser::token::TK_ABS; }
-"sin"                   { return Parser::token::TK_SIN; }
-"cos"                   { return Parser::token::TK_COS; }
-"tan"                   { return Parser::token::TK_TAN; }
-"asin"|"arcsin"         { return Parser::token::TK_ASIN; }
-"acos"|"arccos"         { return Parser::token::TK_ACOS; }
-"atan"|"arctan"         { return Parser::token::TK_ATAN; }
-"atan2"|"arctan2"       { return Parser::token::TK_ATAN2; }
-"sinh"                  { return Parser::token::TK_SINH; }
-"cosh"                  { return Parser::token::TK_COSH; }
-"tanh"                  { return Parser::token::TK_TANH; }
-"min"                   { return Parser::token::TK_MIN; }
-"max"                   { return Parser::token::TK_MAX; }
-"maximize"              { return Parser::token::TK_MAXIMIZE; }
-"minimize"              { return Parser::token::TK_MINIMIZE; }
-"sqrt"                  { return Parser::token::TK_SQRT; }
-"^"|"pow"               { return Parser::token::TK_POW; }
+"+"                     { return Smt2Parser::token::TK_PLUS; }
+"-"                     { return Smt2Parser::token::TK_MINUS; }
+"*"                     { return Smt2Parser::token::TK_TIMES; }
+"/"                     { return Smt2Parser::token::TK_DIV; }
+"="                     { return Smt2Parser::token::TK_EQ; }
+"<="                    { return Smt2Parser::token::TK_LTE; }
+">="                    { return Smt2Parser::token::TK_GTE; }
+"<"                     { return Smt2Parser::token::TK_LT; }
+">"                     { return Smt2Parser::token::TK_GT; }
+"exp"                   { return Smt2Parser::token::TK_EXP; }
+"log"                   { return Smt2Parser::token::TK_LOG; }
+"abs"                   { return Smt2Parser::token::TK_ABS; }
+"sin"                   { return Smt2Parser::token::TK_SIN; }
+"cos"                   { return Smt2Parser::token::TK_COS; }
+"tan"                   { return Smt2Parser::token::TK_TAN; }
+"asin"|"arcsin"         { return Smt2Parser::token::TK_ASIN; }
+"acos"|"arccos"         { return Smt2Parser::token::TK_ACOS; }
+"atan"|"arctan"         { return Smt2Parser::token::TK_ATAN; }
+"atan2"|"arctan2"       { return Smt2Parser::token::TK_ATAN2; }
+"sinh"                  { return Smt2Parser::token::TK_SINH; }
+"cosh"                  { return Smt2Parser::token::TK_COSH; }
+"tanh"                  { return Smt2Parser::token::TK_TANH; }
+"min"                   { return Smt2Parser::token::TK_MIN; }
+"max"                   { return Smt2Parser::token::TK_MAX; }
+"maximize"              { return Smt2Parser::token::TK_MAXIMIZE; }
+"minimize"              { return Smt2Parser::token::TK_MINIMIZE; }
+"sqrt"                  { return Smt2Parser::token::TK_SQRT; }
+"^"|"pow"               { return Smt2Parser::token::TK_POW; }
 
-"true"                  { return Parser::token::TK_TRUE; }
-"false"                 { return Parser::token::TK_FALSE; }
-"and"                   { return Parser::token::TK_AND; }
-"or"                    { return Parser::token::TK_OR; }
-"not"                   { return Parser::token::TK_NOT; }
-"ite"                   { return Parser::token::TK_ITE; }
+"true"                  { return Smt2Parser::token::TK_TRUE; }
+"false"                 { return Smt2Parser::token::TK_FALSE; }
+"and"                   { return Smt2Parser::token::TK_AND; }
+"or"                    { return Smt2Parser::token::TK_OR; }
+"not"                   { return Smt2Parser::token::TK_NOT; }
+"ite"                   { return Smt2Parser::token::TK_ITE; }
 
  /* gobble up white-spaces */
 [ \t\r]+ {
@@ -229,20 +229,20 @@ simple_symbol   {sym_begin}{sym_continue}*
 
 namespace dreal {
 
-Scanner::Scanner(std::istream* in,
-                 std::ostream* out)
+Smt2Scanner::Smt2Scanner(std::istream* in,
+                         std::ostream* out)
     : Smt2FlexLexer(in, out) {}
 
-Scanner::~Scanner() {}
+Smt2Scanner::~Smt2Scanner() {}
 
-void Scanner::set_debug(const bool b) {
+void Smt2Scanner::set_debug(const bool b) {
     yy_flex_debug = b;
 }
 }  // namespace dreal
 
 /* This implementation of Smt2FlexLexer::yylex() is required to fill the
  * vtable of the class Smt2FlexLexer. We define the scanner's main yylex
- * function via YY_DECL to reside in the Scanner class instead. */
+ * function via YY_DECL to reside in the Smt2Scanner class instead. */
 
 #ifdef yylex
 #undef yylex

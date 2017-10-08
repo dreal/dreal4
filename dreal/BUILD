@@ -30,7 +30,8 @@ dreal_cc_library(
 dreal_cc_binary(
     name = "dreal",
     srcs = [
-        "dreal.cc",
+        "dreal_main.cc",
+        "dreal_main.h",
     ],
     visibility = ["//visibility:public"],
     deps = [

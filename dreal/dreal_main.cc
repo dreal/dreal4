@@ -1,10 +1,10 @@
-#include <iostream>
-#include <string>
-#include <vector>
+#include "dreal/dreal_main.h"
 
-#include "./ezOptionParser.hpp"
+#include <iostream>
 
 #include "dreal/smt2/driver.h"
+#include "dreal/solver/context.h"
+#include "dreal/util/exception.h"
 #include "dreal/util/filesystem.h"
 #include "dreal/util/logging.h"
 
@@ -15,34 +15,10 @@ using std::endl;
 using std::string;
 using std::vector;
 
-/// dReal's main program. It parses options from command line and
-/// process a given smt2 file.
-class MainProgram {
- public:
-  /// Constructs a main program using given command-line arguments.
-  MainProgram(int argc, const char* argv[]);
-  /// Executes a smt2 file.
-  int Run();
-
- private:
-  void PrintUsage();
-  void AddOptions();
-  bool ValidateOptions();
-  void ExtractOptions();
-
-  bool is_options_all_valid{true};
-  ez::ezOptionParser opt_;
-  vector<const string*> args_;  // List of valid option arguments.
-  dreal::Driver driver_;
-};
-
 MainProgram::MainProgram(int argc, const char* argv[]) {
   AddOptions();
   opt_.parse(argc, argv);  // Parse Options
-  is_options_all_valid = ValidateOptions();
-  if (is_options_all_valid) {
-    ExtractOptions();
-  }
+  is_options_all_valid_ = ValidateOptions();
 }
 
 void MainProgram::PrintUsage() {
@@ -156,71 +132,83 @@ void MainProgram::ExtractOptions() {
 
   opt_.get("--verbose")->getString(verbosity);
   if (verbosity == "trace") {
-    dreal::log()->set_level(spdlog::level::trace);
+    log()->set_level(spdlog::level::trace);
   } else if (verbosity == "debug") {
-    dreal::log()->set_level(spdlog::level::debug);
+    log()->set_level(spdlog::level::debug);
   } else if (verbosity == "info") {
-    dreal::log()->set_level(spdlog::level::info);
+    log()->set_level(spdlog::level::info);
   } else if (verbosity == "warning") {
-    dreal::log()->set_level(spdlog::level::warn);
+    log()->set_level(spdlog::level::warn);
   } else if (verbosity == "error") {
-    dreal::log()->set_level(spdlog::level::err);
+    log()->set_level(spdlog::level::err);
   } else if (verbosity == "critical") {
-    dreal::log()->set_level(spdlog::level::critical);
+    log()->set_level(spdlog::level::critical);
   } else {
-    dreal::log()->set_level(spdlog::level::off);
+    log()->set_level(spdlog::level::off);
   }
-  // --debug-scanning
-  driver_.trace_scanning_ = opt_.isSet("--debug-scanning");
-  DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --debug-scanning = {}",
-                  driver_.trace_scanning_);
-  // --debug-parsing
-  driver_.trace_parsing_ = opt_.isSet("--debug-parsing");
-  DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --debug-parsing = {}",
-                  driver_.trace_parsing_);
   // --precision
   if (opt_.isSet("--precision")) {
     opt_.get("--precision")->getDouble(precision);
-    driver_.context_.mutable_config().mutable_precision().set_from_command_line(
-        precision);
+    config_.mutable_precision().set_from_command_line(precision);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --precision = {}",
-                    driver_.context_.config().precision());
+                    config_.precision());
   }
   // --produce-model
-  driver_.context_.mutable_config()
-      .mutable_produce_models()
-      .set_from_command_line(opt_.isSet("--produce-models"));
-  DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --produce-models = {}",
-                  driver_.context_.config().produce_models());
+  if (opt_.isSet("--produce-models")) {
+    config_.mutable_produce_models().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --produce-models = {}",
+                    config_.produce_models());
+  }
 
   // --polytope
-  driver_.context_.mutable_config()
-      .mutable_use_polytope()
-      .set_from_command_line(opt_.isSet("--polytope"));
-  DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --polytope = {}",
-                  driver_.context_.config().use_polytope());
+  if (opt_.isSet("--polytope")) {
+    config_.mutable_use_polytope().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --polytope = {}",
+                    config_.use_polytope());
+  }
 
   // --forall-polytope
-  driver_.context_.mutable_config()
-      .mutable_use_polytope_in_forall()
-      .set_from_command_line(opt_.isSet("--forall-polytope"));
-  DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --forall-polytope = {}",
-                  driver_.context_.config().use_polytope_in_forall());
+  if (opt_.isSet("--forall-polytope")) {
+    config_.mutable_use_polytope_in_forall().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --forall-polytope = {}",
+                    config_.use_polytope_in_forall());
+  }
 }
 
 int MainProgram::Run() {
-  if (!is_options_all_valid) {
+  if (!is_options_all_valid_) {
     return 1;
   }
+  ExtractOptions();
   const string& filename{*args_[0]};
-  if (!dreal::file_exists(filename)) {
+  if (!file_exists(filename)) {
     cerr << "File not found: " << filename << "\n" << endl;
     PrintUsage();
     return 1;
   }
-  // For now, the parser calls solving process. We might need to
-  // change it later.
-  driver_.parse_file(filename);
+  const string extension{get_extension(filename)};
+  if (extension == "smt2") {
+    Smt2Driver smt2_driver{Context{config_}};
+    // For now, the parser calls solving process. We might need to
+    // change it later.
+
+    // Set up --debug-scanning option.
+    smt2_driver.trace_scanning_ = opt_.isSet("--debug-scanning");
+    DREAL_LOG_DEBUG("MainProgram::Run() --debug-scanning = {}",
+                    smt2_driver.trace_scanning_);
+    // Set up --debug-parsing option.
+    smt2_driver.trace_parsing_ = opt_.isSet("--debug-parsing");
+    DREAL_LOG_DEBUG("MainProgram::Run() --debug-parsing = {}",
+                    smt2_driver.trace_parsing_);
+
+    smt2_driver.parse_file(filename);
+  } else if (extension == "dr") {
+    throw DREAL_RUNTIME_ERROR("dr format is not supported yet.");
+  } else {
+    cerr << "Unknown extension: " << filename << "\n" << endl;
+    PrintUsage();
+    return 1;
+  }
   return 0;
 }
 }  // namespace dreal
