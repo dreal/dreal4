@@ -11,4 +11,14 @@ bool file_exists(const string& name) {
   }
   return S_ISREG(buffer.st_mode);
 }
+
+string get_extension(const string& name) {
+  const auto idx = name.rfind('.');
+  if (idx != string::npos) {
+    return name.substr(idx + 1);
+  } else {
+    // No extension found
+    return "";
+  }
+}
 }  // namespace dreal

@@ -188,11 +188,10 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
-    name = "tseitin_cnfizer_test",
+    name = "filesystem_test",
     tags = ["unit"],
     deps = [
-        ":tseitin_cnfizer",
-        "//dreal/symbolic:symbolic_test_util",
+        ":filesystem",
     ],
 )
 
@@ -227,6 +226,15 @@ dreal_cc_googletest(
     tags = ["unit"],
     deps = [
         ":scoped_vector",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "tseitin_cnfizer_test",
+    tags = ["unit"],
+    deps = [
+        ":tseitin_cnfizer",
+        "//dreal/symbolic:symbolic_test_util",
     ],
 )
 
