@@ -1,4 +1,5 @@
 #pragma once
+#include <ostream>
 
 #include "dreal/util/option_value.h"
 
@@ -41,4 +42,6 @@ class Config {
   OptionValue<bool> use_polytope_{false};
   OptionValue<bool> use_polytope_in_forall_{false};
 };
+
+std::ostream& operator<<(std::ostream& os, const Config& config);
 }  // namespace dreal
