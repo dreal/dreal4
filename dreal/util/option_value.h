@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <ostream>
 #include <utility>
 
 namespace dreal {
@@ -86,6 +87,19 @@ class OptionValue {
       case Type::FROM_CODE:
         // No operation.
         return;
+    }
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, Type type) {
+    switch (type) {
+      case OptionValue<T>::Type::DEFAULT:
+        return os << "DEFAULT";
+      case OptionValue<T>::Type::FROM_FILE:
+        return os << "FROM_FILE";
+      case OptionValue<T>::Type::FROM_COMMAND_LINE:
+        return os << "FROM_COMMAND_LINE";
+      case OptionValue<T>::Type::FROM_CODE:
+        return os << "FROM_CODE";
     }
   }
 
