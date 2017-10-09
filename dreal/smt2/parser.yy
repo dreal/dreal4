@@ -398,6 +398,7 @@ expr:           DOUBLE { $$ = new Expression{$1}; }
         |       '('TK_MIN expr expr ')' {
             $$ = new Expression{min(*$3, *$4)};
             delete $3;
+            delete $4;
             }
         |       '('TK_MAX expr expr ')' {
             $$ = new Expression{max(*$3, *$4)};
