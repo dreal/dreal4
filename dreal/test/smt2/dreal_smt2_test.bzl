@@ -2,14 +2,14 @@
 # This file contains rules for Bazel
 
 def dreal_smt2_tests(data):
-    prefix = "dreal/test/"
+    prefix = "dreal/test/smt2"
     for smt2 in native.glob(["*.smt2"]):
         native.py_test(
             name = "run_" + smt2,
             args = [
                 "$(location //dreal:dreal)",
-                prefix + smt2,
-                prefix + smt2 + ".expected",
+                prefix + "/" + smt2,
+                prefix + "/" + smt2 + ".expected",
             ],
             tags = ["smt2"],
             srcs = ["test.py"],
