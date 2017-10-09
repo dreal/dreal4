@@ -73,14 +73,16 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
-    name = "driver",
+    name = "smt2",
     srcs = [
         "driver.cc",
+        "run.cc",
         ":parser",
         ":scanner",
     ],
     hdrs = [
         "driver.h",
+        "run.h",
         "scanner.h",
     ],
     deps = [

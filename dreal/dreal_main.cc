@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "dreal/smt2/driver.h"
+#include "dreal/smt2/run.h"
 #include "dreal/solver/context.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/filesystem.h"
@@ -30,7 +30,7 @@ void MainProgram::PrintUsage() {
 void MainProgram::AddOptions() {
   opt_.overview =
       "dReal v" + Context::version() + " : delta-complete SMT solver";
-  opt_.syntax = "dreal [OPTIONS] <.smt2 file>";
+  opt_.syntax = "dreal [OPTIONS] <input file> (.smt2 or .dr)";
 
   // NOTE: Make sure to match the default values specified here with the ones
   // specified in dreal/solver/config.h.
@@ -188,20 +188,8 @@ int MainProgram::Run() {
   }
   const string extension{get_extension(filename)};
   if (extension == "smt2") {
-    Smt2Driver smt2_driver{Context{config_}};
-    // For now, the parser calls solving process. We might need to
-    // change it later.
-
-    // Set up --debug-scanning option.
-    smt2_driver.trace_scanning_ = opt_.isSet("--debug-scanning");
-    DREAL_LOG_DEBUG("MainProgram::Run() --debug-scanning = {}",
-                    smt2_driver.trace_scanning_);
-    // Set up --debug-parsing option.
-    smt2_driver.trace_parsing_ = opt_.isSet("--debug-parsing");
-    DREAL_LOG_DEBUG("MainProgram::Run() --debug-parsing = {}",
-                    smt2_driver.trace_parsing_);
-
-    smt2_driver.parse_file(filename);
+    RunSmt2(filename, config_, opt_.isSet("--debug-scanning"),
+            opt_.isSet("--debug-parsing"));
   } else if (extension == "dr") {
     throw DREAL_RUNTIME_ERROR("dr format is not supported yet.");
   } else {

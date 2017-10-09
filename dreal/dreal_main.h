@@ -11,7 +11,7 @@
 namespace dreal {
 
 /// dReal's main program. It parses options from command line and
-/// process a given smt2 file.
+/// process a given file (either .smt2 or .dr file).
 class MainProgram {
  public:
   /// Constructs a main program using given command-line arguments.

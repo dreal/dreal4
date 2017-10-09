@@ -35,7 +35,7 @@ dreal_cc_binary(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//dreal/smt2:driver",
+        "//dreal/smt2",
         "//dreal/util:filesystem",
         "//dreal/util:logging",
         "@ezoptionparser//:ezoptionparser",
