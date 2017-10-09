@@ -68,6 +68,9 @@ Context::Impl::Impl(Config config) : config_{move(config)} {
 }
 
 void Context::Impl::Assert(const Formula& f) {
+  if (is_true(f)) {
+    return;
+  }
   if (FilterAssertion(f, &box())) {
     DREAL_LOG_DEBUG("Context::Assert: {} is not added.", f);
     DREAL_LOG_DEBUG("Box=\n{}", box());
