@@ -74,13 +74,16 @@
 %type <exprVal>        expr
 %type <formulaVal>     formula
 
-%left TK_AND TK_OR TK_IMPLIES
 %nonassoc TK_EQ TK_NEQ TK_LT TK_LEQ TK_GT TK_GEQ
 %left TK_PLUS TK_MINUS
 %left TK_TIMES TK_DIV
-%nonassoc UMINUS
-%right TK_POW
+%left UMINUS
+%right TK_CARET
 
+%right TK_IMPLIES
+%left TK_OR
+%left TK_AND
+%left TK_NOT
 
 %{
 
@@ -105,14 +108,17 @@ script:         var_decl_sec
 // Variable Declaration Section
 // =============================
 
-var_decl:       TK_LB DOUBLE TK_COMMA DOUBLE TK_RB ID TK_SEMICOLON {
+var_decl:       TK_LB expr TK_COMMA expr TK_RB ID TK_SEMICOLON {
                     driver.context_
-                        .DeclareVariable(Variable{*$6, Variable::Type::CONTINUOUS}, $2, $4);
+                        .DeclareVariable(Variable{*$6, Variable::Type::CONTINUOUS}, $2->Evaluate(), $4->Evaluate());
+                    delete $2;
+                    delete $4;
                     delete $6;
                 }
-        |       DOUBLE ID TK_SEMICOLON {
+        |       expr ID TK_SEMICOLON {
                     driver.context_
-                        .DeclareVariable(Variable{*$2, Variable::Type::CONTINUOUS}, $1, $1);
+                        .DeclareVariable(Variable{*$2, Variable::Type::CONTINUOUS}, $1->Evaluate(), $1->Evaluate());
+                    delete $1;
                     delete $2;
         }
         ;
@@ -174,7 +180,6 @@ formula:
         }
         ;
 
-
 expr:           DOUBLE { $$ = new Expression{$1}; }
         |       ID { $$ = new Expression{driver.context_.lookup_variable(*$1)}; delete $1; }
         |       expr TK_PLUS expr {
@@ -182,7 +187,7 @@ expr:           DOUBLE { $$ = new Expression{$1}; }
             delete $1;
             delete $3;
         }
-        |       TK_MINUS expr {
+        |       TK_MINUS expr %prec UMINUS {
             $$ = new Expression{-*$2};
             delete $2;
         }
