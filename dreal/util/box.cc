@@ -39,7 +39,7 @@ Box::Box()
           make_shared<unordered_map<Variable, int, hash_value<Variable>>>()},
       idx_to_var_{make_shared<unordered_map<int, Variable>>()} {}
 
-Box::Box(const Variables& variables)
+Box::Box(const vector<Variable>& variables)
     : variables_{make_shared<vector<Variable>>()},
       values_{static_cast<int>(variables.size())},
       var_to_idx_{

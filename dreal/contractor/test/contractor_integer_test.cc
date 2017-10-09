@@ -11,12 +11,14 @@
 namespace dreal {
 namespace {
 
+using std::vector;
+
 class ContractorIntegerTest : public ::testing::Test {
  protected:
   const Variable x_{"x", Variable::Type::CONTINUOUS};
   const Variable y_{"y", Variable::Type::INTEGER};
   const Variable z_{"z", Variable::Type::INTEGER};
-  const Variables vars_{{x_, y_, z_}};
+  const vector<Variable> vars_{{x_, y_, z_}};
   Box box_{vars_};
 };
 

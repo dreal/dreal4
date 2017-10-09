@@ -23,7 +23,7 @@ class Box {
   Box();
 
   /// Constructs a box from @p variables.
-  explicit Box(const Variables& variables);
+  explicit Box(const std::vector<Variable>& variables);
 
   /// Default copy constructor.
   Box(const Box&) = default;
