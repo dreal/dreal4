@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "dreal/dr/run.h"
 #include "dreal/smt2/run.h"
 #include "dreal/solver/context.h"
 #include "dreal/util/exception.h"
@@ -191,7 +192,8 @@ int MainProgram::Run() {
     RunSmt2(filename, config_, opt_.isSet("--debug-scanning"),
             opt_.isSet("--debug-parsing"));
   } else if (extension == "dr") {
-    throw DREAL_RUNTIME_ERROR("dr format is not supported yet.");
+    RunDr(filename, config_, opt_.isSet("--debug-scanning"),
+          opt_.isSet("--debug-parsing"));
   } else {
     cerr << "Unknown extension: " << filename << "\n" << endl;
     PrintUsage();

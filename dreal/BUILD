@@ -35,6 +35,7 @@ dreal_cc_binary(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//dreal/dr",
         "//dreal/smt2",
         "//dreal/util:filesystem",
         "//dreal/util:logging",
