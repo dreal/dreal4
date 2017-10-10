@@ -94,6 +94,7 @@ install:
       BAZEL_LOCAL_RESOURCES=400,1,1.0;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
+      brew update;
       brew install bazel pkg-config dreal-deps/ibex/ibex nlopt || true;
       BAZEL_LOCAL_RESOURCES=400,2,1.0;
     fi
