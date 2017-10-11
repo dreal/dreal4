@@ -13,6 +13,7 @@ using std::endl;
 using std::experimental::optional;
 
 // Checks the delta-satisfiability of formula `f`.
+// Note that we have the same function in dreal/api/api.h file.
 optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
   Context context;
   context.mutable_config().mutable_precision() = delta;

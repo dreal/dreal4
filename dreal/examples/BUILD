@@ -15,6 +15,7 @@ dreal_cc_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//dreal/solver",
+        "//dreal/api",
     ],
 )
 
@@ -26,6 +27,7 @@ dreal_cc_binary(
     visibility = ["//visibility:public"],
     deps = [
         "//dreal/solver",
+        "//dreal/api",
     ],
 )
 

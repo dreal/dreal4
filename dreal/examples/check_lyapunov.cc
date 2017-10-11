@@ -4,7 +4,7 @@
 #include <vector>
 #include <experimental/optional>
 
-#include "dreal/solver/context.h"
+#include "dreal/api/api.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -16,17 +16,6 @@ using std::cout;
 using std::endl;
 using std::experimental::optional;
 using std::vector;
-
-// Checks the delta-satisfiability of formula `f`.
-optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
-  Context context;
-  context.mutable_config().mutable_precision() = delta;
-  for (const Variable& v : f.GetFreeVariables()) {
-    context.DeclareVariable(v);
-  }
-  context.Assert(f);
-  return context.CheckSat();
-}
 
 // Given a dynamic system `xᵢ = fᵢ(x)`, checks that a given candidate
 // function `V` is a Lyapunov function of the system within a ball
