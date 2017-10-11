@@ -122,17 +122,17 @@ typedef dreal::DrParser::token_type token_type;
     yylloc->lines(yyleng); yylloc->step();
 }
 
-[+]?(0|[1-9][0-9]*) {
+(0|[1-9][0-9]*) {
     yylval->doubleVal = atof(yytext);
     return token::DOUBLE;
 }
 
-[+]?((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {
+((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {
     yylval->doubleVal = atof(yytext);
     return token::DOUBLE;
 }
 
-[+]?((([0-9]+)|([0-9]+\.)))                            {
+((([0-9]+)|([0-9]+\.)))                            {
     yylval->doubleVal = atof(yytext);
     return token::DOUBLE;
 }
