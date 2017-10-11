@@ -34,8 +34,8 @@ dReal is using the following external packages:
  - [fmtlib](http://fmtlib.net/latest/index.html) - [BSD 2-Clause](https://raw.githubusercontent.com/fmtlib/fmt/master/LICENSE.rst)
  - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
 
-How to Install
-==============
+How to Install dReal
+====================
 
 macOS 10.12 (Sierra) / 10.13 (High Sierra):
 
@@ -64,8 +64,8 @@ wget https://dl.bintray.com/dreal/dreal/dreal_4.17.10_amd64.deb
 dpkg -i dreal_4.17.10_amd64.deb
 ```
 
-How to Build
-============
+How to Build dReal
+==================
 
 Install Prerequsites
 --------------------
@@ -115,3 +115,16 @@ run:
 pip install protobuf    # required to run only once
 ./scripts/generate_compile_commands.sh
 ```
+
+How to Use dReal as a Library
+=============================
+
+After following the install steps,
+[pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config)
+should work. That is, `pkg-config dreal --cflags` and `pkg-config
+dreal --libs` should provide necessary information to use dReal.
+
+We have also prepared the following example projects using dReal as a
+library:
+ - [dreal-cmake-example-project](https://github.com/dreal/dreal-cmake-example-project)
+ - [dreal-bazel-example-project](https://github.com/dreal/dreal-bazel-example-project)
