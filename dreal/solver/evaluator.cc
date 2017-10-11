@@ -5,6 +5,7 @@
 #include "dreal/solver/evaluator_cell.h"
 #include "dreal/solver/evaluator_forall.h"
 #include "dreal/solver/evaluator_quantifier_free.h"
+#include "dreal/util/exception.h"
 
 namespace dreal {
 
@@ -21,6 +22,22 @@ EvaluationResult::Type EvaluationResult::type() const { return type_; }
 
 const Box::Interval& EvaluationResult::evaluation() const {
   return evaluation_;
+}
+
+ostream& operator<<(ostream& os, EvaluationResult::Type type) {
+  switch (type) {
+    case EvaluationResult::Type::VALID:
+      return os << "VALID";
+    case EvaluationResult::Type::UNSAT:
+      return os << "UNSAT";
+    case EvaluationResult::Type::UNKNOWN:
+      return os << "UNKNOWN";
+  }
+  DREAL_UNREACHABLE();
+}
+
+ostream& operator<<(ostream& os, const EvaluationResult& result) {
+  return os << "[" << result.type() << ", " << result.evaluation() << "]";
 }
 
 Evaluator::Evaluator(shared_ptr<EvaluatorCell> ptr) : ptr_{move(ptr)} {}
@@ -45,4 +62,5 @@ Evaluator make_evaluator_forall(const Formula& f,
   assert(is_forall(f));
   return Evaluator{make_shared<EvaluatorForall>(f, variables, epsilon, delta)};
 }
+
 }  // namespace dreal

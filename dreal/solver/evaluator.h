@@ -40,6 +40,9 @@ class EvaluationResult {
   Box::Interval evaluation_;
 };
 
+std::ostream& operator<<(std::ostream& os, EvaluationResult::Type type);
+std::ostream& operator<<(std::ostream& os, const EvaluationResult& result);
+
 /// Class to evaluate a symbolic formula with a box.
 class Evaluator {
  public:
