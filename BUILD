@@ -46,6 +46,7 @@ pkg_tar(
         "//dreal:package_bin",
         "//dreal:package_headers",
         "//dreal:package_sharedlib",
+        "//dreal/api:package_headers",
         "//dreal/smt2:package_headers",
         "//dreal/solver:package_headers",
         "//dreal/symbolic:package_headers",
