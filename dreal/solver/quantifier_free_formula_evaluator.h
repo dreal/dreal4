@@ -6,8 +6,8 @@
 
 #include "./ibex.h"
 
-#include "dreal/solver/evaluator.h"
-#include "dreal/solver/evaluator_cell.h"
+#include "dreal/solver/formula_evaluator.h"
+#include "dreal/solver/formula_evaluator_cell.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/ibex_converter.h"
@@ -15,14 +15,14 @@
 namespace dreal {
 /// Evaluator for quantifier-free formulas. It uses IBEX's function
 /// evaluation to evaluate QF-formulas.
-class EvaluatorQuantifierFree : public EvaluatorCell {
+class QuantifierFreeFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  ~EvaluatorQuantifierFree() override;
+  ~QuantifierFreeFormulaEvaluator() override;
 
-  EvaluatorQuantifierFree(const Formula& f,
-                          const std::vector<Variable>& variables);
+  QuantifierFreeFormulaEvaluator(const Formula& f,
+                                 const std::vector<Variable>& variables);
 
-  EvaluationResult operator()(const Box& box) const override;
+  FormulaEvaluationResult operator()(const Box& box) const override;
 
   std::ostream& Display(std::ostream& os) const override;
 

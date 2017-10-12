@@ -10,10 +10,10 @@ using std::vector;
 
 namespace dreal {
 
-Icp::Icp(Contractor contractor, vector<Evaluator> evaluators,
+Icp::Icp(Contractor contractor, vector<FormulaEvaluator> formula_evaluators,
          const double precision)
     : contractor_{move(contractor)},
-      evaluators_{move(evaluators)},
+      formula_evaluators_{move(formula_evaluators)},
       precision_{precision} {}
 
 bool Icp::CheckSat(ContractorStatus* cs) {
@@ -41,14 +41,14 @@ bool Icp::CheckSat(ContractorStatus* cs) {
       // Evaluate each assertion fᵢ with the current box, B. Stop the ICP
       // loop if |fᵢ(B)| ≤ δ for all fᵢ.
       bool delta_check = true;
-      for (const Evaluator& evaluator : evaluators_) {
-        const EvaluationResult result{evaluator(current_box)};
+      for (const FormulaEvaluator& formula_evaluator : formula_evaluators_) {
+        const FormulaEvaluationResult result{formula_evaluator(current_box)};
         const Box::Interval& evaluation{result.evaluation()};
         if (evaluation.diam() > precision_) {
           DREAL_LOG_DEBUG(
               "Icp::CheckSat() Found an interval >= precision({2}):\n{0} -> "
               "{1}",
-              evaluator, evaluation, precision_);
+              formula_evaluator, evaluation, precision_);
           delta_check = false;
           break;
         }
@@ -57,11 +57,11 @@ bool Icp::CheckSat(ContractorStatus* cs) {
         // Evaluate all constraints under the current box to confirm the
         // delta-sat solution.
         bool unsat_by_evaluation{false};
-        for (const Evaluator& evaluator : evaluators_) {
-          const EvaluationResult result{evaluator(current_box)};
-          if (result.type() == EvaluationResult::Type::UNSAT) {
+        for (const FormulaEvaluator& formula_evaluator : formula_evaluators_) {
+          const FormulaEvaluationResult result{formula_evaluator(current_box)};
+          if (result.type() == FormulaEvaluationResult::Type::UNSAT) {
             DREAL_LOG_DEBUG("Current box:\n{}\nRejected by {}", current_box,
-                            evaluator);
+                            formula_evaluator);
             unsat_by_evaluation = true;
             break;
           }

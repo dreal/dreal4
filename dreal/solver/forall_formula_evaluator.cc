@@ -1,4 +1,4 @@
-#include "dreal/solver/evaluator_forall.h"
+#include "dreal/solver/forall_formula_evaluator.h"
 
 #include <set>
 #include <utility>
@@ -25,16 +25,16 @@ vector<Variable> Add(vector<Variable> vars1, const Variables& vars2) {
 // Given f = [(e₁(x, y) ≥ 0) ∨ ... ∨ (eₙ(x, y) ≥ 0)], build an
 // evaluator for each (eᵢ(x, y) ≥ 0) and return a vector of
 // evaluators.
-vector<EvaluatorQuantifierFree> BuildEvaluators(
+vector<QuantifierFreeFormulaEvaluator> BuildFormulaEvaluators(
     const Formula& f, const vector<Variable>& variables) {
-  DREAL_LOG_DEBUG("BuildEvaluators");
+  DREAL_LOG_DEBUG("BuildFormulaEvaluators");
   const Formula& quantified_formula{get_quantified_formula(f)};
   assert(is_clause(quantified_formula));
   const set<Formula>& disjuncts{get_operands(quantified_formula)};
-  vector<EvaluatorQuantifierFree> evaluators;
+  vector<QuantifierFreeFormulaEvaluator> evaluators;
   evaluators.reserve(disjuncts.size());
   for (const Formula& disjunct : disjuncts) {
-    DREAL_LOG_DEBUG("BuildEvaluators: disjunct = {}", disjunct);
+    DREAL_LOG_DEBUG("BuildFormulaEvaluators: disjunct = {}", disjunct);
     assert(is_relational(disjunct) ||
            (is_negation(disjunct) && is_relational(get_operand(disjunct))));
     evaluators.emplace_back(disjunct, variables);
@@ -44,13 +44,13 @@ vector<EvaluatorQuantifierFree> BuildEvaluators(
 
 }  // namespace
 
-EvaluatorForall::EvaluatorForall(const Formula& f,
-                                 const vector<Variable>& variables,
-                                 const double epsilon, const double delta)
+ForallFormulaEvaluator::ForallFormulaEvaluator(
+    const Formula& f, const vector<Variable>& variables, const double epsilon,
+    const double delta)
     : f_{f},
-      evaluators_{
-          BuildEvaluators(f_, Add(variables, get_quantified_variables(f)))} {
-  DREAL_LOG_DEBUG("EvaluatorForall({})", f);
+      evaluators_{BuildFormulaEvaluators(
+          f_, Add(variables, get_quantified_variables(f)))} {
+  DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", f);
   context_.mutable_config().mutable_precision() = delta;
   for (const Variable& exist_var : variables) {
     context_.DeclareVariable(exist_var);
@@ -61,26 +61,27 @@ EvaluatorForall::EvaluatorForall(const Formula& f,
   context_.Assert(DeltaStrengthen(!get_quantified_formula(f), epsilon));
 }
 
-EvaluatorForall::~EvaluatorForall() {
-  DREAL_LOG_DEBUG("EvaluatorForall()::~EvaluatorForall()");
+ForallFormulaEvaluator::~ForallFormulaEvaluator() {
+  DREAL_LOG_DEBUG("ForallFormulaEvaluator()::~ForallFormulaEvaluator()");
 }
 
-EvaluationResult EvaluatorForall::operator()(const Box& box) const {
+FormulaEvaluationResult ForallFormulaEvaluator::operator()(
+    const Box& box) const {
   for (const Variable& v : box.variables()) {
     context_.SetInterval(v, box[v].lb(), box[v].ub());
   }
   optional<Box> counterexample = context_.CheckSat();
-  DREAL_LOG_DEBUG("EvaluatorForall::operator({})", box);
+  DREAL_LOG_DEBUG("ForallFormulaEvaluator::operator({})", box);
   if (counterexample) {
-    DREAL_LOG_DEBUG("EvaluatorForall::operator()  --  CE found: ",
+    DREAL_LOG_DEBUG("ForallFormulaEvaluator::operator()  --  CE found: ",
                     *counterexample);
     for (const Variable& exist_var : box.variables()) {
       (*counterexample)[exist_var] = box[exist_var];
     }
     double max_diam = 0.0;
-    for (const EvaluatorQuantifierFree& evaluator : evaluators_) {
-      const EvaluationResult eval_result = evaluator(*counterexample);
-      if (eval_result.type() == EvaluationResult::Type::UNSAT) {
+    for (const QuantifierFreeFormulaEvaluator& evaluator : evaluators_) {
+      const FormulaEvaluationResult eval_result = evaluator(*counterexample);
+      if (eval_result.type() == FormulaEvaluationResult::Type::UNSAT) {
         continue;
       }
       const double diam_i{eval_result.evaluation().diam()};
@@ -88,16 +89,16 @@ EvaluationResult EvaluatorForall::operator()(const Box& box) const {
         max_diam = diam_i;
       }
     }
-    return EvaluationResult{EvaluationResult::Type::UNKNOWN,
-                            Box::Interval(0.0, max_diam)};
+    return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                   Box::Interval(0.0, max_diam)};
   } else {
-    DREAL_LOG_DEBUG("EvaluatorForall::operator()  --  No CE found: ");
-    return EvaluationResult{EvaluationResult::Type::VALID,
-                            Box::Interval(0.0, 0.0)};
+    DREAL_LOG_DEBUG("ForallFormulaEvaluator::operator()  --  No CE found: ");
+    return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                   Box::Interval(0.0, 0.0)};
   }
 }
 
-ostream& EvaluatorForall::Display(ostream& os) const {
+ostream& ForallFormulaEvaluator::Display(ostream& os) const {
   return os << "Evaluator(" << f_ << ")";
 }
 

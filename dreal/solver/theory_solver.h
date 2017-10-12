@@ -7,7 +7,7 @@
 
 #include "dreal/contractor/contractor.h"
 #include "dreal/solver/config.h"
-#include "dreal/solver/evaluator.h"
+#include "dreal/solver/formula_evaluator.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -43,7 +43,8 @@ class TheorySolver {
 
  private:
   Contractor BuildContractor(const std::vector<Formula>& assertions);
-  std::vector<Evaluator> BuildEvaluator(const std::vector<Formula>& assertions);
+  std::vector<FormulaEvaluator> BuildFormulaEvaluator(
+      const std::vector<Formula>& assertions);
 
   const Config& config_;
   const Box& box_;
@@ -53,7 +54,8 @@ class TheorySolver {
 
   std::unordered_map<Formula, Contractor, hash_value<Formula>>
       contractor_cache_;
-  std::unordered_map<Formula, Evaluator, hash_value<Formula>> evaluator_cache_;
+  std::unordered_map<Formula, FormulaEvaluator, hash_value<Formula>>
+      formula_evaluator_cache_;
 
   // stat
   int num_check_sat{0};

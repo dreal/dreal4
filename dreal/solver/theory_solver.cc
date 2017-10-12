@@ -6,7 +6,7 @@
 
 #include "dreal/contractor/contractor_forall.h"
 #include "dreal/solver/context.h"
-#include "dreal/solver/evaluator.h"
+#include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/icp.h"
 #include "dreal/util/logging.h"
 
@@ -97,29 +97,29 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
   return make_contractor_fixpoint(termination_condition, move(ctcs));
 }
 
-vector<Evaluator> TheorySolver::BuildEvaluator(
+vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
     const vector<Formula>& assertions) {
-  vector<Evaluator> evaluators;
+  vector<FormulaEvaluator> formula_evaluators;
   const double delta = config_.precision();
   const double epsilon = 0.99 * delta;
   const double inner_delta = 0.99 * epsilon;
   for (const Formula& f : assertions) {
-    auto it = evaluator_cache_.find(f);
-    if (it == evaluator_cache_.end()) {
-      DREAL_LOG_DEBUG("TheorySolver::BuildEvaluator: {}", f);
+    auto it = formula_evaluator_cache_.find(f);
+    if (it == formula_evaluator_cache_.end()) {
+      DREAL_LOG_DEBUG("TheorySolver::BuildFormulaEvaluator: {}", f);
       if (is_forall(f)) {
-        evaluators.push_back(
-            make_evaluator_forall(f, box_.variables(), epsilon, inner_delta));
+        formula_evaluators.push_back(make_forall_formula_evaluator(
+            f, box_.variables(), epsilon, inner_delta));
       } else {
-        evaluators.push_back(
-            make_evaluator_quantifier_free(f, box_.variables()));
+        formula_evaluators.push_back(
+            make_quantifier_free_formula_evaluator(f, box_.variables()));
       }
-      evaluator_cache_.emplace_hint(it, f, evaluators.back());
+      formula_evaluator_cache_.emplace_hint(it, f, formula_evaluators.back());
     } else {
-      evaluators.push_back(it->second);
+      formula_evaluators.push_back(it->second);
     }
   }
-  return evaluators;
+  return formula_evaluators;
 }
 
 bool TheorySolver::CheckSat(const vector<Formula>& assertions) {
@@ -128,7 +128,7 @@ bool TheorySolver::CheckSat(const vector<Formula>& assertions) {
   contractor_status_ = ContractorStatus(box_);
 
   // Icp Step
-  Icp icp(BuildContractor(assertions), BuildEvaluator(assertions),
+  Icp icp(BuildContractor(assertions), BuildFormulaEvaluator(assertions),
           config_.precision());
   icp.CheckSat(&contractor_status_);
   if (contractor_status_.box().empty()) {

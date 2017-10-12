@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "dreal/solver/context.h"
-#include "dreal/solver/evaluator.h"
-#include "dreal/solver/evaluator_cell.h"
-#include "dreal/solver/evaluator_quantifier_free.h"
+#include "dreal/solver/formula_evaluator.h"
+#include "dreal/solver/formula_evaluator_cell.h"
+#include "dreal/solver/quantifier_free_formula_evaluator.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -35,20 +35,21 @@ namespace dreal {
 ///           where `Iₓ` is the current interval assignment on x.
 ///           Returns `[0, maxᵢ{|eᵢ(Iₓ, b)|}]`.
 ///
-class EvaluatorForall : public EvaluatorCell {
+class ForallFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  EvaluatorForall(const Formula& f, const std::vector<Variable>& variables,
-                  double epsilon, double delta);
+  ForallFormulaEvaluator(const Formula& f,
+                         const std::vector<Variable>& variables, double epsilon,
+                         double delta);
 
-  ~EvaluatorForall() override;
+  ~ForallFormulaEvaluator() override;
 
-  EvaluationResult operator()(const Box& box) const override;
+  FormulaEvaluationResult operator()(const Box& box) const override;
 
   std::ostream& Display(std::ostream& os) const override;
 
  private:
   const Formula f_;
   mutable Context context_;
-  std::vector<EvaluatorQuantifierFree> evaluators_;
+  std::vector<QuantifierFreeFormulaEvaluator> evaluators_;
 };
 }  // namespace dreal

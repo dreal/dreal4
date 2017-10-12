@@ -27,18 +27,18 @@ dreal_cc_library(
     name = "solver",
     srcs = [
         "context.cc",
-        "evaluator.cc",
-        "evaluator_cell.h",
-        "evaluator_forall.cc",
-        "evaluator_forall.h",
-        "evaluator_quantifier_free.cc",
-        "evaluator_quantifier_free.h",
+        "forall_formula_evaluator.cc",
+        "forall_formula_evaluator.h",
+        "formula_evaluator.cc",
+        "formula_evaluator_cell.h",
         "icp.cc",
+        "quantifier_free_formula_evaluator.cc",
+        "quantifier_free_formula_evaluator.h",
         "theory_solver.cc",
     ],
     hdrs = [
         "context.h",
-        "evaluator.h",
+        "formula_evaluator.h",
         "icp.h",
         "theory_solver.h",
     ],
@@ -97,7 +97,7 @@ dreal_cc_library(
 # Tests
 # -----
 dreal_cc_googletest(
-    name = "evaluator_test",
+    name = "formula_evaluator_test",
     tags = ["unit"],
     deps = [
         ":solver",

@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-#include "dreal/solver/evaluator.h"
+#include "dreal/solver/formula_evaluator.h"
 
 namespace dreal {
 namespace {
@@ -28,11 +28,14 @@ TEST_F(ApiTest, CheckSatisfiability1) {
   ASSERT_TRUE(result);
 
   const Box& solution{*result};
-  Evaluator evaluator{make_evaluator_quantifier_free(f4, solution.variables())};
-  const EvaluationResult evaluation_result{evaluator(solution)};
-  EXPECT_TRUE(evaluation_result.type() != EvaluationResult::Type::UNSAT);
+  FormulaEvaluator formula_evaluator{
+      make_quantifier_free_formula_evaluator(f4, solution.variables())};
+  const FormulaEvaluationResult formula_evaluation_result{
+      formula_evaluator(solution)};
+  EXPECT_TRUE(formula_evaluation_result.type() !=
+              FormulaEvaluationResult::Type::UNSAT);
   // This indicates that `2 * x + y == z` is true with the found solution.
-  EXPECT_TRUE(evaluation_result.evaluation().contains(0.0));
+  EXPECT_TRUE(formula_evaluation_result.evaluation().contains(0.0));
 }
 
 TEST_F(ApiTest, CheckSatisfiability2) {

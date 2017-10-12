@@ -1,4 +1,4 @@
-#include "dreal/solver/evaluator_quantifier_free.h"
+#include "dreal/solver/quantifier_free_formula_evaluator.h"
 
 #include <utility>
 
@@ -65,7 +65,7 @@ pair<RelationalOperator, Expression> Decompose(const Formula& f) {
 }
 }  // namespace
 
-EvaluatorQuantifierFree::EvaluatorQuantifierFree(
+QuantifierFreeFormulaEvaluator::QuantifierFreeFormulaEvaluator(
     const Formula& f, const vector<Variable>& variables)
     : ibex_converter_{make_shared<IbexConverter>(variables)} {
   const pair<RelationalOperator, Expression> result{Decompose(f)};
@@ -75,11 +75,13 @@ EvaluatorQuantifierFree::EvaluatorQuantifierFree(
   assert(func_);
 }
 
-EvaluatorQuantifierFree::~EvaluatorQuantifierFree() {
-  DREAL_LOG_DEBUG("EvaluatorQuantifierFree::~EvaluatorQuantifierFree()");
+QuantifierFreeFormulaEvaluator::~QuantifierFreeFormulaEvaluator() {
+  DREAL_LOG_DEBUG(
+      "QuantifierFreeFormulaEvaluator::~QuantifierFreeFormulaEvaluator()");
 }
 
-EvaluationResult EvaluatorQuantifierFree::operator()(const Box& box) const {
+FormulaEvaluationResult QuantifierFreeFormulaEvaluator::operator()(
+    const Box& box) const {
   assert(func_);
   const Box::Interval evaluation{func_->eval(box.interval_vector())};
   switch (op_) {
@@ -87,90 +89,108 @@ EvaluationResult EvaluatorQuantifierFree::operator()(const Box& box) const {
       // e₁ - e₂ = 0
       // VALID if e₁ - e₂ == [0, 0].
       if (evaluation.lb() == 0.0 && evaluation.ub() == 0.0) {
-        return EvaluationResult{EvaluationResult::Type::VALID, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                       evaluation};
       }
       // UNSAT if 0 ∉ e₁ - e₂
       if (!evaluation.contains(0.0)) {
-        return EvaluationResult{EvaluationResult::Type::UNSAT, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNSAT,
+                                       evaluation};
       }
       // Otherwise, it's UNKNOWN. It should be the case that 0.0 ∈ e₁ - e₂.
-      return EvaluationResult{EvaluationResult::Type::UNKNOWN, evaluation};
+      return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                     evaluation};
     }
 
     case RelationalOperator::NEQ: {
       // e₁ - e₂ ≠ 0
       // VALID if 0.0 ∉ e₁ - e₂
       if (evaluation.ub() < 0.0 || evaluation.lb() > 0.0) {
-        return EvaluationResult{EvaluationResult::Type::VALID, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                       evaluation};
       }
       // UNSAT if e₁ - e₂ = 0.0
       if (evaluation.ub() == 0.0 && evaluation.lb() == 0.0) {
-        return EvaluationResult{EvaluationResult::Type::UNSAT, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNSAT,
+                                       evaluation};
       }
       // Otherwise, it's UNKNOWN. It should be the case that 0.0 ∈ e₁ - e₂.
-      return EvaluationResult{EvaluationResult::Type::UNKNOWN, evaluation};
+      return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                     evaluation};
     }
 
     case RelationalOperator::GT: {
       // e₁ - e₂ > 0
       // VALID if e₁ - e₂ > 0.
       if (evaluation.lb() > 0.0) {
-        return EvaluationResult{EvaluationResult::Type::VALID, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                       evaluation};
       }
       // UNSAT if e₁ - e₂ ≤ 0.
       if (evaluation.ub() <= 0.0) {
-        return EvaluationResult{EvaluationResult::Type::UNSAT, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNSAT,
+                                       evaluation};
       }
       // Otherwise, it's UNKNOWN.
-      return EvaluationResult{EvaluationResult::Type::UNKNOWN, evaluation};
+      return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                     evaluation};
     }
 
     case RelationalOperator::GEQ: {
       // e₁ - e₂ ≥ 0
       // VALID if e₁ - e₂ ≥ 0.
       if (evaluation.lb() >= 0.0) {
-        return EvaluationResult{EvaluationResult::Type::VALID, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                       evaluation};
       }
       // UNSAT if e₁ - e₂ < 0.
       if (evaluation.ub() < 0.0) {
-        return EvaluationResult{EvaluationResult::Type::UNSAT, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNSAT,
+                                       evaluation};
       }
       // Otherwise, it's UNKNOWN.
-      return EvaluationResult{EvaluationResult::Type::UNKNOWN, evaluation};
+      return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                     evaluation};
     }
 
     case RelationalOperator::LT: {
       // e₁ - e₂ < 0
       // VALID if e₁ - e₂ < 0.
       if (evaluation.ub() < 0.0) {
-        return EvaluationResult{EvaluationResult::Type::VALID, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                       evaluation};
       }
       // UNSAT if e₁ - e₂ ≥ 0.
       if (evaluation.lb() >= 0.0) {
-        return EvaluationResult{EvaluationResult::Type::UNSAT, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNSAT,
+                                       evaluation};
       }
       // Otherwise, it's UNKNOWN.
-      return EvaluationResult{EvaluationResult::Type::UNKNOWN, evaluation};
+      return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                     evaluation};
     }
 
     case RelationalOperator::LEQ: {
       // e₁ - e₂ ≤ 0
       // VALID if e₁ - e₂ ≤ 0.
       if (evaluation.ub() <= 0.0) {
-        return EvaluationResult{EvaluationResult::Type::VALID, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::VALID,
+                                       evaluation};
       }
       // UNSAT if e₁ - e₂ > 0.
       if (evaluation.lb() > 0.0) {
-        return EvaluationResult{EvaluationResult::Type::UNSAT, evaluation};
+        return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNSAT,
+                                       evaluation};
       }
       // Otherwise, it's UNKNOWN.
-      return EvaluationResult{EvaluationResult::Type::UNKNOWN, evaluation};
+      return FormulaEvaluationResult{FormulaEvaluationResult::Type::UNKNOWN,
+                                     evaluation};
     }
   }
   DREAL_UNREACHABLE();
 }
 
-ostream& EvaluatorQuantifierFree::Display(ostream& os) const {
+ostream& QuantifierFreeFormulaEvaluator::Display(ostream& os) const {
   assert(func_);
   return os << "Evaluator(" << func_->expr() << " " << op_ << " 0.0)";
 }

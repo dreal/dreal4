@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "dreal/contractor/contractor.h"
-#include "dreal/solver/evaluator.h"
+#include "dreal/solver/formula_evaluator.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -17,13 +17,13 @@ class Icp {
     UNSAT,
   };
 
-  Icp(Contractor contractor, std::vector<Evaluator> evaluators,
+  Icp(Contractor contractor, std::vector<FormulaEvaluator> formula_evaluators,
       double precision);
   bool CheckSat(ContractorStatus* cs);
 
  private:
   const Contractor contractor_;
-  std::vector<Evaluator> evaluators_;
+  std::vector<FormulaEvaluator> formula_evaluators_;
   const double precision_{};
 };
 
