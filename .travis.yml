@@ -91,12 +91,12 @@ install:
       sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libnlopt-dev;
       wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel_0.5.4-linux-x86_64.deb;
       sudo dpkg -i bazel_0.5.4-linux-x86_64.deb;
-      BAZEL_LOCAL_RESOURCES=400,1,1.0;
+      BAZEL_LOCAL_RESOURCES=2048,1,1.0;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
       brew update;
       brew install bazel pkg-config dreal-deps/ibex/ibex nlopt || true;
-      BAZEL_LOCAL_RESOURCES=400,2,1.0;
+      BAZEL_LOCAL_RESOURCES=2048,2,1.0;
     fi
   - if [ "${COV}" == "ON" ]; then
       sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
@@ -115,6 +115,8 @@ script:
     bazel \
       --batch \
       --output_base="$HOME/.bazel-output-base" \
+      --host_jvm_args=-Xmx2500m \
+      --host_jvm_args=-Xms2500m \
       test \
       --local_resources=${BAZEL_LOCAL_RESOURCES} \
       //...  ${COMPILER} ${BUILD_TYPE} ${COV_OPTION}
