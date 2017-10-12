@@ -112,7 +112,7 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
             f, box_.variables(), epsilon, inner_delta));
       } else {
         formula_evaluators.push_back(
-            make_quantifier_free_formula_evaluator(f, box_.variables()));
+            make_relational_formula_evaluator(f, box_.variables()));
       }
       formula_evaluator_cache_.emplace_hint(it, f, formula_evaluators.back());
     } else {

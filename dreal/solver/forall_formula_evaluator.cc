@@ -25,13 +25,13 @@ vector<Variable> Add(vector<Variable> vars1, const Variables& vars2) {
 // Given f = [(e₁(x, y) ≥ 0) ∨ ... ∨ (eₙ(x, y) ≥ 0)], build an
 // evaluator for each (eᵢ(x, y) ≥ 0) and return a vector of
 // evaluators.
-vector<QuantifierFreeFormulaEvaluator> BuildFormulaEvaluators(
+vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(
     const Formula& f, const vector<Variable>& variables) {
   DREAL_LOG_DEBUG("BuildFormulaEvaluators");
   const Formula& quantified_formula{get_quantified_formula(f)};
   assert(is_clause(quantified_formula));
   const set<Formula>& disjuncts{get_operands(quantified_formula)};
-  vector<QuantifierFreeFormulaEvaluator> evaluators;
+  vector<RelationalFormulaEvaluator> evaluators;
   evaluators.reserve(disjuncts.size());
   for (const Formula& disjunct : disjuncts) {
     DREAL_LOG_DEBUG("BuildFormulaEvaluators: disjunct = {}", disjunct);
@@ -50,6 +50,7 @@ ForallFormulaEvaluator::ForallFormulaEvaluator(
     : f_{f},
       evaluators_{BuildFormulaEvaluators(
           f_, Add(variables, get_quantified_variables(f)))} {
+  assert(is_forall(f));
   DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", f);
   context_.mutable_config().mutable_precision() = delta;
   for (const Variable& exist_var : variables) {
@@ -79,7 +80,7 @@ FormulaEvaluationResult ForallFormulaEvaluator::operator()(
       (*counterexample)[exist_var] = box[exist_var];
     }
     double max_diam = 0.0;
-    for (const QuantifierFreeFormulaEvaluator& evaluator : evaluators_) {
+    for (const RelationalFormulaEvaluator& evaluator : evaluators_) {
       const FormulaEvaluationResult eval_result = evaluator(*counterexample);
       if (eval_result.type() == FormulaEvaluationResult::Type::UNSAT) {
         continue;

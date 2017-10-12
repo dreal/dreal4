@@ -13,14 +13,14 @@
 #include "dreal/util/ibex_converter.h"
 
 namespace dreal {
-/// Evaluator for quantifier-free formulas. It uses IBEX's function
-/// evaluation to evaluate QF-formulas.
-class QuantifierFreeFormulaEvaluator : public FormulaEvaluatorCell {
+/// Evaluator for relational formulas. It uses IBEX's function
+/// evaluation to evaluate them.
+class RelationalFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  ~QuantifierFreeFormulaEvaluator() override;
+  RelationalFormulaEvaluator(const Formula& f,
+                             const std::vector<Variable>& variables);
 
-  QuantifierFreeFormulaEvaluator(const Formula& f,
-                                 const std::vector<Variable>& variables);
+  ~RelationalFormulaEvaluator() override;
 
   FormulaEvaluationResult operator()(const Box& box) const override;
 

@@ -4,7 +4,7 @@
 
 #include "dreal/solver/forall_formula_evaluator.h"
 #include "dreal/solver/formula_evaluator_cell.h"
-#include "dreal/solver/quantifier_free_formula_evaluator.h"
+#include "dreal/solver/relational_formula_evaluator.h"
 #include "dreal/util/exception.h"
 
 namespace dreal {
@@ -54,11 +54,11 @@ ostream& operator<<(ostream& os, const FormulaEvaluator& evaluator) {
   return evaluator.ptr_->Display(os);
 }
 
-FormulaEvaluator make_quantifier_free_formula_evaluator(
+FormulaEvaluator make_relational_formula_evaluator(
     const Formula& f, const std::vector<Variable>& variables) {
   assert(!is_forall(f));
   return FormulaEvaluator{
-      make_shared<QuantifierFreeFormulaEvaluator>(f, variables)};
+      make_shared<RelationalFormulaEvaluator>(f, variables)};
 }
 
 FormulaEvaluator make_forall_formula_evaluator(

@@ -74,7 +74,7 @@ class FormulaEvaluator {
   friend std::ostream& operator<<(std::ostream& os,
                                   const FormulaEvaluator& evaluator);
 
-  friend FormulaEvaluator make_quantifier_free_formula_evaluator(
+  friend FormulaEvaluator make_relational_formula_evaluator(
       const Formula& f, const std::vector<Variable>& variables);
 
   friend FormulaEvaluator make_forall_formula_evaluator(
@@ -82,9 +82,12 @@ class FormulaEvaluator {
       double delta);
 };
 
-FormulaEvaluator make_quantifier_free_formula_evaluator(
+/// Creates FormulaEvaluator for a relational formula @p f using @p variables.
+FormulaEvaluator make_relational_formula_evaluator(
     const Formula& f, const std::vector<Variable>& variables);
 
+/// Creates FormulaEvaluator for a univerally quantified formula @p f
+/// using @p variables, @p epsilon, and @p delta.
 FormulaEvaluator make_forall_formula_evaluator(
     const Formula& f, const std::vector<Variable>& variable, double epsilon,
     double delta);

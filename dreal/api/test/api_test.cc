@@ -29,7 +29,7 @@ TEST_F(ApiTest, CheckSatisfiability1) {
 
   const Box& solution{*result};
   FormulaEvaluator formula_evaluator{
-      make_quantifier_free_formula_evaluator(f4, solution.variables())};
+      make_relational_formula_evaluator(f4, solution.variables())};
   const FormulaEvaluationResult formula_evaluation_result{
       formula_evaluator(solution)};
   EXPECT_TRUE(formula_evaluation_result.type() !=

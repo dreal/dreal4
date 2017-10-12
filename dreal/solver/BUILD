@@ -32,8 +32,8 @@ dreal_cc_library(
         "formula_evaluator.cc",
         "formula_evaluator_cell.h",
         "icp.cc",
-        "quantifier_free_formula_evaluator.cc",
-        "quantifier_free_formula_evaluator.h",
+        "relational_formula_evaluator.cc",
+        "relational_formula_evaluator.h",
         "theory_solver.cc",
     ],
     hdrs = [

@@ -7,7 +7,7 @@
 #include "dreal/solver/context.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/formula_evaluator_cell.h"
-#include "dreal/solver/quantifier_free_formula_evaluator.h"
+#include "dreal/solver/relational_formula_evaluator.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -50,6 +50,6 @@ class ForallFormulaEvaluator : public FormulaEvaluatorCell {
  private:
   const Formula f_;
   mutable Context context_;
-  std::vector<QuantifierFreeFormulaEvaluator> evaluators_;
+  std::vector<RelationalFormulaEvaluator> evaluators_;
 };
 }  // namespace dreal

@@ -1,4 +1,4 @@
-#include "dreal/solver/quantifier_free_formula_evaluator.h"
+#include "dreal/solver/relational_formula_evaluator.h"
 
 #include <utility>
 
@@ -65,9 +65,10 @@ pair<RelationalOperator, Expression> Decompose(const Formula& f) {
 }
 }  // namespace
 
-QuantifierFreeFormulaEvaluator::QuantifierFreeFormulaEvaluator(
+RelationalFormulaEvaluator::RelationalFormulaEvaluator(
     const Formula& f, const vector<Variable>& variables)
     : ibex_converter_{make_shared<IbexConverter>(variables)} {
+  assert(is_relational(f) || (is_negation(f) && is_relational(get_operand(f))));
   const pair<RelationalOperator, Expression> result{Decompose(f)};
   op_ = result.first;
   func_ = make_shared<ibex::Function>(ibex_converter_->variables(),
@@ -75,12 +76,11 @@ QuantifierFreeFormulaEvaluator::QuantifierFreeFormulaEvaluator(
   assert(func_);
 }
 
-QuantifierFreeFormulaEvaluator::~QuantifierFreeFormulaEvaluator() {
-  DREAL_LOG_DEBUG(
-      "QuantifierFreeFormulaEvaluator::~QuantifierFreeFormulaEvaluator()");
+RelationalFormulaEvaluator::~RelationalFormulaEvaluator() {
+  DREAL_LOG_DEBUG("RelationalFormulaEvaluator::~RelationalFormulaEvaluator()");
 }
 
-FormulaEvaluationResult QuantifierFreeFormulaEvaluator::operator()(
+FormulaEvaluationResult RelationalFormulaEvaluator::operator()(
     const Box& box) const {
   assert(func_);
   const Box::Interval evaluation{func_->eval(box.interval_vector())};
@@ -190,7 +190,7 @@ FormulaEvaluationResult QuantifierFreeFormulaEvaluator::operator()(
   DREAL_UNREACHABLE();
 }
 
-ostream& QuantifierFreeFormulaEvaluator::Display(ostream& os) const {
+ostream& RelationalFormulaEvaluator::Display(ostream& os) const {
   assert(func_);
   return os << "Evaluator(" << func_->expr() << " " << op_ << " 0.0)";
 }
