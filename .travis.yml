@@ -72,7 +72,7 @@ matrix:
           packages: ['g++-4.9', 'clang-3.9']
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
-        - COV="ON" COV_OPTION="--config=kcov --test_tag_filters=unit"
+        - COV="ON" COV_OPTION="--config=kcov"
     - os: osx
       osx_image: xcode8.3
       compiler: clang
@@ -92,11 +92,13 @@ install:
       wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel_0.5.4-linux-x86_64.deb;
       sudo dpkg -i bazel_0.5.4-linux-x86_64.deb;
       BAZEL_LOCAL_RESOURCES=2048,1,1.0;
+      TEST_TAG_FILTERS=;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
       brew update;
       brew install bazel pkg-config dreal-deps/ibex/ibex nlopt || true;
       BAZEL_LOCAL_RESOURCES=2048,2,1.0;
+      TEST_TAG_FILTERS=unit;
     fi
   - if [ "${COV}" == "ON" ]; then
       sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
@@ -108,6 +110,7 @@ install:
       make -j;
       sudo cp src/kcov /usr/bin/;
       cd ../../;
+      TEST_TAG_FILTERS=unit;
     fi
 
 script:
@@ -115,11 +118,13 @@ script:
     bazel \
       --batch \
       --output_base="$HOME/.bazel-output-base" \
-      --host_jvm_args=-Xmx2500m \
-      --host_jvm_args=-Xms2500m \
+      --host_jvm_args=-Xmx500m \
+      --host_jvm_args=-Xms500m \
       test \
       --local_resources=${BAZEL_LOCAL_RESOURCES} \
-      //...  ${COMPILER} ${BUILD_TYPE} ${COV_OPTION}
+      //...  ${COMPILER} ${BUILD_TYPE} \
+      ${COV_OPTION} \
+      --test_tag_filters=${TEST_TAG_FILTERS}
 
 after_success:
   - if [ "${COV}" == "ON" ]; then
