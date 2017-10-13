@@ -86,6 +86,7 @@ dreal_cc_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//dreal/api",
         "//dreal/solver",
         "//dreal/util:box",
     ],
