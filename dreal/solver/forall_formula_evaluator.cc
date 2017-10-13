@@ -37,7 +37,7 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(
     DREAL_LOG_DEBUG("BuildFormulaEvaluators: disjunct = {}", disjunct);
     assert(is_relational(disjunct) ||
            (is_negation(disjunct) && is_relational(get_operand(disjunct))));
-    evaluators.emplace_back(disjunct, variables);
+    evaluators.push_back(RelationalFormulaEvaluator::Make(disjunct, variables));
   }
   return evaluators;
 }
@@ -100,7 +100,7 @@ FormulaEvaluationResult ForallFormulaEvaluator::operator()(
 }
 
 ostream& ForallFormulaEvaluator::Display(ostream& os) const {
-  return os << "Evaluator(" << f_ << ")";
+  return os << "FormulaEvaluator(" << f_ << ")";
 }
 
 }  // namespace dreal

@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "dreal/solver/expression_evaluator.h"
 #include "dreal/solver/forall_formula_evaluator.h"
 #include "dreal/solver/formula_evaluator_cell.h"
 #include "dreal/solver/relational_formula_evaluator.h"
@@ -17,7 +18,7 @@ using std::vector;
 
 FormulaEvaluationResult::FormulaEvaluationResult(Type type,
                                                  Box::Interval evaluation)
-    : type_{type}, evaluation_{std::move(evaluation)} {}
+    : type_{type}, evaluation_{move(evaluation)} {}
 
 FormulaEvaluationResult::Type FormulaEvaluationResult::type() const {
   return type_;
@@ -55,15 +56,14 @@ ostream& operator<<(ostream& os, const FormulaEvaluator& evaluator) {
 }
 
 FormulaEvaluator make_relational_formula_evaluator(
-    const Formula& f, const std::vector<Variable>& variables) {
-  assert(!is_forall(f));
-  return FormulaEvaluator{
-      make_shared<RelationalFormulaEvaluator>(f, variables)};
+    const Formula& f, const vector<Variable>& variables) {
+  return FormulaEvaluator{make_shared<RelationalFormulaEvaluator>(
+      RelationalFormulaEvaluator::Make(f, variables))};
 }
 
 FormulaEvaluator make_forall_formula_evaluator(
-    const Formula& f, const std::vector<Variable>& variables,
-    const double epsilon, const double delta) {
+    const Formula& f, const vector<Variable>& variables, const double epsilon,
+    const double delta) {
   assert(is_forall(f));
   return FormulaEvaluator{
       make_shared<ForallFormulaEvaluator>(f, variables, epsilon, delta)};

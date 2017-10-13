@@ -6,14 +6,14 @@
 
 namespace dreal {
 
+using std::make_pair;
+using std::make_shared;
+using std::move;
 using std::ostream;
 using std::pair;
 using std::vector;
 
 namespace {
-
-using std::make_pair;
-using std::make_shared;
 
 // Decomposes a formula `f = e₁ rop e₂` into `(rop, e₁ - e₂)`.
 pair<RelationalOperator, Expression> Decompose(const Formula& f) {
@@ -66,14 +66,15 @@ pair<RelationalOperator, Expression> Decompose(const Formula& f) {
 }  // namespace
 
 RelationalFormulaEvaluator::RelationalFormulaEvaluator(
-    const Formula& f, const vector<Variable>& variables)
-    : ibex_converter_{make_shared<IbexConverter>(variables)} {
+    const RelationalOperator op, ExpressionEvaluator expression_evaluator)
+    : op_{op}, expression_evaluator_{move(expression_evaluator)} {}
+
+RelationalFormulaEvaluator RelationalFormulaEvaluator::Make(
+    const Formula& f, const vector<Variable>& variables) {
   assert(is_relational(f) || (is_negation(f) && is_relational(get_operand(f))));
   const pair<RelationalOperator, Expression> result{Decompose(f)};
-  op_ = result.first;
-  func_ = make_shared<ibex::Function>(ibex_converter_->variables(),
-                                      *ibex_converter_->Convert(result.second));
-  assert(func_);
+  return RelationalFormulaEvaluator{
+      result.first, ExpressionEvaluator{result.second, variables}};
 }
 
 RelationalFormulaEvaluator::~RelationalFormulaEvaluator() {
@@ -82,8 +83,7 @@ RelationalFormulaEvaluator::~RelationalFormulaEvaluator() {
 
 FormulaEvaluationResult RelationalFormulaEvaluator::operator()(
     const Box& box) const {
-  assert(func_);
-  const Box::Interval evaluation{func_->eval(box.interval_vector())};
+  const Box::Interval evaluation{expression_evaluator_(box)};
   switch (op_) {
     case RelationalOperator::EQ: {
       // e₁ - e₂ = 0
@@ -191,7 +191,7 @@ FormulaEvaluationResult RelationalFormulaEvaluator::operator()(
 }
 
 ostream& RelationalFormulaEvaluator::Display(ostream& os) const {
-  assert(func_);
-  return os << "Evaluator(" << func_->expr() << " " << op_ << " 0.0)";
+  return os << "FormulaEvaluator(" << *(expression_evaluator_.func_) << " "
+            << op_ << " 0.0)";
 }
 }  // namespace dreal

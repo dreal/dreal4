@@ -6,6 +6,7 @@
 
 #include "./ibex.h"
 
+#include "dreal/solver/expression_evaluator.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/formula_evaluator_cell.h"
 #include "dreal/symbolic/symbolic.h"
@@ -13,12 +14,17 @@
 #include "dreal/util/ibex_converter.h"
 
 namespace dreal {
+
 /// Evaluator for relational formulas. It uses IBEX's function
 /// evaluation to evaluate them.
 class RelationalFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  RelationalFormulaEvaluator(const Formula& f,
-                             const std::vector<Variable>& variables);
+  RelationalFormulaEvaluator(RelationalOperator op,
+                             ExpressionEvaluator expression_evaluator);
+
+  /// Creates a RelationalFormulaEvaluator from @p f and @p variables.
+  static RelationalFormulaEvaluator Make(
+      const Formula& f, const std::vector<Variable>& variables);
 
   ~RelationalFormulaEvaluator() override;
 
@@ -27,8 +33,7 @@ class RelationalFormulaEvaluator : public FormulaEvaluatorCell {
   std::ostream& Display(std::ostream& os) const override;
 
  private:
-  const std::shared_ptr<IbexConverter> ibex_converter_;
-  RelationalOperator op_{};
-  std::shared_ptr<ibex::Function> func_;
+  const RelationalOperator op_{};
+  const ExpressionEvaluator expression_evaluator_;
 };
 }  // namespace dreal

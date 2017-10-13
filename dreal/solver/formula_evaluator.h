@@ -10,9 +10,6 @@
 
 namespace dreal {
 
-// Forward declaration.
-class FormulaEvaluatorCell;
-
 /// Represents the evaluation result of a constraint given a box.
 class FormulaEvaluationResult {
  public:
@@ -43,6 +40,9 @@ class FormulaEvaluationResult {
 std::ostream& operator<<(std::ostream& os, FormulaEvaluationResult::Type type);
 std::ostream& operator<<(std::ostream& os,
                          const FormulaEvaluationResult& result);
+
+// Forward declaration.
+class FormulaEvaluatorCell;
 
 /// Class to evaluate a symbolic formula with a box.
 class FormulaEvaluator {
