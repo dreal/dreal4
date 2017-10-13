@@ -60,6 +60,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "/usr/include/dreal/api",
     tags = ["manual"],
+    visibility = ["//visibility:public"],
 )
 
 cpplint()
