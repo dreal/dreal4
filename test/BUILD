@@ -6,6 +6,7 @@ load("//tools:dreal.bzl", "dreal_cc_googletest")
 
 cc_test(
     name = "ibex_test",
+    size = "small",
     srcs = ["ibex_test.cc"],
     tags = ["extlib"],
     deps = [
@@ -24,6 +25,7 @@ dreal_cc_googletest(
 
 cc_test(
     name = "ibex_polytope_test",
+    size = "small",
     srcs = [
         "ibex_polytope_test.cc",
     ],
@@ -56,6 +58,7 @@ dreal_cc_googletest(
 
 cc_test(
     name = "spdlog_test",
+    size = "small",
     srcs = ["spdlog_test.cc"],
     tags = ["extlib"],
     deps = [

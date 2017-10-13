@@ -27,10 +27,10 @@ dreal_cc_library(
     name = "solver",
     srcs = [
         "context.cc",
+        "expression_evaluator.cc",
         "forall_formula_evaluator.cc",
         "forall_formula_evaluator.h",
         "formula_evaluator.cc",
-        "expression_evaluator.cc",
         "formula_evaluator_cell.h",
         "icp.cc",
         "relational_formula_evaluator.cc",

@@ -3,10 +3,14 @@
 import sys
 import subprocess
 import difflib
+import os
 
 # 1st Argument: dreal path
 #               need to check if it exists
 dreal = sys.argv[1]
+
+prefix = os.path.basename("a/b/c/d.smt2")
+print prefix
 
 # 2nd Argument: smt2 formula name
 smt2 = sys.argv[2]

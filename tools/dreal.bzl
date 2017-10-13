@@ -220,3 +220,51 @@ def dreal_cc_googletest(
         name = name,
         deps = deps,
         **kwargs)
+
+def smt2_test(
+        name,
+        **kwargs):
+    """Create smt2 test."""
+    smt2 = name + ".smt2"
+    expected = smt2 + ".expected"
+    data_files = native.glob([
+        smt2 + "*",
+    ])
+    native.py_test(
+        name = name,
+        args = [
+            "$(location //dreal:dreal)",
+            "$(location %s)" % smt2,
+            "$(location %s)" % expected,
+        ],
+        tags = ["smt2"],
+        srcs = ["test.py"],
+        data = [
+            "//dreal:dreal",
+        ] + data_files,
+        main = "test.py",
+        **kwargs)
+
+def dr_test(
+        name,
+        **kwargs):
+    """Create dr test."""
+    dr = name + ".dr"
+    expected = dr + ".expected"
+    data_files = native.glob([
+        dr + "*",
+    ])
+    native.py_test(
+        name = name,
+        args = [
+            "$(location //dreal:dreal)",
+            "$(location %s)" % dr,
+            "$(location %s)" % expected,
+        ],
+        tags = ["dr"],
+        srcs = ["test.py"],
+        data = [
+            "//dreal:dreal",
+        ] + data_files,
+        main = "test.py",
+        **kwargs)
