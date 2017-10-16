@@ -110,26 +110,44 @@ const ExprNode* IbexConverter::VisitConstant(const Expression& e) {
 }
 
 const ExprNode* IbexConverter::VisitAddition(const Expression& e) {
-  const ExprNode* ret{
-      &ibex::ExprConstant::new_scalar(get_constant_in_addition(e))};
+  const double c{get_constant_in_addition(e)};
+  const ExprNode* ret{nullptr};
+  if (c != 0) {
+    ret = &ibex::ExprConstant::new_scalar(c);
+  }
   for (const pair<Expression, double>& p :
        get_expr_to_coeff_map_in_addition(e)) {
     const Expression& e{p.first};
     const double coeff{p.second};
     if (coeff == 1.0) {
-      ret = &(*ret + *Visit(e));
+      if (ret) {
+        ret = &(*ret + *Visit(e));
+      } else {
+        ret = Visit(e);
+      }
     } else if (coeff == -1.0) {
-      ret = &(*ret - *Visit(e));
+      if (ret) {
+        ret = &(*ret - *Visit(e));
+      } else {
+        ret = Visit(-e);
+      }
     } else {
-      ret = &(*ret + coeff * *Visit(e));
+      if (ret) {
+        ret = &(*ret + coeff * *Visit(e));
+      } else {
+        ret = &(coeff * *Visit(e));
+      }
     }
   }
   return ret;
 }
 
 const ExprNode* IbexConverter::VisitMultiplication(const Expression& e) {
-  const ExprNode* ret{
-      &ibex::ExprConstant::new_scalar(get_constant_in_multiplication(e))};
+  const double c{get_constant_in_multiplication(e)};
+  const ExprNode* ret{nullptr};
+  if (c != 1.0) {
+    ret = &ibex::ExprConstant::new_scalar(c);
+  }
   for (const pair<Expression, Expression>& p :
        get_base_to_exponent_map_in_multiplication(e)) {
     const Expression& base{p.first};
@@ -137,13 +155,28 @@ const ExprNode* IbexConverter::VisitMultiplication(const Expression& e) {
     if (is_constant(exponent)) {
       const double v{get_constant_value(exponent)};
       if (is_integer(v)) {
-        ret = &(*ret * pow(*Visit(base), static_cast<int>(v)));
+        const ExprNode& term{pow(*Visit(base), static_cast<int>(v))};
+        if (ret) {
+          ret = &(*ret * term);
+        } else {
+          ret = &term;
+        }
       }
       if (v == 0.5) {
-        ret = &(*ret * sqrt(*Visit(base)));
+        const ExprNode& term{sqrt(*Visit(base))};
+        if (ret) {
+          ret = &(*ret * term);
+        } else {
+          ret = &term;
+        }
       }
     } else {
-      ret = &(*ret * pow(*Visit(base), *Visit(exponent)));
+      const ExprNode& term{pow(*Visit(base), *Visit(exponent))};
+      if (ret) {
+        ret = &(*ret * term);
+      } else {
+        ret = &term;
+      }
     }
   }
   return ret;

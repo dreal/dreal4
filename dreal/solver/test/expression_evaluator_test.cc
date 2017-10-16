@@ -39,7 +39,7 @@ TEST_F(ExpressionEvaluatorTest, Arithmetic1) {
             (1 + 2) / 2.0 + (2 + 3) / 2.0 + (3 + 4) / 2.0);
   ostringstream oss;
   oss << evaluator;
-  EXPECT_EQ(oss.str(), "ExpressionEvaluator(_f_0:(x,y,z)->(((0+x)+y)+z))");
+  EXPECT_EQ(oss.str(), "ExpressionEvaluator(_f_0:(x,y,z)->((x+y)+z))");
 }
 
 // TODO(soonho): Add more tests.
