@@ -12,7 +12,7 @@ using std::accumulate;
 using std::experimental::optional;
 using std::runtime_error;
 
-optional<Box> CheckSatisfiability(const Formula& f, double delta) {
+optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
   Config config;
   config.mutable_precision() = delta;
   Context context{config};
@@ -21,6 +21,17 @@ optional<Box> CheckSatisfiability(const Formula& f, double delta) {
   }
   context.Assert(f);
   return context.CheckSat();
+}
+
+bool CheckSatisfiability(const Formula& f, const double delta, Box* const box) {
+  const optional<Box> result{CheckSatisfiability(f, delta)};
+  if (result) {
+    assert(box);
+    *box = *result;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 optional<Box> Minimize(const Expression& objective, const Formula& constraint,
@@ -51,4 +62,17 @@ optional<Box> Minimize(const Expression& objective, const Formula& constraint,
       forall(forall_variables, imply(constraint_y, objective <= objective_y))};
   return CheckSatisfiability(phi, delta);
 }
+
+bool Minimize(const Expression& objective, const Formula& constraint,
+              const double delta, Box* const box) {
+  const optional<Box> result{Minimize(objective, constraint, delta)};
+  if (result) {
+    assert(box);
+    *box = *result;
+    return true;
+  } else {
+    return false;
+  }
+}
+
 }  // namespace dreal
