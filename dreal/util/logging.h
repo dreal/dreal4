@@ -21,10 +21,6 @@ namespace dreal {
 /// DREAL_LOG_CRITICAL("{:<30}", "left aligned");
 /// </pre>
 ///
-/// Note that DREAL_LOG_TRACE and DREAL_LOG_DEBUG will be only enabled
-/// in DEBUG builds. In a RELEASE build, their arguments will not be
-/// evaluated.
-///
 /// Please check https://github.com/gabime/spdlog for more information.
 spdlog::logger* log();
 
@@ -49,6 +45,7 @@ spdlog::logger* log();
     log()->debug(fmt, ##__VA_ARGS__); \
   } while (0)
 #endif
+
 #define DREAL_LOG_INFO(fmt, ...)     \
   do {                               \
     log()->info(fmt, ##__VA_ARGS__); \
@@ -68,5 +65,12 @@ spdlog::logger* log();
   do {                                   \
     log()->critical(fmt, ##__VA_ARGS__); \
   } while (0)
+
+#define DREAL_LOG_TRACE_ENABLED (log()->should_log(spdlog::level::trace))
+#define DREAL_LOG_DEBUG_ENABLED (log()->should_log(spdlog::level::debug))
+#define DREAL_LOG_INFO_ENABLED (log()->should_log(spdlog::level::info))
+#define DREAL_LOG_WARN_ENABLED (log()->should_log(spdlog::level::warn))
+#define DREAL_LOG_ERROR_ENABLED (log()->should_log(spdlog::level::error))
+#define DREAL_LOG_CRITICAL_ENABLED (log()->should_log(spdlog::level::critical))
 
 }  // namespace dreal
