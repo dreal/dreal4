@@ -54,6 +54,7 @@ cc_binary(
     linkshared = 1,
     visibility = ["//visibility:public"],
     deps = [
+        "//dreal/api",
         "//dreal/solver",
         "//dreal/util:box",
         "@drake_symbolic",
