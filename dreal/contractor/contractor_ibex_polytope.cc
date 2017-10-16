@@ -101,10 +101,12 @@ void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
     // Update used constraints.
     if (changed) {
       cs->AddUsedConstraint(formulas_);
-      // ostringstream oss;
-      // DisplayDiff(oss, cs->box().variables(), old_iv,
-      //             cs->box().interval_vector());
-      // DREAL_LOG_TRACE("Changed\n{}", oss.str());
+      if (DREAL_LOG_TRACE_ENABLED) {
+        ostringstream oss;
+        DisplayDiff(oss, cs->box().variables(), old_iv,
+                    cs->box().interval_vector());
+        DREAL_LOG_TRACE("Changed\n{}", oss.str());
+      }
     } else {
       DREAL_LOG_TRACE("NO CHANGE");
     }
