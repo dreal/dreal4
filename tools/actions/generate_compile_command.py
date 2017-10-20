@@ -3,7 +3,7 @@
 
 import sys
 
-import tools.third_party.bazel.protos.extra_actions_base_pb2 as extra_actions_base_pb2
+import tools.third_party.com_github_bazelbuild_bazel.protos.extra_actions_base_pb2 as extra_actions_base_pb2
 
 def _get_cpp_command(cpp_compile_info):
   compiler = cpp_compile_info.tool

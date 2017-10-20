@@ -78,7 +78,7 @@ filegroup(
 # A compiler wrapper script that adjusts linker paths on OS X.
 filegroup(
     name = "osx_cc_wrapper",
-    srcs = ["//tools/third_party/bazel:tools/cpp/osx_cc_wrapper.sh"],
+    srcs = ["//tools/third_party/com_github_bazelbuild_bazel:tools/cpp/osx_cc_wrapper.sh"],
     visibility = ["//visibility:private"],
 )
 

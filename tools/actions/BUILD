@@ -7,7 +7,7 @@ py_binary(
         "generate_compile_command.py",
     ],
     deps = [
-        "//tools/third_party/bazel:extra_actions_proto_py",
+        "//tools/third_party/com_github_bazelbuild_bazel:extra_actions_proto_py",
     ],
 )
 
