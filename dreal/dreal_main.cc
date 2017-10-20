@@ -29,8 +29,14 @@ void MainProgram::PrintUsage() {
 }
 
 void MainProgram::AddOptions() {
+#ifndef NDEBUG
+  const string build_type{"Debug"};
+#else
+  const string build_type{"Release"};
+#endif
   opt_.overview =
-      "dReal v" + Context::version() + " : delta-complete SMT solver";
+      fmt::format("dReal v{} ({} Build) : delta-complete SMT solver",
+                  Context::version(), build_type);
   opt_.syntax = "dreal [OPTIONS] <input file> (.smt2 or .dr)";
 
   // NOTE: Make sure to match the default values specified here with the ones
