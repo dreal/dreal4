@@ -24,6 +24,10 @@ SatSolver::~SatSolver() {
 void SatSolver::AddFormula(const Formula& f) {
   DREAL_LOG_DEBUG("SatSolver::AddFormula({})", f);
   vector<Formula> clauses{cnfizer_.Convert(f)};
+  // Collect Tseitin variables.
+  for (const auto& p : cnfizer_.map()) {
+    tseitin_variables_.insert(p.first);
+  }
   for (Formula& clause : clauses) {
     clause = predicate_abstractor_.Convert(clause);
   }
@@ -60,14 +64,16 @@ void SatSolver::AddClause(const Formula& f) {
   DoAddClause(f);
 }
 
-bool SatSolver::CheckSat() {
+std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
   DREAL_LOG_DEBUG("SatSolver::CheckSat(#vars = {}, #clauses = {})",
                   picosat_variables(sat_),
                   picosat_added_original_clauses(sat_));
   num_of_check_sat_++;
   // Call SAT solver.
   const int ret{picosat_sat(sat_, -1)};
-  model_.clear();
+  Model model;
+  auto& boolean_model = model.first;
+  auto& theory_model = model.second;
   if (ret == PICOSAT_SATISFIABLE) {
     // SAT Case.
     const auto& var_to_formula_map = predicate_abstractor_.var_to_formula_map();
@@ -79,20 +85,26 @@ bool SatSolver::CheckSat() {
       const Variable& var{to_sym_var_[i]};
       const auto it = var_to_formula_map.find(var);
       if (it != var_to_formula_map.end()) {
-        if (model_i == 1) {
-          model_.push_back(it->second);
-        } else {
-          assert(model_i == -1);
-          model_.push_back(!it->second);
-        }
+        DREAL_LOG_TRACE("SatSolver::CheckSat: Add theory literal {}{} to Model",
+                        model_i ? "" : "¬", var);
+        theory_model.emplace_back(var, model_i == 1);
+      } else if (tseitin_variables_.find(var) == tseitin_variables_.end()) {
+        DREAL_LOG_TRACE(
+            "SatSolver::CheckSat: Add Boolean literal {}{} to Model ",
+            model_i ? "" : "¬", var);
+        boolean_model.emplace_back(var, model_i == 1);
+      } else {
+        DREAL_LOG_TRACE(
+            "SatSolver::CheckSat: Skip {}{} which is a temporary variable.",
+            model_i ? "" : "¬", var);
       }
     }
     DREAL_LOG_DEBUG("SatSolver::CheckSat() Found a model.");
-    return true;
+    return model;
   } else if (ret == PICOSAT_UNSATISFIABLE) {
     DREAL_LOG_DEBUG("SatSolver::CheckSat() No solution.");
     // UNSAT Case.
-    return false;
+    return {};
   } else {
     assert(ret == PICOSAT_UNKNOWN);
     DREAL_LOG_CRITICAL("PICOSAT returns PICOSAT_UNKNOWN.");

@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 #include <experimental/optional>
 
@@ -16,6 +17,11 @@ namespace dreal {
 
 class SatSolver {
  public:
+  using Literal = std::pair<Variable, bool>;
+
+  // Boolean model + Theory model.
+  using Model = std::pair<std::vector<Literal>, std::vector<Literal>>;
+
   /// Constructs a SatSolver.
   SatSolver();
 
@@ -40,16 +46,19 @@ class SatSolver {
       const std::unordered_set<Formula, hash_value<Formula>>& formulas);
 
   /// Checks the satisfiability of the current configuration.
-  /// If SAT, it returns true. The witness, satisfying model is provided by
-  /// model(). If UNSAT, it returns false.
-  bool CheckSat();
+  ///
+  /// @returns a witness, satisfying model if the problem is satisfiable.
+  /// @returns nullopt if UNSAT.
+  std::experimental::optional<Model> CheckSat();
 
   // TODO(soonho): Push/Pop cnfizer and predicate_abstractor?
   void Pop();
 
   void Push();
 
-  const std::vector<Formula>& model() const { return model_; }
+  Formula theory_literal(const Variable& var) const {
+    return predicate_abstractor_[var];
+  }
 
  private:
   // Adds a formula @p f to the solver.
@@ -83,13 +92,16 @@ class SatSolver {
   PicoSAT* const sat_{};
   TseitinCnfizer cnfizer_;
   PredicateAbstractor predicate_abstractor_;
-  std::vector<Formula> model_;
 
   // Map symbolic::Variable → int (Variable type in PicoSat).
   std::unordered_map<Variable, int, hash_value<Variable>> to_sat_var_;
 
-  // Map intiable → symbolic::Variable.
+  // Map int (Variable type in PicoSat) → symbolic::Variable.
   std::unordered_map<int, Variable> to_sym_var_;
+
+  /// Set of temporary Boolean variables introduced by Tseitin
+  /// transformations.
+  std::unordered_set<Variable, hash_value<Variable>> tseitin_variables_;
 
   // Stats
   int num_of_check_sat_{0};
