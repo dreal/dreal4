@@ -1,5 +1,6 @@
 #include "dreal/api/api.h"
 
+#include <cmath>
 #include <gtest/gtest.h>
 
 #include "dreal/solver/formula_evaluator.h"
@@ -33,7 +34,19 @@ class ApiTest : public ::testing::Test {
 }
 
 // Tests CheckSatisfiability (δ-SAT case).
-TEST_F(ApiTest, CheckSatisfiability_DeltaSat) {
+TEST_F(ApiTest, CheckSatisfiabilityMixedBooleanAndContinuous) {
+  const Variable b1{"b1", Variable::Type::BOOLEAN};
+  const Variable b2{"b2", Variable::Type::BOOLEAN};
+  const auto result = CheckSatisfiability(
+      !b1 && b2 && (sin(x_) == 1) && x_ > 0 && x_ < 2 * 3.141592, 0.001);
+  ASSERT_TRUE(result);
+  EXPECT_EQ((*result)[b1], 0.0);
+  EXPECT_EQ((*result)[b2], 1.0);
+  EXPECT_NEAR(std::sin((*result)[x_].mid()), 1.0, 0.001);
+}
+
+// Tests CheckSatisfiability (δ-SAT case).
+TEST_F(ApiTest, CheckSatisfiabilityDeltaSat) {
   // 0 ≤ x ≤ 5
   // 0 ≤ y ≤ 5
   // 0 ≤ z ≤ 5
@@ -60,7 +73,7 @@ TEST_F(ApiTest, CheckSatisfiability_DeltaSat) {
 }
 
 // Tests CheckSatisfiability (UNSAT case).
-TEST_F(ApiTest, CheckSatisfiability_Unsat) {
+TEST_F(ApiTest, CheckSatisfiabilityUnsat) {
   // 2x² + 6x + 5 < 0
   // -10 ≤ x ≤ 10
   const Formula f1{2 * x_ * x_ + 6 * x_ + 5 < 0};
