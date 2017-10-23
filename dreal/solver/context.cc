@@ -17,6 +17,7 @@ using std::experimental::optional;
 using std::isfinite;
 using std::move;
 using std::ostringstream;
+using std::pair;
 using std::set;
 using std::stod;
 using std::string;
@@ -91,37 +92,54 @@ optional<Box> Context::Impl::CheckSat() {
       return {};
     }
   }
-  // If {} = stack_ ∨ {true} = stack_, it's trivially SAT.
+  // If stack_ = ∅ or stack_ = {true}, it's trivially SAT.
   if (stack_.empty() || (stack_.size() == 1 && is_true(stack_.first()))) {
     return box();
   }
-
   sat_solver_.AddFormulas(stack_.get_vector());
+
   TheorySolver theory_solver{config_, box()};
   while (true) {
-    if (sat_solver_.CheckSat()) {
-      // SAT from SATSolver.
-      DREAL_LOG_DEBUG("Context::CheckSat() - Sat Check = SAT");
-      if (theory_solver.CheckSat(sat_solver_.model())) {
-        // SAT from TheorySolver.
-        DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = delta-SAT");
-        const Box model{theory_solver.GetModel()};
-        return model;
-      } else {
-        // UNSAT from TheorySolver.
-        DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = UNSAT");
-        const unordered_set<Formula, hash_value<Formula>> explanation{
-            theory_solver.GetExplanation()};
-        if (explanation.empty()) {
-          DREAL_LOG_DEBUG("Context::CheckSat() - Empty Explanation => UNSAT");
-          return {};
-        } else {
-          DREAL_LOG_DEBUG(
-              "Context::CheckSat() - size of explanation = {} - stack "
-              "size = {}",
-              explanation.size(), stack_.get_vector().size());
-          sat_solver_.AddLearnedClause(explanation);
+    const auto optional_model = sat_solver_.CheckSat();
+    if (optional_model) {
+      const vector<pair<Variable, bool>>& boolean_model{optional_model->first};
+      for (const pair<Variable, bool> p : boolean_model) {
+        box()[p.first] = p.second ? 1.0 : 0.0;  // true -> 1.0 and false -> 0.0
+      }
+      const vector<pair<Variable, bool>>& theory_model{optional_model->second};
+      if (theory_model.size() > 0) {
+        // SAT from SATSolver.
+        DREAL_LOG_DEBUG("Context::CheckSat() - Sat Check = SAT");
+
+        vector<Formula> assertions;
+        for (const pair<Variable, bool> p : theory_model) {
+          assertions.push_back(p.second ? sat_solver_.theory_literal(p.first)
+                                        : !sat_solver_.theory_literal(p.first));
         }
+
+        if (theory_solver.CheckSat(assertions)) {
+          // SAT from TheorySolver.
+          DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = delta-SAT");
+          const Box model{theory_solver.GetModel()};
+          return model;
+        } else {
+          // UNSAT from TheorySolver.
+          DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = UNSAT");
+          const unordered_set<Formula, hash_value<Formula>> explanation{
+              theory_solver.GetExplanation()};
+          if (explanation.empty()) {
+            DREAL_LOG_DEBUG("Context::CheckSat() - Empty Explanation => UNSAT");
+            return {};
+          } else {
+            DREAL_LOG_DEBUG(
+                "Context::CheckSat() - size of explanation = {} - stack "
+                "size = {}",
+                explanation.size(), stack_.get_vector().size());
+            sat_solver_.AddLearnedClause(explanation);
+          }
+        }
+      } else {
+        return box();
       }
     } else {
       // UNSAT from SATSolver. Escape the loop.
