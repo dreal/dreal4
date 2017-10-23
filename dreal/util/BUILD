@@ -41,6 +41,7 @@ dreal_cc_library(
     ],
     deps = [
         ":exception",
+        ":logging",
         ":naive_cnfizer",
         "//dreal/symbolic",
     ],
