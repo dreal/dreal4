@@ -9,7 +9,9 @@ using std::vector;
 namespace dreal {
 
 ContractorStatus::ContractorStatus(Box box)
-    : box_{move(box)}, output_{ibex::BitSet::empty(box_.size())} {}
+    : box_{move(box)}, output_{ibex::BitSet::empty(box_.size())} {
+  assert(box_.size() > 0);
+}
 
 const Box& ContractorStatus::box() const { return box_; }
 

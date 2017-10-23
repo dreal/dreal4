@@ -125,6 +125,7 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
 bool TheorySolver::CheckSat(const vector<Formula>& assertions) {
   num_check_sat++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
+  assert(box_.size() > 0);
   contractor_status_ = ContractorStatus(box_);
 
   // Icp Step
