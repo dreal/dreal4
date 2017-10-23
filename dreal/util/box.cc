@@ -56,9 +56,6 @@ void Box::Add(const Variable& v) {
                  [&v](const Variable& var) { return v.equal_to(var); }) ==
          variables_->end());
 
-  // Boolean variables are not allowed.
-  assert(v.get_type() != Variable::Type::BOOLEAN);
-
   if (!variables_.unique()) {
     // If the components of this box is shared by more than one
     // entity, we need to clone this before adding the variable `v`
@@ -74,6 +71,13 @@ void Box::Add(const Variable& v) {
   var_to_idx_->emplace(v, n);
   variables_->push_back(v);
   values_.resize(size());
+
+  // Set up Domain.
+  // TODO(soonho): For now, we allow Boolean variables in a box. Change this.
+  if (v.get_type() == Variable::Type::BOOLEAN ||
+      v.get_type() == Variable::Type::BINARY) {
+    values_[n] = Interval(0.0, 1.0);
+  }
 }
 
 void Box::Add(const Variable& v, const double lb, const double ub) {
