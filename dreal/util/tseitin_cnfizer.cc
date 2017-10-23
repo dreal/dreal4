@@ -7,6 +7,7 @@
 #include <string>
 
 #include "dreal/util/exception.h"
+#include "dreal/util/logging.h"
 
 namespace dreal {
 
@@ -84,15 +85,16 @@ Formula TseitinCnfizer::VisitForall(const Formula& f) {
   // clause₁(x, y) ∧ ... ∧ clauseₙ(x, y)
   const set<Formula> clauses{
       get_clauses(naive_cnfizer_.Convert(quantified_formula))};
-  const set<Formula> new_clauses{map(clauses, [&quantified_variables](
-                                                  const Formula& clause) {
-    assert(is_clause(clause));
-    if (!intersect(clause.GetFreeVariables(), quantified_variables).empty()) {
-      return forall(quantified_variables, clause);
-    } else {
-      return clause;
-    }
-  })};
+  const set<Formula> new_clauses{
+      ::dreal::map(clauses, [&quantified_variables](const Formula& clause) {
+        assert(is_clause(clause));
+        if (!intersect(clause.GetFreeVariables(), quantified_variables)
+                 .empty()) {
+          return forall(quantified_variables, clause);
+        } else {
+          return clause;
+        }
+      })};
 
   assert(new_clauses.size() > 0);
   if (new_clauses.size() == 1) {
@@ -110,9 +112,9 @@ Formula TseitinCnfizer::VisitConjunction(const Formula& f) {
   // Introduce a new Boolean variable, `bvar` for `f` and record the
   // relation `bvar ⇔ f`.
   static size_t id{0};
-  const set<Formula> transformed_operands{
-      map(get_operands(f),
-          [this](const Formula& formula) { return this->Visit(formula); })};
+  const set<Formula> transformed_operands{::dreal::map(
+      get_operands(f),
+      [this](const Formula& formula) { return this->Visit(formula); })};
   const Variable bvar{string("conj") + to_string(id++),
                       Variable::Type::BOOLEAN};
   map_.emplace(bvar, make_conjunction(transformed_operands));
@@ -121,9 +123,9 @@ Formula TseitinCnfizer::VisitConjunction(const Formula& f) {
 
 Formula TseitinCnfizer::VisitDisjunction(const Formula& f) {
   static size_t id{0};
-  const set<Formula>& transformed_operands{
-      map(get_operands(f),
-          [this](const Formula& formula) { return this->Visit(formula); })};
+  const set<Formula>& transformed_operands{::dreal::map(
+      get_operands(f),
+      [this](const Formula& formula) { return this->Visit(formula); })};
   const Variable bvar{string("disj") + to_string(id++),
                       Variable::Type::BOOLEAN};
   map_.emplace(bvar, make_disjunction(transformed_operands));

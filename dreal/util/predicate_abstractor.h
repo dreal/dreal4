@@ -7,18 +7,32 @@
 #include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
+
 class PredicateAbstractor {
  public:
+  /// Converts a first-order logic formula @p f into a Boolean formula
+  /// by predicate abstraction. For example, a formula `(x > 0) ∧ (y <
+  /// 0)` will be converted into `b₁ ∧ b₂` while `b₁` corresponds with
+  /// `x > 0` and `b₂` corresponds with `y < 0`. The class provides
+  /// `operator[b]` which looks up the corresponding formula for a
+  /// Boolean variable `b`.
   Formula Convert(const Formula& f);
+
+  /// Converts @p formulas into a conjunction of Boolean formulas. See
+  /// the above method.
   Formula Convert(const std::vector<Formula>& formulas);
 
-  std::unordered_map<Variable, Formula, hash_value<Variable>>
+  const std::unordered_map<Variable, Formula, hash_value<Variable>>&
   var_to_formula_map() const {
     return var_to_formula_map_;
   }
-  std::unordered_map<Formula, Variable, hash_value<Formula>>
-  formula_to_var_map() const {
-    return formula_to_var_map_;
+
+  const Variable& operator[](const Formula& f) const {
+    return formula_to_var_map_.at(f);
+  }
+
+  const Formula& operator[](const Variable& var) const {
+    return var_to_formula_map_.at(var);
   }
 
  private:

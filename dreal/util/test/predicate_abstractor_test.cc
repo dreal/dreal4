@@ -57,8 +57,8 @@ TEST_F(PredicateAbstractorTest, Eq) {
   const Variable& var{get_variable(f_abstracted)};
 
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var], f);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[f], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], f);
+  EXPECT_PRED2(VarEqual, abstractor_[f], var);
 }
 
 TEST_F(PredicateAbstractorTest, Neq) {
@@ -72,9 +72,8 @@ TEST_F(PredicateAbstractorTest, Neq) {
   const Variable& var{get_variable(get_operand(f_abstracted))};
 
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var],
-               x_ + y_ == 10);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[x_ + y_ == 10], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], x_ + y_ == 10);
+  EXPECT_PRED2(VarEqual, abstractor_[x_ + y_ == 10], var);
 }
 
 TEST_F(PredicateAbstractorTest, Gt) {
@@ -88,9 +87,8 @@ TEST_F(PredicateAbstractorTest, Gt) {
   const Variable& var{get_variable(get_operand(f_abstracted))};
 
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var],
-               x_ + y_ <= 10);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[x_ + y_ <= 10], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], x_ + y_ <= 10);
+  EXPECT_PRED2(VarEqual, abstractor_[x_ + y_ <= 10], var);
 }
 
 TEST_F(PredicateAbstractorTest, Geq) {
@@ -104,9 +102,8 @@ TEST_F(PredicateAbstractorTest, Geq) {
   const Variable& var{get_variable(get_operand(f_abstracted))};
 
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var],
-               x_ + y_ < 10);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[x_ + y_ < 10], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], x_ + y_ < 10);
+  EXPECT_PRED2(VarEqual, abstractor_[x_ + y_ < 10], var);
 }
 
 TEST_F(PredicateAbstractorTest, Lt) {
@@ -119,8 +116,8 @@ TEST_F(PredicateAbstractorTest, Lt) {
   const Variable& var{get_variable(f_abstracted)};
 
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var], f);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[f], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], f);
+  EXPECT_PRED2(VarEqual, abstractor_[f], var);
 }
 
 TEST_F(PredicateAbstractorTest, Leq) {
@@ -133,8 +130,8 @@ TEST_F(PredicateAbstractorTest, Leq) {
   const Variable& var{get_variable(f_abstracted)};
 
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var], f);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[f], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], f);
+  EXPECT_PRED2(VarEqual, abstractor_[f], var);
 }
 
 TEST_F(PredicateAbstractorTest, Conjunction) {
@@ -157,12 +154,12 @@ TEST_F(PredicateAbstractorTest, Conjunction) {
     // if (is_variable(f)) {
     //   // Case: f = v.
     //   const Variable& var{get_variable(f)};
-    //   const Formula& corresponding_f{abstractor_.var_to_formula_map()[var]};
+    //   const Formula& corresponding_f{abstractor_[var]};
     //   EXPECT_TRUE(operands.find(corresponding_f) != operands.end());
     // } else {
     //   // Case: f = !v.
     //   const Variable& var{get_variable(get_operand(f))};
-    //   const Formula& corresponding_f{abstractor_.var_to_formula_map()[var]};
+    //   const Formula& corresponding_f{abstractor_[var]};
     //   EXPECT_TRUE(operands.find(corresponding_f) != operands.end());
     // }
   }
@@ -187,7 +184,7 @@ TEST_F(PredicateAbstractorTest, Disjunction) {
                 (is_negation(f) && is_variable(get_operand(f))));
     // ASSERT_TRUE(is_variable(f));
     // const Variable& var{get_variable(f)};
-    // const Formula& corresponding_f{abstractor_.var_to_formula_map()[var]};
+    // const Formula& corresponding_f{abstractor_[var]};
     // EXPECT_TRUE(operands.find(corresponding_f) != operands.end());
   }
 }
@@ -201,9 +198,8 @@ TEST_F(PredicateAbstractorTest, Negation) {
   ASSERT_TRUE(is_variable(not_f_abstracted));
   const Variable& var{get_variable(not_f_abstracted)};
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var],
-               x_ + y_ < 10);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[x_ + y_ < 10], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], x_ + y_ < 10);
+  EXPECT_PRED2(VarEqual, abstractor_[x_ + y_ < 10], var);
 }
 
 TEST_F(PredicateAbstractorTest, Forall) {
@@ -213,8 +209,8 @@ TEST_F(PredicateAbstractorTest, Forall) {
   ASSERT_TRUE(is_variable(f_abstracted));
   const Variable& var{get_variable(f_abstracted)};
   EXPECT_EQ(var.get_type(), Variable::Type::BOOLEAN);
-  EXPECT_PRED2(FormulaEqual, abstractor_.var_to_formula_map()[var], f);
-  EXPECT_PRED2(VarEqual, abstractor_.formula_to_var_map()[f], var);
+  EXPECT_PRED2(FormulaEqual, abstractor_[var], f);
+  EXPECT_PRED2(VarEqual, abstractor_[f], var);
 }
 
 }  // namespace

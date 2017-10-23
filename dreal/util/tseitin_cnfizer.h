@@ -14,6 +14,15 @@ class TseitinCnfizer {
   /// Convert @p f into an equi-satisfiable formula @c f' in CNF.
   std::vector<Formula> Convert(const Formula& f);
 
+  /// Returns a const reference of `map_` member.
+  ///
+  /// @note that this member `map_` is cleared at the beginning of `Convert`
+  /// method.
+  const std::unordered_map<Variable, Formula, hash_value<Variable>>& map()
+      const {
+    return map_;
+  }
+
  private:
   Formula Visit(const Formula& f);
   Formula VisitFalse(const Formula& f);
@@ -30,6 +39,11 @@ class TseitinCnfizer {
   Formula VisitNegation(const Formula& f);
   Formula VisitForall(const Formula& f);
 
+  // Maps a temporary variable, which is introduced by a Tseitin
+  // transformation, to a corresponding Formula.
+  //
+  // @note that this map_ is cleared at the beginning of `Convert`
+  // call.
   std::unordered_map<Variable, Formula, hash_value<Variable>> map_;
 
   // To transform nested formulas inside of universal quantifications.
