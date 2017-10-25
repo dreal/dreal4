@@ -7,6 +7,12 @@
 
 namespace dreal {
 
+// Contractor for integer variables. For an integer variable `i = [lb,
+// ub]`, it reduces the assignment into `[ceil(lb), floor(ub)]`.
+//
+// This class should be created via `make_contractor_integer` which
+// handles the case where there is no integer/binary variables in a
+// box.
 class ContractorInteger : public ContractorCell {
  public:
   explicit ContractorInteger(const Box& box);

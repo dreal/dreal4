@@ -61,7 +61,9 @@ Contractor make_contractor_id() { return Contractor{}; }
 Contractor make_contractor_integer(const Box& box) {
   if (any_of(box.variables().begin(), box.variables().end(),
              [](const Variable& v) {
-               return v.get_type() == Variable::Type::INTEGER;
+               const Variable::Type type{v.get_type()};
+               return type == Variable::Type::INTEGER ||
+                      type == Variable::Type::BINARY;
              })) {
     return Contractor{make_shared<ContractorInteger>(box)};
   } else {

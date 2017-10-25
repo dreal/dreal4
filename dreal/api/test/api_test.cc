@@ -13,6 +13,12 @@ class ApiTest : public ::testing::Test {
   const Variable x_{"x", Variable::Type::CONTINUOUS};
   const Variable y_{"y", Variable::Type::CONTINUOUS};
   const Variable z_{"z", Variable::Type::CONTINUOUS};
+
+  const Variable binary1_{"binary1", Variable::Type::BINARY};
+  const Variable binary2_{"binary2", Variable::Type::BINARY};
+
+  const Variable b1_{"b1", Variable::Type::BOOLEAN};
+  const Variable b2_{"b2", Variable::Type::BOOLEAN};
 };
 
 ::testing::AssertionResult CheckSolution(const Formula& f,
@@ -35,14 +41,29 @@ class ApiTest : public ::testing::Test {
 
 // Tests CheckSatisfiability (δ-SAT case).
 TEST_F(ApiTest, CheckSatisfiabilityMixedBooleanAndContinuous) {
-  const Variable b1{"b1", Variable::Type::BOOLEAN};
-  const Variable b2{"b2", Variable::Type::BOOLEAN};
   const auto result = CheckSatisfiability(
-      !b1 && b2 && (sin(x_) == 1) && x_ > 0 && x_ < 2 * 3.141592, 0.001);
+      !b1_ && b2_ && (sin(x_) == 1) && x_ > 0 && x_ < 2 * 3.141592, 0.001);
   ASSERT_TRUE(result);
-  EXPECT_EQ((*result)[b1], 0.0);
-  EXPECT_EQ((*result)[b2], 1.0);
+  EXPECT_EQ((*result)[b1_], 0.0);
+  EXPECT_EQ((*result)[b2_], 1.0);
   EXPECT_NEAR(std::sin((*result)[x_].mid()), 1.0, 0.001);
+}
+
+TEST_F(ApiTest, CheckSatisfiabilityBinaryVariables1) {
+  const Formula f{2 * binary1_ + 4 * binary2_ == 0};
+  const auto result = CheckSatisfiability(f, 0.001);
+  ASSERT_TRUE(result);
+  const Box& solution{*result};
+  EXPECT_EQ(solution[binary1_].mid(), 0.0);
+  EXPECT_EQ(solution[binary2_].mid(), 0.0);
+  EXPECT_EQ(solution[binary1_].diam(), 0.0);
+  EXPECT_EQ(solution[binary2_].diam(), 0.0);
+}
+
+TEST_F(ApiTest, CheckSatisfiabilityBinaryVariables2) {
+  const Formula f{binary1_ + binary2_ > 3};
+  const auto result = CheckSatisfiability(f, 0.001);
+  EXPECT_FALSE(result);
 }
 
 // Tests CheckSatisfiability (δ-SAT case).
