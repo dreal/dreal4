@@ -8,7 +8,7 @@ BINTRAY_URL=https://api.bintray.com/content/dreal/dreal/dreal
 set -e
 
 # BUILD
-bazel build //:package_debian --compiler=gcc-4.9
+bazel build //:package_debian --compiler=gcc-5
 
 # Renaming: Until https://github.com/bazelbuild/bazel/issues/3652 is fixed.
 mv bazel-bin/dreal__amd64.deb dreal_${VERSION}_amd64.deb
