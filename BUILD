@@ -65,7 +65,6 @@ pkg_deb(
         "flex",
         "pkg-config",
         "libibex-dev",
-        "libnlopt-dev",
     ],
     description = "SMT solver for nonlinear theories",
     homepage = "http://dreal.github.io",
