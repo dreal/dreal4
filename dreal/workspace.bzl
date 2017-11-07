@@ -14,13 +14,6 @@ def dreal_workspace():
         sha256 = "a773ef09e451dfcb36451de548c063e045751c917f61e59aa73ad68ac69ba2c2",
     )
     github_archive(
-        name = "ezoptionparser", # MIT
-        repository = "dreal-deps/ezoptionparser",
-        commit = "b42ee9e166ddc66dd2e02a178592917fb58bbdb7",
-        sha256 = "701d9300c02ebf47b184f112b3a7b322003abc8654c96b1762900af35ba447d3",
-        build_file = str(Label("//tools:ezoptionparser.BUILD")),
-    )
-    github_archive(
         name = "spdlog", # MIT
         repository = "gabime/spdlog",
         commit = "1e4f14c78965c4bdb6c4b2917ad06d21ab87e21d",
