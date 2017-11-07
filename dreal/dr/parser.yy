@@ -4,6 +4,9 @@
 
 #include "dreal/symbolic/symbolic.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 /* void yyerror(SmtPrsr parser, const char *); */
 #define YYMAXDEPTH 1024 * 1024
 %}
@@ -293,3 +296,5 @@ void dreal::DrParser::error(const DrParser::location_type& l,
                             const std::string& m) {
     driver.error(l, m);
 }
+
+#pragma GCC diagnostic pop

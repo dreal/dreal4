@@ -7,6 +7,9 @@
 #include "dreal/smt2/sort.h"
 #include "dreal/symbolic/symbolic.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+
 /* void yyerror(SmtPrsr parser, const char *); */
 #define YYMAXDEPTH 1024 * 1024
 %}
@@ -427,3 +430,5 @@ void dreal::Smt2Parser::error(const Smt2Parser::location_type& l,
                               const std::string& m) {
     driver.error(l, m);
 }
+
+#pragma GCC diagnostic pop

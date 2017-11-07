@@ -4,7 +4,18 @@
 #include <string>
 #include <vector>
 
+// TODO(soonho): Fix ezoptionparser to remove those pragmas.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshadow"
+#endif
 #include "./ezOptionParser.hpp"
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#pragma GCC diagnostic pop
 
 #include "dreal/solver/config.h"
 

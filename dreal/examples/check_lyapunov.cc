@@ -34,8 +34,8 @@ void CheckLyapunov(const vector<Variable>& x, const vector<Expression>& f,
   // ball = ∑ xᵢ².
   const Expression ball =
       accumulate(x.begin(), x.end(), Expression::Zero(),
-                 [](const Expression& result, const Variable& x) {
-                   return result + (x * x);
+                 [](const Expression& result, const Variable& x_i) {
+                   return result + (x_i * x_i);
                  });
   // lie_derivative_of_V = ∑ fᵢ*∂V/∂xᵢ.
   Expression lie_derivative_of_V = 0.0;

@@ -70,8 +70,9 @@ class ContractorForall : public ContractorCell {
     // 2. Assert strengthen(¬φ, ε).
     if (is_conjunction(strengthend_negated_nested_f_)) {
       // Optimizations
-      for (const Formula& f : get_operands(strengthend_negated_nested_f_)) {
-        context_for_counterexample_.Assert(f);
+      for (const Formula& formula :
+           get_operands(strengthend_negated_nested_f_)) {
+        context_for_counterexample_.Assert(formula);
       }
     } else {
       context_for_counterexample_.Assert(strengthend_negated_nested_f_);

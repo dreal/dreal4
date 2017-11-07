@@ -35,8 +35,10 @@ vector<Contractor> Flatten(const vector<Contractor>& contractors) {
       continue;
     } else if (kind == Contractor::Kind::SEQ) {
       // Flatten it out if contractor == SEQ.
-      const vector<Contractor>& contractors{to_seq(contractor)->contractors()};
-      vec.insert(vec.end(), contractors.begin(), contractors.end());
+      const vector<Contractor>& contractors_inside{
+          to_seq(contractor)->contractors()};
+      vec.insert(vec.end(), contractors_inside.begin(),
+                 contractors_inside.end());
     } else {
       vec.push_back(contractor);
     }

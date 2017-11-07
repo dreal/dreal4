@@ -8,7 +8,9 @@
 #endif
 
 /* ignore harmless bug in old versions of flex */
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 
 #include <string>
 
@@ -264,6 +266,8 @@ int Smt2FlexLexer::yywrap()
 {
     return 1;
 }
+
+#pragma GCC diagnostic pop
 
 #ifdef __clang__
 #pragma clang diagnostic pop

@@ -117,25 +117,25 @@ const ExprNode* IbexConverter::VisitAddition(const Expression& e) {
   }
   for (const pair<Expression, double>& p :
        get_expr_to_coeff_map_in_addition(e)) {
-    const Expression& e{p.first};
+    const Expression& e_i{p.first};
     const double coeff{p.second};
     if (coeff == 1.0) {
       if (ret) {
-        ret = &(*ret + *Visit(e));
+        ret = &(*ret + *Visit(e_i));
       } else {
-        ret = Visit(e);
+        ret = Visit(e_i);
       }
     } else if (coeff == -1.0) {
       if (ret) {
-        ret = &(*ret - *Visit(e));
+        ret = &(*ret - *Visit(e_i));
       } else {
-        ret = Visit(-e);
+        ret = Visit(-e_i);
       }
     } else {
       if (ret) {
-        ret = &(*ret + coeff * *Visit(e));
+        ret = &(*ret + coeff * *Visit(e_i));
       } else {
-        ret = &(coeff * *Visit(e));
+        ret = &(coeff * *Visit(e_i));
       }
     }
   }
