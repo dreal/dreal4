@@ -16,7 +16,7 @@ cc_test(
 
 dreal_cc_googletest(
     name = "ibex_bitset_test",
-    srcs = ["ibex_test.cc"],
+    srcs = ["ibex_bitset_test.cc"],
     tags = ["extlib"],
     deps = [
         "@ibex//:ibex",

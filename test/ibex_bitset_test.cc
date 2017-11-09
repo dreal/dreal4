@@ -6,36 +6,45 @@
 
 namespace {
 
-using std::endl;
-using std::cerr;
-
 GTEST_TEST(IbexBitsetTest, Add) {
-  // TODO(soonho): add.
   int _bitset1[3] = {3, 7, 161};
-  int _bitset2[2] = {4, 7};
-  int _bitset3[4] = {3, 4, 7, 160};
   ibex::BitSet bitset1(3, _bitset1);
+  EXPECT_TRUE(bitset1[3]);
+  EXPECT_TRUE(bitset1[7]);
+  EXPECT_TRUE(bitset1[161]);
+  EXPECT_EQ(bitset1.size(), 3);
+  EXPECT_EQ(bitset1.min(), 3);
+  EXPECT_EQ(bitset1.max(), 161);
+
+  int _bitset2[2] = {4, 7};
   ibex::BitSet bitset2(2, _bitset2);
+  EXPECT_TRUE(bitset2[4]);
+  EXPECT_TRUE(bitset2[7]);
+  EXPECT_EQ(bitset2.size(), 2);
+  EXPECT_EQ(bitset2.min(), 4);
+  EXPECT_EQ(bitset2.max(), 7);
+
+  int _bitset3[4] = {3, 4, 7, 160};
   ibex::BitSet bitset3(4, _bitset3);
+  EXPECT_TRUE(bitset3[3]);
+  EXPECT_TRUE(bitset3[4]);
+  EXPECT_TRUE(bitset3[7]);
+  EXPECT_TRUE(bitset3[160]);
+  EXPECT_EQ(bitset3.size(), 4);
+  EXPECT_EQ(bitset3.min(), 3);
+  EXPECT_EQ(bitset3.max(), 160);
 
-  ibex::BitSet bs;
-
-  cerr << bitset1.max() << endl;
-  cerr << bitset2.max() << endl;
-  cerr << bitset3.max() << endl;
-
-  bs.display(cerr);
-  cerr << endl;
-
-  bs.display(cerr);
-  cerr << endl;
-
-  bs.union_with(bitset1);
-  bs.union_with(bitset2);
-  bs.union_with(bitset3);
-
-  bs.display(cerr);
-  cerr << endl;
+  ibex::BitSet bs(bitset1);
+  bs |= bitset2;
+  bs |= bitset3;
+  EXPECT_TRUE(bs[3]);
+  EXPECT_TRUE(bs[4]);
+  EXPECT_TRUE(bs[7]);
+  EXPECT_TRUE(bs[160]);
+  EXPECT_TRUE(bs[161]);
+  EXPECT_EQ(bs.size(), 5);
+  EXPECT_EQ(bs.min(), 3);
+  EXPECT_EQ(bs.max(), 161);
 }
 
 }  // namespace
