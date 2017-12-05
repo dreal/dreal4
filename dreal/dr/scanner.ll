@@ -110,6 +110,7 @@ typedef dreal::DrParser::token_type token_type;
 "^"                     { return DrParser::token::TK_CARET; }
 
 "implies"               { return DrParser::token::TK_IMPLIES; }
+"=>"                    { return DrParser::token::TK_IMPLIES; }
 "and"                   { return DrParser::token::TK_AND; }
 "or"                    { return DrParser::token::TK_OR; }
 "not"                   { return DrParser::token::TK_NOT; }

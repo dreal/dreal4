@@ -162,6 +162,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 "or"                    { return Smt2Parser::token::TK_OR; }
 "not"                   { return Smt2Parser::token::TK_NOT; }
 "ite"                   { return Smt2Parser::token::TK_ITE; }
+"=>"                    { return Smt2Parser::token::TK_IMPLIES; }
 
  /* gobble up white-spaces */
 [ \t\r]+ {
