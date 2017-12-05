@@ -452,6 +452,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "uav",
+    size = "small",
+)
+
+smt2_test(
     name = "yichao_01",
     size = "small",
 )
