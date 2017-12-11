@@ -358,12 +358,12 @@ smt2_test(
 
 smt2_test(
     name = "nikos_01",
-    size = "small",
+    size = "medium",
 )
 
 smt2_test(
     name = "nikos_02",
-    size = "small",
+    size = "medium",
 )
 
 smt2_test(
