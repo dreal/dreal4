@@ -16,17 +16,11 @@ using std::set;
 using std::vector;
 
 namespace {
-// Returns vars₁ ∪ vars₂.
-vector<Variable> Add(vector<Variable> vars1, const Variables& vars2) {
-  vars1.insert(vars1.begin(), vars2.begin(), vars2.end());
-  return vars1;
-}
 
 // Given f = [(e₁(x, y) ≥ 0) ∨ ... ∨ (eₙ(x, y) ≥ 0)], build an
 // evaluator for each (eᵢ(x, y) ≥ 0) and return a vector of
 // evaluators.
-vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(
-    const Formula& f, const vector<Variable>& variables) {
+vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
   DREAL_LOG_DEBUG("BuildFormulaEvaluators");
   const Formula& quantified_formula{get_quantified_formula(f)};
   assert(is_clause(quantified_formula));
@@ -37,23 +31,21 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(
     DREAL_LOG_DEBUG("BuildFormulaEvaluators: disjunct = {}", disjunct);
     assert(is_relational(disjunct) ||
            (is_negation(disjunct) && is_relational(get_operand(disjunct))));
-    evaluators.push_back(RelationalFormulaEvaluator::Make(disjunct, variables));
+    evaluators.push_back(RelationalFormulaEvaluator{disjunct});
   }
   return evaluators;
 }
 
 }  // namespace
 
-ForallFormulaEvaluator::ForallFormulaEvaluator(
-    const Formula& f, const vector<Variable>& variables, const double epsilon,
-    const double delta)
-    : f_{f},
-      evaluators_{BuildFormulaEvaluators(
-          f_, Add(variables, get_quantified_variables(f)))} {
+ForallFormulaEvaluator::ForallFormulaEvaluator(const Formula& f,
+                                               const double epsilon,
+                                               const double delta)
+    : f_{f}, evaluators_{BuildFormulaEvaluators(f_)} {
   assert(is_forall(f));
   DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", f);
   context_.mutable_config().mutable_precision() = delta;
-  for (const Variable& exist_var : variables) {
+  for (const Variable& exist_var : f.GetFreeVariables()) {
     context_.DeclareVariable(exist_var);
   }
   for (const Variable& forall_var : get_quantified_variables(f)) {
@@ -100,7 +92,11 @@ FormulaEvaluationResult ForallFormulaEvaluator::operator()(
 }
 
 ostream& ForallFormulaEvaluator::Display(ostream& os) const {
-  return os << "FormulaEvaluator(" << f_ << ")";
+  return os << "ForallFormulaEvaluator(" << f_ << ")";
+}
+
+Variables ForallFormulaEvaluator::variables() const {
+  return f_.GetFreeVariables();
 }
 
 }  // namespace dreal

@@ -1,5 +1,6 @@
 #include "dreal/solver/formula_evaluator.h"
 
+#include <cassert>
 #include <utility>
 
 #include "dreal/solver/expression_evaluator.h"
@@ -45,28 +46,30 @@ ostream& operator<<(ostream& os, const FormulaEvaluationResult& result) {
 }
 
 FormulaEvaluator::FormulaEvaluator(shared_ptr<FormulaEvaluatorCell> ptr)
-    : ptr_{move(ptr)} {}
+    : ptr_{move(ptr)} {
+  assert(ptr_);
+}
 
 FormulaEvaluationResult FormulaEvaluator::operator()(const Box& box) const {
   return (*ptr_)(box);
 }
 
+Variables FormulaEvaluator::variables() const { return ptr_->variables(); }
+
 ostream& operator<<(ostream& os, const FormulaEvaluator& evaluator) {
   return evaluator.ptr_->Display(os);
 }
 
-FormulaEvaluator make_relational_formula_evaluator(
-    const Formula& f, const vector<Variable>& variables) {
-  return FormulaEvaluator{make_shared<RelationalFormulaEvaluator>(
-      RelationalFormulaEvaluator::Make(f, variables))};
+FormulaEvaluator make_relational_formula_evaluator(const Formula& f) {
+  return FormulaEvaluator{make_shared<RelationalFormulaEvaluator>(f)};
 }
 
-FormulaEvaluator make_forall_formula_evaluator(
-    const Formula& f, const vector<Variable>& variables, const double epsilon,
-    const double delta) {
+FormulaEvaluator make_forall_formula_evaluator(const Formula& f,
+                                               const double epsilon,
+                                               const double delta) {
   assert(is_forall(f));
   return FormulaEvaluator{
-      make_shared<ForallFormulaEvaluator>(f, variables, epsilon, delta)};
+      make_shared<ForallFormulaEvaluator>(f, epsilon, delta)};
 }
 
 }  // namespace dreal

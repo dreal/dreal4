@@ -33,8 +33,7 @@ class FormulaEvaluatorTest : public ::testing::Test {
 };
 
 TEST_F(FormulaEvaluatorTest, Gt) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(gt_, {x_, y_})};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(gt_)};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{formula_evaluator(box_).evaluation()};
@@ -43,8 +42,7 @@ TEST_F(FormulaEvaluatorTest, Gt) {
 }
 
 TEST_F(FormulaEvaluatorTest, Gte) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(gte_, {x_, y_})};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(gte_)};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{formula_evaluator(box_).evaluation()};
@@ -53,8 +51,7 @@ TEST_F(FormulaEvaluatorTest, Gte) {
 }
 
 TEST_F(FormulaEvaluatorTest, Lt) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(lt_, {x_, y_})};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(lt_)};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{formula_evaluator(box_).evaluation()};
@@ -63,8 +60,7 @@ TEST_F(FormulaEvaluatorTest, Lt) {
 }
 
 TEST_F(FormulaEvaluatorTest, Lte) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(lte_, {x_, y_})};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(lte_)};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{formula_evaluator(box_).evaluation()};
@@ -73,8 +69,7 @@ TEST_F(FormulaEvaluatorTest, Lte) {
 }
 
 TEST_F(FormulaEvaluatorTest, Eq) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(eq_, {x_, y_})};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(eq_)};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{formula_evaluator(box_).evaluation()};
@@ -83,8 +78,7 @@ TEST_F(FormulaEvaluatorTest, Eq) {
 }
 
 TEST_F(FormulaEvaluatorTest, Neq) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(neq_, {x_, y_})};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(neq_)};
   box_[x_] = 10.0;
   box_[y_] = 0.0;
   const Box::Interval result{formula_evaluator(box_).evaluation()};

@@ -108,11 +108,10 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
     if (it == formula_evaluator_cache_.end()) {
       DREAL_LOG_DEBUG("TheorySolver::BuildFormulaEvaluator: {}", f);
       if (is_forall(f)) {
-        formula_evaluators.push_back(make_forall_formula_evaluator(
-            f, box_.variables(), epsilon, inner_delta));
-      } else {
         formula_evaluators.push_back(
-            make_relational_formula_evaluator(f, box_.variables()));
+            make_forall_formula_evaluator(f, epsilon, inner_delta));
+      } else {
+        formula_evaluators.push_back(make_relational_formula_evaluator(f));
       }
       formula_evaluator_cache_.emplace_hint(it, f, formula_evaluators.back());
     } else {

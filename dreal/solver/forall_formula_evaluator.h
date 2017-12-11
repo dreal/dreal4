@@ -37,15 +37,15 @@ namespace dreal {
 ///
 class ForallFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  ForallFormulaEvaluator(const Formula& f,
-                         const std::vector<Variable>& variables, double epsilon,
-                         double delta);
+  ForallFormulaEvaluator(const Formula& f, double epsilon, double delta);
 
   ~ForallFormulaEvaluator() override;
 
   FormulaEvaluationResult operator()(const Box& box) const override;
 
   std::ostream& Display(std::ostream& os) const override;
+
+  Variables variables() const override;
 
  private:
   const Formula f_;

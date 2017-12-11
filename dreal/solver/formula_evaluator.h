@@ -65,6 +65,9 @@ class FormulaEvaluator {
   /// Evaluates the constraint/formula with @p box.
   FormulaEvaluationResult operator()(const Box& box) const;
 
+  /// Returns the occurred variables in the formula.
+  Variables variables() const;
+
  private:
   // Constructs an FormulaEvaluator from `ptr`.
   explicit FormulaEvaluator(std::shared_ptr<FormulaEvaluatorCell> ptr);
@@ -74,23 +77,20 @@ class FormulaEvaluator {
   friend std::ostream& operator<<(std::ostream& os,
                                   const FormulaEvaluator& evaluator);
 
-  friend FormulaEvaluator make_relational_formula_evaluator(
-      const Formula& f, const std::vector<Variable>& variables);
+  friend FormulaEvaluator make_relational_formula_evaluator(const Formula& f);
 
-  friend FormulaEvaluator make_forall_formula_evaluator(
-      const Formula& f, const std::vector<Variable>& variables, double epsilon,
-      double delta);
+  friend FormulaEvaluator make_forall_formula_evaluator(const Formula& f,
+                                                        double epsilon,
+                                                        double delta);
 };
 
 /// Creates FormulaEvaluator for a relational formula @p f using @p variables.
-FormulaEvaluator make_relational_formula_evaluator(
-    const Formula& f, const std::vector<Variable>& variables);
+FormulaEvaluator make_relational_formula_evaluator(const Formula& f);
 
 /// Creates FormulaEvaluator for a univerally quantified formula @p f
 /// using @p variables, @p epsilon, and @p delta.
-FormulaEvaluator make_forall_formula_evaluator(
-    const Formula& f, const std::vector<Variable>& variable, double epsilon,
-    double delta);
+FormulaEvaluator make_forall_formula_evaluator(const Formula& f, double epsilon,
+                                               double delta);
 
 std::ostream& operator<<(std::ostream& os, const FormulaEvaluator& evaluator);
 

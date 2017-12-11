@@ -1,55 +1,64 @@
 #pragma once
 
-#include <memory>
 #include <ostream>
-#include <vector>
 
 #include "./ibex.h"
 
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/ibex_converter.h"
 
 namespace dreal {
+
 class ExpressionEvaluator {
  public:
-  // No default constructor.
-  ExpressionEvaluator() = delete;
-
-  // Constructs from @p e using @p variables.
-  ExpressionEvaluator(const Expression& e,
-                      const std::vector<Variable>& variables);
-
-  // Constructs from @p e using @p box.
-  ExpressionEvaluator(const Expression& e, const Box& box);
-
-  /// Default copy constructor.
-  ExpressionEvaluator(const ExpressionEvaluator&) = default;
-
-  /// Default move constructor.
-  ExpressionEvaluator(ExpressionEvaluator&&) = default;
-
-  /// Default copy assign operator.
-  ExpressionEvaluator& operator=(const ExpressionEvaluator&) = default;
-
-  /// Default move assign operator.
-  ExpressionEvaluator& operator=(ExpressionEvaluator&&) = default;
+  explicit ExpressionEvaluator(Expression e);
 
   /// Evaluates the expression with @p box.
   Box::Interval operator()(const Box& box) const;
 
-  /// Evaluates the expression at the center of a given @p box.
-  /// @note It returns a double, not an interval.
-  double EvaluateAtCenter(const Box& box) const;
+  Variables variables() const { return e_.GetVariables(); }
 
-  // We allows the following friends who need to access func_ member.
-  friend class RelationalFormulaEvaluator;
+ private:
+  Box::Interval Visit(const Expression& e, const Box& box) const;
+  Box::Interval VisitVariable(const Expression& e, const Box& box) const;
+  Box::Interval VisitConstant(const Expression& e, const Box& box) const;
+  Box::Interval VisitAddition(const Expression& e, const Box& box) const;
+  Box::Interval VisitMultiplication(const Expression& e, const Box& box) const;
+  Box::Interval VisitDivision(const Expression& e, const Box& box) const;
+  Box::Interval VisitLog(const Expression& e, const Box& box) const;
+  Box::Interval VisitAbs(const Expression& e, const Box& box) const;
+  Box::Interval VisitExp(const Expression& e, const Box& box) const;
+  Box::Interval VisitSqrt(const Expression& e, const Box& box) const;
+  Box::Interval VisitPow(const Expression& e, const Box& box) const;
+
+  // Evaluates `pow(e1, e2)` with the @p box.
+  Box::Interval VisitPow(const Expression& e1, const Expression& e2,
+                         const Box& box) const;
+  Box::Interval VisitSin(const Expression& e, const Box& box) const;
+  Box::Interval VisitCos(const Expression& e, const Box& box) const;
+  Box::Interval VisitTan(const Expression& e, const Box& box) const;
+  Box::Interval VisitAsin(const Expression& e, const Box& box) const;
+  Box::Interval VisitAcos(const Expression& e, const Box& box) const;
+  Box::Interval VisitAtan(const Expression& e, const Box& box) const;
+  Box::Interval VisitAtan2(const Expression& e, const Box& box) const;
+  Box::Interval VisitSinh(const Expression& e, const Box& box) const;
+  Box::Interval VisitCosh(const Expression& e, const Box& box) const;
+  Box::Interval VisitTanh(const Expression& e, const Box& box) const;
+  Box::Interval VisitMin(const Expression& e, const Box& box) const;
+  Box::Interval VisitMax(const Expression& e, const Box& box) const;
+  Box::Interval VisitIfThenElse(const Expression& e, const Box& box) const;
+  Box::Interval VisitUninterpretedFunction(const Expression& e,
+                                           const Box& box) const;
+
+  // Makes VisitExpression a friend of this class so that it can use private
+  // operator()s.
+  friend Box::Interval drake::symbolic::VisitExpression<Box::Interval>(
+      const ExpressionEvaluator*, const Expression&, const Box&);
+
   friend std::ostream& operator<<(
       std::ostream& os, const ExpressionEvaluator& expression_evaluator);
 
- private:
-  const std::shared_ptr<IbexConverter> ibex_converter_;
-  std::shared_ptr<ibex::Function> func_;
+  const Expression e_;
 };
 
 std::ostream& operator<<(std::ostream& os,

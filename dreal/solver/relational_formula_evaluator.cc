@@ -6,47 +6,34 @@
 
 namespace dreal {
 
-using std::make_pair;
-using std::make_shared;
-using std::move;
 using std::ostream;
 using std::pair;
-using std::vector;
 
 namespace {
 
-// Decomposes a formula `f = e₁ rop e₂` into `(rop, e₁ - e₂)`.
-pair<RelationalOperator, Expression> Decompose(const Formula& f) {
+RelationalOperator GetRelationalOperator(const Formula& f) {
+  assert(is_relational(f) || is_negation(f));
   switch (f.get_kind()) {
     case FormulaKind::Eq:
-      return make_pair(RelationalOperator::EQ,
-                       get_lhs_expression(f) - get_rhs_expression(f));
+      return RelationalOperator::EQ;
 
     case FormulaKind::Neq:
-      return make_pair(RelationalOperator::NEQ,
-                       get_lhs_expression(f) - get_rhs_expression(f));
+      return RelationalOperator::NEQ;
 
     case FormulaKind::Gt:
-      return make_pair(RelationalOperator::GT,
-                       get_lhs_expression(f) - get_rhs_expression(f));
+      return RelationalOperator::GT;
 
     case FormulaKind::Geq:
-      return make_pair(RelationalOperator::GEQ,
-                       get_lhs_expression(f) - get_rhs_expression(f));
+      return RelationalOperator::GEQ;
 
     case FormulaKind::Lt:
-      return make_pair(RelationalOperator::LT,
-                       get_lhs_expression(f) - get_rhs_expression(f));
+      return RelationalOperator::LT;
 
     case FormulaKind::Leq:
-      return make_pair(RelationalOperator::LEQ,
-                       get_lhs_expression(f) - get_rhs_expression(f));
+      return RelationalOperator::LEQ;
 
-    case FormulaKind::Not: {
-      const pair<RelationalOperator, Expression> result{
-          Decompose(get_operand(f))};
-      return make_pair(!result.first, result.second);
-    }
+    case FormulaKind::Not:
+      return !GetRelationalOperator(get_operand(f));
 
     case FormulaKind::True:
       DREAL_UNREACHABLE();
@@ -63,19 +50,21 @@ pair<RelationalOperator, Expression> Decompose(const Formula& f) {
   }
   DREAL_UNREACHABLE();
 }
+
+// Decomposes a formula `f = e₁ rop e₂` into `(rop, e₁ - e₂)`.
+Expression ExtractExpression(const Formula& f) {
+  if (is_relational(f)) {
+    return get_lhs_expression(f) - get_rhs_expression(f);
+  } else {
+    assert(is_negation(f));
+    return ExtractExpression(get_operand(f));
+  }
+}
 }  // namespace
 
-RelationalFormulaEvaluator::RelationalFormulaEvaluator(
-    const RelationalOperator op, ExpressionEvaluator expression_evaluator)
-    : op_{op}, expression_evaluator_{move(expression_evaluator)} {}
-
-RelationalFormulaEvaluator RelationalFormulaEvaluator::Make(
-    const Formula& f, const vector<Variable>& variables) {
-  assert(is_relational(f) || (is_negation(f) && is_relational(get_operand(f))));
-  const pair<RelationalOperator, Expression> result{Decompose(f)};
-  return RelationalFormulaEvaluator{
-      result.first, ExpressionEvaluator{result.second, variables}};
-}
+RelationalFormulaEvaluator::RelationalFormulaEvaluator(const Formula& f)
+    : op_{GetRelationalOperator(f)},
+      expression_evaluator_{ExtractExpression(f)} {}
 
 RelationalFormulaEvaluator::~RelationalFormulaEvaluator() {
   DREAL_LOG_DEBUG("RelationalFormulaEvaluator::~RelationalFormulaEvaluator()");
@@ -191,7 +180,7 @@ FormulaEvaluationResult RelationalFormulaEvaluator::operator()(
 }
 
 ostream& RelationalFormulaEvaluator::Display(ostream& os) const {
-  return os << "FormulaEvaluator(" << *(expression_evaluator_.func_) << " "
+  return os << "RelationalFormulaEvaluator(" << expression_evaluator_ << " "
             << op_ << " 0.0)";
 }
 }  // namespace dreal

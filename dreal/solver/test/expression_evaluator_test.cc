@@ -28,18 +28,16 @@ class ExpressionEvaluatorTest : public ::testing::Test {
 
 TEST_F(ExpressionEvaluatorTest, Arithmetic1) {
   const Expression e{x_ + y_ + z_};
-  const ExpressionEvaluator evaluator{e, box_};
+  const ExpressionEvaluator evaluator{e};
 
   box_[x_] = Box::Interval{1, 2};
   box_[y_] = Box::Interval{2, 3};
   box_[z_] = Box::Interval{3, 4};
 
   EXPECT_EQ(evaluator(box_), Box::Interval(1 + 2 + 3, 2 + 3 + 4));
-  EXPECT_EQ(evaluator.EvaluateAtCenter(box_),
-            (1 + 2) / 2.0 + (2 + 3) / 2.0 + (3 + 4) / 2.0);
   ostringstream oss;
   oss << evaluator;
-  EXPECT_EQ(oss.str(), "ExpressionEvaluator(_f_0:(x,y,z)->((x+y)+z))");
+  EXPECT_EQ(oss.str(), "ExpressionEvaluator((x + y + z))");
 }
 
 // TODO(soonho): Add more tests.

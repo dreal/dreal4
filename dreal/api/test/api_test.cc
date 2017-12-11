@@ -23,8 +23,7 @@ class ApiTest : public ::testing::Test {
 
 ::testing::AssertionResult CheckSolution(const Formula& f,
                                          const Box& solution) {
-  FormulaEvaluator formula_evaluator{
-      make_relational_formula_evaluator(f, solution.variables())};
+  FormulaEvaluator formula_evaluator{make_relational_formula_evaluator(f)};
   const FormulaEvaluationResult formula_evaluation_result{
       formula_evaluator(solution)};
   if (formula_evaluation_result.type() ==

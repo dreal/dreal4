@@ -57,6 +57,7 @@ dreal_cc_library(
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:logging",
+        "//dreal/util:math",
         "//dreal/util:nnfizer",
         "//dreal/util:scoped_vector",
     ],
