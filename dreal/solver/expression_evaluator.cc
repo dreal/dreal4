@@ -32,7 +32,7 @@ Box::Interval ExpressionEvaluator::VisitVariable(const Expression& e,
 }
 
 Box::Interval ExpressionEvaluator::VisitConstant(const Expression& e,
-                                                 const Box& box) const {
+                                                 const Box&) const {
   const double c{get_constant_value(e)};
   return Box::Interval{c};
 }
@@ -178,13 +178,13 @@ Box::Interval ExpressionEvaluator::VisitMax(const Expression& e,
              Visit(get_second_argument(e), box));
 }
 
-Box::Interval ExpressionEvaluator::VisitIfThenElse(const Expression& e,
-                                                   const Box& box) const {
+Box::Interval ExpressionEvaluator::VisitIfThenElse(const Expression&,
+                                                   const Box&) const {
   throw DREAL_RUNTIME_ERROR("If-then-else expression is not supported yet.");
 }
 
 Box::Interval ExpressionEvaluator::VisitUninterpretedFunction(
-    const Expression& e, const Box& box) const {
+    const Expression&, const Box&) const {
   throw DREAL_RUNTIME_ERROR("Uninterpreted function is not supported.");
 }
 
