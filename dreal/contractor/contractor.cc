@@ -105,14 +105,24 @@ Contractor make_contractor_ibex_polytope(vector<Formula> formulas,
 
 Contractor make_contractor_fixpoint(TerminationCondition term_cond,
                                     const vector<Contractor>& contractors) {
-  return Contractor{
-      make_shared<ContractorFixpoint>(move(term_cond), Flatten(contractors))};
+  vector<Contractor> ctcs{Flatten(contractors)};
+  if (ctcs.empty()) {
+    return make_contractor_id();
+  } else {
+    return Contractor{
+        make_shared<ContractorFixpoint>(move(term_cond), move(ctcs))};
+  }
 }
 
 Contractor make_contractor_worklist_fixpoint(
     TerminationCondition term_cond, const vector<Contractor>& contractors) {
-  return Contractor{make_shared<ContractorWorklistFixpoint>(
-      move(term_cond), Flatten(contractors))};
+  vector<Contractor> ctcs{Flatten(contractors)};
+  if (ctcs.empty()) {
+    return make_contractor_id();
+  } else {
+    return Contractor{
+        make_shared<ContractorWorklistFixpoint>(move(term_cond), move(ctcs))};
+  }
 }
 
 Contractor make_contractor_join(vector<Contractor> vec) {
