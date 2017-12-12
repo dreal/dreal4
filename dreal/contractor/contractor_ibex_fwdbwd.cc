@@ -16,6 +16,22 @@ using std::vector;
 
 namespace dreal {
 
+namespace {
+class ContractorIbexFwdbwdStat {
+ public:
+  ContractorIbexFwdbwdStat() = default;
+  ~ContractorIbexFwdbwdStat() {
+    DREAL_LOG_INFO("Total # of zero-effect ibex-fwdbwd pruning = {}",
+                   num_zero_effect_pruning_);
+    DREAL_LOG_INFO("Total # of             ibex-fwdbwd pruning = {}",
+                   num_pruning_);
+  }
+
+  int num_zero_effect_pruning_{0};
+  int num_pruning_{0};
+};
+}  // namespace
+
 //---------------------------------------
 // Implementation of ContractorIbexFwdbwd
 //---------------------------------------
@@ -41,6 +57,7 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box)
 }
 
 void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
+  static ContractorIbexFwdbwdStat stat;
   if (ctc_) {
     Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
     static Box::IntervalVector old_iv{iv};
@@ -49,6 +66,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
     DREAL_LOG_TRACE("CTC = {}", *num_ctr_);
     DREAL_LOG_TRACE("F = {}", f_);
     ctc_->contract(iv);
+    stat.num_pruning_++;
     bool changed{false};
     // Update output.
     if (iv.is_empty()) {
@@ -72,6 +90,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
         DREAL_LOG_TRACE("Changed\n{}", oss.str());
       }
     } else {
+      stat.num_zero_effect_pruning_++;
       DREAL_LOG_TRACE("NO CHANGE");
     }
   }
