@@ -88,6 +88,20 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
   // Fail to find a branching point.
   return false;
 }
+
+// A class to show statistics information at destruction. We have a
+// static instance in Icp::CheckSat() to keep track of the numbers of
+// branching and pruning operations.
+class IcpStat {
+ public:
+  IcpStat() = default;
+  ~IcpStat() {
+    DREAL_LOG_INFO("Total # of Branching @ ICP level = {}", num_branch_);
+    DREAL_LOG_INFO("Total # of Pruning   @ ICP level = {}", num_prune_);
+  }
+  int num_branch_{0};
+  int num_prune_{0};
+};
 }  // namespace
 
 Icp::Icp(Contractor contractor, vector<FormulaEvaluator> formula_evaluators,
@@ -134,6 +148,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(const Box& box) {
 }
 
 bool Icp::CheckSat(ContractorStatus* cs) {
+  static IcpStat stat;
   DREAL_LOG_DEBUG("Icp::CheckSat()");
   // Stack of Box x BranchingPoint.
   vector<pair<Box, int>> stack;
@@ -158,6 +173,7 @@ bool Icp::CheckSat(ContractorStatus* cs) {
     // 2. Prune the current box.
     DREAL_LOG_TRACE("Icp::CheckSat() Current Box:\n{}", current_box);
     contractor_.Prune(cs);
+    stat.num_prune_++;
     DREAL_LOG_TRACE("Icp::CheckSat() After pruning, the current box =\n{}",
                     current_box);
 
@@ -191,6 +207,7 @@ bool Icp::CheckSat(ContractorStatus* cs) {
           current_box);
       return true;
     }
+    stat.num_branch_++;
   }
   DREAL_LOG_DEBUG("Icp::CheckSat() No solution");
   return false;
