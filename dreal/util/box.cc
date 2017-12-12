@@ -213,11 +213,36 @@ Box& Box::InplaceUnion(const Box& b) {
   return *this;
 }
 
-std::ostream& operator<<(std::ostream& os, const Box& box) {
+namespace {
+// RAII which preserves the FmtFlags of an ostream.
+class IosFmtFlagSaver {
+ public:
+  explicit IosFmtFlagSaver(ostream& os) : os_(os), flags_(os.flags()) {}
+  ~IosFmtFlagSaver() { os_.flags(flags_); }
+
+  IosFmtFlagSaver(const IosFmtFlagSaver& rhs) = delete;
+  IosFmtFlagSaver& operator=(const IosFmtFlagSaver& rhs) = delete;
+
+ private:
+  ostream& os_;
+  std::ios::fmtflags flags_;
+};
+}  // namespace
+
+ostream& operator<<(ostream& os, const Box& box) {
   int i{0};
   for (const Variable& var : *(box.variables_)) {
     const Box::Interval interval{box.values_[i++]};
-    os << var << " : " << interval;
+    os << var << " : ";
+    if (var.get_type() == Variable::Type::INTEGER ||
+        var.get_type() == Variable::Type::BINARY) {
+      IosFmtFlagSaver saver{os};
+      os << std::fixed;
+      os << "[" << static_cast<int>(interval.lb()) << ", "
+         << static_cast<int>(interval.ub()) << "]";
+    } else {
+      os << interval;
+    }
     if (i != box.size()) {
       os << "\n";
     }
