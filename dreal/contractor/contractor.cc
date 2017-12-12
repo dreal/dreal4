@@ -47,6 +47,18 @@ vector<Contractor> Flatten(const vector<Contractor>& contractors) {
   return vec;
 }
 
+// A class to show statistics information at destruction. We have a
+// static instance in Contractor::Prune() to keep track of the number
+// of pruning operations.
+class ContractorStat {
+ public:
+  ContractorStat() = default;
+  ~ContractorStat() {
+    DREAL_LOG_INFO("Total # of Pruning @ Contractor level = {}", num_prune_);
+  }
+  int num_prune_{0};
+};
+
 }  // namespace
 
 Contractor::Contractor() : ptr_{make_shared<ContractorId>()} {}
@@ -55,7 +67,11 @@ Contractor::Contractor(const shared_ptr<ContractorCell>& ptr) : ptr_(ptr) {}
 
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 
-void Contractor::Prune(ContractorStatus* cs) const { ptr_->Prune(cs); }
+void Contractor::Prune(ContractorStatus* cs) const {
+  static ContractorStat stat;
+  stat.num_prune_++;
+  ptr_->Prune(cs);
+}
 
 Contractor::Kind Contractor::kind() const { return ptr_->kind(); }
 
