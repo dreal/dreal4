@@ -77,6 +77,9 @@ void Box::Add(const Variable& v) {
   if (v.get_type() == Variable::Type::BOOLEAN ||
       v.get_type() == Variable::Type::BINARY) {
     values_[n] = Interval(0.0, 1.0);
+  } else if (v.get_type() == Variable::Type::INTEGER) {
+    values_[n] =
+        Interval(-numeric_limits<int>::max(), numeric_limits<int>::max());
   }
 }
 
