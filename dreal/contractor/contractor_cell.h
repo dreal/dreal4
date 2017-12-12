@@ -19,6 +19,7 @@ class ContractorSeq;
 class ContractorIbexFwdbwd;
 class ContractorIbexPolytope;
 class ContractorFixpoint;
+class ContractorWorklistFixpoint;
 class ContractorJoin;
 template <typename ContextType>
 class ContractorForall;
@@ -68,8 +69,9 @@ class ContractorCell {
 };
 
 /// Returns max(c₁.input().max(), ..., cₙ.input().max()).
-/// This is used in ContractorSeq and ContractorFixpoint to find the size of its
-/// input BitSet.
+///
+/// This is used in ContractorSeq, ContractorFixpoint, and
+/// ContractorWorklistFixpoint to find the size of its input BitSet.
 int ComputeInputSize(const std::vector<Contractor>& contractors);
 
 std::ostream& operator<<(std::ostream& os, const ContractorCell& c);
@@ -93,6 +95,10 @@ std::shared_ptr<ContractorIbexPolytope> to_ibex_polytope(
 
 /// Converts @p contractor to ContractorFixpoint.
 std::shared_ptr<ContractorFixpoint> to_fixpoint(const Contractor& contractor);
+
+/// Converts @p contractor to ContractorWorklistFixpoint.
+std::shared_ptr<ContractorWorklistFixpoint> to_worklist_fixpoint(
+    const Contractor& contractor);
 
 /// Converts @p contractor to ContractorJoin.
 std::shared_ptr<ContractorJoin> to_join(const Contractor& contractor);

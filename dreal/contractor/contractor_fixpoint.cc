@@ -44,37 +44,4 @@ ostream& ContractorFixpoint::display(ostream& os) const {
   return os << ")";
 }
 
-// ContractorFixpointDep::ContractorFixpointDep(TerminationCondition term_cond,
-//                                              vector<Contractor> contractors)
-//     : ContractorCell{ibex::BitSet::empty(ComputeInputSize(contractors))},
-//       term_cond_{move(term_cond)},
-//       contractors_{move(contractors)} {
-//   assert(contractors_.size() > 0);
-//   ibex::BitSet& input{mutable_input()};
-//   for (const Contractor& c : contractors_) {
-//     input.union_with(c.input());
-//   }
-// }
-
-// void ContractorFixpointDep::Prune(ContractorStatus* cs) const {
-//   static Box::IntervalVector old_iv{cs->box().interval_vector()};
-//   do {
-//     old_iv = cs->box().interval_vector();
-//     for (const Contractor& ctc : contractors_) {
-//       ctc.Prune(cs);
-//       if (cs->box().empty()) {
-//         return;
-//       }
-//     }
-//   } while (!term_cond_(old_iv, cs->box().interval_vector()));
-// }
-
-// ostream& ContractorFixpointDep::display(ostream& os) const {
-//   os << "FixpointDep(";
-//   for (const Contractor& c : contractors_) {
-//     os << c << ", ";
-//   }
-//   return os << ")";
-// }
-
 }  // namespace dreal

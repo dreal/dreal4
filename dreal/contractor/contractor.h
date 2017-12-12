@@ -19,6 +19,7 @@ class ContractorSeq;
 class ContractorIbexFwdbwd;
 class ContractorIbexPolytope;
 class ContractorFixpoint;
+class ContractorWorklistFixpoint;
 class ContractorJoin;
 template <typename ContextType>
 class ContractorForall;
@@ -36,6 +37,7 @@ class Contractor {
     IBEX_FWDBWD,
     IBEX_POLYTOPE,
     FIXPOINT,
+    WORKLIST_FIXPOINT,
     FORALL,
     JOIN,
   };
@@ -85,6 +87,9 @@ class Contractor {
   friend Contractor make_contractor_fixpoint(
       TerminationCondition term_cond,
       const std::vector<Contractor>& contractors);
+  friend Contractor make_contractor_worklist_fixpoint(
+      TerminationCondition term_cond,
+      const std::vector<Contractor>& contractors);
   template <typename ContextType>
   friend Contractor make_contractor_forall(Formula f, const Box& box,
                                            double delta1, double delta2,
@@ -103,6 +108,8 @@ class Contractor {
   friend std::shared_ptr<ContractorIbexPolytope> to_ibex_polytope(
       const Contractor& contractor);
   friend std::shared_ptr<ContractorFixpoint> to_fixpoint(
+      const Contractor& contractor);
+  friend std::shared_ptr<ContractorWorklistFixpoint> to_worklist_fixpoint(
       const Contractor& contractor);
   friend std::shared_ptr<ContractorJoin> to_join(const Contractor& contractor);
   template <typename ContextType>
@@ -148,6 +155,14 @@ Contractor make_contractor_ibex_polytope(std::vector<Formula> formulas,
 Contractor make_contractor_fixpoint(TerminationCondition term_cond,
                                     const std::vector<Contractor>& contractors);
 
+/// Returns a worklist fixed-point contractor. The returned contractor
+/// applies the contractors in @p vec sequentially until @p term_cond
+/// is met.
+///
+/// @see ContractorFixpoint.
+Contractor make_contractor_worklist_fixpoint(
+    TerminationCondition term_cond, const std::vector<Contractor>& contractors);
+
 /// Returns a join contractor. The returned contractor does the following
 /// operation:
 /// <pre>
@@ -184,6 +199,9 @@ bool is_ibex_polytope(const Contractor& contractor);
 
 /// Returns true if @p contractor is fixpoint contractor.
 bool is_fixpoint(const Contractor& contractor);
+
+/// Returns true if @p contractor is worklist-fixpoint contractor.
+bool is_worklist_fixpoint(const Contractor& contractor);
 
 /// Returns true if @p contractor is forall contractor.
 bool is_forall(const Contractor& contractor);

@@ -12,6 +12,7 @@
 #include "dreal/contractor/contractor_integer.h"
 #include "dreal/contractor/contractor_join.h"
 #include "dreal/contractor/contractor_seq.h"
+#include "dreal/contractor/contractor_worklist_fixpoint.h"
 
 using std::any_of;
 using std::make_shared;
@@ -92,6 +93,12 @@ Contractor make_contractor_fixpoint(TerminationCondition term_cond,
       make_shared<ContractorFixpoint>(move(term_cond), Flatten(contractors))};
 }
 
+Contractor make_contractor_worklist_fixpoint(
+    TerminationCondition term_cond, const vector<Contractor>& contractors) {
+  return Contractor{make_shared<ContractorWorklistFixpoint>(
+      move(term_cond), Flatten(contractors))};
+}
+
 Contractor make_contractor_join(vector<Contractor> vec) {
   return Contractor{make_shared<ContractorJoin>(move(vec))};
 }
@@ -120,6 +127,9 @@ bool is_ibex_polytope(const Contractor& contractor) {
 }
 bool is_fixpoint(const Contractor& contractor) {
   return contractor.kind() == Contractor::Kind::FIXPOINT;
+}
+bool is_worklist_fixpoint(const Contractor& contractor) {
+  return contractor.kind() == Contractor::Kind::WORKLIST_FIXPOINT;
 }
 bool is_forall(const Contractor& contractor) {
   return contractor.kind() == Contractor::Kind::FORALL;

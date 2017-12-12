@@ -35,6 +35,8 @@ dreal_cc_library(
         "contractor_join.h",
         "contractor_seq.cc",
         "contractor_seq.h",
+        "contractor_worklist_fixpoint.cc",
+        "contractor_worklist_fixpoint.h",
         "generic_contractor_generator.cc",
     ],
     hdrs = [

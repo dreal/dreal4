@@ -10,6 +10,7 @@
 #include "dreal/contractor/contractor_integer.h"
 #include "dreal/contractor/contractor_join.h"
 #include "dreal/contractor/contractor_seq.h"
+#include "dreal/contractor/contractor_worklist_fixpoint.h"
 
 using std::move;
 using std::ostream;
@@ -29,8 +30,8 @@ const ibex::BitSet& ContractorCell::input() const { return input_; }
 ibex::BitSet& ContractorCell::mutable_input() { return input_; }
 
 // Returns max(c₁.input().max(), ..., cₙ.input().max()).
-// This is used in ContractorSeq and ContractorFixpoint to find the size of its
-// input BitSet.
+// This is used in ContractorSeq, ContractorFixpoint, and
+// ContractorWorklistFixpoint to find the size of its input BitSet.
 int ComputeInputSize(const vector<Contractor>& contractors) {
   int ret = 0;
   for (const Contractor& c : contractors) {
@@ -74,6 +75,11 @@ shared_ptr<ContractorIbexPolytope> to_ibex_polytope(
 shared_ptr<ContractorFixpoint> to_fixpoint(const Contractor& contractor) {
   assert(is_fixpoint(contractor));
   return static_pointer_cast<ContractorFixpoint>(contractor.ptr_);
+}
+shared_ptr<ContractorWorklistFixpoint> to_worklist_fixpoint(
+    const Contractor& contractor) {
+  assert(is_fixpoint(contractor));
+  return static_pointer_cast<ContractorWorklistFixpoint>(contractor.ptr_);
 }
 shared_ptr<ContractorJoin> to_join(const Contractor& contractor) {
   assert(is_join(contractor));
