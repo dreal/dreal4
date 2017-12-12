@@ -33,10 +33,8 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
 
   static TerminationCondition termination_condition{
       [](const Box::IntervalVector& old_iv, const Box::IntervalVector& new_iv) {
-        if (new_iv.is_empty()) {
-          return true;
-        }
-        const double threshold{0.01};
+        assert(!new_iv.is_empty());
+        constexpr double threshold{0.01};
         // If there is a dimension which is improved more than
         // threshold, we continue the current fixed-point computation
         // (return false).
@@ -94,12 +92,17 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
     // Add polytope contractor.
     ctcs.push_back(make_contractor_ibex_polytope(assertions, box_));
   }
-  return make_contractor_fixpoint(termination_condition, move(ctcs));
+  if (config_.use_worklist_fixpoint()) {
+    return make_contractor_worklist_fixpoint(termination_condition, move(ctcs));
+  } else {
+    return make_contractor_fixpoint(termination_condition, move(ctcs));
+  }
 }
 
 vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
     const vector<Formula>& assertions) {
   vector<FormulaEvaluator> formula_evaluators;
+  formula_evaluators.reserve(assertions.size());
   const double delta = config_.precision();
   const double epsilon = 0.99 * delta;
   const double inner_delta = 0.99 * epsilon;
