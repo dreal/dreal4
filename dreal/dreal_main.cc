@@ -83,6 +83,11 @@ void MainProgram::AddOptions() {
            "Use polytope contractor in forall contractor.\n",
            "--forall-polytope");
 
+  opt_.add("false" /* Default */, false /* Required? */,
+           0 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "Use worklist fixpoint algorithm in ICP.\n", "--worklist-fixpoint");
+
   ez::ezOptionValidator* const verbose_option_validator =
       new ez::ezOptionValidator(
           "t", "in", "trace,debug,info,warning,error,critical,off", true);
@@ -179,6 +184,13 @@ void MainProgram::ExtractOptions() {
     config_.mutable_use_polytope_in_forall().set_from_command_line(true);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --forall-polytope = {}",
                     config_.use_polytope_in_forall());
+  }
+
+  // --worklist-fixpoint
+  if (opt_.isSet("--worklist-fixpoint")) {
+    config_.mutable_use_worklist_fixpoint().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --worklist-fixpoint = {}",
+                    config_.use_worklist_fixpoint());
   }
 }
 

@@ -34,6 +34,12 @@ class Config {
   /// Returns a mutable OptionValue for 'use_polytope_in_forall'.
   OptionValue<bool>& mutable_use_polytope_in_forall();
 
+  /// Returns whether it uses worklist-fixpoint algorithm.
+  bool use_worklist_fixpoint() const;
+
+  /// Returns a mutable OptionValue for 'use_worklist_fixpoint'.
+  OptionValue<bool>& mutable_use_worklist_fixpoint();
+
  private:
   // NOTE: Make sure to match the default values specified here with the ones
   // specified in dreal/dreal.cc.
@@ -41,6 +47,7 @@ class Config {
   OptionValue<bool> produce_models_{false};
   OptionValue<bool> use_polytope_{false};
   OptionValue<bool> use_polytope_in_forall_{false};
+  OptionValue<bool> use_worklist_fixpoint_{false};
 };
 
 std::ostream& operator<<(std::ostream& os, const Config& config);

@@ -22,15 +22,24 @@ OptionValue<bool>& Config::mutable_use_polytope_in_forall() {
   return use_polytope_in_forall_;
 }
 
+bool Config::use_worklist_fixpoint() const {
+  return use_worklist_fixpoint_.get();
+}
+OptionValue<bool>& Config::mutable_use_worklist_fixpoint() {
+  return use_worklist_fixpoint_;
+}
+
 ostream& operator<<(ostream& os, const Config& config) {
   return os << fmt::format(
              "Config("
              "precision = {}, "
              "produce_model = {}, "
              "use_polytope = {}, "
-             "use_polytope_in_forall = {})",
+             "use_polytope_in_forall = {}"
+             "use_worklist_fixpoint = {}"
+             ")",
              config.precision(), config.produce_models(), config.use_polytope(),
-             config.use_polytope_in_forall());
+             config.use_polytope_in_forall(), config.use_worklist_fixpoint());
 }
 
 }  // namespace dreal
