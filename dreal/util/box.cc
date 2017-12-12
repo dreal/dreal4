@@ -177,16 +177,20 @@ pair<Box, Box> Box::bisect(const Variable& var) const {
 pair<Box, Box> Box::bisect_int(const int i) const {
   assert(idx_to_var_->at(i).get_type() == Variable::Type::INTEGER ||
          idx_to_var_->at(i).get_type() == Variable::Type::BINARY);
+  const Interval& intv_i{values_[i]};
+  const double lb{ceil(intv_i.lb())};
+  const double ub{floor(intv_i.ub())};
+  const double mid{intv_i.mid()};
+  const double mid_floor{floor(mid)};
+  assert(intv_i.lb() <= lb);
+  assert(lb <= mid_floor);
+  assert(mid_floor + 1 <= ub);
+  assert(ub <= intv_i.ub());
+
   Box b1{*this};
   Box b2{*this};
-  const Interval intv_i{values_[i]};
-  double lb{intv_i.lb()};
-  double ub{intv_i.ub()};
-  lb = isfinite(lb) ? static_cast<int>(ceil(lb)) : -numeric_limits<int>::max();
-  ub = isfinite(ub) ? static_cast<int>(floor(ub)) : numeric_limits<int>::max();
-  const int mid{static_cast<int>(intv_i.mid())};
-  b1[i] = Interval(lb, mid);
-  b2[i] = Interval(mid + 1, ub);
+  b1[i] = Interval(lb, mid_floor);
+  b2[i] = Interval(mid_floor + 1, ub);
   return make_pair(b1, b2);
 }
 
