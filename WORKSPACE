@@ -23,10 +23,10 @@ github_archive(
 )
 
 github_archive(
-    name = "ezoptionparser", # MIT
+    name = "ezoptionparser",  # MIT
     build_file = "//tools:ezoptionparser.BUILD",
-    repository = "dreal-deps/ezoptionparser",
     commit = "b42ee9e166ddc66dd2e02a178592917fb58bbdb7",
+    repository = "dreal-deps/ezoptionparser",
     sha256 = "701d9300c02ebf47b184f112b3a7b322003abc8654c96b1762900af35ba447d3",
 )
 
