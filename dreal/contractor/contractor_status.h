@@ -15,21 +15,29 @@ class ContractorStatus {
  public:
   ContractorStatus() = delete;
 
-  /// Constructs a contractor status with @p box.
-  explicit ContractorStatus(Box box);
+  /// Constructs a contractor status with @p box and @p branching_point.
+  explicit ContractorStatus(Box box, int branching_point = -1);
 
-  /// Returns the embedded box.
+  /// Returns a const reference of the embedded box.
   const Box& box() const;
-  /// Returns the embedded box.
+
+  /// Returns a mutable reference of the embedded box.
   Box& mutable_box();
 
-  /// Returns the output.
+  /// Returns the branching_point.
+  int branching_point() const;
+
+  /// Returns a mutable reference of the branching_point.
+  int& mutable_branching_point();
+
+  /// Returns a const reference of the output field.
   const ibex::BitSet& output() const;
-  /// Returns the output.
+
+  /// Returns a mutable reference of the output field.
   ibex::BitSet& mutable_output();
 
-  /// Returns the explanation, a list of formula responsible for the unsat.
-  const std::unordered_set<Formula, hash_value<Formula>> explanation() const;
+  /// Returns explanation, a list of formula responsible for the unsat.
+  std::unordered_set<Formula, hash_value<Formula>> explanation() const;
 
   /// Add a formula @p f into the used constraints.
   void AddUsedConstraint(Formula f);
@@ -44,14 +52,16 @@ class ContractorStatus {
   ContractorStatus& InplaceJoin(const ContractorStatus& contractor_status);
 
  private:
-  /// The current box to prune. Most of contractors are updating
-  /// this member.
+  // The current box to prune. Most of contractors are updating
+  // this member.
   Box box_;
 
-  /// Some of contractors return a set of boxes in their pruning
-  /// processes. The first one is saved in m_box, the rest will be
-  /// saved in m_box_stack.
-  /// std::vector<Box> box_stack_;
+  // If the nested box is obtained from a branching operation, this field
+  // records the dimension (variable) where the branching occurred. The default
+  // value is -1, which indicates that the box is not obtained by a branching.
+  //
+  // This field is used in worklist-fixpoint contractor.
+  int branching_point_{-1};
 
   // "output_[i] == 1" means that the value of the i-th variable is
   // changed after running the contractor.

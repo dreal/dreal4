@@ -8,14 +8,21 @@ using std::vector;
 
 namespace dreal {
 
-ContractorStatus::ContractorStatus(Box box)
-    : box_{move(box)}, output_{ibex::BitSet::empty(box_.size())} {
+ContractorStatus::ContractorStatus(Box box, const int branching_point)
+    : box_{move(box)},
+      branching_point_{branching_point},
+      output_{ibex::BitSet::empty(box_.size())} {
   assert(box_.size() > 0);
+  assert(branching_point_ >= -1 && branching_point_ < box_.size());
 }
 
 const Box& ContractorStatus::box() const { return box_; }
 
 Box& ContractorStatus::mutable_box() { return box_; }
+
+int ContractorStatus::branching_point() const { return branching_point_; }
+
+int& ContractorStatus::mutable_branching_point() { return branching_point_; }
 
 const ibex::BitSet& ContractorStatus::output() const { return output_; }
 
@@ -62,8 +69,8 @@ unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
   return explanation;
 }
 
-const unordered_set<Formula, hash_value<Formula>>
-ContractorStatus::explanation() const {
+unordered_set<Formula, hash_value<Formula>> ContractorStatus::explanation()
+    const {
   return GenerateExplanation(unsat_witness_, used_constraints_);
 }
 
