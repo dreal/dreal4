@@ -38,10 +38,20 @@ pkg_tar(
 )
 
 pkg_tar(
+    name = "package_license_file",
+    srcs = ["LICENSE.txt"],
+    extension = "tar.gz",
+    package_dir = "/usr/share/doc/dreal",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
+)
+
+pkg_tar(
     name = "archive",
     extension = "tar.gz",
     tags = ["manual"],
     deps = [
+        ":package_license_file",
         ":package_pkg_file",
         "//dreal:package_bin",
         "//dreal:package_headers",
