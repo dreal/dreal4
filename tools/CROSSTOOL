@@ -46,7 +46,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   compiler_flag: "-frounding-math"
   compiler_flag: "-ffloat-store"
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/7"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/7"
@@ -132,7 +132,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   compiler_flag: "-frounding-math"
   compiler_flag: "-ffloat-store"
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/6"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/6"
@@ -217,7 +217,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   compiler_flag: "-frounding-math"
   compiler_flag: "-ffloat-store"
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/5"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5"
@@ -302,7 +302,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   compiler_flag: "-frounding-math"
   compiler_flag: "-ffloat-store"
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/4.9"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/4.9"
@@ -384,7 +384,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/4.9"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/4.9"
@@ -462,7 +462,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/4.9"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/4.9"
@@ -541,7 +541,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
   cxx_builtin_include_directory: "/usr/include/c++/4.9"
   cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/4.9"
@@ -655,7 +655,7 @@ toolchain {
   # Pass IBEX's CFLAGS
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
-  compiler_flag: "-msse2"
+  compiler_flag: "-msse3"
   compiler_flag: "-mfpmath=sse"
 
   # Security hardening on by default.
