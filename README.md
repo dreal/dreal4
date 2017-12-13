@@ -49,8 +49,8 @@ sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt update
 sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev
 sudo apt upgrade libstdc++6
-wget https://dl.bintray.com/dreal/dreal/dreal_4.17.12.1_amd64.deb
-dpkg -i dreal_4.17.12.1_amd64.deb
+wget https://dl.bintray.com/dreal/dreal/dreal_4.17.12.2_amd64.deb
+dpkg -i dreal_4.17.12.2_amd64.deb
 ```
 
 Ubuntu 16.04 LTS:
@@ -59,8 +59,8 @@ sudo apt install -y software-properties-common  # for add-apt-repository
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
 sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev
-wget https://dl.bintray.com/dreal/dreal/dreal_4.17.12.1_amd64.deb
-dpkg -i dreal_4.17.12.1_amd64.deb
+wget https://dl.bintray.com/dreal/dreal/dreal_4.17.12.2_amd64.deb
+dpkg -i dreal_4.17.12.2_amd64.deb
 ```
 
 How to Build dReal
