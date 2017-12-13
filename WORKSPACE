@@ -9,9 +9,9 @@ load("//tools:github.bzl", "github_archive")
 
 github_archive(
     name = "io_kythe_dreal",  # Apache-2.0
-    commit = "beea4d79aac45e6a50774052254f8b74c4fa1b9c",
+    commit = "ee2e00de4b72e9ed9f1b819898b5238c03d10dd6",
     repository = "dreal-deps/kythe",
-    sha256 = "81b93528a95f7ee60b2711cf46de8387018ba9d87ea568e8d347d337f3a1eb7b",
+    sha256 = "7229c5d5a471fd26bcc50b5202568dc9c3035d7375312eb92ded9230e9f6886f",
 )
 
 github_archive(
