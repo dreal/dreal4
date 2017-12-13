@@ -15,7 +15,8 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
     : ContractorCell{Contractor::Kind::FIXPOINT,
                      ibex::BitSet::empty(ComputeInputSize(contractors))},
       term_cond_{move(term_cond)},
-      contractors_{move(contractors)} {
+      contractors_{move(contractors)},
+      old_iv_{1 /* will be updated anyway */} {
   assert(contractors_.size() > 0);
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
@@ -24,16 +25,15 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
 }
 
 void ContractorFixpoint::Prune(ContractorStatus* cs) const {
-  Box::IntervalVector old_iv{cs->box().interval_vector()};
   do {
-    old_iv = cs->box().interval_vector();
+    old_iv_ = cs->box().interval_vector();
     for (const Contractor& ctc : contractors_) {
       ctc.Prune(cs);
       if (cs->box().empty()) {
         return;
       }
     }
-  } while (!term_cond_(old_iv, cs->box().interval_vector()));
+  } while (!term_cond_(old_iv_, cs->box().interval_vector()));
 }
 
 ostream& ContractorFixpoint::display(ostream& os) const {
