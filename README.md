@@ -102,6 +102,11 @@ gcc-5`). See
 [tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L47-L75)
 file for more information.
 
+Build Debian Package
+--------------------
+
+Run `bazel build //:package_debian` and find `.deb` file in `bazel-bin` directory.
+
 
 How to Build Compilation Database
 -----------------------------------
