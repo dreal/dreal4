@@ -111,8 +111,8 @@ Database](https://clang.llvm.org/docs/JSONCompilationDatabase.html),
 run:
 
 ```bash
-pip install protobuf    # required to run only once
-./scripts/generate_compile_commands.sh
+curl -L https://github.com/grailbio/bazel-compilation-database/archive/0.2.tar.gz | tar -xz
+bazel-compilation-database-${RELEASE_VERSION}/generate.sh
 ```
 
 How to Use dReal as a Library
