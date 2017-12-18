@@ -1,10 +1,13 @@
 #include "dreal/solver/sat_solver.h"
 
+#include <ostream>
+
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
 namespace dreal {
 
+using std::cout;
 using std::experimental::make_optional;
 using std::experimental::optional;
 using std::unordered_set;
@@ -16,10 +19,7 @@ SatSolver::SatSolver(const vector<Formula>& clauses) : SatSolver{} {
   AddClauses(clauses);
 }
 
-SatSolver::~SatSolver() {
-  picosat_reset(sat_);
-  DREAL_LOG_DEBUG("SatSolver::~SatSolver() #CheckSat = {}", num_of_check_sat_);
-}
+SatSolver::~SatSolver() { picosat_reset(sat_); }
 
 void SatSolver::AddFormula(const Formula& f) {
   DREAL_LOG_DEBUG("SatSolver::AddFormula({})", f);
@@ -64,11 +64,28 @@ void SatSolver::AddClause(const Formula& f) {
   DoAddClause(f);
 }
 
+namespace {
+class SatSolverStat {
+ public:
+  SatSolverStat() = default;
+  ~SatSolverStat() {
+    if (DREAL_LOG_INFO_ENABLED) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of CheckSat",
+            "SAT level", num_check_sat_);
+    }
+  }
+
+  int num_check_sat_{0};
+};
+}  // namespace
+
 std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
+  static SatSolverStat stat;
   DREAL_LOG_DEBUG("SatSolver::CheckSat(#vars = {}, #clauses = {})",
                   picosat_variables(sat_),
                   picosat_added_original_clauses(sat_));
-  num_of_check_sat_++;
+  stat.num_check_sat_++;
   // Call SAT solver.
   const int ret{picosat_sat(sat_, -1)};
   Model model;

@@ -102,9 +102,6 @@ class SatSolver {
   /// Set of temporary Boolean variables introduced by Tseitin
   /// transformations.
   std::unordered_set<Variable, hash_value<Variable>> tseitin_variables_;
-
-  // Stats
-  int num_of_check_sat_{0};
 };
 
 }  // namespace dreal
