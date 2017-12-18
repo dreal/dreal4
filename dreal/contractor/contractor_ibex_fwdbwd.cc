@@ -8,6 +8,7 @@
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 
+using std::cout;
 using std::move;
 using std::ostream;
 using std::ostringstream;
@@ -21,10 +22,14 @@ class ContractorIbexFwdbwdStat {
  public:
   ContractorIbexFwdbwdStat() = default;
   ~ContractorIbexFwdbwdStat() {
-    DREAL_LOG_INFO("Total # of zero-effect ibex-fwdbwd pruning = {}",
-                   num_zero_effect_pruning_);
-    DREAL_LOG_INFO("Total # of             ibex-fwdbwd pruning = {}",
-                   num_pruning_);
+    if (DREAL_LOG_INFO_ENABLED) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n",
+            "Total # of ibex-fwdbwd Pruning", "Pruning level", num_pruning_);
+      print(cout, "{:<45} @ {:<20} = {:>15}\n",
+            "Total # of ibex-fwdbwd Pruning (zero-effect)", "Pruning level",
+            num_zero_effect_pruning_);
+    }
   }
 
   int num_zero_effect_pruning_{0};

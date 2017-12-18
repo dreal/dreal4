@@ -15,6 +15,7 @@
 #include "dreal/contractor/contractor_worklist_fixpoint.h"
 
 using std::any_of;
+using std::cout;
 using std::make_shared;
 using std::move;
 using std::ostream;
@@ -54,7 +55,11 @@ class ContractorStat {
  public:
   ContractorStat() = default;
   ~ContractorStat() {
-    DREAL_LOG_INFO("Total # of Pruning @ Contractor level = {}", num_prune_);
+    if (DREAL_LOG_INFO_ENABLED) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Pruning",
+            "Contractor level", num_prune_);
+    }
   }
   int num_prune_{0};
 };

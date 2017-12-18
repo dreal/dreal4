@@ -1,10 +1,12 @@
 #include "dreal/solver/icp.h"
 
+#include <ostream>
 #include <tuple>
 #include <utility>
 
 #include "dreal/util/logging.h"
 
+using std::cout;
 using std::experimental::nullopt;
 using std::experimental::optional;
 using std::make_pair;
@@ -96,8 +98,13 @@ class IcpStat {
  public:
   IcpStat() = default;
   ~IcpStat() {
-    DREAL_LOG_INFO("Total # of Branching @ ICP level = {}", num_branch_);
-    DREAL_LOG_INFO("Total # of Pruning   @ ICP level = {}", num_prune_);
+    if (DREAL_LOG_INFO_ENABLED) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Branching",
+            "ICP level", num_branch_);
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Pruning",
+            "ICP level", num_prune_);
+    }
   }
   int num_branch_{0};
   int num_prune_{0};
