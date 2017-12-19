@@ -15,15 +15,15 @@ shared_ptr<spdlog::logger> CreateLogger(const string& logger_name) {
     return logger;
   }
 
-  // Set format.
-  spdlog::set_pattern("[%l] [%Y%m%d %H:%M:%S.%f] %v");
-
   // Create and return a new logger.
   logger = spdlog::stderr_color_mt(logger_name);
 
   // Turn it off by default so that external programs using dReal as a library
   // do not see internal loggings.
   logger->set_level(spdlog::level::off);
+
+  // Set format.
+  logger->set_pattern("[%l] [%Y%m%d %H:%M:%S.%f] %v");
 
   return logger;
 }
