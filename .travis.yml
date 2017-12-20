@@ -68,6 +68,20 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang-4.0']
+      env:
+        - COMPILER="--compiler=clang-4.0" CONFIG="--config asan"
+    - compiler: clang
+      addons:
+        apt:
+          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang-4.0']
+      env:
+        - COMPILER="--compiler=clang-4.0" CONFIG="--config lsan"
+    - compiler: clang
+      addons:
+        apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-4.9', 'clang-3.9']
       env:
@@ -122,7 +136,7 @@ script:
       --host_jvm_args=-Xms500m \
       test \
       --local_resources=${BAZEL_LOCAL_RESOURCES} \
-      //...  ${COMPILER} ${BUILD_TYPE} \
+      //...  ${COMPILER} ${BUILD_TYPE} ${CONFIG} \
       ${COV_OPTION} \
       --test_tag_filters=${TEST_TAG_FILTERS}
 
