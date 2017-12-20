@@ -12,9 +12,9 @@
 #include <cmath>
 #include <iostream>
 
-using std::sqrt;
 using std::cout;
 using std::endl;
+using std::sqrt;
 
 int main() {
   {
@@ -28,7 +28,10 @@ int main() {
     // > Embed this contractor in a generic fix-point loop
     // ------------------------------------------------
 
-    ibex::Variable x("x"), y("y");
+    // We do the following to avoid memory leak. See
+    // https://github.com/ibex-team/ibex-lib/issues/137#issuecomment-104536311
+    const auto& x = ibex::ExprSymbol::new_();
+    const auto& y = ibex::ExprSymbol::new_();
     const double d = 0.5 * sqrt(2);
     ibex::Function f(
         x, y,
@@ -60,7 +63,8 @@ int main() {
     // > Create the Newton iteration contractor
     // > Contract the box x'
     // ------------------------------------------------
-    ibex::Variable x("x"), y("y");
+    const auto& x = ibex::ExprSymbol::new_();
+    const auto& y = ibex::ExprSymbol::new_();
     const double d = 1.0;
     ibex::Function f(x, y,
                      ibex::Return(sqrt(sqr(x) + sqr(y)) - d,
