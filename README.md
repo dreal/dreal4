@@ -96,7 +96,7 @@ By default, it builds a release build. To build a debug-build, run
 `bazel build //... -c dbg`. In macOS, pass `--config=apple_debug` to
 allow lldb/gdb to show symbols.
 
-In Ubuntu, it uses `clang-3.9` as a default compiler. To use other
+In Ubuntu, it uses `clang-4.0` as a default compiler. To use other
 compilers, pass `--compiler` option to bazel (for example `--compiler
 gcc-5`). See
 [tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L47-L75)

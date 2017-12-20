@@ -22,7 +22,7 @@ default_toolchain {
 # --compiler=gcc-4.9 (Trusty)
 default_toolchain {
   cpu: "k8"
-  toolchain_identifier: "clang-3.9-linux"
+  toolchain_identifier: "clang-4.0-linux"
 }
 
 # GCC 7.x on Linux
