@@ -41,7 +41,8 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
     : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
                      ibex::BitSet::empty(box.size())},
       formulas_{move(formulas)},
-      ibex_converter_{box} {
+      ibex_converter_{box},
+      old_iv_{1 /* Will be overwritten anyway */} {
   DREAL_LOG_DEBUG("ContractorIbexPolytope::ContractorIbexPolytope");
 
   // Build SystemFactory. Add variables and constraints.
@@ -81,8 +82,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
 void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
   if (ctc_) {
     Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
-    static Box::IntervalVector old_iv{iv};
-    old_iv = iv;
+    old_iv_ = iv;
     DREAL_LOG_TRACE("ContractorIbexPolytope::Prune");
     ctc_->contract(iv);
     bool changed{false};
@@ -91,8 +91,8 @@ void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
       changed = true;
       cs->mutable_output().fill(0, cs->box().size() - 1);
     } else {
-      for (int i = 0; i < old_iv.size(); ++i) {
-        if (old_iv[i] != iv[i]) {
+      for (int i = 0; i < old_iv_.size(); ++i) {
+        if (old_iv_[i] != iv[i]) {
           cs->mutable_output().add(i);
           changed = true;
         }
@@ -103,7 +103,7 @@ void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
       cs->AddUsedConstraint(formulas_);
       if (DREAL_LOG_TRACE_ENABLED) {
         ostringstream oss;
-        DisplayDiff(oss, cs->box().variables(), old_iv,
+        DisplayDiff(oss, cs->box().variables(), old_iv_,
                     cs->box().interval_vector());
         DREAL_LOG_TRACE("Changed\n{}", oss.str());
       }

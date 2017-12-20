@@ -37,6 +37,9 @@ class ContractorIbexFwdbwd : public ContractorCell {
   std::unique_ptr<const ibex::ExprCtr> expr_ctr_;
   std::unique_ptr<const ibex::NumConstraint> num_ctr_;
   std::unique_ptr<ibex::CtcFwdBwd> ctc_;
+
+  // Temporary storage to store an old interval vector.
+  mutable Box::IntervalVector old_iv_;
 };
 
 }  // namespace dreal

@@ -44,7 +44,8 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box)
     : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
                      ibex::BitSet::empty(box.size())},
       f_{move(f)},
-      ibex_converter_{box} {
+      ibex_converter_{box},
+      old_iv_{1 /* Will be overwritten anyway */} {
   // Build num_ctr and ctc_.
   expr_ctr_.reset(ibex_converter_.Convert(f_));
   if (expr_ctr_) {
@@ -65,8 +66,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
   static ContractorIbexFwdbwdStat stat;
   if (ctc_) {
     Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
-    static Box::IntervalVector old_iv{iv};
-    old_iv = iv;
+    old_iv_ = iv;
     DREAL_LOG_TRACE("ContractorIbexFwdbwd::Prune");
     DREAL_LOG_TRACE("CTC = {}", *num_ctr_);
     DREAL_LOG_TRACE("F = {}", f_);
@@ -78,8 +78,8 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
       changed = true;
       cs->mutable_output().fill(0, cs->box().size() - 1);
     } else {
-      for (int i = 0; i < old_iv.size(); ++i) {
-        if (old_iv[i] != iv[i]) {
+      for (int i = 0; i < old_iv_.size(); ++i) {
+        if (old_iv_[i] != iv[i]) {
           cs->mutable_output().add(i);
           changed = true;
         }
@@ -90,7 +90,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
       cs->AddUsedConstraint(f_);
       if (DREAL_LOG_TRACE_ENABLED) {
         ostringstream oss;
-        DisplayDiff(oss, cs->box().variables(), old_iv,
+        DisplayDiff(oss, cs->box().variables(), old_iv_,
                     cs->box().interval_vector());
         DREAL_LOG_TRACE("Changed\n{}", oss.str());
       }

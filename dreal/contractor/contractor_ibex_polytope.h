@@ -32,6 +32,9 @@ class ContractorIbexPolytope : public ContractorCell {
   std::unique_ptr<ibex::System> system_;
   std::unique_ptr<ibex::LinearizerCombo> linear_relax_combo_;
   std::unique_ptr<ibex::CtcPolytopeHull> ctc_;
+
+  // Temporary storage to store an old interval vector.
+  mutable Box::IntervalVector old_iv_;
 };
 
 }  // namespace dreal
