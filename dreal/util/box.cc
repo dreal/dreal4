@@ -230,14 +230,16 @@ class IosFmtFlagSaver {
 }  // namespace
 
 ostream& operator<<(ostream& os, const Box& box) {
+  IosFmtFlagSaver saver{os};
+  // See
+  // https://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout#comment40126260_554134.
+  os.precision(numeric_limits<double>::max_digits10 + 2);
   int i{0};
   for (const Variable& var : *(box.variables_)) {
     const Box::Interval interval{box.values_[i++]};
     os << var << " : ";
     if (var.get_type() == Variable::Type::INTEGER ||
         var.get_type() == Variable::Type::BINARY) {
-      IosFmtFlagSaver saver{os};
-      os << std::fixed;
       os << "[" << static_cast<int>(interval.lb()) << ", "
          << static_cast<int>(interval.ub()) << "]";
     } else {
@@ -262,6 +264,10 @@ bool operator!=(const Box& b1, const Box& b2) { return !(b1 == b2); }
 ostream& DisplayDiff(ostream& os, const vector<Variable>& variables,
                      const Box::IntervalVector& old_iv,
                      const Box::IntervalVector& new_iv) {
+  IosFmtFlagSaver saver{os};
+  // See
+  // https://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout#comment40126260_554134.
+  os.precision(numeric_limits<double>::max_digits10 + 2);
   for (size_t i = 0; i < variables.size(); ++i) {
     const Box::Interval& old_i{old_iv[i]};
     const Box::Interval& new_i{new_iv[i]};
