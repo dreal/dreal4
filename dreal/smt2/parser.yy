@@ -318,6 +318,9 @@ expr_list:      expr { $$ = new std::vector<Expression>(1, *$1); delete $1; }
 expr:           DOUBLE { $$ = new Expression{$1}; }
         |       INT { $$ = new Expression{static_cast<double>($1)}; }
         |       SYMBOL { $$ = new Expression{driver.context_.lookup_variable(*$1)}; delete $1; }
+        |       '(' TK_PLUS expr ')' {
+            $$ = $3;
+        }
         |       '(' TK_PLUS expr expr_list ')' {
             for (const Expression& term : *$4) {
                 *$3 += term;
