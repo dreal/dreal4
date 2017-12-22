@@ -162,6 +162,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "constant_region_loss_5_212",
+    size = "small",
+)
+
+smt2_test(
     name = "constrained_betts",
     size = "small",
 )
