@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <experimental/optional>
 
 #include "dreal/contractor/contractor.h"
 #include "dreal/solver/config.h"
@@ -30,7 +31,7 @@ class TheorySolver {
   ///
   /// @note It does the real-work only if status_ is UNCHECKED. Otherwise, it
   /// does nothing.
-  bool CheckSat(const std::vector<Formula>& assertions);
+  bool CheckSat(const Box& box, const std::vector<Formula>& assertions);
 
   /// Gets a satisfying Model.
   ///
@@ -42,12 +43,17 @@ class TheorySolver {
   const std::unordered_set<Formula, hash_value<Formula>> GetExplanation() const;
 
  private:
-  Contractor BuildContractor(const std::vector<Formula>& assertions);
+  // Builds a contractor using @p box and @p assertions. It returns
+  // nullopt if it detects an empty box while building a contractor.
+  //
+  // @note This method updates @p box as it calls FilterAssertion
+  // function.
+  std::experimental::optional<Contractor> BuildContractor(
+      Box* const box, const std::vector<Formula>& assertions);
   std::vector<FormulaEvaluator> BuildFormulaEvaluator(
       const std::vector<Formula>& assertions);
 
   const Config& config_;
-  const Box& box_;
   Status status_{Status::UNCHECKED};
   ContractorStatus contractor_status_;
   // const Nnfizer nnfizer_;

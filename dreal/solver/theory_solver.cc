@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "dreal/contractor/contractor_forall.h"
+#include "dreal/solver/assertion_filter.h"
 #include "dreal/solver/context.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/icp.h"
@@ -12,13 +13,14 @@
 
 namespace dreal {
 
+using std::experimental::optional;
 using std::move;
 using std::numeric_limits;
 using std::unordered_set;
 using std::vector;
 
 TheorySolver::TheorySolver(const Config& config, const Box& box)
-    : config_{config}, box_{box}, contractor_status_{box} {}
+    : config_{config}, contractor_status_{box} {}
 
 TheorySolver::~TheorySolver() {
   DREAL_LOG_DEBUG(
@@ -26,43 +28,58 @@ TheorySolver::~TheorySolver() {
       num_check_sat);
 }
 
-Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
-  if (assertions.empty()) {
-    return make_contractor_integer(box_);
+namespace {
+bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
+                                 const Box::IntervalVector& new_iv) {
+  assert(!new_iv.is_empty());
+  constexpr double threshold{0.01};
+  // If there is a dimension which is improved more than
+  // threshold, we continue the current fixed-point computation
+  // (return false).
+  for (int i{0}; i < old_iv.size(); ++i) {
+    const double new_i{new_iv[i].diam()};
+    const double old_i{old_iv[i].diam()};
+    // If the width of new interval is +oo, it has no improvement
+    if (new_i == numeric_limits<double>::infinity()) {
+      continue;
+    }
+    // If the i-th dimension was already a point, nothing to improve.
+    if (old_i == 0) {
+      continue;
+    }
+    const double improvement{1 - new_i / old_i};
+    assert(!std::isnan(improvement));
+    if (improvement >= threshold) {
+      return false;
+    }
   }
+  // If an execution reaches at this point, it means there was no
+  // significant improvement. So return true to stop fixed-point
+  // computation
+  return true;
+}
+}  // namespace
 
-  static TerminationCondition termination_condition{
-      [](const Box::IntervalVector& old_iv, const Box::IntervalVector& new_iv) {
-        assert(!new_iv.is_empty());
-        constexpr double threshold{0.01};
-        // If there is a dimension which is improved more than
-        // threshold, we continue the current fixed-point computation
-        // (return false).
-        for (int i{0}; i < old_iv.size(); ++i) {
-          const double new_i{new_iv[i].diam()};
-          const double old_i{old_iv[i].diam()};
-          // If the width of new interval is +oo, it has no improvement
-          if (new_i == numeric_limits<double>::infinity()) {
-            continue;
-          }
-          // If the i-th dimension was already a point, nothing to improve.
-          if (old_i == 0) {
-            continue;
-          }
-          const double improvement{1 - new_i / old_i};
-          assert(!std::isnan(improvement));
-          if (improvement >= threshold) {
-            return false;
-          }
-        }
-        // If an execution reaches at this point, it means there was no
-        // significant improvement. So return true to stop fixed-point
-        // computation
-        return true;
-      }};
-
+optional<Contractor> TheorySolver::BuildContractor(
+    Box* const box, const vector<Formula>& assertions) {
+  if (assertions.empty()) {
+    return make_contractor_integer(*box);
+  }
   vector<Contractor> ctcs;
   for (const Formula& f : assertions) {
+    switch (FilterAssertion(f, box)) {
+      case FilterAssertionResult::NotFiltered:
+        /* No OP */
+        break;
+      case FilterAssertionResult::FilteredWithChange:
+        contractor_status_.AddUsedConstraint(f);
+        if (box->empty()) {
+          return {};
+        }
+        continue;
+      case FilterAssertionResult::FilteredWithoutChange:
+        continue;
+    }
     auto it = contractor_cache_.find(f);
     if (it == contractor_cache_.end()) {
       // There is no contractor for `f`, build one.
@@ -72,11 +89,11 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
         const double epsilon = config_.precision() * 0.99;
         const double inner_delta = epsilon * 0.99;
         const Contractor ctc{make_contractor_forall<Context>(
-            f, box_, epsilon, inner_delta, config_.use_polytope_in_forall())};
+            f, *box, epsilon, inner_delta, config_.use_polytope_in_forall())};
         ctcs.emplace_back(
-            make_contractor_fixpoint(termination_condition, {ctc}));
+            make_contractor_fixpoint(DefaultTerminationCondition, {ctc}));
       } else {
-        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, box_));
+        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, *box));
       }
       // Add it to the cache.
       contractor_cache_.emplace_hint(it, f, ctcs.back());
@@ -86,16 +103,17 @@ Contractor TheorySolver::BuildContractor(const vector<Formula>& assertions) {
     }
   }
   // Add integer contractor.
-  ctcs.push_back(make_contractor_integer(box_));
+  ctcs.push_back(make_contractor_integer(*box));
 
   if (config_.use_polytope()) {
     // Add polytope contractor.
-    ctcs.push_back(make_contractor_ibex_polytope(assertions, box_));
+    ctcs.push_back(make_contractor_ibex_polytope(assertions, *box));
   }
   if (config_.use_worklist_fixpoint()) {
-    return make_contractor_worklist_fixpoint(termination_condition, move(ctcs));
+    return make_contractor_worklist_fixpoint(DefaultTerminationCondition,
+                                             move(ctcs));
   } else {
-    return make_contractor_fixpoint(termination_condition, move(ctcs));
+    return make_contractor_fixpoint(DefaultTerminationCondition, move(ctcs));
   }
 }
 
@@ -124,22 +142,29 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
   return formula_evaluators;
 }
 
-bool TheorySolver::CheckSat(const vector<Formula>& assertions) {
+bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   num_check_sat++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
-  assert(box_.size() > 0);
-  contractor_status_ = ContractorStatus(box_);
+  assert(box.size() > 0);
+  contractor_status_ = ContractorStatus(box);
 
   // Icp Step
-  Icp icp(BuildContractor(assertions), BuildFormulaEvaluator(assertions),
-          config_.precision());
-  icp.CheckSat(&contractor_status_);
-  if (contractor_status_.box().empty()) {
+  const auto contractor =
+      BuildContractor(&contractor_status_.mutable_box(), assertions);
+  if (contractor) {
+    Icp icp(*contractor, BuildFormulaEvaluator(assertions),
+            config_.precision());
+    icp.CheckSat(&contractor_status_);
+    if (contractor_status_.box().empty()) {
+      status_ = Status::UNSAT;
+      return false;
+    } else {
+      status_ = Status::SAT;
+      return true;
+    }
+  } else {
     status_ = Status::UNSAT;
     return false;
-  } else {
-    status_ = Status::SAT;
-    return true;
   }
 }
 

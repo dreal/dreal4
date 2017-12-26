@@ -72,11 +72,6 @@ void Context::Impl::Assert(const Formula& f) {
   if (is_true(f)) {
     return;
   }
-  if (FilterAssertion(f, &box())) {
-    DREAL_LOG_DEBUG("Context::Assert: {} is not added.", f);
-    DREAL_LOG_DEBUG("Box=\n{}", box());
-    return;
-  }
   stack_.push_back(f);
 }
 
@@ -116,8 +111,7 @@ optional<Box> Context::Impl::CheckSat() {
           assertions.push_back(p.second ? sat_solver_.theory_literal(p.first)
                                         : !sat_solver_.theory_literal(p.first));
         }
-
-        if (theory_solver.CheckSat(assertions)) {
+        if (theory_solver.CheckSat(box(), assertions)) {
           // SAT from TheorySolver.
           DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = delta-SAT");
           const Box model{theory_solver.GetModel()};
