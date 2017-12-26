@@ -125,18 +125,14 @@ optional<Box> Context::Impl::CheckSat() {
         } else {
           // UNSAT from TheorySolver.
           DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = UNSAT");
-          const unordered_set<Formula, hash_value<Formula>> explanation{
+          const unordered_set<Formula, hash_value<Formula>>& explanation{
               theory_solver.GetExplanation()};
-          if (explanation.empty()) {
-            DREAL_LOG_DEBUG("Context::CheckSat() - Empty Explanation => UNSAT");
-            return {};
-          } else {
-            DREAL_LOG_DEBUG(
-                "Context::CheckSat() - size of explanation = {} - stack "
-                "size = {}",
-                explanation.size(), stack_.get_vector().size());
-            sat_solver_.AddLearnedClause(explanation);
-          }
+          assert(!explanation.empty());
+          DREAL_LOG_DEBUG(
+              "Context::CheckSat() - size of explanation = {} - stack "
+              "size = {}",
+              explanation.size(), stack_.get_vector().size());
+          sat_solver_.AddLearnedClause(explanation);
         }
       } else {
         return box();
