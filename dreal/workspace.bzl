@@ -4,8 +4,12 @@ load("@io_kythe_dreal//tools/build_rules/config:pkg_config.bzl", "pkg_config_pac
 
 def dreal_workspace():
     pkg_config_package(
-        name = "ibex",
+        name = "ibex", # LGPL3
         modname = "ibex",
+    )
+    pkg_config_package(
+        name = "nlopt",  # LGPL2 + MIT
+        modname = "nlopt",
     )
     github_archive(
         name = "drake_symbolic", # BSD

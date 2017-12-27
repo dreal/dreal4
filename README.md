@@ -32,6 +32,7 @@ dReal is using the following external packages:
  - [ezOptionParser](http://ezoptionparser.sourceforge.net) - [MIT](https://raw.githubusercontent.com/dreal-deps/ezoptionparser/master/MIT-LICENSE)
  - [fmtlib](http://fmtlib.net/latest/index.html) - [BSD 2-Clause](https://raw.githubusercontent.com/fmtlib/fmt/master/LICENSE.rst)
  - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
+ - [nlopt](http://nlopt.readthedocs.io) - [LGPL/MIT](https://raw.githubusercontent.com/stevengj/nlopt/master/COPYING)
 
 How to Install dReal
 ====================
@@ -47,7 +48,7 @@ Ubuntu 14.04 LTS:
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
 sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev libnlopt-dev
 sudo apt upgrade libstdc++6
 wget https://dl.bintray.com/dreal/dreal/dreal_4.17.12.3_amd64.deb
 dpkg -i dreal_4.17.12.3_amd64.deb
@@ -58,7 +59,7 @@ Ubuntu 16.04 LTS:
 sudo apt install -y software-properties-common  # for add-apt-repository
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev libnlopt-dev
 wget https://dl.bintray.com/dreal/dreal/dreal_4.17.12.3_amd64.deb
 dpkg -i dreal_4.17.12.3_amd64.deb
 ```
@@ -72,7 +73,7 @@ Install Prerequsites
 macOS 10.12 (Sierra) / 10.13 (High Sierra):
 
 ```bash
-brew install bazel pkg-config dreal-deps/ibex/ibex
+brew install bazel pkg-config dreal-deps/ibex/ibex libnlopt-dev
 ```
 
 Ubuntu 14.04 LTS / 16.04 LTS
@@ -80,7 +81,7 @@ Ubuntu 14.04 LTS / 16.04 LTS
 ```bash
 sudo add-apt-repository ppa:dreal/dreal -y
 sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev
+sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev libnlopt-dev
 ```
 
 Build and Test
