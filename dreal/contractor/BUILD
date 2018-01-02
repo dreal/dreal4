@@ -43,12 +43,11 @@ dreal_cc_library(
         "contractor.h",
         "generic_contractor_generator.h",
     ],
-    # Without the following, we have dyld problem in OSX (bazel issue).
-    linkstatic = 1,
     deps = [
         ":contractor_status",
         "//dreal/optimization:nlopt_optimizer",
         "//dreal/symbolic",
+        "//dreal/util:assert",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:logging",
@@ -68,6 +67,7 @@ dreal_cc_library(
     ],
     deps = [
         "//dreal/symbolic",
+        "//dreal/util:assert",
         "//dreal/util:box",
         "@ibex//:ibex",
     ],

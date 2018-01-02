@@ -5,6 +5,7 @@
 #include <queue>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 
 using std::move;
@@ -37,7 +38,7 @@ ContractorWorklistFixpoint::ContractorWorklistFixpoint(
                             ibex::BitSet::empty(contractors_.size())},
       worklist_{ibex::BitSet::empty(contractors_.size())},
       old_iv_{1 /* It will be updated anyway. */} {
-  assert(contractors_.size() > 0);
+  DREAL_ASSERT(contractors_.size() > 0);
   // Setup the input member.
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& ctc : contractors_) {

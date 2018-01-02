@@ -6,6 +6,7 @@
 
 #include "dreal/api/api.h"
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/assert.h"
 #include "dreal/util/box.h"
 
 namespace dreal {
@@ -25,11 +26,11 @@ using std::vector;
 void CheckLyapunov(const vector<Variable>& x, const vector<Expression>& f,
                    const Expression& V, const double ball_lb,
                    const double ball_ub, const double delta) {
-  assert(x.size() == f.size());
-  assert(ball_lb > 0.0);
-  assert(ball_ub > 0.0);
-  assert(ball_ub > ball_lb);
-  assert(delta > 0.0);
+  DREAL_ASSERT(x.size() == f.size());
+  DREAL_ASSERT(ball_lb > 0.0);
+  DREAL_ASSERT(ball_ub > 0.0);
+  DREAL_ASSERT(ball_ub > ball_lb);
+  DREAL_ASSERT(delta > 0.0);
 
   // ball = ∑ xᵢ².
   const Expression ball =

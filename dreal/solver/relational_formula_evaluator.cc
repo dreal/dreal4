@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 
 namespace dreal {
@@ -12,7 +13,7 @@ using std::pair;
 namespace {
 
 RelationalOperator GetRelationalOperator(const Formula& f) {
-  assert(is_relational(f) || is_negation(f));
+  DREAL_ASSERT(is_relational(f) || is_negation(f));
   switch (f.get_kind()) {
     case FormulaKind::Eq:
       return RelationalOperator::EQ;
@@ -56,7 +57,7 @@ Expression ExtractExpression(const Formula& f) {
   if (is_relational(f)) {
     return get_lhs_expression(f) - get_rhs_expression(f);
   } else {
-    assert(is_negation(f));
+    DREAL_ASSERT(is_negation(f));
     return ExtractExpression(get_operand(f));
   }
 }

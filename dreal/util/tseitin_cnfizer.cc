@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
@@ -87,7 +88,7 @@ Formula TseitinCnfizer::VisitForall(const Formula& f) {
       get_clauses(naive_cnfizer_.Convert(quantified_formula))};
   const set<Formula> new_clauses{
       ::dreal::map(clauses, [&quantified_variables](const Formula& clause) {
-        assert(is_clause(clause));
+        DREAL_ASSERT(is_clause(clause));
         if (!intersect(clause.GetFreeVariables(), quantified_variables)
                  .empty()) {
           return forall(quantified_variables, clause);
@@ -96,7 +97,7 @@ Formula TseitinCnfizer::VisitForall(const Formula& f) {
         }
       })};
 
-  assert(new_clauses.size() > 0);
+  DREAL_ASSERT(new_clauses.size() > 0);
   if (new_clauses.size() == 1) {
     return *(new_clauses.begin());
   } else {

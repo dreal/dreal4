@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "dreal/util/assert.h"
+
 using std::move;
 using std::unordered_set;
 using std::vector;
@@ -12,8 +14,8 @@ ContractorStatus::ContractorStatus(Box box, const int branching_point)
     : box_{move(box)},
       branching_point_{branching_point},
       output_{ibex::BitSet::empty(box_.size())} {
-  assert(box_.size() > 0);
-  assert(branching_point_ >= -1 && branching_point_ < box_.size());
+  DREAL_ASSERT(box_.size() > 0);
+  DREAL_ASSERT(branching_point_ >= -1 && branching_point_ < box_.size());
 }
 
 const Box& ContractorStatus::box() const { return box_; }

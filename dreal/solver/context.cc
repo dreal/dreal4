@@ -9,6 +9,7 @@
 #include "dreal/solver/assertion_filter.h"
 #include "dreal/solver/sat_solver.h"
 #include "dreal/solver/theory_solver.h"
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/scoped_vector.h"
@@ -121,7 +122,7 @@ optional<Box> Context::Impl::CheckSat() {
           DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = UNSAT");
           const unordered_set<Formula, hash_value<Formula>>& explanation{
               theory_solver.GetExplanation()};
-          assert(!explanation.empty());
+          DREAL_ASSERT(!explanation.empty());
           DREAL_LOG_DEBUG(
               "Context::CheckSat() - size of explanation = {} - stack "
               "size = {}",

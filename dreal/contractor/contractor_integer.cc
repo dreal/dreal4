@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/math.h"
 
 using std::ostream;
@@ -19,7 +20,7 @@ ContractorInteger::ContractorInteger(const Box& box)
       input.add(i);
     }
   }
-  assert(!int_indexes_.empty());
+  DREAL_ASSERT(!int_indexes_.empty());
 }
 
 void ContractorInteger::Prune(ContractorStatus* contractor_status) const {

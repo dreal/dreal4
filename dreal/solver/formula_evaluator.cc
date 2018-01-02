@@ -7,6 +7,7 @@
 #include "dreal/solver/forall_formula_evaluator.h"
 #include "dreal/solver/formula_evaluator_cell.h"
 #include "dreal/solver/relational_formula_evaluator.h"
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 
 namespace dreal {
@@ -47,7 +48,7 @@ ostream& operator<<(ostream& os, const FormulaEvaluationResult& result) {
 
 FormulaEvaluator::FormulaEvaluator(shared_ptr<FormulaEvaluatorCell> ptr)
     : ptr_{move(ptr)} {
-  assert(ptr_);
+  DREAL_ASSERT(ptr_);
 }
 
 FormulaEvaluationResult FormulaEvaluator::operator()(const Box& box) const {
@@ -67,7 +68,7 @@ FormulaEvaluator make_relational_formula_evaluator(const Formula& f) {
 FormulaEvaluator make_forall_formula_evaluator(const Formula& f,
                                                const double epsilon,
                                                const double delta) {
-  assert(is_forall(f));
+  DREAL_ASSERT(is_forall(f));
   return FormulaEvaluator{
       make_shared<ForallFormulaEvaluator>(f, epsilon, delta)};
 }

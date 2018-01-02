@@ -5,6 +5,7 @@
 #include <experimental/optional>
 
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
@@ -23,14 +24,15 @@ namespace {
 vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
   DREAL_LOG_DEBUG("BuildFormulaEvaluators");
   const Formula& quantified_formula{get_quantified_formula(f)};
-  assert(is_clause(quantified_formula));
+  DREAL_ASSERT(is_clause(quantified_formula));
   const set<Formula>& disjuncts{get_operands(quantified_formula)};
   vector<RelationalFormulaEvaluator> evaluators;
   evaluators.reserve(disjuncts.size());
   for (const Formula& disjunct : disjuncts) {
     DREAL_LOG_DEBUG("BuildFormulaEvaluators: disjunct = {}", disjunct);
-    assert(is_relational(disjunct) ||
-           (is_negation(disjunct) && is_relational(get_operand(disjunct))));
+    DREAL_ASSERT(
+        is_relational(disjunct) ||
+        (is_negation(disjunct) && is_relational(get_operand(disjunct))));
     evaluators.push_back(RelationalFormulaEvaluator{disjunct});
   }
   return evaluators;
@@ -42,7 +44,7 @@ ForallFormulaEvaluator::ForallFormulaEvaluator(const Formula& f,
                                                const double epsilon,
                                                const double delta)
     : f_{f}, evaluators_{BuildFormulaEvaluators(f_)} {
-  assert(is_forall(f));
+  DREAL_ASSERT(is_forall(f));
   DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", f);
   context_.mutable_config().mutable_precision() = delta;
   for (const Variable& exist_var : f.GetFreeVariables()) {

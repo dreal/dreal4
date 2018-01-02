@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/assert.h"
 
 using std::cout;
 using std::endl;
@@ -25,7 +26,7 @@ bool IsSatisfiable(const Formula& f) {
     return false;
   }
   const Variables vars{f.GetFreeVariables()};
-  assert(!vars.empty());
+  DREAL_ASSERT(!vars.empty());
   const Variable& first_var{*vars.begin()};
   return IsSatisfiable(f.Substitute(first_var, Formula::True())) ||
          IsSatisfiable(f.Substitute(first_var, Formula::False()));

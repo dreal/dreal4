@@ -3,6 +3,7 @@
 #include <sstream>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 
 namespace dreal {
@@ -28,10 +29,10 @@ namespace {
 //                               void* f_data);
 double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
                               void* const f_data) {
-  assert(f_data);
+  DREAL_ASSERT(f_data);
   auto& expression = *static_cast<CachedExpression*>(f_data);
   const Box& box{expression.box()};
-  assert(n == static_cast<size_t>(box.size()));
+  DREAL_ASSERT(n == static_cast<size_t>(box.size()));
   // Set up an environment.
   Environment& env{expression.mutable_environment()};
   for (size_t i = 0; i < n; ++i) {
@@ -48,9 +49,6 @@ double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
   // Return evaluation.
   return expression.Evaluate(env);
 }
-
-template <typename... Args>
-void unused(const Args&...) {}
 }  // namespace
 
 // ----------------
@@ -58,11 +56,11 @@ void unused(const Args&...) {}
 // ----------------
 CachedExpression::CachedExpression(Expression e, const Box& box)
     : expression_{move(e)}, box_{&box} {
-  assert(box_);
+  DREAL_ASSERT(box_);
 }
 
 const Box& CachedExpression::box() const {
-  assert(box_);
+  DREAL_ASSERT(box_);
   return *box_;
 }
 
@@ -96,7 +94,7 @@ ostream& operator<<(ostream& os, const CachedExpression& expression) {
 NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
                                const double delta)
     : box_{move(bound)}, delta_{delta} {
-  assert(delta_ > 0.0);
+  DREAL_ASSERT(delta_ > 0.0);
   opt_ = nlopt_create(algorithm, box_.size());
 
   // Set tolerance.
@@ -111,12 +109,10 @@ NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
   }
   const nlopt_result nlopt_result_lb{
       nlopt_set_lower_bounds(opt_, lower_bounds.get())};
-  assert(nlopt_result_lb == NLOPT_SUCCESS);
-  unused(nlopt_result_lb);
+  DREAL_ASSERT(nlopt_result_lb == NLOPT_SUCCESS);
   const nlopt_result nlopt_result_ub{
       nlopt_set_upper_bounds(opt_, upper_bounds.get())};
-  assert(nlopt_result_ub == NLOPT_SUCCESS);
-  unused(nlopt_result_ub);
+  DREAL_ASSERT(nlopt_result_ub == NLOPT_SUCCESS);
 }
 
 NloptOptimizer::~NloptOptimizer() { nlopt_destroy(opt_); }
@@ -125,8 +121,7 @@ void NloptOptimizer::SetMinObjective(const Expression& objective) {
   objective_ = CachedExpression{objective, box_};
   const nlopt_result result{nlopt_set_min_objective(
       opt_, NloptOptimizerEvaluate, static_cast<void*>(&objective_))};
-  assert(result == NLOPT_SUCCESS);
-  unused(result);
+  DREAL_ASSERT(result == NLOPT_SUCCESS);
 }
 
 void NloptOptimizer::AddConstraint(const Formula& formula) {

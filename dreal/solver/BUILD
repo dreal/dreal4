@@ -53,6 +53,7 @@ dreal_cc_library(
         "//dreal/smt2:logic",
         "//dreal/smt2:sort",
         "//dreal/symbolic",
+        "//dreal/util:assert",
         "//dreal/util:box",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
@@ -73,6 +74,7 @@ dreal_cc_library(
     ],
     deps = [
         "//dreal/symbolic",
+        "//dreal/util:assert",
         "//dreal/util:exception",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",

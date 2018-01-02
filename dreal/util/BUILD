@@ -15,6 +15,13 @@ package(default_visibility = ["//visibility:public"])
 # Libraries
 # ---------
 dreal_cc_library(
+    name = "assert",
+    hdrs = [
+        "assert.h",
+    ],
+)
+
+dreal_cc_library(
     name = "box",
     srcs = [
         "box.cc",
@@ -23,6 +30,7 @@ dreal_cc_library(
         "box.h",
     ],
     deps = [
+        ":assert",
         ":exception",
         ":logging",
         ":math",
@@ -40,6 +48,7 @@ dreal_cc_library(
         "tseitin_cnfizer.h",
     ],
     deps = [
+        ":assert",
         ":exception",
         ":logging",
         ":naive_cnfizer",
@@ -56,6 +65,7 @@ dreal_cc_library(
         "naive_cnfizer.h",
     ],
     deps = [
+        ":assert",
         ":exception",
         ":nnfizer",
         "//dreal/symbolic",
@@ -174,7 +184,10 @@ dreal_cc_library(
     hdrs = [
         "scoped_vector.h",
     ],
-    deps = [":exception"],
+    deps = [
+        ":assert",
+        ":exception",
+    ],
 )
 
 # -----

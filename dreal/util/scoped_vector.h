@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 
 namespace dreal {
@@ -64,19 +65,19 @@ class ScopedVector {
   vector get_vector() { return vector_; }
 
   reference first() {
-    assert(vector_.size() > 0);
+    DREAL_ASSERT(vector_.size() > 0);
     return vector_[0];
   }
   const_reference first() const {
-    assert(vector_.size() > 0);
+    DREAL_ASSERT(vector_.size() > 0);
     return vector_[0];
   }
   reference last() {
-    assert(vector_.size() > 0);
+    DREAL_ASSERT(vector_.size() > 0);
     return vector_[size() - 1];
   }
   const_reference last() const {
-    assert(vector_.size() > 0);
+    DREAL_ASSERT(vector_.size() > 0);
     return vector_[size() - 1];
   }
   reference operator[](size_type n) { return vector_[n]; }

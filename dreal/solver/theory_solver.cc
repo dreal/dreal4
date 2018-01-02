@@ -9,6 +9,7 @@
 #include "dreal/solver/context.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/icp.h"
+#include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 
 namespace dreal {
@@ -31,7 +32,7 @@ TheorySolver::~TheorySolver() {
 namespace {
 bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
                                  const Box::IntervalVector& new_iv) {
-  assert(!new_iv.is_empty());
+  DREAL_ASSERT(!new_iv.is_empty());
   constexpr double threshold{0.01};
   // If there is a dimension which is improved more than
   // threshold, we continue the current fixed-point computation
@@ -48,7 +49,7 @@ bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
       continue;
     }
     const double improvement{1 - new_i / old_i};
-    assert(!std::isnan(improvement));
+    DREAL_ASSERT(!std::isnan(improvement));
     if (improvement >= threshold) {
       return false;
     }
@@ -145,7 +146,7 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
 bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   num_check_sat++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
-  assert(box.size() > 0);
+  DREAL_ASSERT(box.size() > 0);
   contractor_status_ = ContractorStatus(box);
 
   // Icp Step
@@ -169,14 +170,14 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
 }
 
 Box TheorySolver::GetModel() const {
-  assert(status_ == Status::SAT);
+  DREAL_ASSERT(status_ == Status::SAT);
   DREAL_LOG_DEBUG("TheorySolver::GetModel():\n{}", contractor_status_.box());
   return contractor_status_.box();
 }
 
 const unordered_set<Formula, hash_value<Formula>> TheorySolver::GetExplanation()
     const {
-  assert(status_ == Status::UNSAT);
+  DREAL_ASSERT(status_ == Status::UNSAT);
   return contractor_status_.explanation();
 }
 

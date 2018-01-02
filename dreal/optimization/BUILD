@@ -24,6 +24,7 @@ dreal_cc_library(
     ],
     deps = [
         "//dreal/symbolic",
+        "//dreal/util:assert",
         "//dreal/util:box",
         "//dreal/util:nnfizer",
         "@nlopt",

@@ -16,6 +16,7 @@ dreal_cc_binary(
     deps = [
         "//dreal/api",
         "//dreal/solver",
+        "//dreal/util:assert",
     ],
 )
 
@@ -28,6 +29,7 @@ dreal_cc_binary(
     deps = [
         "//dreal/api",
         "//dreal/solver",
+        "//dreal/util:assert",
     ],
 )
 

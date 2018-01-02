@@ -11,6 +11,7 @@
 #include "dreal/contractor/contractor_join.h"
 #include "dreal/contractor/contractor_seq.h"
 #include "dreal/contractor/contractor_worklist_fixpoint.h"
+#include "dreal/util/assert.h"
 
 using std::move;
 using std::ostream;
@@ -52,37 +53,37 @@ ostream& operator<<(ostream& os, const ContractorCell& c) {
 }
 
 shared_ptr<ContractorId> to_id(const Contractor& contractor) {
-  assert(is_id(contractor));
+  DREAL_ASSERT(is_id(contractor));
   return static_pointer_cast<ContractorId>(contractor.ptr_);
 }
 shared_ptr<ContractorInteger> to_integer(const Contractor& contractor) {
-  assert(is_integer(contractor));
+  DREAL_ASSERT(is_integer(contractor));
   return static_pointer_cast<ContractorInteger>(contractor.ptr_);
 }
 shared_ptr<ContractorSeq> to_seq(const Contractor& contractor) {
-  assert(is_seq(contractor));
+  DREAL_ASSERT(is_seq(contractor));
   return static_pointer_cast<ContractorSeq>(contractor.ptr_);
 }
 shared_ptr<ContractorIbexFwdbwd> to_ibex_fwdbwd(const Contractor& contractor) {
-  assert(is_ibex_fwdbwd(contractor));
+  DREAL_ASSERT(is_ibex_fwdbwd(contractor));
   return static_pointer_cast<ContractorIbexFwdbwd>(contractor.ptr_);
 }
 shared_ptr<ContractorIbexPolytope> to_ibex_polytope(
     const Contractor& contractor) {
-  assert(is_ibex_polytope(contractor));
+  DREAL_ASSERT(is_ibex_polytope(contractor));
   return static_pointer_cast<ContractorIbexPolytope>(contractor.ptr_);
 }
 shared_ptr<ContractorFixpoint> to_fixpoint(const Contractor& contractor) {
-  assert(is_fixpoint(contractor));
+  DREAL_ASSERT(is_fixpoint(contractor));
   return static_pointer_cast<ContractorFixpoint>(contractor.ptr_);
 }
 shared_ptr<ContractorWorklistFixpoint> to_worklist_fixpoint(
     const Contractor& contractor) {
-  assert(is_fixpoint(contractor));
+  DREAL_ASSERT(is_fixpoint(contractor));
   return static_pointer_cast<ContractorWorklistFixpoint>(contractor.ptr_);
 }
 shared_ptr<ContractorJoin> to_join(const Contractor& contractor) {
-  assert(is_join(contractor));
+  DREAL_ASSERT(is_join(contractor));
   return static_pointer_cast<ContractorJoin>(contractor.ptr_);
 }
 

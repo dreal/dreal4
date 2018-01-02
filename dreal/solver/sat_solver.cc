@@ -2,6 +2,7 @@
 
 #include <ostream>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
@@ -123,7 +124,7 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
     // UNSAT Case.
     return {};
   } else {
-    assert(ret == PICOSAT_UNKNOWN);
+    DREAL_ASSERT(ret == PICOSAT_UNKNOWN);
     DREAL_LOG_CRITICAL("PICOSAT returns PICOSAT_UNKNOWN.");
     throw DREAL_RUNTIME_ERROR("PICOSAT returns PICOSAT_UNKNOWN.");
   }
@@ -140,18 +141,19 @@ void SatSolver::Push() {
 }
 
 void SatSolver::AddLiteral(const Formula& f) {
-  assert(is_variable(f) || (is_negation(f) && is_variable(get_operand(f))));
+  DREAL_ASSERT(is_variable(f) ||
+               (is_negation(f) && is_variable(get_operand(f))));
   if (is_variable(f)) {
     // f = b
     const Variable& var{get_variable(f)};
-    assert(var.get_type() == Variable::Type::BOOLEAN);
+    DREAL_ASSERT(var.get_type() == Variable::Type::BOOLEAN);
     // Add l = b
     picosat_add(sat_, to_sat_var_[var]);
   } else {
     // f = ¬b
-    assert(is_negation(f) && is_variable(get_operand(f)));
+    DREAL_ASSERT(is_negation(f) && is_variable(get_operand(f)));
     const Variable& var{get_variable(get_operand(f))};
-    assert(var.get_type() == Variable::Type::BOOLEAN);
+    DREAL_ASSERT(var.get_type() == Variable::Type::BOOLEAN);
     // Add l = ¬b
     picosat_add(sat_, -to_sat_var_[var]);
   }

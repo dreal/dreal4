@@ -2,6 +2,7 @@
 
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 
 using std::move;
@@ -17,7 +18,7 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
       term_cond_{move(term_cond)},
       contractors_{move(contractors)},
       old_iv_{1 /* will be updated anyway */} {
-  assert(contractors_.size() > 0);
+  DREAL_ASSERT(contractors_.size() > 0);
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();

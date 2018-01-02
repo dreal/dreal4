@@ -20,6 +20,7 @@ dreal_cc_library(
         "symbolic.h",
     ],
     deps = [
+        "//dreal/util:assert",
         "//dreal/util:exception",
         "@drake_symbolic",
     ],

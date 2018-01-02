@@ -10,6 +10,7 @@
 #include "dreal/contractor/contractor.h"
 #include "dreal/contractor/contractor_cell.h"
 #include "dreal/contractor/generic_contractor_generator.h"
+#include "dreal/util/assert.h"
 #include "dreal/util/box.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/nnfizer.h"
@@ -54,9 +55,9 @@ class ContractorForall : public ContractorCell {
         contractor_{GenericContractorGenerator{}.Generate(
             get_quantified_formula(f_),
             ExtendBox(box, get_quantified_variables(f_)), use_polytope)} {
-    assert(epsilon > 0.0);
-    assert(delta > 0.0);
-    assert(epsilon > delta);
+    DREAL_ASSERT(epsilon > 0.0);
+    DREAL_ASSERT(delta > 0.0);
+    DREAL_ASSERT(epsilon > delta);
 
     // Setup context:
     // 1. Add exist/forall variables.
@@ -176,7 +177,7 @@ Contractor make_contractor_forall(Formula f, const Box& box, double epsilon,
 template <typename ContextType>
 std::shared_ptr<ContractorForall<ContextType>> to_forall(
     const Contractor& contractor) {
-  assert(is_forall(contractor));
+  DREAL_ASSERT(is_forall(contractor));
   return std::static_pointer_cast<ContractorForall<ContextType>>(
       contractor.ptr_);
 }

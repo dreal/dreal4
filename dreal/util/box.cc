@@ -7,6 +7,7 @@
 #include <sstream>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
@@ -52,9 +53,9 @@ Box::Box(const vector<Variable>& variables)
 
 void Box::Add(const Variable& v) {
   // Duplicate variables are not allowed.
-  assert(find_if(variables_->begin(), variables_->end(),
-                 [&v](const Variable& var) { return v.equal_to(var); }) ==
-         variables_->end());
+  DREAL_ASSERT(find_if(variables_->begin(), variables_->end(),
+                       [&v](const Variable& var) { return v.equal_to(var); }) ==
+               variables_->end());
 
   if (!variables_.unique()) {
     // If the components of this box is shared by more than one
@@ -86,14 +87,15 @@ void Box::Add(const Variable& v) {
 void Box::Add(const Variable& v, const double lb, const double ub) {
   Add(v);
 
-  assert(lb <= ub);
+  DREAL_ASSERT(lb <= ub);
 
   // Binary variable => lb, ub ∈ [0, 1].
-  assert(v.get_type() != Variable::Type::BINARY || (0.0 <= lb && ub <= 1.0));
+  DREAL_ASSERT(v.get_type() != Variable::Type::BINARY ||
+               (0.0 <= lb && ub <= 1.0));
 
   // Integer variable => lb, ub ∈ Z.
-  assert(v.get_type() != Variable::Type::INTEGER ||
-         (is_integer(lb) && is_integer(ub)));
+  DREAL_ASSERT(v.get_type() != Variable::Type::INTEGER ||
+               (is_integer(lb) && is_integer(ub)));
 
   values_[(*var_to_idx_)[v]] = Interval{lb, ub};
 }
@@ -105,14 +107,14 @@ void Box::set_empty() { values_.set_empty(); }
 int Box::size() const { return variables_->size(); }
 
 Box::Interval& Box::operator[](const int i) {
-  assert(i < size());
+  DREAL_ASSERT(i < size());
   return values_[i];
 }
 Box::Interval& Box::operator[](const Variable& var) {
   return values_[(*var_to_idx_)[var]];
 }
 const Box::Interval& Box::operator[](const int i) const {
-  assert(i < size());
+  DREAL_ASSERT(i < size());
   return values_[i];
 }
 const Box::Interval& Box::operator[](const Variable& var) const {
@@ -175,17 +177,17 @@ pair<Box, Box> Box::bisect(const Variable& var) const {
 }
 
 pair<Box, Box> Box::bisect_int(const int i) const {
-  assert(idx_to_var_->at(i).get_type() == Variable::Type::INTEGER ||
-         idx_to_var_->at(i).get_type() == Variable::Type::BINARY);
+  DREAL_ASSERT(idx_to_var_->at(i).get_type() == Variable::Type::INTEGER ||
+               idx_to_var_->at(i).get_type() == Variable::Type::BINARY);
   const Interval& intv_i{values_[i]};
   const double lb{ceil(intv_i.lb())};
   const double ub{floor(intv_i.ub())};
   const double mid{intv_i.mid()};
   const double mid_floor{floor(mid)};
-  assert(intv_i.lb() <= lb);
-  assert(lb <= mid_floor);
-  assert(mid_floor + 1 <= ub);
-  assert(ub <= intv_i.ub());
+  DREAL_ASSERT(intv_i.lb() <= lb);
+  DREAL_ASSERT(lb <= mid_floor);
+  DREAL_ASSERT(mid_floor + 1 <= ub);
+  DREAL_ASSERT(ub <= intv_i.ub());
 
   Box b1{*this};
   Box b2{*this};
@@ -195,7 +197,7 @@ pair<Box, Box> Box::bisect_int(const int i) const {
 }
 
 pair<Box, Box> Box::bisect_continuous(const int i) const {
-  assert(idx_to_var_->at(i).get_type() == Variable::Type::CONTINUOUS);
+  DREAL_ASSERT(idx_to_var_->at(i).get_type() == Variable::Type::CONTINUOUS);
   Box b1{*this};
   Box b2{*this};
   const Interval intv_i{values_[i]};
@@ -207,8 +209,9 @@ pair<Box, Box> Box::bisect_continuous(const int i) const {
 
 Box& Box::InplaceUnion(const Box& b) {
   // Checks variables() == b.variables().
-  assert(equal(variables().begin(), variables().end(), b.variables().begin(),
-               b.variables().end(), std::equal_to<Variable>{}));
+  DREAL_ASSERT(equal(variables().begin(), variables().end(),
+                     b.variables().begin(), b.variables().end(),
+                     std::equal_to<Variable>{}));
   values_ |= b.values_;
   return *this;
 }

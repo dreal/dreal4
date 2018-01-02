@@ -5,6 +5,7 @@
 
 #include "dreal/solver/config.h"
 #include "dreal/solver/context.h"
+#include "dreal/util/assert.h"
 
 namespace dreal {
 
@@ -26,7 +27,7 @@ optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
 bool CheckSatisfiability(const Formula& f, const double delta, Box* const box) {
   const optional<Box> result{CheckSatisfiability(f, delta)};
   if (result) {
-    assert(box);
+    DREAL_ASSERT(box);
     *box = *result;
     return true;
   } else {
@@ -67,7 +68,7 @@ bool Minimize(const Expression& objective, const Formula& constraint,
               const double delta, Box* const box) {
   const optional<Box> result{Minimize(objective, constraint, delta)};
   if (result) {
-    assert(box);
+    DREAL_ASSERT(box);
     *box = *result;
     return true;
   } else {

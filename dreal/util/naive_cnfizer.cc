@@ -3,6 +3,7 @@
 #include <numeric>
 #include <set>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 
 namespace dreal {
@@ -87,7 +88,7 @@ Formula NaiveCnfizer::VisitDisjunction(const Formula& f) const {
 }
 
 Formula NaiveCnfizer::VisitNegation(const Formula& f) const {
-  assert(is_atomic(get_operand(f)));
+  DREAL_ASSERT(is_atomic(get_operand(f)));
   return f;
 }
 }  // namespace dreal

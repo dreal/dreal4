@@ -4,6 +4,7 @@
 #include <tuple>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 
 using std::cout;
@@ -24,7 +25,7 @@ namespace {
 ///
 /// @returns a pair of (max dimension, variable index).
 pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset) {
-  assert(!bitset.empty());
+  DREAL_ASSERT(!bitset.empty());
   double max_diam{0.0};
   int max_diam_idx{-1};
   for (int i = 0, idx = bitset.min(); i < bitset.size();
@@ -48,7 +49,7 @@ pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset) {
 /// @returns false if it fails to find a branching dimension.
 bool Branch(const Box& box, const ibex::BitSet& bitset,
             vector<pair<Box, int>>* const stack) {
-  assert(!bitset.empty());
+  DREAL_ASSERT(!bitset.empty());
 
   // If `stack_left_box_first` is true, we add the left box from the
   // branching operation to the `stack`. Otherwise, we add the right

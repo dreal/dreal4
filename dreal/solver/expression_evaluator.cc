@@ -4,6 +4,7 @@
 #include <numeric>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
@@ -99,7 +100,7 @@ Box::Interval ExpressionEvaluator::VisitPow(const Expression& e1,
   const Box::Interval second{Visit(e2, box)};
   if (second.is_degenerated() && !second.is_empty()) {
     // This indicates that this interval is a point.
-    assert(second.lb() == second.ub());
+    DREAL_ASSERT(second.lb() == second.ub());
     const double point{second.lb()};
     if (is_integer(point)) {
       if (point == 2.0) {
