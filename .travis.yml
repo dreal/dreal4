@@ -13,6 +13,7 @@ secure: "K4HzcNOd9Kzp5OhHc/bBldhaYLado14f/FT0kCUXYJBfyRt94tDMVhs1fHMwSg1PFqCFrR/
 cache:
   directories:
     - $HOME/.bazel-output-base
+    - $HOME/Library/Caches/Homebrew
 
 matrix:
   include:
