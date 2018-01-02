@@ -82,13 +82,8 @@ def dreal_cc_library(
         srcs = None,
         deps = None,
         copts = [],
-        linkstatic = 1,
         **kwargs):
     """Creates a rule to declare a C++ library.
-
-    By default, we produce only static libraries, to reduce compilation time
-    on all platforms, and to avoid mysterious dyld errors on OS X. This default
-    could be revisited if binary size becomes a concern.
     """
     _check_library_deps_blacklist(name, deps)
     native.cc_library(
@@ -97,7 +92,6 @@ def dreal_cc_library(
         srcs = srcs,
         deps = deps,
         copts = _platform_copts(copts),
-        linkstatic = linkstatic,
         **kwargs)
 
 def dreal_cc_binary(
@@ -106,16 +100,12 @@ def dreal_cc_binary(
         srcs = None,
         deps = None,
         copts = [],
-        linkstatic = 1,
         testonly = 0,
         add_test_rule = 0,
         test_rule_args = [],
         test_rule_size = None,
         **kwargs):
     """Creates a rule to declare a C++ binary.
-
-    By default, we prefer to link static libraries whenever they are available.
-    This default could be revisited if binary size becomes a concern.
 
     If you wish to create a smoke-test demonstrating that your binary runs
     without crashing, supply add_test_rule=1. Note that if you wish to do
@@ -130,7 +120,6 @@ def dreal_cc_binary(
         deps = deps,
         copts = _platform_copts(copts),
         testonly = testonly,
-        linkstatic = linkstatic,
         **kwargs)
 
     # Also generate the OS X debug symbol file for this binary.
@@ -154,7 +143,6 @@ def dreal_cc_binary(
             copts = copts,
             size = test_rule_size,
             testonly = testonly,
-            linkstatic = linkstatic,
             args = test_rule_args,
             **kwargs)
 

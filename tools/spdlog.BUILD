@@ -20,7 +20,6 @@ cc_library(
         "@dreal//tools:linux": ["-pthread"],
         "@//conditions:default": [],
     }),
-    linkstatic = 1,
     visibility = ["//visibility:public"],
     deps = ["@fmt"],
 )
