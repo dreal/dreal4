@@ -29,7 +29,7 @@ namespace {
 double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
                               void* const f_data) {
   assert(f_data);
-  auto& expression{*static_cast<CachedExpression*>(f_data)};
+  auto& expression = *static_cast<CachedExpression*>(f_data);
   const Box& box{expression.box()};
   assert(n == static_cast<size_t>(box.size()));
   // Set up an environment.
