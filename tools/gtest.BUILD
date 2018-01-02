@@ -1,7 +1,16 @@
 # -*- python -*-
 
+# Taken from
+# https://raw.githubusercontent.com/RobotLocomotion/drake/b617a1990340ccb7c841c5884632abcbfa081812/tools/workspace/gtest/gtest.BUILD.bazel
+
+config_setting(
+    name = "linux",
+    values = {"cpu": "k8"},
+)
+
 cc_library(
-    name = "main",
+    name = "without_main",
+    testonly = 1,
     srcs = glob(
         [
             "googlemock/src/*.cc",
@@ -9,6 +18,8 @@ cc_library(
             "googletest/src/*.h",
         ],
         exclude = [
+            "googlemock/src/gmock_main.cc",
+            "googletest/src/gtest_main.cc",
             "googlemock/src/gmock-all.cc",
             "googletest/src/gtest-all.cc",
         ],
@@ -30,9 +41,19 @@ cc_library(
         "googletest/include",
     ],
     linkopts = select({
-        "@//tools:linux": ["-pthread"],
+        ":linux": ["-pthread"],
+        # This is a bazel-default rule, and does not need @drake//
         "@//conditions:default": [],
     }),
-    linkstatic = 1,
     visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "main",
+    testonly = 1,
+    srcs = ["googlemock/src/gmock_main.cc"],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":without_main",
+    ],
 )
