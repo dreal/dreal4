@@ -47,6 +47,7 @@ dreal_cc_library(
     linkstatic = 1,
     deps = [
         ":contractor_status",
+        "//dreal/optimization:nlopt_optimizer",
         "//dreal/symbolic",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
