@@ -48,6 +48,9 @@ double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
   // Return evaluation.
   return expression.Evaluate(env);
 }
+
+template <typename... Args>
+void unused(const Args&...) {}
 }  // namespace
 
 // ----------------
@@ -109,9 +112,11 @@ NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
   const nlopt_result nlopt_result_lb{
       nlopt_set_lower_bounds(opt_, lower_bounds.get())};
   assert(nlopt_result_lb == NLOPT_SUCCESS);
+  unused(nlopt_result_lb);
   const nlopt_result nlopt_result_ub{
       nlopt_set_upper_bounds(opt_, upper_bounds.get())};
   assert(nlopt_result_ub == NLOPT_SUCCESS);
+  unused(nlopt_result_ub);
 }
 
 NloptOptimizer::~NloptOptimizer() { nlopt_destroy(opt_); }
@@ -121,6 +126,7 @@ void NloptOptimizer::SetMinObjective(const Expression& objective) {
   const nlopt_result result{nlopt_set_min_objective(
       opt_, NloptOptimizerEvaluate, static_cast<void*>(&objective_))};
   assert(result == NLOPT_SUCCESS);
+  unused(result);
 }
 
 void NloptOptimizer::AddConstraint(const Formula& formula) {
