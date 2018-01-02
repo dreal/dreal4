@@ -64,11 +64,10 @@ class NloptOptimizer {
   /// Specifies constraints.
   void AddConstraints(const std::vector<Formula>& formulas);
 
-  /// Runs optimization.
+  /// Runs optimization. Uses @p x as an initial value for the
+  /// optimization and updates it with a solution. @p opt_f will be
+  /// updated with the found optimal value.
   nlopt_result Optimize(std::vector<double>* x, double* opt_f);
-
-  // friend double NloptOptimizerEvaluate(unsigned n, const double* x,
-  //                                      double* grad, void* f_data);
 
  private:
   void AddRelationalConstraint(const Formula& formula);
