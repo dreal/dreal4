@@ -73,7 +73,7 @@ Install Prerequsites
 macOS 10.12 (Sierra) / 10.13 (High Sierra):
 
 ```bash
-brew install bazel pkg-config dreal-deps/ibex/ibex libnlopt-dev
+brew install bazel pkg-config dreal-deps/ibex/ibex nlopt
 ```
 
 Ubuntu 14.04 LTS / 16.04 LTS
