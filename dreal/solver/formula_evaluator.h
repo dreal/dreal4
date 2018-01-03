@@ -68,6 +68,8 @@ class FormulaEvaluator {
   /// Returns the occurred variables in the formula.
   Variables variables() const;
 
+  const Formula& formula() const;
+
  private:
   // Constructs an FormulaEvaluator from `ptr`.
   explicit FormulaEvaluator(std::shared_ptr<FormulaEvaluatorCell> ptr);

@@ -57,6 +57,8 @@ FormulaEvaluationResult FormulaEvaluator::operator()(const Box& box) const {
 
 Variables FormulaEvaluator::variables() const { return ptr_->variables(); }
 
+const Formula& FormulaEvaluator::formula() const { return ptr_->formula(); }
+
 ostream& operator<<(ostream& os, const FormulaEvaluator& evaluator) {
   return evaluator.ptr_->Display(os);
 }

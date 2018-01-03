@@ -15,7 +15,7 @@ namespace dreal {
 /// Evaluator for relational formulas.
 class RelationalFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  explicit RelationalFormulaEvaluator(const Formula& f);
+  explicit RelationalFormulaEvaluator(Formula f);
 
   ~RelationalFormulaEvaluator() override;
 

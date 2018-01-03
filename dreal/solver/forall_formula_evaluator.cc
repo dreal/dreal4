@@ -12,6 +12,7 @@
 namespace dreal {
 
 using std::experimental::optional;
+using std::move;
 using std::ostream;
 using std::set;
 using std::vector;
@@ -40,20 +41,20 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
 
 }  // namespace
 
-ForallFormulaEvaluator::ForallFormulaEvaluator(const Formula& f,
-                                               const double epsilon,
+ForallFormulaEvaluator::ForallFormulaEvaluator(Formula f, const double epsilon,
                                                const double delta)
-    : f_{f}, evaluators_{BuildFormulaEvaluators(f_)} {
-  DREAL_ASSERT(is_forall(f));
-  DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", f);
+    : FormulaEvaluatorCell{move(f)},
+      evaluators_{BuildFormulaEvaluators(formula())} {
+  DREAL_ASSERT(is_forall(formula()));
+  DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", formula());
   context_.mutable_config().mutable_precision() = delta;
-  for (const Variable& exist_var : f.GetFreeVariables()) {
+  for (const Variable& exist_var : formula().GetFreeVariables()) {
     context_.DeclareVariable(exist_var);
   }
-  for (const Variable& forall_var : get_quantified_variables(f)) {
+  for (const Variable& forall_var : get_quantified_variables(formula())) {
     context_.DeclareVariable(forall_var);
   }
-  context_.Assert(DeltaStrengthen(!get_quantified_formula(f), epsilon));
+  context_.Assert(DeltaStrengthen(!get_quantified_formula(formula()), epsilon));
 }
 
 ForallFormulaEvaluator::~ForallFormulaEvaluator() {
@@ -94,11 +95,11 @@ FormulaEvaluationResult ForallFormulaEvaluator::operator()(
 }
 
 ostream& ForallFormulaEvaluator::Display(ostream& os) const {
-  return os << "ForallFormulaEvaluator(" << f_ << ")";
+  return os << "ForallFormulaEvaluator(" << formula() << ")";
 }
 
 Variables ForallFormulaEvaluator::variables() const {
-  return f_.GetFreeVariables();
+  return formula().GetFreeVariables();
 }
 
 }  // namespace dreal
