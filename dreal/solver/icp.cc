@@ -118,7 +118,8 @@ Icp::Icp(Contractor contractor, vector<FormulaEvaluator> formula_evaluators,
       formula_evaluators_{move(formula_evaluators)},
       precision_{precision} {}
 
-optional<ibex::BitSet> Icp::EvaluateBox(const Box& box) {
+optional<ibex::BitSet> Icp::EvaluateBox(const Box& box,
+                                        ContractorStatus* const cs) {
   ibex::BitSet branching_candidates(box.size());  // This function returns this.
   for (const FormulaEvaluator& formula_evaluator : formula_evaluators_) {
     const FormulaEvaluationResult result{formula_evaluator(box)};
@@ -129,6 +130,8 @@ optional<ibex::BitSet> Icp::EvaluateBox(const Box& box) {
             "{0}\n"
             "has no solution for {1} (evaluation = {2}).",
             box, formula_evaluator, result.evaluation());
+        cs->mutable_box().set_empty();
+        cs->AddUsedConstraint(formula_evaluator.formula());
         return nullopt;
       case FormulaEvaluationResult::Type::VALID:
         DREAL_LOG_DEBUG(
@@ -155,7 +158,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(const Box& box) {
   return branching_candidates;
 }
 
-bool Icp::CheckSat(ContractorStatus* cs) {
+bool Icp::CheckSat(ContractorStatus* const cs) {
   static IcpStat stat;
   DREAL_LOG_DEBUG("Icp::CheckSat()");
   // Stack of Box x BranchingPoint.
@@ -192,14 +195,14 @@ bool Icp::CheckSat(ContractorStatus* cs) {
     }
     // 3.2. The box is non-empty. Check if the box is still feasible
     // under evaluation and it's small enough.
-    const optional<ibex::BitSet> evaluation_result{EvaluateBox(current_box)};
+    const optional<ibex::BitSet> evaluation_result{
+        EvaluateBox(current_box, cs)};
     if (!evaluation_result) {
       // 3.2.1. We detect that the current box is not a feasible solution.
       DREAL_LOG_DEBUG(
           "Icp::CheckSat() Detect that the current box is not feasible by "
           "evaluation:\n{}",
           current_box);
-      current_box.set_empty();
       continue;
     }
     if (evaluation_result->empty()) {

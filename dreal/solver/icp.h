@@ -33,7 +33,12 @@ class Icp {
   // Returns Some(Vars)          if there is fᵢ such that |fᵢ(B)| > δ.
   //                             Vars = {v | v ∈ fᵢ ∧ |fᵢ(B)| > δ for all fᵢs}.
   //                             (This indicates the problem is delta-SAT)
-  std::experimental::optional<ibex::BitSet> EvaluateBox(const Box& box);
+  //
+  // It sets @p cs's box empty if it detects UNSAT. It also calls
+  // cs->AddUsedConstraint to store the constraint that is responsible
+  // for the UNSAT.
+  std::experimental::optional<ibex::BitSet> EvaluateBox(const Box& box,
+                                                        ContractorStatus* cs);
 
   const Contractor contractor_;
   std::vector<FormulaEvaluator> formula_evaluators_;
