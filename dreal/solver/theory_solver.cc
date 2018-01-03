@@ -178,7 +178,7 @@ Box TheorySolver::GetModel() const {
 const unordered_set<Formula, hash_value<Formula>> TheorySolver::GetExplanation()
     const {
   DREAL_ASSERT(status_ == Status::UNSAT);
-  return contractor_status_.explanation();
+  return contractor_status_.Explanation();
 }
 
 }  // namespace dreal

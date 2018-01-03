@@ -31,16 +31,47 @@ const ibex::BitSet& ContractorStatus::output() const { return output_; }
 ibex::BitSet& ContractorStatus::mutable_output() { return output_; }
 
 void ContractorStatus::AddUsedConstraint(const Formula& f) {
-  used_constraints_.insert(f);
+  if (box_.empty()) {
+    unsat_witness_.insert(f);
+  } else {
+    used_constraints_.insert(f);
+  }
 }
 
 void ContractorStatus::AddUsedConstraint(const vector<Formula>& formulas) {
-  used_constraints_.insert(formulas.begin(), formulas.end());
+  if (box_.empty()) {
+    unsat_witness_.insert(formulas.begin(), formulas.end());
+  } else {
+    used_constraints_.insert(formulas.begin(), formulas.end());
+  }
 }
 
-const unordered_set<Formula, hash_value<Formula>>&
-ContractorStatus::explanation() const {
-  return used_constraints_;
+unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
+    unordered_set<Formula, hash_value<Formula>> explanation,
+    const unordered_set<Formula, hash_value<Formula>>& used_constraints) {
+  bool keep_going = true;
+  while (keep_going) {
+    keep_going = false;
+    for (const Formula& f_i : explanation) {
+      const Variables variables_in_f_i{f_i.GetFreeVariables()};
+      for (const Formula& f_j : used_constraints) {
+        if (explanation.count(f_j) > 0) {
+          continue;
+        }
+        if (HaveIntersection(variables_in_f_i, f_j.GetFreeVariables())) {
+          explanation.insert(f_j);
+          keep_going = true;
+        }
+      }
+    }
+  }
+  return explanation;
+}
+
+unordered_set<Formula, hash_value<Formula>> ContractorStatus::Explanation()
+    const {
+  DREAL_ASSERT(!unsat_witness_.empty());
+  return GenerateExplanation(unsat_witness_, used_constraints_);
 }
 
 ContractorStatus& ContractorStatus::InplaceJoin(
