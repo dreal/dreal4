@@ -190,7 +190,7 @@ void Context::Impl::Minimize(const Expression& f) {
     }
   }
   for (const Formula& constraint : stack_) {
-    if (!intersect(x_vars, constraint.GetFreeVariables()).empty()) {
+    if (HaveIntersection(x_vars, constraint.GetFreeVariables())) {
       // Case : xᵢ ∈ vars(constraint)
       // We need to collect constraint[xᵢ ↦ yᵢ].
       set_of_negated_phi.insert(!constraint.Substitute(subst));

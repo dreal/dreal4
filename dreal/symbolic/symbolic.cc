@@ -106,6 +106,25 @@ bool is_cnf(const Formula& f) {
   DREAL_UNREACHABLE();
 }
 
+bool HaveIntersection(const Variables& variables1,
+                      const Variables& variables2) {
+  auto begin1 = variables1.begin();
+  auto begin2 = variables2.begin();
+  const auto end1 = variables1.end();
+  const auto end2 = variables2.end();
+  while (begin1 != end1 && begin2 != end2) {
+    if (begin1->less(*begin2)) {
+      ++begin1;
+    } else {
+      if (!begin2->less(*begin1)) {
+        return true;
+      }
+      ++begin2;
+    }
+  }
+  return false;
+}
+
 namespace {
 /// Visitor class which strengthens a formula by delta.
 class DeltaStrengthenVisitor {

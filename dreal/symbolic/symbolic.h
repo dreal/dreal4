@@ -63,6 +63,10 @@ std::set<Formula> get_clauses(const Formula& f);
 /// Checks if @p is in CNF form.
 bool is_cnf(const Formula& f);
 
+/// @return true if @p variables1 and @p variables2 is an non-empty
+/// intersection.
+bool HaveIntersection(const Variables& variables1, const Variables& variables2);
+
 /// Strengthen the input formula @p f by @p delta.
 /// @pre delta > 0
 Formula DeltaStrengthen(const Formula& f, double delta);

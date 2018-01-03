@@ -89,8 +89,7 @@ Formula TseitinCnfizer::VisitForall(const Formula& f) {
   const set<Formula> new_clauses{
       ::dreal::map(clauses, [&quantified_variables](const Formula& clause) {
         DREAL_ASSERT(is_clause(clause));
-        if (!intersect(clause.GetFreeVariables(), quantified_variables)
-                 .empty()) {
+        if (HaveIntersection(clause.GetFreeVariables(), quantified_variables)) {
           return forall(quantified_variables, clause);
         } else {
           return clause;
