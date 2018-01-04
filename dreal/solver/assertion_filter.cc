@@ -14,7 +14,9 @@ using std::nextafter;
 FilterAssertionResult UpdateBoundsViaEquality(const Variable& var,
                                               const double v, Box* const box) {
   Box::Interval& intv{(*box)[var]};
-  if (intv.lb() == intv.ub() && intv.lb() == v) {
+  const double lb{intv.lb()};
+  const double ub{intv.ub()};
+  if (lb == ub && lb == v) {
     return FilterAssertionResult::FilteredWithoutChange;
   }
   if (intv.contains(v)) {
@@ -26,14 +28,16 @@ FilterAssertionResult UpdateBoundsViaEquality(const Variable& var,
 }
 
 // Constrains the @p box with ` box[var].lb() >= v`.
-FilterAssertionResult UpdateLowerBound(const Variable& var, const double v,
+FilterAssertionResult UpdateLowerBound(const Variable& var, const double new_lb,
                                        Box* const box) {
-  Box::Interval& iv{(*box)[var]};
-  if (v <= iv.lb()) {
+  Box::Interval& intv{(*box)[var]};
+  const double lb{intv.lb()};
+  const double ub{intv.ub()};
+  if (new_lb <= lb) {
     return FilterAssertionResult::FilteredWithoutChange;
   }
-  if (v <= iv.ub()) {
-    iv = Box::Interval(v, iv.ub());
+  if (new_lb <= ub) {
+    intv = Box::Interval(new_lb, ub);
   } else {
     box->set_empty();
   }
@@ -45,19 +49,21 @@ FilterAssertionResult UpdateLowerBound(const Variable& var, const double v,
 // + ε` is the smallest representable floating-point number bigger than
 // `v`.
 FilterAssertionResult UpdateStrictLowerBound(const Variable& var,
-                                             const double v, Box* const box) {
-  return UpdateLowerBound(var, nextafter(v, DBL_MAX), box);
+                                             const double lb, Box* const box) {
+  return UpdateLowerBound(var, nextafter(lb, DBL_MAX), box);
 }
 
-// Constrains the @p box with ` box[var].lb() <= v`.
-FilterAssertionResult UpdateUpperBound(const Variable& var, const double v,
+// Constrains the @p box with ` box[var].ub() <= v`.
+FilterAssertionResult UpdateUpperBound(const Variable& var, const double new_ub,
                                        Box* const box) {
-  Box::Interval& iv{(*box)[var]};
-  if (v >= iv.ub()) {
+  Box::Interval& intv{(*box)[var]};
+  const double lb{intv.lb()};
+  const double ub{intv.ub()};
+  if (new_ub >= ub) {
     return FilterAssertionResult::FilteredWithoutChange;
   }
-  if (v >= iv.lb()) {
-    iv = Box::Interval(iv.lb(), v);
+  if (new_ub >= lb) {
+    intv = Box::Interval(lb, new_ub);
   } else {
     box->set_empty();
   }
@@ -69,8 +75,8 @@ FilterAssertionResult UpdateUpperBound(const Variable& var, const double v,
 // - ε` is the largest representable floating-point number smaller
 // than `v`.
 FilterAssertionResult UpdateStrictUpperBound(const Variable& var,
-                                             const double v, Box* const box) {
-  return UpdateUpperBound(var, nextafter(v, DBL_MIN), box);
+                                             const double ub, Box* const box) {
+  return UpdateUpperBound(var, nextafter(ub, DBL_MIN), box);
 }
 
 class AssertionFilter {
@@ -133,7 +139,7 @@ class AssertionFilter {
         // var > v
         return UpdateStrictLowerBound(var, v, box);
       } else {
-        // var <= v
+        // !(var > v) => (var <= v)
         return UpdateUpperBound(var, v, box);
       }
     }
@@ -144,7 +150,7 @@ class AssertionFilter {
         // v > var
         return UpdateStrictUpperBound(var, v, box);
       } else {
-        // v <= var
+        // !(v > var) => (v <= var)
         return UpdateLowerBound(var, v, box);
       }
     }
@@ -162,7 +168,7 @@ class AssertionFilter {
         // var >= v
         return UpdateLowerBound(var, v, box);
       } else {
-        // var < v
+        // !(var >= v) => (var < v)
         return UpdateStrictUpperBound(var, v, box);
       }
     }
@@ -173,7 +179,7 @@ class AssertionFilter {
         // v >= var
         return UpdateUpperBound(var, v, box);
       } else {
-        // v < var
+        // !(v >= var) => (v < var)
         return UpdateStrictLowerBound(var, v, box);
       }
     }
