@@ -23,8 +23,9 @@ The following packages are required to build dReal:
  - [Flex](https://www.gnu.org/software/flex) and [Bison](https://www.gnu.org/software/bison)
  - [Clp](https://projects.coin-or.org/Clp)
  - [IBEX](https://github.com/ibex-team/ibex-lib)
+ - [nlopt](http://nlopt.readthedocs.io) - [LGPL/MIT](https://raw.githubusercontent.com/stevengj/nlopt/master/COPYING)
 
-dReal is using the following external packages:
+dReal is using the following external packages. It checks out the sources of them and builds internally. No installation required for them:
 
  - [Drake](http://drake.mit.edu)'s symbolic library - [BSD 3-Clause](https://raw.githubusercontent.com/RobotLocomotion/drake/master/LICENSE.TXT)
  - [Google Test](https://github.com/google/googletest) - [BSD 3-Clause](https://raw.githubusercontent.com/google/googletest/master/googletest/LICENSE)
@@ -32,7 +33,6 @@ dReal is using the following external packages:
  - [ezOptionParser](http://ezoptionparser.sourceforge.net) - [MIT](https://raw.githubusercontent.com/dreal-deps/ezoptionparser/master/MIT-LICENSE)
  - [fmtlib](http://fmtlib.net/latest/index.html) - [BSD 2-Clause](https://raw.githubusercontent.com/fmtlib/fmt/master/LICENSE.rst)
  - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
- - [nlopt](http://nlopt.readthedocs.io) - [LGPL/MIT](https://raw.githubusercontent.com/stevengj/nlopt/master/COPYING)
 
 How to Install dReal
 ====================
