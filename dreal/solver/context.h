@@ -53,6 +53,9 @@ class Context {
   void Push(int n);
 
   /// Sets an info @p key with a value @p val.
+  void SetInfo(const std::string& key, double val);
+
+  /// Sets an info @p key with a value @p val.
   void SetInfo(const std::string& key, const std::string& val);
 
   /// Sets the interval of @p v in the current box (top one in boxes_).
@@ -60,6 +63,9 @@ class Context {
 
   /// Sets the current logic to be @p logic.
   void SetLogic(const Logic& logic);
+
+  /// Sets an option @p key with a value @p val.
+  void SetOption(const std::string& key, double val);
 
   /// Sets an option @p key with a value @p val.
   void SetOption(const std::string& key, const std::string& val);

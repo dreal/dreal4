@@ -219,7 +219,7 @@ command_set_info:
         |       '(' TK_SET_INFO KEYWORD DOUBLE ')' {
                     driver
                         .context_
-                        .SetInfo(*$3, std::to_string($4));
+                        .SetInfo(*$3, $4);
                     delete $3;
                 }
                 ;
@@ -242,7 +242,7 @@ command_set_option:
         |       '('TK_SET_OPTION KEYWORD DOUBLE ')' {
                     driver
                         .context_
-                        .SetOption(*$3, std::to_string($4));
+                        .SetOption(*$3, $4);
                     delete $3;
                 }
         |       '('TK_SET_OPTION KEYWORD TK_TRUE ')' {

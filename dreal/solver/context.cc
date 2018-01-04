@@ -1,6 +1,7 @@
 #include "dreal/solver/context.h"
 
 #include <cmath>
+#include <limits>
 #include <ostream>
 #include <set>
 #include <sstream>
@@ -17,10 +18,10 @@
 using std::experimental::optional;
 using std::isfinite;
 using std::move;
+using std::numeric_limits;
 using std::ostringstream;
 using std::pair;
 using std::set;
-using std::stod;
 using std::string;
 using std::unordered_set;
 using std::vector;
@@ -41,9 +42,11 @@ class Context::Impl {
   void Minimize(const Expression& f);
   void Pop();
   void Push();
+  void SetInfo(const std::string& key, double val);
   void SetInfo(const std::string& key, const std::string& val);
   void SetInterval(const Variable& v, double lb, double ub);
   void SetLogic(const Logic& logic);
+  void SetOption(const std::string& key, double val);
   void SetOption(const std::string& key, const std::string& val);
   const Variable& lookup_variable(const std::string& name);
   const Config& config() const { return config_; }
@@ -214,12 +217,26 @@ void Context::Impl::Push() {
   stack_.push();
 }
 
+namespace {
+string to_string(const double) {
+  ostringstream oss;
+  oss.precision(numeric_limits<double>::max_digits10 + 2);
+  return oss.str();
+}
+}  // namespace
+
+void Context::Impl::SetInfo(const string& key, const double val) {
+  DREAL_LOG_DEBUG("Context::SetInfo({} ↦ {})", key, val);
+  info_[key] = to_string(val);
+  if (key == ":precision") {
+    DREAL_ASSERT(val > 0.0);
+    config_.mutable_precision().set_from_file(val);
+  }
+}
+
 void Context::Impl::SetInfo(const string& key, const string& val) {
   DREAL_LOG_DEBUG("Context::SetInfo({} ↦ {})", key, val);
   info_[key] = val;
-  if (key == ":precision") {
-    config_.mutable_precision().set_from_file(stod(val));
-  }
 }
 
 void Context::Impl::SetInterval(const Variable& v, const double lb,
@@ -231,6 +248,11 @@ void Context::Impl::SetInterval(const Variable& v, const double lb,
 void Context::Impl::SetLogic(const Logic& logic) {
   DREAL_LOG_DEBUG("Context::SetLogic({})", logic);
   logic_ = logic;
+}
+
+void Context::Impl::SetOption(const string& key, const double val) {
+  DREAL_LOG_DEBUG("Context::SetOption({} ↦ {})", key, val);
+  option_[key] = to_string(val);
 }
 
 void Context::Impl::SetOption(const string& key, const string& val) {
@@ -312,6 +334,10 @@ void Context::Push(int n) {
   }
 }
 
+void Context::SetInfo(const string& key, const double val) {
+  impl_->SetInfo(key, val);
+}
+
 void Context::SetInfo(const string& key, const string& val) {
   impl_->SetInfo(key, val);
 }
@@ -321,6 +347,10 @@ void Context::SetInterval(const Variable& v, const double lb, const double ub) {
 }
 
 void Context::SetLogic(const Logic& logic) { impl_->SetLogic(logic); }
+
+void Context::SetOption(const string& key, const double val) {
+  impl_->SetOption(key, val);
+}
 
 void Context::SetOption(const string& key, const string& val) {
   impl_->SetOption(key, val);
