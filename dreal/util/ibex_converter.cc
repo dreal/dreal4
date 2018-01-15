@@ -284,7 +284,8 @@ const ExprCtr* IbexConverter::VisitVariable(const Formula&, const bool) {
 const ExprCtr* IbexConverter::VisitEqualTo(const Formula& f,
                                            const bool polarity) {
   if (polarity) {
-    return &(*Visit(get_lhs_expression(f)) = *Visit(get_rhs_expression(f)));
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) =
+                 *Visit(0.0));
   } else {
     return nullptr;
   }
@@ -292,47 +293,39 @@ const ExprCtr* IbexConverter::VisitEqualTo(const Formula& f,
 
 const ExprCtr* IbexConverter::VisitNotEqualTo(const Formula& f,
                                               const bool polarity) {
-  if (polarity) {
-    return nullptr;
-  } else {
-    return &(*Visit(get_lhs_expression(f)) = *Visit(get_rhs_expression(f)));
-  }
+  return VisitEqualTo(f, !polarity);
 }
 
 const ExprCtr* IbexConverter::VisitGreaterThan(const Formula& f,
                                                const bool polarity) {
   if (polarity) {
-    return &(*Visit(get_lhs_expression(f)) > *Visit(get_rhs_expression(f)));
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) >
+             *Visit(0.0));
   } else {
-    return &(*Visit(get_lhs_expression(f)) <= *Visit(get_rhs_expression(f)));
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) <=
+             *Visit(0.0));
   }
 }
 
 const ExprCtr* IbexConverter::VisitGreaterThanOrEqualTo(const Formula& f,
                                                         const bool polarity) {
   if (polarity) {
-    return &(*Visit(get_lhs_expression(f)) >= *Visit(get_rhs_expression(f)));
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) >=
+             *Visit(0.0));
   } else {
-    return &(*Visit(get_lhs_expression(f)) < *Visit(get_rhs_expression(f)));
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) <
+             *Visit(0.0));
   }
 }
 
 const ExprCtr* IbexConverter::VisitLessThan(const Formula& f,
                                             const bool polarity) {
-  if (polarity) {
-    return &(*Visit(get_lhs_expression(f)) < *Visit(get_rhs_expression(f)));
-  } else {
-    return &(*Visit(get_lhs_expression(f)) >= *Visit(get_rhs_expression(f)));
-  }
+  return VisitGreaterThanOrEqualTo(f, !polarity);
 }
 
 const ExprCtr* IbexConverter::VisitLessThanOrEqualTo(const Formula& f,
                                                      const bool polarity) {
-  if (polarity) {
-    return &(*Visit(get_lhs_expression(f)) <= *Visit(get_rhs_expression(f)));
-  } else {
-    return &(*Visit(get_lhs_expression(f)) > *Visit(get_rhs_expression(f)));
-  }
+  return VisitGreaterThan(f, !polarity);
 }
 
 const ExprCtr* IbexConverter::VisitConjunction(const Formula&, const bool) {
