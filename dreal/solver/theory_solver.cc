@@ -17,7 +17,6 @@ namespace dreal {
 
 using std::cout;
 using std::experimental::optional;
-using std::move;
 using std::numeric_limits;
 using std::unordered_set;
 using std::vector;
@@ -59,6 +58,10 @@ bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
 class TheorySolverStat {
  public:
   TheorySolverStat() = default;
+  TheorySolverStat(const TheorySolverStat&) = default;
+  TheorySolverStat(TheorySolverStat&&) = default;
+  TheorySolverStat& operator=(const TheorySolverStat&) = default;
+  TheorySolverStat& operator=(TheorySolverStat&&) = default;
   ~TheorySolverStat() {
     if (DREAL_LOG_INFO_ENABLED) {
       using fmt::print;
@@ -125,10 +128,9 @@ optional<Contractor> TheorySolver::BuildContractor(
     ctcs.push_back(make_contractor_ibex_polytope(assertions, box));
   }
   if (config_.use_worklist_fixpoint()) {
-    return make_contractor_worklist_fixpoint(DefaultTerminationCondition,
-                                             move(ctcs));
+    return make_contractor_worklist_fixpoint(DefaultTerminationCondition, ctcs);
   } else {
-    return make_contractor_fixpoint(DefaultTerminationCondition, move(ctcs));
+    return make_contractor_fixpoint(DefaultTerminationCondition, ctcs);
   }
 }
 
@@ -163,7 +165,7 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   static TheorySolverStat stat;
   stat.num_check_sat_++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
-  DREAL_ASSERT(box.size() > 0);
+  DREAL_ASSERT(!box.empty());
   contractor_status_ = ContractorStatus(box);
 
   // Icp Step
@@ -172,15 +174,10 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
     Icp icp(*contractor, BuildFormulaEvaluator(assertions),
             config_.precision());
     icp.CheckSat(&contractor_status_);
-    if (contractor_status_.box().empty()) {
-      return false;
-    } else {
-      return true;
-    }
-  } else {
-    DREAL_ASSERT(contractor_status_.box().empty());
-    return false;
+    return !contractor_status_.box().empty();
   }
+  DREAL_ASSERT(contractor_status_.box().empty());
+  return false;
 }
 
 Box TheorySolver::GetModel() const {

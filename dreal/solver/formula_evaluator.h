@@ -62,6 +62,9 @@ class FormulaEvaluator {
   /// Default move assign operator.
   FormulaEvaluator& operator=(FormulaEvaluator&&) = default;
 
+  /// Default destruction
+  ~FormulaEvaluator() = default;
+
   /// Evaluates the constraint/formula with @p box.
   FormulaEvaluationResult operator()(const Box& box) const;
 

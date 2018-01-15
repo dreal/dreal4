@@ -14,7 +14,6 @@ using std::make_pair;
 using std::move;
 using std::pair;
 using std::tie;
-using std::unordered_set;
 using std::vector;
 
 namespace dreal {
@@ -98,6 +97,10 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
 class IcpStat {
  public:
   IcpStat() = default;
+  IcpStat(const IcpStat&) = default;
+  IcpStat(IcpStat&&) = default;
+  IcpStat& operator=(const IcpStat&) = default;
+  IcpStat& operator=(IcpStat&&) = default;
   ~IcpStat() {
     if (DREAL_LOG_INFO_ENABLED) {
       using fmt::print;

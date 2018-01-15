@@ -5,6 +5,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+
 #include <experimental/optional>
 
 #include "./picosat.h"
@@ -27,6 +28,18 @@ class SatSolver {
 
   /// Constructs a SatSolver while asserting @p clauses.
   explicit SatSolver(const std::vector<Formula>& clauses);
+
+  /// Deleted copy constructor.
+  SatSolver(const SatSolver&) = delete;
+
+  /// Deleted move constructor.
+  SatSolver(SatSolver&&) = delete;
+
+  /// Deleted copy-assignment operator.
+  SatSolver& operator=(const SatSolver&) = delete;
+
+  /// Deleted move-assignment operator.
+  SatSolver& operator=(SatSolver&&) = delete;
 
   ~SatSolver();
 

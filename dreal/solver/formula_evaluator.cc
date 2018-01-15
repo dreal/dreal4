@@ -16,11 +16,10 @@ using std::make_shared;
 using std::move;
 using std::ostream;
 using std::shared_ptr;
-using std::vector;
 
 FormulaEvaluationResult::FormulaEvaluationResult(Type type,
                                                  Box::Interval evaluation)
-    : type_{type}, evaluation_{move(evaluation)} {}
+    : type_{type}, evaluation_{evaluation} {}
 
 FormulaEvaluationResult::Type FormulaEvaluationResult::type() const {
   return type_;

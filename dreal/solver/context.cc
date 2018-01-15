@@ -18,7 +18,6 @@
 using std::experimental::optional;
 using std::isfinite;
 using std::make_shared;
-using std::move;
 using std::numeric_limits;
 using std::ostringstream;
 using std::pair;
@@ -33,8 +32,13 @@ namespace dreal {
 class Context::Impl {
  public:
   Impl();
-  ~Impl() { DREAL_LOG_DEBUG("Context::Impl::~Impl()"); }
   explicit Impl(Config config);
+  Impl(const Impl&) = delete;
+  Impl(Impl&&) = delete;
+  Impl& operator=(const Impl&) = delete;
+  Impl& operator=(Impl&&) = delete;
+  ~Impl() = default;
+
   void Assert(const Formula& f);
   std::experimental::optional<Box> CheckSat();
   void DeclareVariable(const Variable& v);
@@ -69,7 +73,7 @@ class Context::Impl {
 
 Context::Impl::Impl() { boxes_.push_back(Box{}); }
 
-Context::Impl::Impl(Config config) : config_{move(config)} {
+Context::Impl::Impl(Config config) : config_{config} {
   boxes_.push_back(Box{});
 }
 
@@ -103,16 +107,17 @@ optional<Box> Context::Impl::CheckSat() {
     const auto optional_model = sat_solver_.CheckSat();
     if (optional_model) {
       const vector<pair<Variable, bool>>& boolean_model{optional_model->first};
-      for (const pair<Variable, bool> p : boolean_model) {
+      for (const pair<Variable, bool>& p : boolean_model) {
         box()[p.first] = p.second ? 1.0 : 0.0;  // true -> 1.0 and false -> 0.0
       }
       const vector<pair<Variable, bool>>& theory_model{optional_model->second};
-      if (theory_model.size() > 0) {
+      if (!theory_model.empty()) {
         // SAT from SATSolver.
         DREAL_LOG_DEBUG("Context::CheckSat() - Sat Check = SAT");
 
         vector<Formula> assertions;
-        for (const pair<Variable, bool> p : theory_model) {
+        assertions.reserve(theory_model.size());
+        for (const pair<Variable, bool>& p : theory_model) {
           assertions.push_back(p.second ? sat_solver_.theory_literal(p.first)
                                         : !sat_solver_.theory_literal(p.first));
         }
@@ -291,7 +296,7 @@ const Variable& Context::Impl::lookup_variable(const string& name) {
 
 Context::Context() : Context{Config{}} {}
 
-Context::Context(Config config) : impl_{make_shared<Impl>(move(config))} {}
+Context::Context(Config config) : impl_{make_shared<Impl>(config)} {}
 
 void Context::Assert(const Formula& f) { impl_->Assert(f); }
 

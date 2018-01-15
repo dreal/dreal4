@@ -39,7 +39,20 @@ class ForallFormulaEvaluator : public FormulaEvaluatorCell {
  public:
   ForallFormulaEvaluator(Formula f, double epsilon, double delta);
 
-  ~ForallFormulaEvaluator() override;
+  /// Deleted copy constructor.
+  ForallFormulaEvaluator(const ForallFormulaEvaluator&) = delete;
+
+  /// Deleted move constructor.
+  ForallFormulaEvaluator(ForallFormulaEvaluator&&) = delete;
+
+  /// Deleted copy-assignment operator.
+  ForallFormulaEvaluator& operator=(const ForallFormulaEvaluator&) = delete;
+
+  /// Deleted move-assignment operator.
+  ForallFormulaEvaluator& operator=(ForallFormulaEvaluator&&) = delete;
+
+  /// Default destructor.
+  ~ForallFormulaEvaluator() override = default;
 
   FormulaEvaluationResult operator()(const Box& box) const override;
 

@@ -2,6 +2,7 @@
 
 #include <set>
 #include <utility>
+
 #include <experimental/optional>
 
 #include "dreal/symbolic/symbolic.h"
@@ -34,7 +35,7 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
     DREAL_ASSERT(
         is_relational(disjunct) ||
         (is_negation(disjunct) && is_relational(get_operand(disjunct))));
-    evaluators.push_back(RelationalFormulaEvaluator{disjunct});
+    evaluators.emplace_back(disjunct);
   }
   return evaluators;
 }
@@ -55,10 +56,6 @@ ForallFormulaEvaluator::ForallFormulaEvaluator(Formula f, const double epsilon,
     context_.DeclareVariable(forall_var);
   }
   context_.Assert(DeltaStrengthen(!get_quantified_formula(formula()), epsilon));
-}
-
-ForallFormulaEvaluator::~ForallFormulaEvaluator() {
-  DREAL_LOG_DEBUG("ForallFormulaEvaluator()::~ForallFormulaEvaluator()");
 }
 
 FormulaEvaluationResult ForallFormulaEvaluator::operator()(

@@ -8,6 +8,10 @@ namespace dreal {
 class Config {
  public:
   Config() = default;
+  Config(const Config&) = default;
+  Config(Config&&) = default;
+  Config& operator=(const Config&) = default;
+  Config& operator=(Config&&) = default;
   ~Config() = default;
 
   /// Returns the precision option.

@@ -9,7 +9,6 @@
 namespace dreal {
 
 using std::cout;
-using std::experimental::make_optional;
 using std::experimental::optional;
 using std::unordered_set;
 using std::vector;
@@ -73,6 +72,10 @@ namespace {
 class SatSolverStat {
  public:
   SatSolverStat() = default;
+  SatSolverStat(const SatSolverStat&) = default;
+  SatSolverStat(SatSolverStat&&) = default;
+  SatSolverStat& operator=(const SatSolverStat&) = default;
+  SatSolverStat& operator=(SatSolverStat&&) = default;
   ~SatSolverStat() {
     if (DREAL_LOG_INFO_ENABLED) {
       using fmt::print;
@@ -187,6 +190,5 @@ void SatSolver::MakeSatVar(const Variable& var) {
   to_sat_var_.emplace_hint(it, var, sat_var);
   to_sym_var_.emplace(sat_var, var);
   DREAL_LOG_DEBUG("SatSolver::MakeSatVar({} ↦ {})", var, sat_var);
-  return;
 }
 }  // namespace dreal

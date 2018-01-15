@@ -9,7 +9,6 @@ namespace dreal {
 
 using std::move;
 using std::ostream;
-using std::pair;
 
 namespace {
 

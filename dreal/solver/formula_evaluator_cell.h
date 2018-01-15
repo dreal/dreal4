@@ -14,6 +14,19 @@ class FormulaEvaluatorCell {
  public:
   explicit FormulaEvaluatorCell(Formula f);
 
+  /// Deleted copy-constructor.
+  FormulaEvaluatorCell(const FormulaEvaluatorCell&) = delete;
+
+  /// Deleted move-constructor.
+  FormulaEvaluatorCell(FormulaEvaluatorCell&&) = default;
+
+  /// Deleted copy-assignment operator.
+  FormulaEvaluatorCell& operator=(const FormulaEvaluatorCell&) = delete;
+
+  /// Deleted move-assignment operator.
+  FormulaEvaluatorCell& operator=(FormulaEvaluatorCell&&) = delete;
+
+  /// Default destructor.
   virtual ~FormulaEvaluatorCell() = default;
 
   const Formula& formula() const { return f_; }

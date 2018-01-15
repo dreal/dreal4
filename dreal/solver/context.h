@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+
 #include <experimental/optional>
 
 #include "dreal/smt2/logic.h"

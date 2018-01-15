@@ -17,6 +17,19 @@ class RelationalFormulaEvaluator : public FormulaEvaluatorCell {
  public:
   explicit RelationalFormulaEvaluator(Formula f);
 
+  /// Deleted copy-constructor.
+  RelationalFormulaEvaluator(const RelationalFormulaEvaluator&) = delete;
+
+  /// Deleted move-constructor.
+  RelationalFormulaEvaluator(RelationalFormulaEvaluator&&) = default;
+
+  /// Deleted copy-assignment operator.
+  RelationalFormulaEvaluator& operator=(const RelationalFormulaEvaluator&) =
+      delete;
+
+  /// Deleted move-assignment operator.
+  RelationalFormulaEvaluator& operator=(RelationalFormulaEvaluator&&) = delete;
+
   ~RelationalFormulaEvaluator() override;
 
   FormulaEvaluationResult operator()(const Box& box) const override;
