@@ -17,6 +17,7 @@
 
 using std::experimental::optional;
 using std::isfinite;
+using std::make_shared;
 using std::move;
 using std::numeric_limits;
 using std::ostringstream;
@@ -288,9 +289,9 @@ const Variable& Context::Impl::lookup_variable(const string& name) {
   return it->second;
 }
 
-Context::Context() : impl_{new Impl{}} {}
+Context::Context() : Context{Config{}} {}
 
-Context::Context(Config config) : impl_{new Impl{move(config)}} {}
+Context::Context(Config config) : impl_{make_shared<Impl>(move(config))} {}
 
 void Context::Assert(const Formula& f) { impl_->Assert(f); }
 
