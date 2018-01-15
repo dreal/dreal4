@@ -9,6 +9,7 @@
 #include "dreal/util/math.h"
 
 using std::cout;
+using std::make_unique;
 using std::move;
 using std::ostream;
 using std::ostringstream;
@@ -49,16 +50,14 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box)
   // Build num_ctr and ctc_.
   expr_ctr_.reset(ibex_converter_.Convert(f_));
   if (expr_ctr_) {
-    num_ctr_.reset(
-        new ibex::NumConstraint(ibex_converter_.variables(), *expr_ctr_));
-  }
-  if (num_ctr_) {
-    ctc_.reset(new ibex::CtcFwdBwd{*num_ctr_});
-  }
-  // Build input.
-  ibex::BitSet& input{mutable_input()};
-  for (const Variable& var : f_.GetFreeVariables()) {
-    input.add(box.index(var));
+    num_ctr_ = make_unique<ibex::NumConstraint>(ibex_converter_.variables(),
+                                                *expr_ctr_);
+    ctc_ = make_unique<ibex::CtcFwdBwd>(*num_ctr_);
+    // Build input.
+    ibex::BitSet& input{mutable_input()};
+    for (const Variable& var : f_.GetFreeVariables()) {
+      input.add(box.index(var));
+    }
   }
 }
 
