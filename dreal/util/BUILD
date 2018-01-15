@@ -40,6 +40,19 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "interval",
+    srcs = [
+        "interval.cc",
+    ],
+    hdrs = [
+        "interval.h",
+    ],
+    deps = [
+        ":box",
+    ],
+)
+
+dreal_cc_library(
     name = "tseitin_cnfizer",
     srcs = [
         "tseitin_cnfizer.cc",
@@ -206,6 +219,14 @@ dreal_cc_googletest(
     tags = ["unit"],
     deps = [
         ":filesystem",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "interval_test",
+    tags = ["unit"],
+    deps = [
+        ":interval",
     ],
 )
 
