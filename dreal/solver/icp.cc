@@ -152,6 +152,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(const Box& box,
             branching_candidates.add(box.index(v));
           }
         }
+        break;
       }
     }
   }

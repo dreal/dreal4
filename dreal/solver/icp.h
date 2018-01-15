@@ -27,10 +27,15 @@ class Icp {
   // Returns None                if there is fᵢ such that fᵢ(box) is empty.
   //                             (This indicates the problem is UNSAT)
   //
-  // Returns Some(∅)            if for all fᵢ, we have |fᵢ(B)| ≤ δ.
+  // Returns Some(∅)             if for all fᵢ, we have either
+  //                             1) fᵢ(x) is valid for all x ∈ B *or*
+  //                             2) |fᵢ(B)| ≤ δ.
   //                             (This indicates the problem is delta-SAT)
   //
-  // Returns Some(Vars)          if there is fᵢ such that |fᵢ(B)| > δ.
+  // Returns Some(Vars)          if there is fᵢ such that
+  //                             1) Interval arithmetic can't validate that
+  //                                fᵢ(x) is valid for all x ∈ B *and*
+  //                             2) |fᵢ(B)| > δ.
   //                             Vars = {v | v ∈ fᵢ ∧ |fᵢ(B)| > δ for all fᵢs}.
   //                             (This indicates the problem is delta-SAT)
   //
