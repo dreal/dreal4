@@ -19,7 +19,7 @@ class Nnfizer {
   // Converts @p f into an equivalent formula @c f' in NNF. The parameter @p
   // polarity is to indicate whether it processes @c f (if @p polarity is
   // true) or @c ¬f (if @p polarity is false).
-  Formula Visit(const Formula& f, const bool polarity,
+  Formula Visit(const Formula& f, bool polarity,
                 bool push_negation_into_relationals) const;
 
   Formula VisitFalse(const Formula& f, bool polarity,

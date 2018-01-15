@@ -31,13 +31,13 @@ class OptionValue {
   OptionValue(const OptionValue&) = default;
 
   /// Default move constructor.
-  OptionValue(OptionValue&&) = default;
+  OptionValue(OptionValue&&) noexcept = default;
 
   /// Default copy assign operator.
   OptionValue& operator=(const OptionValue&) = default;
 
   /// Default move assign operator.
-  OptionValue& operator=(OptionValue&&) = default;
+  OptionValue& operator=(OptionValue&&) noexcept = default;
 
   /// Default destructor.
   ~OptionValue() = default;

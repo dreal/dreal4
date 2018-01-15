@@ -6,10 +6,7 @@
 
 namespace dreal {
 
-using std::cout;
-using std::endl;
 using std::set;
-using std::shared_ptr;
 using std::stringstream;
 using std::vector;
 

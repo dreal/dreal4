@@ -1,12 +1,15 @@
 #include "dreal/util/profiler.h"
 
+#include <utility>
+
 using std::endl;
+using std::move;
 using std::ostream;
 using std::string;
 
 namespace dreal {
-Profiler::Profiler(const string& name, ostream& out)
-    : name_(name),
+Profiler::Profiler(string name, ostream& out)
+    : name_{move(name)},
       out_(out),
       begin_(std::chrono::high_resolution_clock::now()) {}
 

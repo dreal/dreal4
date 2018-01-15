@@ -12,12 +12,7 @@
 
 namespace dreal {
 
-using std::back_inserter;
-using std::copy;
-using std::cout;
-using std::endl;
 using std::set;
-using std::shared_ptr;
 using std::string;
 using std::to_string;
 using std::vector;
@@ -96,7 +91,7 @@ Formula TseitinCnfizer::VisitForall(const Formula& f) {
         }
       })};
 
-  DREAL_ASSERT(new_clauses.size() > 0);
+  DREAL_ASSERT(!new_clauses.empty());
   if (new_clauses.size() == 1) {
     return *(new_clauses.begin());
   } else {
@@ -215,7 +210,7 @@ void CnfizeConjunction(const Variable& b, const Formula& f,
   const set<Formula>& negated_operands{
       map(operands, [](const Formula& formula) { return !formula; })};
   Formula ret{Formula::True()};
-  for (const Formula b_i : operands) {
+  for (const Formula& b_i : operands) {
     Add(!b || b_i, clauses);
   }
   Add(make_disjunction(negated_operands) || b, clauses);
@@ -233,7 +228,7 @@ void CnfizeDisjunction(const Variable& b, const Formula& f,
   const set<Formula>& negated_operands{
       map(get_operands(f), [](const Formula& formula) { return !formula; })};
   Add(!b || f, clauses);  // (¬b ∨ b₁ ∨ ... ∨ bₙ)
-  for (const Formula neg_b_i : negated_operands) {
+  for (const Formula& neg_b_i : negated_operands) {
     Add(neg_b_i || b, clauses);
   }
 }

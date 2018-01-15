@@ -5,7 +5,7 @@ namespace dreal {
 using std::string;
 
 bool file_exists(const string& name) {
-  struct stat buffer;
+  struct stat buffer;  // NOLINT
   if (stat(name.c_str(), &buffer) != 0) {
     return false;
   }

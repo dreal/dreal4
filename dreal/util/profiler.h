@@ -6,7 +6,11 @@
 namespace dreal {
 class Profiler {
  public:
-  explicit Profiler(const std::string& name, std::ostream& out = std::cerr);
+  explicit Profiler(std::string name, std::ostream& out = std::cerr);
+  Profiler(const Profiler&) = delete;
+  Profiler(Profiler&&) = delete;
+  Profiler& operator=(const Profiler&) = delete;
+  Profiler& operator=(Profiler&&) = delete;
   ~Profiler();
 
  private:

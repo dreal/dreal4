@@ -9,6 +9,6 @@ void unused(const Args&...) {}
 // To suppress unused variables warnings.
 #define DREAL_ASSERT(x) unused(x);
 #else
-#include <assert.h>
+#include <assert.h>  // NOLINT
 #define DREAL_ASSERT(x) assert(x)
 #endif

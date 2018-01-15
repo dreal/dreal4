@@ -104,8 +104,7 @@ const ExprNode* IbexConverter::VisitAddition(const Expression& e) {
   if (c != 0) {
     ret = &ibex::ExprConstant::new_scalar(c);
   }
-  for (const pair<Expression, double>& p :
-       get_expr_to_coeff_map_in_addition(e)) {
+  for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
     const Expression& e_i{p.first};
     const double coeff{p.second};
     if (coeff == 1.0) {
@@ -137,8 +136,7 @@ const ExprNode* IbexConverter::VisitMultiplication(const Expression& e) {
   if (c != 1.0) {
     ret = &ibex::ExprConstant::new_scalar(c);
   }
-  for (const pair<Expression, Expression>& p :
-       get_base_to_exponent_map_in_multiplication(e)) {
+  for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
     const Expression& base{p.first};
     const Expression& exponent{p.second};
     if (is_constant(exponent)) {

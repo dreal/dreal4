@@ -27,6 +27,10 @@ class ScopedVector {
   typedef typename vector::const_reference const_reference;
 
   ScopedVector() = default;
+  ScopedVector(const ScopedVector&) = default;
+  ScopedVector(ScopedVector&&) noexcept = default;
+  ScopedVector& operator=(const ScopedVector&) = default;
+  ScopedVector& operator=(ScopedVector&&) noexcept = default;
   ~ScopedVector() = default;
 
   iterator begin() { return vector_.begin(); }
@@ -65,19 +69,19 @@ class ScopedVector {
   vector get_vector() { return vector_; }
 
   reference first() {
-    DREAL_ASSERT(vector_.size() > 0);
+    DREAL_ASSERT(!vector_.empty());
     return vector_[0];
   }
   const_reference first() const {
-    DREAL_ASSERT(vector_.size() > 0);
+    DREAL_ASSERT(!vector_.empty());
     return vector_[0];
   }
   reference last() {
-    DREAL_ASSERT(vector_.size() > 0);
+    DREAL_ASSERT(!vector_.empty());
     return vector_[size() - 1];
   }
   const_reference last() const {
-    DREAL_ASSERT(vector_.size() > 0);
+    DREAL_ASSERT(!vector_.empty());
     return vector_[size() - 1];
   }
   reference operator[](size_type n) { return vector_[n]; }

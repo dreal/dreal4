@@ -16,10 +16,8 @@ using std::ceil;
 using std::equal;
 using std::find_if;
 using std::floor;
-using std::isfinite;
 using std::make_pair;
 using std::make_shared;
-using std::move;
 using std::numeric_limits;
 using std::ostream;
 using std::ostringstream;
@@ -224,7 +222,9 @@ class IosFmtFlagSaver {
   ~IosFmtFlagSaver() { os_.flags(flags_); }
 
   IosFmtFlagSaver(const IosFmtFlagSaver& rhs) = delete;
+  IosFmtFlagSaver(IosFmtFlagSaver&& rhs) = delete;
   IosFmtFlagSaver& operator=(const IosFmtFlagSaver& rhs) = delete;
+  IosFmtFlagSaver& operator=(IosFmtFlagSaver&& rhs) = delete;
 
  private:
   ostream& os_;

@@ -85,22 +85,21 @@ class IbexConverter {
   const ibex::ExprNode* VisitUninterpretedFunction(const Expression&);
 
   // Visits @p e and converts it into ibex::ibex::ExprNode.
-  const ibex::ExprCtr* Visit(const Formula& f, const bool polarity);
-  const ibex::ExprCtr* VisitFalse(const Formula&, const bool);
-  const ibex::ExprCtr* VisitTrue(const Formula&, const bool);
-  const ibex::ExprCtr* VisitVariable(const Formula&, const bool);
-  const ibex::ExprCtr* VisitEqualTo(const Formula& f, const bool polarity);
-  const ibex::ExprCtr* VisitNotEqualTo(const Formula& f, const bool polarity);
-  const ibex::ExprCtr* VisitGreaterThan(const Formula& f, const bool polarity);
+  const ibex::ExprCtr* Visit(const Formula& f, bool polarity);
+  const ibex::ExprCtr* VisitFalse(const Formula&, bool);
+  const ibex::ExprCtr* VisitTrue(const Formula&, bool);
+  const ibex::ExprCtr* VisitVariable(const Formula&, bool);
+  const ibex::ExprCtr* VisitEqualTo(const Formula& f, bool polarity);
+  const ibex::ExprCtr* VisitNotEqualTo(const Formula& f, bool polarity);
+  const ibex::ExprCtr* VisitGreaterThan(const Formula& f, bool polarity);
   const ibex::ExprCtr* VisitGreaterThanOrEqualTo(const Formula& f,
-                                                 const bool polarity);
-  const ibex::ExprCtr* VisitLessThan(const Formula& f, const bool polarity);
-  const ibex::ExprCtr* VisitLessThanOrEqualTo(const Formula& f,
-                                              const bool polarity);
-  const ibex::ExprCtr* VisitConjunction(const Formula&, const bool);
-  const ibex::ExprCtr* VisitDisjunction(const Formula&, const bool);
-  const ibex::ExprCtr* VisitNegation(const Formula& f, const bool polarity);
-  const ibex::ExprCtr* VisitForall(const Formula&, const bool);
+                                                 bool polarity);
+  const ibex::ExprCtr* VisitLessThan(const Formula& f, bool polarity);
+  const ibex::ExprCtr* VisitLessThanOrEqualTo(const Formula& f, bool polarity);
+  const ibex::ExprCtr* VisitConjunction(const Formula&, bool);
+  const ibex::ExprCtr* VisitDisjunction(const Formula&, bool);
+  const ibex::ExprCtr* VisitNegation(const Formula& f, bool polarity);
+  const ibex::ExprCtr* VisitForall(const Formula&, bool);
 
   // ---------------
   // Member fields
