@@ -14,7 +14,11 @@ using std::experimental::optional;
 using std::unordered_set;
 using std::vector;
 
-SatSolver::SatSolver() : sat_{picosat_init()} {}
+SatSolver::SatSolver() : sat_{picosat_init()} {
+  // Enable partial checks via picosat_deref_partial. See the call-site in
+  // SatSolver::CheckSat().
+  picosat_save_original_clauses(sat_);
+}
 
 SatSolver::SatSolver(const vector<Formula>& clauses) : SatSolver{} {
   AddClauses(clauses);
@@ -96,7 +100,7 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
     // SAT Case.
     const auto& var_to_formula_map = predicate_abstractor_.var_to_formula_map();
     for (int i = 1; i <= picosat_variables(sat_); ++i) {
-      const int model_i{picosat_deref(sat_, i)};
+      const int model_i{picosat_deref_partial(sat_, i)};
       if (model_i == 0) {
         continue;
       }
