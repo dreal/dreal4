@@ -58,5 +58,6 @@ def FlagsForFile( filename, **kwargs ):
     'flags': [ '-x', 'c++', '-std=c++14', '-Wall', '-Wextra', '-Werror',
                # everything in 'src' (including 'third-party')
                '-I%s' % WORKSPACE_PATH,
+               '-I%s/bazel-genfiles' % WORKSPACE_PATH,
     ] + ['-isystem' + SYSTEM_INCLUDE for SYSTEM_INCLUDE in SYSTEM_INCLUDES],
   }
