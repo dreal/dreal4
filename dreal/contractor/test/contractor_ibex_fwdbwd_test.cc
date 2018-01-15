@@ -7,6 +7,7 @@
 #include "dreal/contractor/contractor_status.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/interval.h"
 
 namespace dreal {
 namespace {
@@ -82,5 +83,55 @@ TEST_F(ContractorIbexFwdbwdTest, Unsat) {
   EXPECT_TRUE(cs.output()[1]);
   EXPECT_TRUE(cs.output()[2]);
 }
+
+TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20) {
+  const Formula f{y_ + z_ == x_};
+  ContractorStatus cs{box_};
+  const ContractorIbexFwdbwd ctc{f, box_};
+  Box& box = cs.mutable_box();
+
+  box[x_] = 0.7;
+  box[y_] = 0.0647;
+  box[z_] = 0.6353;
+  ctc.Prune(&cs);
+
+  // After pruning, the box is still not empty.
+  EXPECT_FALSE(cs.box().empty());
+}
+
+TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20_1_Lowlevel) {
+  // Given a box,
+  //     x = 0.2
+  //     y = 0.5
+  //     z = 0.7
+  //
+  // `x + y = z` holds. However, IBEX's contractor prunes out this
+  // point-box because `0.2` and `0.7` are machine-representable.
+
+  const double v1 = 0.2;
+  const double v2 = 0.5;
+  const double v3 = 0.7;
+
+  // Double check the arithmetic first.
+  EXPECT_EQ(v1 + v2 - v3, 0.0);
+
+  const auto& x = ibex::ExprSymbol::new_();
+  const auto& y = ibex::ExprSymbol::new_();
+  const auto& z = ibex::ExprSymbol::new_();
+  ibex::Function f(x, y, z, x + y - z);
+  ibex::IntervalVector box(3);
+
+  // Note that the use of BloatPoint is necessary here. Otherwise, we have an
+  // empty box after pruning.
+  box[0] = BloatPoint(v1);
+  box[1] = BloatPoint(v2);
+  box[2] = BloatPoint(v3);
+
+  ibex::CtcFwdBwd c(f);
+  c.contract(box);
+
+  EXPECT_FALSE(box.is_empty());
+}
+
 }  // namespace
 }  // namespace dreal
