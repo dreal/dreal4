@@ -116,6 +116,7 @@ dreal_cc_library(
     deps = [
         ":box",
         ":exception",
+        ":interval",
         ":logging",
         ":math",
         "//dreal/symbolic",

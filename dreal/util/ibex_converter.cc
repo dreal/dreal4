@@ -1,18 +1,16 @@
 #include "dreal/util/ibex_converter.h"
 
 #include <algorithm>
-#include <limits>
 #include <sstream>
 #include <utility>
 
 #include "dreal/util/exception.h"
+#include "dreal/util/interval.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 
 namespace dreal {
 
-using std::nextafter;
-using std::numeric_limits;
 using std::ostringstream;
 using std::pair;
 using std::vector;
@@ -104,9 +102,7 @@ const ExprNode* IbexConverter::VisitConstant(const Expression& e) {
   // We bloat the constant c into a smallest interval [lb, ub] to avoid
   // numerical issues.
   const double c{get_constant_value(e)};
-  const double lb{nextafter(c, -numeric_limits<double>::infinity())};
-  const double ub{nextafter(c, +numeric_limits<double>::infinity())};
-  return &ibex::ExprConstant::new_scalar(ibex::Interval(lb, ub));
+  return &ibex::ExprConstant::new_scalar(BloatPoint(c));
 }
 
 const ExprNode* IbexConverter::VisitAddition(const Expression& e) {
