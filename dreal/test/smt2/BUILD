@@ -462,6 +462,22 @@ smt2_test(
 )
 
 smt2_test(
+    name = "uav_hard",
+    size = "large",
+    tags = ["manual"],
+)
+
+smt2_test(
+    name = "uav_poly",
+    size = "small",
+)
+
+smt2_test(
+    name = "uav_simple",
+    size = "small",
+)
+
+smt2_test(
     name = "uav_transcend",
     size = "small",
 )
