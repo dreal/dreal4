@@ -1,45 +1,65 @@
 #include "dreal/solver/sat_solver.h"
 
-#include <iostream>
-#include <vector>
-
 #include <gtest/gtest.h>
 
 #include "dreal/symbolic/symbolic.h"
 
-using std::cout;
-using std::endl;
-using std::vector;
-
 namespace dreal {
 namespace {
 
-// GTEST_TEST(SatSolver, Test) {
-//   const Variable x("x");
-//   const Variable y("y");
-//   const Variable z("z");
-//   const Formula f1{x == 1};
-//   const Formula f2{y == 2};
-//   const Formula f3{z == 3};
-//   vector<Formula> formulas;
-//   formulas.push_back(f1);
-//   formulas.push_back(!f1);
-//   formulas.push_back(f1 || f2);
-//   formulas.push_back(f1 && f2);
-//   formulas.push_back((f1 && f2) || (f1 && !f3));
-//   formulas.push_back((f1 || f2) && (f1 || !f3));
+class SatSolverTest : public ::testing::Test {
+ protected:
+  const Variable b1_{"b1", Variable::Type::BOOLEAN};
+  const Variable b2_{"b2", Variable::Type::BOOLEAN};
 
-//   cout << "--------------------------" << endl;
-//   for (const auto& f : formulas) {
-//     cout << "F     = " << f << endl;
-//     SatSolver sat_solver{f};
-//     const auto result{sat_solver.CheckSat()};
-//     for (const Formula& m : result.template value_or<vector<Formula>>({})) {
-//       cout << "MODEL = " << m << endl;
-//     }
-//     cout << "--------------------------" << endl;
-//   }
-// }
+  SatSolver sat_{};
+};
+
+TEST_F(SatSolverTest, Sat1) {
+  // b1
+  sat_.AddFormula(Formula{b1_});
+  EXPECT_TRUE(sat_.CheckSat());
+}
+
+TEST_F(SatSolverTest, Sat2) {
+  // b2
+  sat_.AddFormula(!b1_);
+  EXPECT_TRUE(sat_.CheckSat());
+}
+
+TEST_F(SatSolverTest, Sat3) {
+  // b1 ∧ ¬b2
+  sat_.AddFormula(b1_ && !b2_);
+  EXPECT_TRUE(sat_.CheckSat());
+}
+
+TEST_F(SatSolverTest, Sat4) {
+  // b1 ∧ ¬b2
+  sat_.AddFormula(Formula{b1_});
+  sat_.AddFormula(!b2_);
+  EXPECT_TRUE(sat_.CheckSat());
+}
+
+TEST_F(SatSolverTest, Sat5) {
+  // (b1 ∧ b2) ∧ (b1 ∨ b2)
+  sat_.AddFormula(b1_ && b2_);
+  sat_.AddFormula(b1_ || b2_);
+  EXPECT_TRUE(sat_.CheckSat());
+}
+
+TEST_F(SatSolverTest, UNSAT1) {
+  // b1 ∧ ¬b1
+  sat_.AddFormula(Formula{b1_});
+  sat_.AddFormula(!b1_);
+  EXPECT_FALSE(sat_.CheckSat());
+}
+
+TEST_F(SatSolverTest, UNSAT2) {
+  // (b1 ∧ b2) ∧ (¬b1 ∨ ¬b2)
+  sat_.AddFormula(b1_ && b2_);
+  sat_.AddFormula(!b1_ || !b2_);
+  EXPECT_FALSE(sat_.CheckSat());
+}
 
 }  // namespace
 }  // namespace dreal
