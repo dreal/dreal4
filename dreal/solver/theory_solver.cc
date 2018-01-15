@@ -1,5 +1,6 @@
 #include "dreal/solver/theory_solver.h"
 
+#include <iostream>
 #include <limits>
 #include <memory>
 #include <utility>
@@ -14,6 +15,7 @@
 
 namespace dreal {
 
+using std::cout;
 using std::experimental::optional;
 using std::move;
 using std::numeric_limits;
@@ -22,12 +24,6 @@ using std::vector;
 
 TheorySolver::TheorySolver(const Config& config, const Box& box)
     : config_{config}, contractor_status_{box} {}
-
-TheorySolver::~TheorySolver() {
-  DREAL_LOG_DEBUG(
-      "TheorySolver::~TheorySolver() - # of TheorySolver::CheckSat() = {}",
-      num_check_sat);
-}
 
 namespace {
 bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
@@ -59,6 +55,21 @@ bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
   // computation
   return true;
 }
+
+class TheorySolverStat {
+ public:
+  TheorySolverStat() = default;
+  ~TheorySolverStat() {
+    if (DREAL_LOG_INFO_ENABLED) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of CheckSat",
+            "Theory level", num_check_sat_);
+    }
+  }
+
+  int num_check_sat_{0};
+};
+
 }  // namespace
 
 optional<Contractor> TheorySolver::BuildContractor(
@@ -144,7 +155,8 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
 }
 
 bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
-  num_check_sat++;
+  static TheorySolverStat stat;
+  stat.num_check_sat_++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
   DREAL_ASSERT(box.size() > 0);
   contractor_status_ = ContractorStatus(box);

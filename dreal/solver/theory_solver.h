@@ -24,7 +24,6 @@ class TheorySolver {
 
   TheorySolver() = delete;
   TheorySolver(const Config& config, const Box& box);
-  ~TheorySolver();
 
   /// Checks consistency. Returns true if there is a satisfying
   /// assignment. Otherwise, return false.
@@ -56,15 +55,11 @@ class TheorySolver {
   const Config& config_;
   Status status_{Status::UNCHECKED};
   ContractorStatus contractor_status_;
-  // const Nnfizer nnfizer_;
 
   std::unordered_map<Formula, Contractor, hash_value<Formula>>
       contractor_cache_;
   std::unordered_map<Formula, FormulaEvaluator, hash_value<Formula>>
       formula_evaluator_cache_;
-
-  // stat
-  int num_check_sat{0};
 };
 
 }  // namespace dreal
