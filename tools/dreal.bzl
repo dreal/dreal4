@@ -220,6 +220,7 @@ def dreal_cc_googletest(
 
 def smt2_test(
         name,
+        tags = [],
         **kwargs):
     """Create smt2 test."""
     smt2 = name + ".smt2"
@@ -234,7 +235,7 @@ def smt2_test(
             "$(location %s)" % smt2,
             "$(location %s)" % expected,
         ],
-        tags = ["smt2"],
+        tags = tags + ["smt2"],
         srcs = ["test.py"],
         data = [
             "//dreal:dreal",
