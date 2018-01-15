@@ -46,6 +46,18 @@ class NloptOptimizer {
   /// possible values of NLopt Algorithms.
   NloptOptimizer(nlopt_algorithm algorithm, Box bound, double delta);
 
+  /// Deleted copy-constructor.
+  NloptOptimizer(const NloptOptimizer&) = delete;
+
+  /// Deleted move-constructor.
+  NloptOptimizer(NloptOptimizer&&) = default;
+
+  /// Deleted copy-assignment operator.
+  NloptOptimizer& operator=(const NloptOptimizer&) = delete;
+
+  /// Deleted move-assignment operator.
+  NloptOptimizer& operator=(NloptOptimizer&&) = delete;
+
   /// Destructor.
   ~NloptOptimizer();
 

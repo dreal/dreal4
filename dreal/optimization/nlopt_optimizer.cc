@@ -8,13 +8,10 @@
 
 namespace dreal {
 
-using std::make_pair;
 using std::make_unique;
 using std::move;
 using std::ostream;
 using std::ostringstream;
-using std::pair;
-using std::unique_ptr;
 using std::vector;
 
 namespace {
