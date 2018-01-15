@@ -1,4 +1,4 @@
-#include "dreal/solver/assertion_filter.h"
+#include "dreal/solver/filter_assertion.h"
 
 #include <cmath>
 

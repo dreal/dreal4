@@ -7,7 +7,7 @@
 #include <sstream>
 #include <unordered_set>
 
-#include "dreal/solver/assertion_filter.h"
+#include "dreal/solver/filter_assertion.h"
 #include "dreal/solver/sat_solver.h"
 #include "dreal/solver/theory_solver.h"
 #include "dreal/util/assert.h"

@@ -5,8 +5,8 @@
 #include <utility>
 
 #include "dreal/contractor/contractor_forall.h"
-#include "dreal/solver/assertion_filter.h"
 #include "dreal/solver/context.h"
+#include "dreal/solver/filter_assertion.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/icp.h"
 #include "dreal/util/assert.h"

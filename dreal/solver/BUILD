@@ -46,8 +46,8 @@ dreal_cc_library(
         "theory_solver.h",
     ],
     deps = [
-        ":assertion_filter",
         ":config",
+        ":filter_assertion",
         ":sat_solver",
         "//dreal:version_header",
         "//dreal/contractor",
@@ -85,12 +85,12 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
-    name = "assertion_filter",
+    name = "filter_assertion",
     srcs = [
-        "assertion_filter.cc",
+        "filter_assertion.cc",
     ],
     hdrs = [
-        "assertion_filter.h",
+        "filter_assertion.h",
     ],
     deps = [
         "//dreal/symbolic",
