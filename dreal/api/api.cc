@@ -1,17 +1,12 @@
 #include "dreal/api/api.h"
 
-#include <numeric>
-#include <stdexcept>
-
 #include "dreal/solver/config.h"
 #include "dreal/solver/context.h"
 #include "dreal/util/assert.h"
 
 namespace dreal {
 
-using std::accumulate;
 using std::experimental::optional;
-using std::runtime_error;
 
 optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
   Config config;
