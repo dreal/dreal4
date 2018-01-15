@@ -111,6 +111,14 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "filter_assertion_test",
+    tags = ["unit"],
+    deps = [
+        ":filter_assertion",
+    ],
+)
+
+dreal_cc_googletest(
     name = "formula_evaluator_test",
     tags = ["unit"],
     deps = [
