@@ -49,9 +49,8 @@ void MainProgram::AddOptions() {
            "Display usage instructions.", "-h", "-help", "--help", "--usage");
 
   const double d[1] = {0.0};
-  ez::ezOptionValidator* const precision_option_validator =
-      new ez::ezOptionValidator(ez::ezOptionValidator::D,
-                                ez::ezOptionValidator::GT, d, 1);
+  auto* const precision_option_validator = new ez::ezOptionValidator(
+      ez::ezOptionValidator::D, ez::ezOptionValidator::GT, d, 1);
 
   opt_.add("0.001" /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
@@ -90,9 +89,8 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */,
            "Use worklist fixpoint algorithm in ICP.\n", "--worklist-fixpoint");
 
-  ez::ezOptionValidator* const verbose_option_validator =
-      new ez::ezOptionValidator(
-          "t", "in", "trace,debug,info,warning,error,critical,off", true);
+  auto* const verbose_option_validator = new ez::ezOptionValidator(
+      "t", "in", "trace,debug,info,warning,error,critical,off", true);
   opt_.add(
       "error",  // Default.
       0,        // Required?
@@ -106,25 +104,28 @@ void MainProgram::AddOptions() {
 
 bool MainProgram::ValidateOptions() {
   // Checks bad options and bad arguments.
-  vector<string> badOptions;
-  vector<string> badArgs;
-  if (!opt_.gotRequired(badOptions)) {
-    for (size_t i = 0; i < badOptions.size(); ++i)
-      cerr << "ERROR: Missing required option " << badOptions[i] << ".\n\n";
+  vector<string> bad_options;
+  vector<string> bad_args;
+  if (!opt_.gotRequired(bad_options)) {
+    for (const auto& bad_option : bad_options) {
+      cerr << "ERROR: Missing required option " << bad_option << ".\n\n";
+    }
     PrintUsage();
     return false;
   }
-  if (!opt_.gotExpected(badOptions)) {
-    for (size_t i = 0; i < badOptions.size(); ++i)
+  if (!opt_.gotExpected(bad_options)) {
+    for (const auto& bad_option : bad_options) {
       cerr << "ERROR: Got unexpected number of arguments for option "
-           << badOptions[i] << ".\n\n";
+           << bad_option << ".\n\n";
+    }
     PrintUsage();
     return false;
   }
-  if (!opt_.gotValid(badOptions, badArgs)) {
-    for (size_t i = 0; i < badOptions.size(); ++i)
-      cerr << "ERROR: Got invalid argument \"" << badArgs[i] << "\" for option "
-           << badOptions[i] << ".\n\n";
+  if (!opt_.gotValid(bad_options, bad_args)) {
+    for (size_t i = 0; i < bad_options.size(); ++i) {
+      cerr << "ERROR: Got invalid argument \"" << bad_args[i]
+           << "\" for option " << bad_options[i] << ".\n\n";
+    }
     PrintUsage();
     return false;
   }
