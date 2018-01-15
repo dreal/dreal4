@@ -264,6 +264,7 @@ vector<Variable> CreateVector(const string& prefix, const int size,
   DREAL_ASSERT(prefix.length() > 0);
   DREAL_ASSERT(size >= 1);
   vector<Variable> v;
+  v.reserve(size);
   for (int i = 0; i < size; ++i) {
     v.emplace_back(prefix + to_string(i), type);
   }

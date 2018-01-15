@@ -31,7 +31,7 @@
 
 namespace dreal {
 
-using drake::hash_value;
+using drake::hash_value;  // NOLINT
 
 // NOLINTNEXTLINE(build/namespaces)
 using namespace drake::symbolic;
