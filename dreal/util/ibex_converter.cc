@@ -33,14 +33,7 @@ IbexConverter::IbexConverter(const vector<Variable>& variables)
   }
 }
 
-IbexConverter::IbexConverter(const Box& box) : IbexConverter{box.variables()} {
-  for (const Variable& var : vars_) {
-    const Box::Interval& iv{box[var]};
-    if (iv.is_degenerated()) {
-      expression_substitution_.emplace(var, iv.lb());
-    }
-  }
-}
+IbexConverter::IbexConverter(const Box& box) : IbexConverter{box.variables()} {}
 
 IbexConverter::~IbexConverter() {
   DREAL_LOG_DEBUG("IbexConverter::~IbexConverter()");
@@ -54,7 +47,7 @@ IbexConverter::~IbexConverter() {
 
 const ExprCtr* IbexConverter::Convert(const Formula& f) {
   DREAL_LOG_DEBUG("IbexConverter::Convert({})", f);
-  const ExprCtr* expr_ctr{Visit(f.Substitute(expression_substitution_), true)};
+  const ExprCtr* expr_ctr{Visit(f, true)};
   if (expr_ctr) {
     need_to_delete_variables_ = false;
   }
@@ -63,7 +56,7 @@ const ExprCtr* IbexConverter::Convert(const Formula& f) {
 
 const ExprNode* IbexConverter::Convert(const Expression& e) {
   DREAL_LOG_DEBUG("IbexConverter::Convert({})", e);
-  const ExprNode* expr_node{Visit(e.Substitute(expression_substitution_))};
+  const ExprNode* expr_node{Visit(e)};
   if (expr_node) {
     need_to_delete_variables_ = false;
   }

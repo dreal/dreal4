@@ -20,9 +20,7 @@ class IbexConverter {
   /// Constructs a converter from @p variables.
   explicit IbexConverter(const std::vector<Variable>& variables);
 
-  /// Constructs a converter from a box. Given a point in a box @p, it
-  /// sets up `ExpressionSubstitution` so that `Convert(f)` performs a
-  /// substitution on `f` first.
+  /// Constructs a converter from @p box.
   explicit IbexConverter(const Box& box);
 
   ///@{ Delete copy/move constructors and copy/move assign operations.
@@ -115,8 +113,6 @@ class IbexConverter {
   // when `Convert()` method returns a non-null pointer, it changes to
   // false assuming that the caller will delete the variables.
   bool need_to_delete_variables_{true};
-
-  ExpressionSubstitution expression_substitution_;
 
   // Variable → ibex::ExprSymbol*.
   std::unordered_map<Variable, const ibex::ExprSymbol*, hash_value<Variable>>
