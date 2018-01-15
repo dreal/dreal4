@@ -48,7 +48,7 @@ class TheorySolver {
   // @note This method updates @p box as it calls FilterAssertion
   // function.
   std::experimental::optional<Contractor> BuildContractor(
-      Box* const box, const std::vector<Formula>& assertions);
+      const std::vector<Formula>& assertions);
   std::vector<FormulaEvaluator> BuildFormulaEvaluator(
       const std::vector<Formula>& assertions);
 

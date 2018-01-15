@@ -73,19 +73,20 @@ class TheorySolverStat {
 }  // namespace
 
 optional<Contractor> TheorySolver::BuildContractor(
-    Box* const box, const vector<Formula>& assertions) {
+    const vector<Formula>& assertions) {
+  Box& box = contractor_status_.mutable_box();
   if (assertions.empty()) {
-    return make_contractor_integer(*box);
+    return make_contractor_integer(box);
   }
   vector<Contractor> ctcs;
   for (const Formula& f : assertions) {
-    switch (FilterAssertion(f, box)) {
+    switch (FilterAssertion(f, &box)) {
       case FilterAssertionResult::NotFiltered:
         /* No OP */
         break;
       case FilterAssertionResult::FilteredWithChange:
         contractor_status_.AddUsedConstraint(f);
-        if (box->empty()) {
+        if (box.empty()) {
           return {};
         }
         continue;
@@ -98,14 +99,16 @@ optional<Contractor> TheorySolver::BuildContractor(
       DREAL_LOG_DEBUG("TheorySolver::BuildContractor: {}", f);
       if (is_forall(f)) {
         // We should have `inner_delta < epsilon < delta`.
-        const double epsilon = config_.precision() * 0.99;
-        const double inner_delta = epsilon * 0.99;
+        const double delta{config_.precision()};
+        const double epsilon{delta * 0.99};
+        const double inner_delta{epsilon * 0.99};
+        DREAL_ASSERT(inner_delta < epsilon && epsilon < delta);
         const Contractor ctc{make_contractor_forall<Context>(
-            f, *box, epsilon, inner_delta, config_.use_polytope_in_forall())};
+            f, box, epsilon, inner_delta, config_.use_polytope_in_forall())};
         ctcs.emplace_back(
             make_contractor_fixpoint(DefaultTerminationCondition, {ctc}));
       } else {
-        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, *box));
+        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, box));
       }
       // Add it to the cache.
       contractor_cache_.emplace_hint(it, f, ctcs.back());
@@ -115,11 +118,11 @@ optional<Contractor> TheorySolver::BuildContractor(
     }
   }
   // Add integer contractor.
-  ctcs.push_back(make_contractor_integer(*box));
+  ctcs.push_back(make_contractor_integer(box));
 
   if (config_.use_polytope()) {
     // Add polytope contractor.
-    ctcs.push_back(make_contractor_ibex_polytope(assertions, *box));
+    ctcs.push_back(make_contractor_ibex_polytope(assertions, box));
   }
   if (config_.use_worklist_fixpoint()) {
     return make_contractor_worklist_fixpoint(DefaultTerminationCondition,
@@ -133,9 +136,11 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
     const vector<Formula>& assertions) {
   vector<FormulaEvaluator> formula_evaluators;
   formula_evaluators.reserve(assertions.size());
-  const double delta = config_.precision();
-  const double epsilon = 0.99 * delta;
-  const double inner_delta = 0.99 * epsilon;
+  // We should have `inner_delta < epsilon < delta`.
+  const double delta{config_.precision()};
+  const double epsilon{0.99 * delta};
+  const double inner_delta{0.99 * epsilon};
+  DREAL_ASSERT(inner_delta < epsilon && epsilon < delta);
   for (const Formula& f : assertions) {
     auto it = formula_evaluator_cache_.find(f);
     if (it == formula_evaluator_cache_.end()) {
@@ -162,8 +167,7 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   contractor_status_ = ContractorStatus(box);
 
   // Icp Step
-  const auto contractor =
-      BuildContractor(&contractor_status_.mutable_box(), assertions);
+  const optional<Contractor> contractor{BuildContractor(assertions)};
   if (contractor) {
     Icp icp(*contractor, BuildFormulaEvaluator(assertions),
             config_.precision());
@@ -176,6 +180,7 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
       return true;
     }
   } else {
+    DREAL_ASSERT(contractor_status_.box().empty());
     status_ = Status::UNSAT;
     return false;
   }
