@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 
-#include "dreal/smt2/command.h"
 #include "dreal/smt2/location.hh"
 #include "dreal/smt2/scanner.h"
 #include "dreal/solver/context.h"

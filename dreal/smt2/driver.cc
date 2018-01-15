@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include <utility>
+
 #include <experimental/optional>
 
 #include "dreal/smt2/scanner.h"
@@ -37,7 +38,9 @@ bool Smt2Driver::parse_stream(istream& in, const string& sname) {
 
 bool Smt2Driver::parse_file(const string& filename) {
   ifstream in(filename.c_str());
-  if (!in.good()) return false;
+  if (!in.good()) {
+    return false;
+  }
   return parse_stream(in, filename);
 }
 

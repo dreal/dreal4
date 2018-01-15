@@ -86,7 +86,6 @@ dreal_cc_library(
         "scanner.h",
     ],
     deps = [
-        ":command",
         ":logic",
         ":sort",
         "//dreal/solver",

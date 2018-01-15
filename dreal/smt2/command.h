@@ -3,6 +3,7 @@
 #include <memory>
 #include <ostream>
 #include <string>
+#include <utility>
 
 #include "dreal/smt2/logic.h"
 #include "dreal/symbolic/symbolic.h"
@@ -15,7 +16,7 @@ class CommandCell;
  * CommandCell.*/
 class Command {
  public:
-  explicit Command(const std::shared_ptr<CommandCell>& ptr) : ptr_{ptr} {}
+  explicit Command(std::shared_ptr<CommandCell> ptr) : ptr_{std::move(ptr)} {}
 
  private:
   std::shared_ptr<CommandCell> ptr_;

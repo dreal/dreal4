@@ -2,6 +2,7 @@
 
 #include <ostream>
 #include <string>
+#include <utility>
 
 #include "dreal/smt2/command.h"
 #include "dreal/symbolic/symbolic.h"
@@ -12,6 +13,21 @@ namespace dreal {
 /// representing smt2lib commands.
 class CommandCell {
  public:
+  /// Default constructor.
+  CommandCell() = default;
+
+  /// Deleted copy-constructor.
+  CommandCell(const CommandCell&) = delete;
+
+  /// Deleted move-constructor.
+  CommandCell(CommandCell&&) = default;
+
+  /// Deleted copy-assignment operator.
+  CommandCell& operator=(const CommandCell&) = delete;
+
+  /// Deleted move-assignment operator.
+  CommandCell& operator=(CommandCell&&) = delete;
+
   /// Default destructor.
   virtual ~CommandCell() = default;
   /// Output its string representation to @p os.
@@ -21,7 +37,7 @@ class CommandCell {
 /// "assert" command.
 class AssertCommand : public CommandCell {
  public:
-  explicit AssertCommand(const Formula& f) : f_{f} {};
+  explicit AssertCommand(Formula f) : f_{std::move(f)} {};
   const Formula& get_assertion() const { return f_; }
   std::ostream& Display(std::ostream& os) const override;
 
@@ -39,7 +55,7 @@ class CheckSatCommand : public CommandCell {
 /// "echo" command.
 class EchoCommand : public CommandCell {
  public:
-  explicit EchoCommand(const std::string& message) : message_{message} {}
+  explicit EchoCommand(std::string message) : message_{std::move(message)} {}
   const std::string get_message() const { return message_; }
   std::ostream& Display(std::ostream& os) const override;
 
@@ -89,7 +105,7 @@ class GetModelCommand : public CommandCell {
 /// "get-option" command.
 class GetOptionCommand : public CommandCell {
  public:
-  explicit GetOptionCommand(const std::string key) : key_{key} {}
+  explicit GetOptionCommand(std::string key) : key_{std::move(key)} {}
   const std::string get_key() const { return key_; }
   std::ostream& Display(std::ostream& os) const override;
 
@@ -157,8 +173,8 @@ class ResetAssertionsCommand : public CommandCell {
 /// "set-info" command.
 class SetInfoCommand : public CommandCell {
  public:
-  SetInfoCommand(const std::string& key, const std::string& value)
-      : key_{key}, value_{value} {}
+  SetInfoCommand(std::string key, std::string value)
+      : key_{std::move(key)}, value_{std::move(value)} {}
   const std::string& get_key() const { return key_; }
   const std::string& get_value() const { return value_; }
   std::ostream& Display(std::ostream& os) const override;
@@ -180,8 +196,8 @@ class SetLogicCommand : public CommandCell {
 
 class SetOptionCommand : public CommandCell {
  public:
-  SetOptionCommand(const std::string& key, const std::string& value)
-      : key_{key}, value_{value} {}
+  SetOptionCommand(std::string key, std::string value)
+      : key_{std::move(key)}, value_{std::move(value)} {}
   std::ostream& Display(std::ostream& os) const override;
 
  private:
