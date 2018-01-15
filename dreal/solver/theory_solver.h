@@ -16,29 +16,17 @@ namespace dreal {
 
 class TheorySolver {
  public:
-  enum class Status {
-    UNCHECKED,
-    SAT,
-    UNSAT,
-  };
-
   TheorySolver() = delete;
   TheorySolver(const Config& config, const Box& box);
 
   /// Checks consistency. Returns true if there is a satisfying
   /// assignment. Otherwise, return false.
-  ///
-  /// @note It does the real-work only if status_ is UNCHECKED. Otherwise, it
-  /// does nothing.
   bool CheckSat(const Box& box, const std::vector<Formula>& assertions);
 
   /// Gets a satisfying Model.
-  ///
-  /// @pre status_ is SAT.
   Box GetModel() const;
 
   /// Gets a list of used constraints.
-  /// @pre status_ is UNSAT.
   const std::unordered_set<Formula, hash_value<Formula>> GetExplanation() const;
 
  private:
@@ -53,7 +41,6 @@ class TheorySolver {
       const std::vector<Formula>& assertions);
 
   const Config& config_;
-  Status status_{Status::UNCHECKED};
   ContractorStatus contractor_status_;
 
   std::unordered_map<Formula, Contractor, hash_value<Formula>>

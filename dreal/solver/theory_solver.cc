@@ -173,28 +173,23 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
             config_.precision());
     icp.CheckSat(&contractor_status_);
     if (contractor_status_.box().empty()) {
-      status_ = Status::UNSAT;
       return false;
     } else {
-      status_ = Status::SAT;
       return true;
     }
   } else {
     DREAL_ASSERT(contractor_status_.box().empty());
-    status_ = Status::UNSAT;
     return false;
   }
 }
 
 Box TheorySolver::GetModel() const {
-  DREAL_ASSERT(status_ == Status::SAT);
   DREAL_LOG_DEBUG("TheorySolver::GetModel():\n{}", contractor_status_.box());
   return contractor_status_.box();
 }
 
 const unordered_set<Formula, hash_value<Formula>> TheorySolver::GetExplanation()
     const {
-  DREAL_ASSERT(status_ == Status::UNSAT);
   return contractor_status_.Explanation();
 }
 
