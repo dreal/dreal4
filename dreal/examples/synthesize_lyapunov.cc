@@ -2,7 +2,6 @@
 #include <numeric>
 #include <ostream>
 #include <vector>
-#include <experimental/optional>
 
 #include "dreal/api/api.h"
 #include "dreal/symbolic/symbolic.h"
@@ -12,7 +11,6 @@
 using std::accumulate;
 using std::cout;
 using std::endl;
-using std::experimental::optional;
 using std::vector;
 
 namespace dreal {
@@ -39,7 +37,7 @@ void CheckLyapunov(const vector<Variable>& x, const vector<Expression>& f,
                    return result + (x_i * x_i);
                  });
   // lie_derivative_of_V = ∑ fᵢ*∂V/∂xᵢ.
-  Expression lie_derivative_of_V = 0.0;
+  Expression lie_derivative_of_V = 0.0;  // NOLINT
   for (size_t i = 0; i < x.size(); i++) {
     lie_derivative_of_V += f[i] * V.Differentiate(x[i]);
   }
@@ -94,7 +92,7 @@ void SynthesizeLyapunov(const vector<Variable>& x, const vector<Expression>& f,
                    return result + (x_i * x_i);
                  });
   // lie_derivative_of_V = ∑ fᵢ*∂V/∂xᵢ.
-  Expression lie_derivative_of_V = 0.0;
+  Expression lie_derivative_of_V = 0.0;  // NOLINT
   for (size_t i = 0; i < x.size(); i++) {
     lie_derivative_of_V += f[i] * V.Differentiate(x[i]);
   }

@@ -1,4 +1,5 @@
 #include <ostream>
+
 #include <experimental/optional>
 
 #include "dreal/solver/context.h"
