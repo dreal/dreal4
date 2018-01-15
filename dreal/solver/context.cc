@@ -81,7 +81,17 @@ void Context::Impl::Assert(const Formula& f) {
   if (is_true(f)) {
     return;
   }
-  stack_.push_back(f);
+  if (box().empty()) {
+    return;
+  }
+  if (FilterAssertion(f, &box()) == FilterAssertionResult::NotFiltered) {
+    stack_.push_back(f);
+    return;
+  } else {
+    DREAL_LOG_DEBUG("Context::Assert: {} is not added.", f);
+    DREAL_LOG_DEBUG("Box=\n{}", box());
+    return;
+  }
 }
 
 optional<Box> Context::Impl::CheckSat() {

@@ -197,11 +197,11 @@ class AssertionFilter {
   }
   FilterAssertionResult VisitConjunction(const Formula&, Box* const,
                                          const bool) const {
-    DREAL_UNREACHABLE();
+    return FilterAssertionResult::NotFiltered;
   }
   FilterAssertionResult VisitDisjunction(const Formula&, Box* const,
                                          const bool) const {
-    DREAL_UNREACHABLE();
+    return FilterAssertionResult::NotFiltered;
   }
   FilterAssertionResult VisitNegation(const Formula& f, Box* const box,
                                       const bool polarity) const {
