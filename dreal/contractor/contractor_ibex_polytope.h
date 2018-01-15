@@ -18,6 +18,18 @@ class ContractorIbexPolytope : public ContractorCell {
   /// Constructs IbexPolytope contractor using @p f and @p vars.
   ContractorIbexPolytope(std::vector<Formula> formulas, const Box& box);
 
+  /// Deleted copy constructor.
+  ContractorIbexPolytope(const ContractorIbexPolytope&) = delete;
+
+  /// Deleted move constructor.
+  ContractorIbexPolytope(ContractorIbexPolytope&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorIbexPolytope& operator=(const ContractorIbexPolytope&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorIbexPolytope& operator=(ContractorIbexPolytope&&) = delete;
+
   /// Default destructor.
   ~ContractorIbexPolytope() override = default;
 

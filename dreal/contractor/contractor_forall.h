@@ -5,6 +5,7 @@
 #include <ostream>
 #include <stdexcept>
 #include <utility>
+
 #include <experimental/optional>
 
 #include "dreal/contractor/contractor.h"
@@ -85,6 +86,18 @@ class ContractorForall : public ContractorCell {
       input.add(box.index(v));
     }
   }
+
+  /// Deleted copy constructor.
+  ContractorForall(const ContractorForall&) = delete;
+
+  /// Deleted move constructor.
+  ContractorForall(ContractorForall&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorForall& operator=(const ContractorForall&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorForall& operator=(ContractorForall&&) = delete;
 
   /// Default destructor.
   ~ContractorForall() override = default;

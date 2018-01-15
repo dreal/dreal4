@@ -54,6 +54,10 @@ vector<Contractor> Flatten(const vector<Contractor>& contractors) {
 class ContractorStat {
  public:
   ContractorStat() = default;
+  ContractorStat(const ContractorStat&) = default;
+  ContractorStat(ContractorStat&&) = default;
+  ContractorStat& operator=(const ContractorStat&) = default;
+  ContractorStat& operator=(ContractorStat&&) = default;
   ~ContractorStat() {
     if (DREAL_LOG_INFO_ENABLED) {
       using fmt::print;
@@ -68,7 +72,7 @@ class ContractorStat {
 
 Contractor::Contractor() : ptr_{make_shared<ContractorId>()} {}
 
-Contractor::Contractor(const shared_ptr<ContractorCell>& ptr) : ptr_(ptr) {}
+Contractor::Contractor(shared_ptr<ContractorCell> ptr) : ptr_{move(ptr)} {}
 
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 

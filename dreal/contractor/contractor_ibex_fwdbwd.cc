@@ -1,9 +1,7 @@
 #include "dreal/contractor/contractor_ibex_fwdbwd.h"
 
 #include <sstream>
-#include <unordered_map>
 #include <utility>
-#include <vector>
 
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
@@ -13,8 +11,6 @@ using std::make_unique;
 using std::move;
 using std::ostream;
 using std::ostringstream;
-using std::unordered_map;
-using std::vector;
 
 namespace dreal {
 
@@ -22,6 +18,11 @@ namespace {
 class ContractorIbexFwdbwdStat {
  public:
   ContractorIbexFwdbwdStat() = default;
+  ContractorIbexFwdbwdStat(const ContractorIbexFwdbwdStat&) = default;
+  ContractorIbexFwdbwdStat(ContractorIbexFwdbwdStat&&) = default;
+  ContractorIbexFwdbwdStat& operator=(const ContractorIbexFwdbwdStat&) =
+      default;
+  ContractorIbexFwdbwdStat& operator=(ContractorIbexFwdbwdStat&&) = default;
   ~ContractorIbexFwdbwdStat() {
     if (DREAL_LOG_INFO_ENABLED) {
       using fmt::print;

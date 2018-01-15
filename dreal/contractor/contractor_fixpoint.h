@@ -19,13 +19,25 @@ class ContractorFixpoint : public ContractorCell {
   /// Deletes default constructor.
   ContractorFixpoint() = delete;
 
-  /// Default destructor.
-  ~ContractorFixpoint() = default;
-
   /// Constructs a fixpoint contractor with a termination condition
   /// (Box × Box → Bool) and a sequence of Contractors {C₁, ..., Cₙ}.
   ContractorFixpoint(TerminationCondition term_cond,
                      std::vector<Contractor> contractors);
+
+  /// Deleted copy constructor.
+  ContractorFixpoint(const ContractorFixpoint&) = delete;
+
+  /// Deleted move constructor.
+  ContractorFixpoint(ContractorFixpoint&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorFixpoint& operator=(const ContractorFixpoint&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorFixpoint& operator=(ContractorFixpoint&&) = delete;
+
+  /// Default destructor.
+  ~ContractorFixpoint() override = default;
 
   void Prune(ContractorStatus* cs) const override;
   std::ostream& display(std::ostream& os) const override;

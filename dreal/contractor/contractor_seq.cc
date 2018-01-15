@@ -14,7 +14,7 @@ ContractorSeq::ContractorSeq(vector<Contractor> contractors)
     : ContractorCell{Contractor::Kind::SEQ,
                      ibex::BitSet::empty(ComputeInputSize(contractors))},
       contractors_{move(contractors)} {
-  DREAL_ASSERT(contractors_.size() > 0);
+  DREAL_ASSERT(!contractors_.empty());
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
@@ -28,7 +28,6 @@ void ContractorSeq::Prune(ContractorStatus* cs) const {
       return;
     }
   }
-  return;
 }
 
 ostream& ContractorSeq::display(ostream& os) const {

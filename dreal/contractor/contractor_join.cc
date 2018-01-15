@@ -1,6 +1,7 @@
 #include "dreal/contractor/contractor_join.h"
 
 #include <utility>
+
 #include "dreal/util/assert.h"
 
 using std::move;
@@ -13,7 +14,7 @@ ContractorJoin::ContractorJoin(vector<Contractor> contractors)
     : ContractorCell{Contractor::Kind::JOIN,
                      ibex::BitSet::empty(ComputeInputSize(contractors))},
       contractors_{move(contractors)} {
-  DREAL_ASSERT(contractors_.size() > 0);
+  DREAL_ASSERT(!contractors_.empty());
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();

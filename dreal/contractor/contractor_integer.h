@@ -17,10 +17,22 @@ class ContractorInteger : public ContractorCell {
  public:
   explicit ContractorInteger(const Box& box);
 
+  /// Deleted copy constructor.
+  ContractorInteger(const ContractorInteger&) = delete;
+
+  /// Deleted move constructor.
+  ContractorInteger(ContractorInteger&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorInteger& operator=(const ContractorInteger&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorInteger& operator=(ContractorInteger&&) = delete;
+
   /// Default destructor.
   ~ContractorInteger() override = default;
 
-  void Prune(ContractorStatus* cs) const override;
+  void Prune(ContractorStatus* contractor_status) const override;
   std::ostream& display(std::ostream& os) const override;
 
  private:

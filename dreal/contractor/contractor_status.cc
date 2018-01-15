@@ -14,7 +14,7 @@ ContractorStatus::ContractorStatus(Box box, const int branching_point)
     : box_{move(box)},
       branching_point_{branching_point},
       output_{ibex::BitSet::empty(box_.size())} {
-  DREAL_ASSERT(box_.size() > 0);
+  DREAL_ASSERT(!box_.empty());
   DREAL_ASSERT(branching_point_ >= -1 && branching_point_ < box_.size());
 }
 

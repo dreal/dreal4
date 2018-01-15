@@ -21,6 +21,18 @@ class ContractorIbexFwdbwd : public ContractorCell {
   /// Constructs IbexFwdbwd contractor using @p f and @p box.
   ContractorIbexFwdbwd(Formula f, const Box& box);
 
+  /// Deleted copy constructor.
+  ContractorIbexFwdbwd(const ContractorIbexFwdbwd&) = delete;
+
+  /// Deleted move constructor.
+  ContractorIbexFwdbwd(ContractorIbexFwdbwd&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorIbexFwdbwd& operator=(const ContractorIbexFwdbwd&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorIbexFwdbwd& operator=(ContractorIbexFwdbwd&&) = delete;
+
   ~ContractorIbexFwdbwd() override = default;
 
   void Prune(ContractorStatus* cs) const override;

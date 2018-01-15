@@ -9,6 +9,18 @@ class ContractorId : public ContractorCell {
   /// Constructs ID contractor.
   ContractorId();
 
+  /// Deleted copy constructor.
+  ContractorId(const ContractorId&) = delete;
+
+  /// Deleted move constructor.
+  ContractorId(ContractorId&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorId& operator=(const ContractorId&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorId& operator=(ContractorId&&) = delete;
+
   /// Default destructor.
   ~ContractorId() override = default;
 

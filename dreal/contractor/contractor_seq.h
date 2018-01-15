@@ -17,6 +17,18 @@ class ContractorSeq : public ContractorCell {
   /// Constructor a sequential contractor from a {C₁, ..., Cₙ}.
   explicit ContractorSeq(std::vector<Contractor> contractors);
 
+  /// Deleted copy constructor.
+  ContractorSeq(const ContractorSeq&) = delete;
+
+  /// Deleted move constructor.
+  ContractorSeq(ContractorSeq&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorSeq& operator=(const ContractorSeq&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorSeq& operator=(ContractorSeq&&) = delete;
+
   /// Default destructor.
   ~ContractorSeq() override = default;
 

@@ -2,7 +2,6 @@
 
 #include <algorithm>  // To suppress cpplint
 #include <cmath>
-#include <queue>
 #include <utility>
 
 #include "dreal/util/assert.h"
@@ -10,8 +9,6 @@
 
 using std::move;
 using std::ostream;
-using std::queue;
-using std::unordered_set;
 using std::vector;
 
 namespace dreal {
@@ -38,7 +35,7 @@ ContractorWorklistFixpoint::ContractorWorklistFixpoint(
                             ibex::BitSet::empty(contractors_.size())},
       worklist_{ibex::BitSet::empty(contractors_.size())},
       old_iv_{1 /* It will be updated anyway. */} {
-  DREAL_ASSERT(contractors_.size() > 0);
+  DREAL_ASSERT(!contractors_.empty());
   // Setup the input member.
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& ctc : contractors_) {
@@ -84,13 +81,13 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
   old_iv_ = cs->box().interval_vector();
   if (branching_point < 0) {
     // No branching_point information specified, add all contractors.
-    for (size_t ctc_idx = 0; ctc_idx < contractors_.size(); ++ctc_idx) {
+    for (const auto& contractor : contractors_) {
       // TODO(soonho): Need to save cs->output() and restore after
       // running UpdateWorklist() below. For now, it should be OK
       // since we do not call ContractorWorklistFixpoint::Prune()
       // recursively.
       cs->mutable_output().clear();
-      contractors_[ctc_idx].Prune(cs);
+      contractor.Prune(cs);
       if (cs->box().empty()) {
         return;
       }

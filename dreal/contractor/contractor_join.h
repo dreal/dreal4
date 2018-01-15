@@ -18,6 +18,18 @@ class ContractorJoin : public ContractorCell {
   /// Constructs a join contractor from a {C₁, ..., Cₙ}.
   explicit ContractorJoin(std::vector<Contractor> contractors);
 
+  /// Deleted copy constructor.
+  ContractorJoin(const ContractorJoin&) = delete;
+
+  /// Deleted move constructor.
+  ContractorJoin(ContractorJoin&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorJoin& operator=(const ContractorJoin&) = delete;
+
+  /// Deleted move assign operator.
+  ContractorJoin& operator=(ContractorJoin&&) = delete;
+
   /// Default destructor.
   ~ContractorJoin() override = default;
 

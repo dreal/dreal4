@@ -1,9 +1,6 @@
 #pragma once
 
-#include <functional>
 #include <ostream>
-#include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include "dreal/contractor/contractor.h"
@@ -25,8 +22,21 @@ class ContractorWorklistFixpoint : public ContractorCell {
   ContractorWorklistFixpoint(TerminationCondition term_cond,
                              std::vector<Contractor> contractors);
 
+  /// Deleted copy constructor.
+  ContractorWorklistFixpoint(const ContractorWorklistFixpoint&) = delete;
+
+  /// Deleted move constructor.
+  ContractorWorklistFixpoint(ContractorWorklistFixpoint&&) = delete;
+
+  /// Deleted copy assign operator.
+  ContractorWorklistFixpoint& operator=(const ContractorWorklistFixpoint&) =
+      delete;
+
+  /// Deleted move assign operator.
+  ContractorWorklistFixpoint& operator=(ContractorWorklistFixpoint&&) = delete;
+
   /// Default destructor.
-  ~ContractorWorklistFixpoint() = default;
+  ~ContractorWorklistFixpoint() override = default;
 
   void Prune(ContractorStatus* cs) const override;
   std::ostream& display(std::ostream& os) const override;

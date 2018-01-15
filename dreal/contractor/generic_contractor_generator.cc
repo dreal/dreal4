@@ -111,7 +111,7 @@ Contractor GenericContractorGenerator::VisitConjunction(
     contractors.push_back(
         make_contractor_ibex_polytope(relational_formulas, box));
   }
-  return make_contractor_seq(move(contractors));
+  return make_contractor_seq(contractors);
 }
 
 Contractor GenericContractorGenerator::VisitDisjunction(

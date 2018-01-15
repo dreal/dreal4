@@ -70,10 +70,10 @@ class Contractor {
   /// Returns kind.
   Kind kind() const;
 
-  friend std::ostream& operator<<(std::ostream& os, Contractor const& c);
+  friend std::ostream& operator<<(std::ostream& os, Contractor const& ctc);
 
  private:
-  explicit Contractor(const std::shared_ptr<ContractorCell>& ptr);
+  explicit Contractor(std::shared_ptr<ContractorCell> ptr);
 
   std::shared_ptr<ContractorCell> ptr_{};
 
@@ -92,7 +92,7 @@ class Contractor {
       const std::vector<Contractor>& contractors);
   template <typename ContextType>
   friend Contractor make_contractor_forall(Formula f, const Box& box,
-                                           double delta1, double delta2,
+                                           double epsilon, double delta,
                                            bool use_polytope);
   friend Contractor make_contractor_join(std::vector<Contractor> vec);
 
@@ -177,8 +177,8 @@ Contractor make_contractor_join(std::vector<Contractor> vec);
 /// @note the implementation is at `dreal/contractor/contractor_forall.h` file.
 /// @see ContractorForall.
 template <typename ContextType>
-Contractor make_contractor_forall(Formula f, const Box& box, double delta1,
-                                  double delta2, bool use_polytope);
+Contractor make_contractor_forall(Formula f, const Box& box, double epsilon,
+                                  double delta, bool use_polytope);
 
 std::ostream& operator<<(std::ostream& os, const Contractor& ctc);
 
