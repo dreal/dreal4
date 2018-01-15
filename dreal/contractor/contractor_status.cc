@@ -78,6 +78,8 @@ ContractorStatus& ContractorStatus::InplaceJoin(
     const ContractorStatus& contractor_status) {
   box_.InplaceUnion(contractor_status.box());
   output_ |= contractor_status.output();
+  unsat_witness_.insert(contractor_status.unsat_witness_.begin(),
+                        contractor_status.unsat_witness_.end());
   used_constraints_.insert(contractor_status.used_constraints_.begin(),
                            contractor_status.used_constraints_.end());
   return *this;
