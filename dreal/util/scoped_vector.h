@@ -47,6 +47,7 @@ class ScopedVector {
   const_reverse_iterator crend() const { return vector_.crend(); }
 
   void push_back(value_type const& v) { vector_.push_back(v); }
+  void push_back(value_type&& v) { vector_.push_back(std::move(v)); }
   void push() { scopes_.push_back(vector_.size()); }
   size_t pop() {
     if (scopes_.empty()) {
