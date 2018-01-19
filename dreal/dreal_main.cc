@@ -89,6 +89,12 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */,
            "Use worklist fixpoint algorithm in ICP.\n", "--worklist-fixpoint");
 
+  opt_.add("false" /* Default */, false /* Required? */,
+           0 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "Use local optimization algorithm for exist-forall problems.\n",
+           "--local-optimization");
+
   auto* const verbose_option_validator = new ez::ezOptionValidator(
       "t", "in", "trace,debug,info,warning,error,critical,off", true);
   opt_.add(
@@ -194,6 +200,13 @@ void MainProgram::ExtractOptions() {
     config_.mutable_use_worklist_fixpoint().set_from_command_line(true);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --worklist-fixpoint = {}",
                     config_.use_worklist_fixpoint());
+  }
+
+  // --local-optimization
+  if (opt_.isSet("--local-optimization")) {
+    config_.mutable_use_local_optimization().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --local-optimization = {}",
+                    config_.use_local_optimization());
   }
 }
 
