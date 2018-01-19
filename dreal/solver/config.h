@@ -44,6 +44,13 @@ class Config {
   /// Returns a mutable OptionValue for 'use_worklist_fixpoint'.
   OptionValue<bool>& mutable_use_worklist_fixpoint();
 
+  /// Returns whether it uses local optimization algorithm in exist-forall
+  /// problems.
+  bool use_local_optimization() const;
+
+  /// Returns a mutable OptionValue for 'use_local_optimization'.
+  OptionValue<bool>& mutable_use_local_optimization();
+
  private:
   // NOTE: Make sure to match the default values specified here with the ones
   // specified in dreal/dreal.cc.
@@ -52,6 +59,7 @@ class Config {
   OptionValue<bool> use_polytope_{false};
   OptionValue<bool> use_polytope_in_forall_{false};
   OptionValue<bool> use_worklist_fixpoint_{false};
+  OptionValue<bool> use_local_optimization_{false};
 };
 
 std::ostream& operator<<(std::ostream& os, const Config& config);

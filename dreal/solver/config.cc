@@ -29,6 +29,13 @@ OptionValue<bool>& Config::mutable_use_worklist_fixpoint() {
   return use_worklist_fixpoint_;
 }
 
+bool Config::use_local_optimization() const {
+  return use_local_optimization_.get();
+}
+OptionValue<bool>& Config::mutable_use_local_optimization() {
+  return use_local_optimization_;
+}
+
 ostream& operator<<(ostream& os, const Config& config) {
   return os << fmt::format(
              "Config("
@@ -37,9 +44,11 @@ ostream& operator<<(ostream& os, const Config& config) {
              "use_polytope = {}, "
              "use_polytope_in_forall = {}"
              "use_worklist_fixpoint = {}"
+             "use_local_optimization = {}"
              ")",
              config.precision(), config.produce_models(), config.use_polytope(),
-             config.use_polytope_in_forall(), config.use_worklist_fixpoint());
+             config.use_polytope_in_forall(), config.use_worklist_fixpoint(),
+             config.use_local_optimization());
 }
 
 }  // namespace dreal
