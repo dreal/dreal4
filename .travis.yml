@@ -104,8 +104,8 @@ install:
       sudo add-apt-repository ppa:dreal/dreal -y;
       sudo apt update;
       sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libnlopt-dev;
-      wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel_0.5.4-linux-x86_64.deb;
-      sudo dpkg -i bazel_0.5.4-linux-x86_64.deb;
+      wget https://github.com/bazelbuild/bazel/releases/download/0.9.0/bazel_0.9.0-linux-x86_64.deb;
+      sudo dpkg -i bazel_0.9.0-linux-x86_64.deb;
       BAZEL_LOCAL_RESOURCES=2048,1,1.0;
       TEST_TAG_FILTERS=;
     fi
