@@ -73,6 +73,11 @@ class NloptOptimizer {
   /// @throw std::runtime_error if the above condition does not meet.
   void AddConstraint(const Formula& formula);
 
+  /// Specifies a relational constraint.
+  ///
+  /// @pre @p formula is a relational constraint.
+  void AddRelationalConstraint(const Formula& formula);
+
   /// Specifies constraints.
   void AddConstraints(const std::vector<Formula>& formulas);
 
@@ -81,9 +86,16 @@ class NloptOptimizer {
   /// updated with the found optimal value.
   nlopt_result Optimize(std::vector<double>* x, double* opt_f);
 
- private:
-  void AddRelationalConstraint(const Formula& formula);
+  /// Runs optimization.
+  ///
+  /// @note Constraint and objective functions possibly include
+  /// non-decision variables. If this is the case, @p env should be
+  /// provided so that we can have full information to evaluate those
+  /// functions.
+  nlopt_result Optimize(std::vector<double>* x, double* opt_f,
+                        const Environment& env);
 
+ private:
   nlopt_opt opt_;
   const Box box_;
   const double delta_{0.0};
