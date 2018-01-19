@@ -45,7 +45,7 @@ dreal_cc_library(
     ],
     deps = [
         ":contractor_status",
-        "//dreal/optimization:nlopt_optimizer",
+        ":counterexample_refiner",
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:exception",
@@ -54,6 +54,24 @@ dreal_cc_library(
         "//dreal/util:math",
         "//dreal/util:nnfizer",
         "@ibex//:ibex",
+    ],
+)
+
+dreal_cc_library(
+    name = "counterexample_refiner",
+    srcs = [
+        "counterexample_refiner.cc",
+    ],
+    hdrs = [
+        "counterexample_refiner.h",
+    ],
+    deps = [
+        "//dreal/optimization:nlopt_optimizer",
+        "//dreal/solver:filter_assertion",
+        "//dreal/symbolic",
+        "//dreal/util:assert",
+        "//dreal/util:box",
+        "//dreal/util:logging",
     ],
 )
 
