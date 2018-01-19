@@ -10,6 +10,7 @@
 
 #include "dreal/contractor/contractor.h"
 #include "dreal/contractor/contractor_cell.h"
+#include "dreal/contractor/counterexample_refiner.h"
 #include "dreal/contractor/generic_contractor_generator.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/box.h"
@@ -17,6 +18,12 @@
 #include "dreal/util/nnfizer.h"
 
 namespace dreal {
+
+/// Add Doc.
+Box RefineCounterexample(const Formula& query,
+                         const Variables& quantified_variables, Box b,
+                         double precision);
+
 /// Contractor for forall constraints. See the following problem
 /// definition and our approach.
 ///
@@ -46,16 +53,17 @@ class ContractorForall : public ContractorCell {
   ///
   /// @pre epsilon > delta > 0.0
   ContractorForall(Formula f, const Box& box, double epsilon, double delta,
-                   bool use_polytope)
+                   bool use_polytope, bool use_local_optimization)
       : ContractorCell{Contractor::Kind::FORALL,
                        ibex::BitSet::empty(box.size())},
         f_{std::move(f)},
+        quantified_variables_{get_quantified_variables(f_)},
         strengthend_negated_nested_f_{Nnfizer{}.Convert(
-            DeltaStrengthen(!get_quantified_formula(f_), epsilon),
-            use_polytope)},
+            DeltaStrengthen(!get_quantified_formula(f_), epsilon), true)},
         contractor_{GenericContractorGenerator{}.Generate(
-            get_quantified_formula(f_),
-            ExtendBox(box, get_quantified_variables(f_)), use_polytope)} {
+            get_quantified_formula(f_), ExtendBox(box, quantified_variables_),
+            use_polytope)},
+        use_local_optimization_{use_local_optimization} {
     DREAL_ASSERT(epsilon > 0.0);
     DREAL_ASSERT(delta > 0.0);
     DREAL_ASSERT(epsilon > delta);
@@ -85,6 +93,10 @@ class ContractorForall : public ContractorCell {
     for (const Variable& v : f_.GetFreeVariables()) {
       input.add(box.index(v));
     }
+    if (use_local_optimization_) {
+      refiner_ = std::make_unique<CounterexampleRefiner>(
+          strengthend_negated_nested_f_, quantified_variables_, delta);
+    }
   }
 
   /// Deleted copy constructor.
@@ -111,14 +123,20 @@ class ContractorForall : public ContractorCell {
                                                 current_box[exist_var].lb(),
                                                 current_box[exist_var].ub());
       }
-      const std::experimental::optional<Box> counterexample =
+      std::experimental::optional<Box> counterexample_opt =
           context_for_counterexample_.CheckSat();
-      if (counterexample) {
+      if (counterexample_opt) {
+        Box& counterexample{*counterexample_opt};
         // 1.1. Counterexample found.
         DREAL_LOG_DEBUG("ContractorForall::Prune: Counterexample found:\n{}",
-                        *counterexample);
+                        counterexample);
+
+        if (use_local_optimization_) {
+          counterexample = refiner_->Refine(counterexample);
+        }
+
         // Need to prune the current_box using counterexample.
-        ContractorStatus contractor_status(*counterexample);
+        ContractorStatus contractor_status(counterexample);
         // 1.1.1. Set up exist_var parts for pruning
         for (const Variable& exist_var : current_box.variables()) {
           contractor_status.mutable_box()[exist_var] = current_box[exist_var];
@@ -128,7 +146,7 @@ class ContractorForall : public ContractorCell {
         // taking the mid-points of counterexample.
         for (const Variable& forall_var : get_quantified_variables(f_)) {
           contractor_status.mutable_box()[forall_var] =
-              (*counterexample)[forall_var].mid();
+              counterexample[forall_var].mid();
         }
         contractor_.Prune(&contractor_status);
         if (contractor_status.box().empty()) {
@@ -172,18 +190,23 @@ class ContractorForall : public ContractorCell {
   }
 
   const Formula f_;                             // ∀X.φ
+  const Variables quantified_variables_;        // X
   const Formula strengthend_negated_nested_f_;  // (¬φ)⁻ᵟ¹
   // To compute `B' = Contract(φ(x₁, ..., xₙ, b₁, ..., bₘ), B)`.
   Contractor contractor_;
   // Context to do `Solve(¬φ', δ₂)`.
   mutable ContextType context_for_counterexample_;
+  const bool use_local_optimization_{false};
+
+  std::unique_ptr<CounterexampleRefiner> refiner_;
 };
 
 template <typename ContextType>
 Contractor make_contractor_forall(Formula f, const Box& box, double epsilon,
-                                  double delta, bool use_polytope) {
+                                  double delta, bool use_polytope,
+                                  bool use_local_optimization) {
   return Contractor{std::make_shared<ContractorForall<ContextType>>(
-      std::move(f), box, epsilon, delta, use_polytope)};
+      std::move(f), box, epsilon, delta, use_polytope, use_local_optimization)};
 }
 
 /// Converts @p contractor to ContractorForall.

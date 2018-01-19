@@ -93,7 +93,8 @@ class Contractor {
   template <typename ContextType>
   friend Contractor make_contractor_forall(Formula f, const Box& box,
                                            double epsilon, double delta,
-                                           bool use_polytope);
+                                           bool use_polytope,
+                                           bool use_local_optimization);
   friend Contractor make_contractor_join(std::vector<Contractor> vec);
 
   // Note that the following converter functions are only for
@@ -178,7 +179,8 @@ Contractor make_contractor_join(std::vector<Contractor> vec);
 /// @see ContractorForall.
 template <typename ContextType>
 Contractor make_contractor_forall(Formula f, const Box& box, double epsilon,
-                                  double delta, bool use_polytope);
+                                  double delta, bool use_polytope,
+                                  bool use_local_optimization);
 
 std::ostream& operator<<(std::ostream& os, const Contractor& ctc);
 

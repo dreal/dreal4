@@ -107,7 +107,8 @@ optional<Contractor> TheorySolver::BuildContractor(
         const double inner_delta{epsilon * 0.99};
         DREAL_ASSERT(inner_delta < epsilon && epsilon < delta);
         const Contractor ctc{make_contractor_forall<Context>(
-            f, box, epsilon, inner_delta, config_.use_polytope_in_forall())};
+            f, box, epsilon, inner_delta, config_.use_polytope_in_forall(),
+            config_.use_local_optimization())};
         ctcs.emplace_back(
             make_contractor_fixpoint(DefaultTerminationCondition, {ctc}));
       } else {
