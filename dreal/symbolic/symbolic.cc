@@ -150,27 +150,20 @@ class DeltaStrengthenVisitor {
     } else {
       //     lhs = rhs
       // -> (lhs >= rhs) ∧ (lhs <= rhs)
-      // -> (lhs - rhs >= 0) ∧ (0 <= rhs - lhs)
-      //
-      // After weakening (note that delta is negative), we have:
-      // -> (lhs - rhs >= delta) ∧ (delta <= rhs - lhs)
-
       const Expression& lhs{get_lhs_expression(f)};
       const Expression& rhs{get_rhs_expression(f)};
-      return (lhs - rhs >= delta) && (delta <= rhs - lhs);
+      return VisitGreaterThanOrEqualTo(lhs >= rhs, delta) &&
+             VisitLessThanOrEqualTo(lhs <= rhs, delta);
     }
   }
   Formula VisitNotEqualTo(const Formula& f, const double delta) const {
     if (delta > 0) {
       //     lhs ≠ rhs
       // -> (lhs > rhs) ∨ (lhs < rhs)
-      // -> (lhs - rhs > 0) ∨ (0 < rhs - lhs)
-      //
-      // After strengthening, we have:
-      //     (lhs - rhs > delta) ∨ (delta < rhs - lhs)
       const Expression& lhs{get_lhs_expression(f)};
       const Expression& rhs{get_rhs_expression(f)};
-      return (lhs - rhs > delta) || (delta < rhs - lhs);
+      return VisitGreaterThan(lhs > rhs, delta) ||
+             VisitLessThan(lhs < rhs, delta);
     } else {
       return Formula::True();
     }
@@ -179,38 +172,70 @@ class DeltaStrengthenVisitor {
     //     lhs > rhs
     //
     // After strengthening, we have:
-    //     (lhs - rhs > delta)
+    //     (lhs > rhs + delta)
     const Expression& lhs{get_lhs_expression(f)};
     const Expression& rhs{get_rhs_expression(f)};
-    return (lhs - rhs > delta);
+    if (is_variable(rhs)) {
+      // We return the following so that possibly we can keep the
+      // bounded constraint form (c relop. v) where c is a constant.
+      // Keeping this syntactic form is useful because our
+      // FilterAssertion relies on that.
+      return (lhs - delta > rhs);
+    } else {
+      return (lhs > rhs + delta);
+    }
   }
   Formula VisitGreaterThanOrEqualTo(const Formula& f,
                                     const double delta) const {
     //     lhs >= rhs
     //
     // After strengthening, we have:
-    //     (lhs - rhs >= delta)
+    //     (lhs >= rhs + delta)
     const Expression& lhs{get_lhs_expression(f)};
     const Expression& rhs{get_rhs_expression(f)};
-    return (lhs - rhs >= delta);
+    if (is_variable(rhs)) {
+      // We return the following so that possibly we can keep the
+      // bounded constraint form (c relop. v) where c is a constant.
+      // Keeping this syntactic form is useful because our
+      // FilterAssertion relies on that.
+      return (lhs - delta >= rhs);
+    } else {
+      return (lhs >= rhs + delta);
+    }
   }
   Formula VisitLessThan(const Formula& f, const double delta) const {
     //     lhs < rhs
     //
     // After strengthening, we have:
-    //     (delta < rhs - lhs)
+    //     (lhs + delta < rhs)
     const Expression& lhs{get_lhs_expression(f)};
     const Expression& rhs{get_rhs_expression(f)};
-    return (delta < rhs - lhs);
+    if (is_variable(lhs)) {
+      // We return the following so that possibly we can keep the
+      // bounded constraint form (v relop. c) where c is a constant.
+      // Keeping this syntactic form is useful because our
+      // FilterAssertion relies on that.
+      return (lhs < rhs - delta);
+    } else {
+      return (lhs + delta < rhs);
+    }
   }
   Formula VisitLessThanOrEqualTo(const Formula& f, const double delta) const {
     //     lhs <= rhs
     //
     // After strengthening, we have:
-    //     (delta <= rhs - lhs)
+    //     (lhs + delta <= rhs)
     const Expression& lhs{get_lhs_expression(f)};
     const Expression& rhs{get_rhs_expression(f)};
-    return (delta <= rhs - lhs);
+    if (is_variable(lhs)) {
+      // We return the following so that possibly we can keep the
+      // bounded constraint form (v relop. c) where c is a constant.
+      // Keeping this syntactic form is useful because our
+      // FilterAssertion relies on that.
+      return (lhs <= rhs - delta);
+    } else {
+      return (lhs + delta <= rhs);
+    }
   }
   Formula VisitConjunction(const Formula& f, const double delta) const {
     return make_conjunction(
