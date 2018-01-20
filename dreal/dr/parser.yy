@@ -104,12 +104,23 @@
 %% /*** Grammar Rules ***/
 
 script:         var_decl_sec
-                ctr_decl_sec
-        ;
+                opt_ctr_decl_sec
+		opt_cost_decl_sec
+		{
+                    driver.context_.Exit();
+                    driver.CheckSat();
+		}
+		;
 
 // =============================
 // Variable Declaration Section
 // =============================
+var_decl_sec:   TK_VAR TK_COLON var_decl_list
+        ;
+
+var_decl_list:  var_decl
+        |       var_decl var_decl_list
+        ;
 
 var_decl:       TK_LB expr TK_COMMA expr TK_RB ID TK_SEMICOLON {
                     driver.context_
@@ -126,16 +137,19 @@ var_decl:       TK_LB expr TK_COMMA expr TK_RB ID TK_SEMICOLON {
         }
         ;
 
-var_decl_list:  var_decl
-        |       var_decl var_decl_list
-        ;
-
-var_decl_sec:   TK_VAR TK_COLON var_decl_list
-        ;
-
 // =============================
 // Constraints
 // =============================
+opt_ctr_decl_sec:   /* nothing */
+	|	ctr_decl_sec
+	;
+
+ctr_decl_sec:   TK_CTR TK_COLON ctr_decl_list
+        ;
+
+ctr_decl_list:  ctr_decl
+        |       ctr_decl ctr_decl_list
+        ;
 
 ctr_decl:        formula TK_SEMICOLON {
                      driver.context_.Assert(*$1);
@@ -143,16 +157,22 @@ ctr_decl:        formula TK_SEMICOLON {
         }
         ;
 
-ctr_decl_list:  ctr_decl
-        |       ctr_decl ctr_decl_list
-        ;
+// ====
+// Cost
+// ====
+opt_cost_decl_sec: /* nothing */
+	|	 cost_decl_sec
+	;
 
-ctr_decl_sec:   TK_CTR TK_COLON ctr_decl_list {
-                    driver.CheckSat();
-                    driver.context_.Exit();
-        }
-        ;
+cost_decl_sec: TK_COST TK_COLON expr TK_SEMICOLON {
+		   driver.context_.Minimize(*$3);
+		   delete $3;
+		}
+		;
 
+// =======
+// Formula
+// =======
 formula:
                 expr TK_EQ expr { $$ = new Formula(*$1 == *$3); delete $1; delete $3; }
         |       expr TK_LT expr { $$ = new Formula(*$1 < *$3); delete $1; delete $3; }
@@ -183,6 +203,9 @@ formula:
         }
         ;
 
+// ==========
+// Expression
+// ==========
 expr:           DOUBLE { $$ = new Expression{$1}; }
         |       ID { $$ = new Expression{driver.context_.lookup_variable(*$1)}; delete $1; }
         |       expr TK_PLUS expr {
