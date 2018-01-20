@@ -1,5 +1,6 @@
 %{
 
+#include <iostream>
 #include <string>
 
 #include "dreal/symbolic/symbolic.h"
@@ -207,7 +208,17 @@ formula:
 // Expression
 // ==========
 expr:           DOUBLE { $$ = new Expression{$1}; }
-        |       ID { $$ = new Expression{driver.context_.lookup_variable(*$1)}; delete $1; }
+        |       ID {
+	    try {
+		const Variable& var = driver.context_.lookup_variable(*$1);
+	        $$ = new Expression{var};
+            } catch (std::runtime_error& e) {
+		std::cerr << @1 << " : " << e.what() << std::endl;
+		delete $1;		
+		YYABORT;
+	    }
+	    delete $1;		
+	}
         |       expr TK_PLUS expr {
             $$ = new Expression(*$1 + *$3);
             delete $1;

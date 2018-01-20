@@ -1,5 +1,6 @@
 %{
 
+#include <iostream>
 #include <string>
 
 #include "dreal/smt2/logic.h"
@@ -316,7 +317,17 @@ expr_list:      expr { $$ = new std::vector<Expression>(1, *$1); delete $1; }
 
 expr:           DOUBLE { $$ = new Expression{$1}; }
         |       INT { $$ = new Expression{static_cast<double>($1)}; }
-        |       SYMBOL { $$ = new Expression{driver.context_.lookup_variable(*$1)}; delete $1; }
+        |       SYMBOL {
+	    try {
+		const Variable& var = driver.context_.lookup_variable(*$1);
+	        $$ = new Expression{var};
+            } catch (std::runtime_error& e) {
+		std::cerr << @1 << " : " << e.what() << std::endl;
+		delete $1;		
+		YYABORT;
+	    }
+	    delete $1;		
+        }
         |       '(' TK_PLUS expr ')' {
             $$ = $3;
         }
