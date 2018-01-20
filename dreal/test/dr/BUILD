@@ -50,3 +50,28 @@ dr_test(
     name = "unary_minus",
     size = "small",
 )
+
+dr_test(
+    name = "unconstrained_opt_beale",
+    size = "small",
+)
+
+dr_test(
+    name = "constrained_opt_rosenbrock_cubic",
+    size = "small",
+)
+
+dr_test(
+    name = "constrained_opt_rosenbrock_disk",
+    size = "small",
+)
+
+dr_test(
+    name = "constrained_opt_misha_bird",
+    size = "small",
+)
+
+dr_test(
+    name = "constrained_opt_townsend",
+    size = "small",
+)

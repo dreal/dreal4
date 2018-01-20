@@ -1,0 +1,11 @@
+# Rosenbrock function constrained to a disk
+# From https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_constrained_optimization
+var:
+	[-1.5, 1.5] x;
+	[-1.5, 1.5] y;
+
+ctr:
+	x^2 + y^2 < 2;
+
+cost:
+	(1 - x)^2 + 100 * (y - x^2)^2;

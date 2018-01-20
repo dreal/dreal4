@@ -1,0 +1,11 @@
+# Beale 
+# https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_multi-objective_optimization
+
+var:
+    [-4.5, 4.5] x;
+    [-4.5, 4.5] y;
+
+cost:
+    (1.5 - x + x * y) ^ 2 +
+    (2.25 - x + x * y^2) ^2 +
+    (2.625 - x + x*y^3)^2;

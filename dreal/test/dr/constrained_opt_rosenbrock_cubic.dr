@@ -1,0 +1,12 @@
+# Rosenbrock function constrained with a cubic and a line
+# From https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_constrained_optimization
+var:
+	[-1.5, 1.5] x;
+	[-0.5, 2.5] y;
+
+ctr:
+	(x - 1)^3 - y + 1 < 0;
+	x + y - 2 < 0;
+
+cost:
+	(1 - x)^2 + 100 * (y - x^2)^2;
