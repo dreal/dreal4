@@ -17,6 +17,7 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
                                              const double precision)
     : init_(forall_variables.size(), 0.0),
       forall_variables_{move(forall_variables)} {
+  std::cerr << query << std::endl;
   DREAL_ASSERT(is_conjunction(query));
 
   // Build forall_vec_ (of vector<Variable>).
@@ -32,8 +33,6 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
     const FilterAssertionResult result{FilterAssertion(f, &box)};
     if (result == FilterAssertionResult::NotFiltered) {
       formulas.push_back(f);
-    } else {
-      std::cerr << "Not included: " << f << std::endl;
     }
   }
 
@@ -42,7 +41,6 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
   opt_ = make_unique<NloptOptimizer>(NLOPT_LD_SLSQP, box, precision);
   Expression objective{};
   for (const Formula& f : formulas) {
-    std::cerr << "included: " << f << std::endl;
     DREAL_ASSERT(is_relational(f));
 
     if (!f.GetFreeVariables().IsSubsetOf(forall_variables_)) {
