@@ -51,10 +51,17 @@ typedef dreal::Smt2Parser::token_type token_type;
 /* enables the use of start condition stacks */
 %option stack
 
+%option yylineno
+			
 /* The following paragraph suffices to track locations accurately. Each time
  * yylex is invoked, the begin position is moved onto the end position. */
 %{
-#define YY_USER_ACTION  yylloc->columns(yyleng);
+/* handle locations */
+int smt2_yycolumn = 1;
+    
+#define YY_USER_ACTION yylloc->begin.line = yylloc->end.line = yylineno; \
+yylloc->begin.column = smt2_yycolumn; yylloc->end.column = smt2_yycolumn+yyleng-1; \
+smt2_yycolumn += yyleng;
 %}
 
 whitespace      [\x09 \xA0]
@@ -83,7 +90,7 @@ simple_symbol   {sym_begin}{sym_continue}*
  /*** BEGIN - lexer rules ***/
 
 ";".*[\n\r]+ {
-    yylloc->lines(yyleng); yylloc->step();
+    smt2_yycolumn=1;
 }
 
 "!"                     { return Smt2Parser::token::TK_EXCLAMATION; }
@@ -171,7 +178,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 
  /* gobble up end-of-lines */
 \n {
-    yylloc->lines(yyleng); yylloc->step();
+    smt2_yycolumn=1;
 }
 
 [-+]?(0|[1-9][0-9]*) {
