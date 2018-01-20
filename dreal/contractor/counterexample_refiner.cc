@@ -17,7 +17,6 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
                                              const double precision)
     : init_(forall_variables.size(), 0.0),
       forall_variables_{move(forall_variables)} {
-  std::cerr << query << std::endl;
   DREAL_ASSERT(is_conjunction(query));
 
   // Build forall_vec_ (of vector<Variable>).
