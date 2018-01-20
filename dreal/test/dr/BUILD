@@ -75,3 +75,8 @@ dr_test(
     name = "constrained_opt_townsend",
     size = "small",
 )
+
+dr_test(
+    name = "constrained_opt_simionescu",
+    size = "small",
+)

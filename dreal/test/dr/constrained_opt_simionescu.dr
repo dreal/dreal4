@@ -1,0 +1,14 @@
+# Simionescu
+# From https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_constrained_optimization
+var:
+        [-1.25, 1.25] x;
+        [-1.25, 1.25] y;
+	[1, 1] R_t;
+	[0.2, 0.2] R_s;
+	[8, 8] n;
+
+ctr:
+        x^2 + y^2 <= (R_t + R_s * cos(n * atan(x / y)))^2;
+
+cost:
+        0.1 * x * y;
