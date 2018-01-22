@@ -22,6 +22,7 @@ dreal_cc_library(
     deps = [
         "//dreal/util:assert",
         "//dreal/util:exception",
+        "//dreal/util:logging",
         "@drake_symbolic",
     ],
 )

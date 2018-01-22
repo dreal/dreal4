@@ -67,6 +67,7 @@ class ContractorForall : public ContractorCell {
     DREAL_ASSERT(epsilon > 0.0);
     DREAL_ASSERT(delta > 0.0);
     DREAL_ASSERT(epsilon > delta);
+    DREAL_ASSERT(!is_false(strengthend_negated_nested_f_));
 
     // Setup context:
     // 1. Add exist/forall variables.

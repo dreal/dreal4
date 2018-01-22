@@ -5,6 +5,7 @@
 
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
+#include "dreal/util/logging.h"
 
 namespace dreal {
 
@@ -146,7 +147,10 @@ class DeltaStrengthenVisitor {
   Formula VisitVariable(const Formula& f, const double) const { return f; }
   Formula VisitEqualTo(const Formula& f, const double delta) const {
     if (delta > 0) {
-      return Formula::False();
+      DREAL_LOG_WARN(
+          "Strengthening {} with {} results in false. However, we return {}.",
+          f, delta, f);
+      return f;
     } else {
       //     lhs = rhs
       // -> (lhs >= rhs) ∧ (lhs <= rhs)
