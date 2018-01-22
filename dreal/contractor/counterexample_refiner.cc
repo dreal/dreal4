@@ -37,7 +37,14 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
 
   // 2. Build an Nlopt problem by adding constraints and setting up an
   // objective function.
-  opt_ = make_unique<NloptOptimizer>(NLOPT_LD_SLSQP, box, precision);
+  if (IsDifferentiable(query)) {
+    // See https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#slsqp
+    opt_ = make_unique<NloptOptimizer>(NLOPT_LD_SLSQP, box, precision);
+  } else {
+    // See
+    // https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#newuoa-bound-constraints
+    opt_ = make_unique<NloptOptimizer>(NLOPT_LN_NEWUOA_BOUND, box, precision);
+  }
   Expression objective{};
   for (const Formula& f : formulas) {
     DREAL_ASSERT(is_relational(f));
