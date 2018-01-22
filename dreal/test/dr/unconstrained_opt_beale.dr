@@ -1,5 +1,5 @@
 # Beale 
-# https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_multi-objective_optimization
+# https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_single-objective_optimization
 
 var:
     [-4.5, 4.5] x;
