@@ -16,9 +16,11 @@ expected_output_filename = sys.argv[3]
 with open (expected_output_filename, "r") as myfile:
     expected_output = myfile.read().strip().splitlines()
 
+rest_of_args = sys.argv[4:]
+
 try:
     # 1. Run dReal with dr file
-    output = subprocess.check_output([dreal, dr]).splitlines()
+    output = subprocess.check_output([dreal, dr] + rest_of_args).splitlines()
     # 2. Compare the output with expected output
     diff_result = list(difflib.unified_diff(output,
                                             expected_output,

@@ -245,6 +245,7 @@ def smt2_test(
 
 def dr_test(
         name,
+        args = [],
         **kwargs):
     """Create dr test."""
     dr = name + ".dr"
@@ -258,7 +259,7 @@ def dr_test(
             "$(location //dreal:dreal)",
             "$(location %s)" % dr,
             "$(location %s)" % expected,
-        ],
+        ] + args,
         tags = ["dr"],
         srcs = ["test.py"],
         data = [
