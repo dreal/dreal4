@@ -41,10 +41,14 @@ class Context {
   /// Closes the context.
   void Exit();
 
-  /// Asserts a formula maximizing a cost function @p f.
+  /// Asserts a formula minimizing a cost function @p f.
   void Minimize(const Expression& f);
 
-  /// Asserts a formula minimizing a cost function @p f.
+  /// Asserts a formula encoding Pareto optimality with a given set of
+  /// objective functions.
+  void Minimize(const std::vector<Expression>& functions);
+
+  /// Asserts a formula maximizing a cost function @p f.
   void Maximize(const Expression& f);
 
   /// Pops @p n stacks.

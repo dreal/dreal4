@@ -44,7 +44,7 @@ class Context::Impl {
   void DeclareVariable(const Variable& v);
   void DeclareVariable(const Variable& v, const Expression& lb,
                        const Expression& ub);
-  void Minimize(const Expression& f);
+  void Minimize(const vector<Expression>& functions);
   void Pop();
   void Push();
   void SetInfo(const std::string& key, double val);
@@ -171,15 +171,17 @@ void Context::Impl::DeclareVariable(const Variable& v, const Expression& lb,
   SetInterval(v, lb.Evaluate(), ub.Evaluate());
 }
 
-void Context::Impl::Minimize(const Expression& f) {
-  DREAL_LOG_DEBUG("Context::Minimize: {} is called.", f);
-
-  // Given e = f(x) and the current constraints ϕᵢ which
-  // involves x. it constructs a universally quantified formula ψ:
+void Context::Impl::Minimize(const vector<Expression>& functions) {
+  // Given objective functions f₁(x), ... fₙ(x) and the current
+  // constraints ϕᵢ which involves x. it constructs a universally
+  // quantified formula ψ:
   //
-  //    ψ = ∀y. (⋀ᵢ ϕᵢ(y)) → (f(x) ≤ f(y))
-  //      = ∀y. ¬(⋀ᵢ ϕᵢ(y)) ∨ (f(x) ≤ f(y))
-  //      = ∀y. (∨ᵢ ¬ϕᵢ(y)) ∨ (f(x) ≤ f(y)).
+  //    ψ = ∀y. (⋀ᵢ ϕᵢ(y)) → (f₁(x) ≤ f₁(y) ∨ ... ∨ fₙ(x) ≤ fₙ(y))
+  //      = ∀y. ¬(⋀ᵢ ϕᵢ(y)) ∨ (f₁(x) ≤ f₁(y) ∨ ... ∨ fₙ(x) ≤ fₙ(y))
+  //      = ∀y. (∨ᵢ ¬ϕᵢ(y)) ∨ (f₁(x) ≤ f₁(y) ∨ ... ∨ fₙ(x) ≤ fₙ(y)).
+  //
+  // Note that when we have more than one objective function, this
+  // encoding scheme denotes Pareto optimality.
   //
   // To construct ϕᵢ(y), we need to traverse both `box()` and
   // `stack_` because some of the asserted formulas are translated
@@ -187,7 +189,10 @@ void Context::Impl::Minimize(const Expression& f) {
   set<Formula> set_of_negated_phi;  // Collects ¬ϕᵢ(y).
   ExpressionSubstitution subst;  // Maps xᵢ ↦ yᵢ to build f(y₁, ..., yₙ).
   Variables quantified_variables;  // {y₁, ... yₙ}
-  const Variables x_vars{f.GetVariables()};
+  Variables x_vars;
+  for (const Expression& f : functions) {
+    x_vars += f.GetVariables();
+  }
   for (const Variable& x_i : x_vars) {
     // We add postfix '_' to name y_i
     const Variable y_i{x_i.get_name() + "_", x_i.get_type()};
@@ -212,9 +217,11 @@ void Context::Impl::Minimize(const Expression& f) {
       set_of_negated_phi.insert(!constraint.Substitute(subst));
     }
   }
-  const Formula phi{make_disjunction(set_of_negated_phi)};  // ∨ᵢ ¬ϕᵢ(y)
-  const Formula psi{
-      forall(quantified_variables, phi || (f <= f.Substitute(subst)))};
+  Formula quantified{make_disjunction(set_of_negated_phi)};  // ∨ᵢ ¬ϕᵢ(y)
+  for (const Expression& f : functions) {
+    quantified = quantified || (f <= f.Substitute(subst));
+  }
+  const Formula psi{forall(quantified_variables, quantified)};
   return Assert(psi);
 }
 
@@ -321,9 +328,13 @@ void Context::DeclareVariable(const Variable& v, const Expression& lb,
 
 void Context::Exit() { DREAL_LOG_DEBUG("Context::Exit()"); }
 
-void Context::Minimize(const Expression& f) { impl_->Minimize(f); }
+void Context::Minimize(const Expression& f) { impl_->Minimize({f}); }
 
-void Context::Maximize(const Expression& f) { impl_->Minimize(-f); }
+void Context::Minimize(const vector<Expression>& functions) {
+  impl_->Minimize(functions);
+}
+
+void Context::Maximize(const Expression& f) { impl_->Minimize({-f}); }
 
 void Context::Pop(int n) {
   DREAL_LOG_DEBUG("Context::Pop({})", n);
