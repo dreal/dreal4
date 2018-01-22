@@ -54,16 +54,28 @@ dr_test(
 dr_test(
     name = "unconstrained_opt_beale",
     size = "small",
+    args = [
+        "--precision 0.01",
+        "--local-optimization",
+    ],
 )
 
 dr_test(
     name = "unconstrained_opt_eggholder",
     size = "small",
+    args = [
+        "--precision 2",
+        "--local-optimization",
+    ],
 )
 
 dr_test(
     name = "unconstrained_opt_mccormick",
     size = "small",
+    args = [
+        "--precision 0.2",
+        "--local-optimization",
+    ],
 )
 
 dr_test(
@@ -87,8 +99,12 @@ dr_test(
 )
 
 dr_test(
-    name = "constrained_opt_misha_bird",
+    name = "constrained_opt_mishra_bird",
     size = "small",
+    args = [
+        "--precision 0.01",
+        "--local-optimization",
+    ],
 )
 
 dr_test(
