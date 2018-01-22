@@ -1,5 +1,6 @@
 #include "dreal/solver/forall_formula_evaluator.h"
 
+#include <limits>
 #include <set>
 #include <utility>
 
@@ -14,6 +15,7 @@ namespace dreal {
 
 using std::experimental::optional;
 using std::move;
+using std::numeric_limits;
 using std::ostream;
 using std::set;
 using std::vector;
@@ -74,10 +76,12 @@ FormulaEvaluationResult ForallFormulaEvaluator::operator()(
     double max_diam = 0.0;
     for (const RelationalFormulaEvaluator& evaluator : evaluators_) {
       const FormulaEvaluationResult eval_result = evaluator(*counterexample);
+      double diam_i{0.0};
       if (eval_result.type() == FormulaEvaluationResult::Type::UNSAT) {
-        continue;
+        diam_i = eval_result.evaluation().mag();
+      } else {
+        diam_i = eval_result.evaluation().diam();
       }
-      const double diam_i{eval_result.evaluation().diam()};
       if (diam_i > max_diam) {
         max_diam = diam_i;
       }
