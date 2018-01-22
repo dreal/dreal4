@@ -266,6 +266,117 @@ class DeltaStrengthenVisitor {
   friend Formula drake::symbolic::VisitFormula<Formula>(
       const DeltaStrengthenVisitor*, const Formula&, const double&);
 };
+
+/// Visitor class which strengthens a formula by delta.
+class IsDifferentiableVisitor {
+ public:
+  IsDifferentiableVisitor() = default;
+  bool Visit(const Formula& f) const { return VisitFormula<bool>(this, f); }
+  bool Visit(const Expression& e) const {
+    return VisitExpression<bool>(this, e);
+  }
+
+ private:
+  // Handle Formulas.
+  bool VisitFalse(const Formula&) const { return true; }
+  bool VisitTrue(const Formula&) const { return true; }
+  bool VisitVariable(const Formula&) const { return true; }
+  bool VisitEqualTo(const Formula& f) const {
+    return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
+  }
+  bool VisitNotEqualTo(const Formula& f) const {
+    return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
+  }
+  bool VisitGreaterThan(const Formula& f) const {
+    return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
+  }
+  bool VisitGreaterThanOrEqualTo(const Formula& f) const {
+    return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
+  }
+  bool VisitLessThan(const Formula& f) const {
+    return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
+  }
+  bool VisitLessThanOrEqualTo(const Formula& f) const {
+    return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
+  }
+  bool VisitConjunction(const Formula& f) const {
+    for (const Formula& formula : get_operands(f)) {
+      if (!Visit(formula)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool VisitDisjunction(const Formula& f) const {
+    for (const Formula& formula : get_operands(f)) {
+      if (!Visit(formula)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool VisitNegation(const Formula& f) const { return Visit(get_operand(f)); }
+  bool VisitForall(const Formula&) const { return false; }
+
+  // Handle Expressions.
+  bool VisitVariable(const Expression&) const { return true; }
+  bool VisitConstant(const Expression&) const { return true; }
+  bool VisitAddition(const Expression& e) const {
+    for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
+      const Expression& e_i{p.first};
+      if (!Visit(e_i)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool VisitMultiplication(const Expression& e) const {
+    for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
+      const Expression& base{p.first};
+      const Expression& exponent{p.second};
+      if (!Visit(base) || !Visit(exponent)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  bool VisitDivision(const Expression& e) const {
+    return Visit(get_first_argument(e)) && Visit(get_second_argument(e));
+  }
+  bool VisitLog(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitAbs(const Expression&) const { return false; }
+  bool VisitExp(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitSqrt(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitPow(const Expression& e) const {
+    return Visit(get_first_argument(e)) && Visit(get_second_argument(e));
+  }
+  bool VisitSin(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitCos(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitTan(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitAsin(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitAcos(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitAtan(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitAtan2(const Expression& e) const {
+    return Visit(get_first_argument(e)) && Visit(get_second_argument(e));
+  }
+  bool VisitSinh(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitCosh(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitTanh(const Expression& e) const { return Visit(get_argument(e)); }
+  bool VisitMin(const Expression&) const { return false; }
+  bool VisitMax(const Expression&) const { return false; }
+  bool VisitIfThenElse(const Expression&) const { return false; }
+  bool VisitUninterpretedFunction(const Expression&) const { return false; }
+
+  // Makes VisitFormula a friend of this class so that it can use private
+  // operator()s.
+  friend bool drake::symbolic::VisitFormula<bool>(
+      const IsDifferentiableVisitor*, const Formula&);
+  // Makes VisitExpression a friend of this class so that it can use private
+  // operator()s.
+  friend bool drake::symbolic::VisitExpression<bool>(
+      const IsDifferentiableVisitor*, const Expression&);
+};
+
 }  // namespace
 
 /// Strengthen the input formula $p f by @p delta.
@@ -278,6 +389,14 @@ Formula DeltaStrengthen(const Formula& f, const double delta) {
 Formula DeltaWeaken(const Formula& f, const double delta) {
   DREAL_ASSERT(delta > 0);
   return DeltaStrengthenVisitor{}.Strengthen(f, -delta);
+}
+
+bool IsDifferentiable(const Formula& f) {
+  return IsDifferentiableVisitor{}.Visit(f);
+}
+
+bool IsDifferentiable(const Expression& e) {
+  return IsDifferentiableVisitor{}.Visit(e);
 }
 
 Formula make_conjunction(const vector<Formula>& formulas) {

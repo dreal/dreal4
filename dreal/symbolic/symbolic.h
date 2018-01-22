@@ -75,6 +75,12 @@ Formula DeltaStrengthen(const Formula& f, double delta);
 /// @pre delta > 0
 Formula DeltaWeaken(const Formula& f, double delta);
 
+/// Returns true if the formula @p f is symbolic-differentiable.
+bool IsDifferentiable(const Formula& f);
+
+/// Returns true if the expression @e f is symbolic-differentiable.
+bool IsDifferentiable(const Expression& e);
+
 /// Make conjunction of @p formulas.
 ///
 /// @note This is different from the one in Drake's symbolic
