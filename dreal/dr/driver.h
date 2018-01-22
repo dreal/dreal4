@@ -56,8 +56,24 @@ class DrDriver {
    * e.g. to a dialog box. */
   void error(const std::string& m);
 
-  /// Calls context_.CheckSat() and print proper output messages to cout.
-  void CheckSat();
+  /// Returns a variable associated with a name @p name.
+  const Variable& lookup_variable(const std::string& name);
+
+  /// Declare a variable @p v.
+  void DeclareVariable(const Variable& v);
+
+  /// Declare a variable @p v which is bounded by an interval `[lb, ub]`.
+  void DeclareVariable(const Variable& v, const Expression& lb,
+                       const Expression& ub);
+
+  /// Asserts a formula @p f.
+  void Assert(const Formula& f);
+
+  /// Asserts a formula maximizing a cost function @p f.
+  void Minimize(const Expression& f);
+
+  /// Solves the constructed problem.
+  void Solve();
 
   /// enable debug output in the flex scanner
   bool trace_scanning_{false};
@@ -72,8 +88,13 @@ class DrDriver {
    * parser to the scanner. It is used in the yylex macro. */
   DrScanner* scanner_{nullptr};
 
+ private:
   /** The context filled during parsing of the expressions. */
   Context context_;
+
+ private:
+  std::vector<Formula> constraints_;
+  std::vector<Expression> objectives_;
 };
 
 }  // namespace dreal

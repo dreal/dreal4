@@ -108,8 +108,7 @@ script:         var_decl_sec
                 opt_ctr_decl_sec
 		opt_cost_decl_sec
 		{
-                    driver.context_.Exit();
-                    driver.CheckSat();
+                    driver.Solve();
 		}
 		;
 
@@ -124,15 +123,13 @@ var_decl_list:  var_decl
         ;
 
 var_decl:       TK_LB expr TK_COMMA expr TK_RB ID TK_SEMICOLON {
-                    driver.context_
-                        .DeclareVariable(Variable{*$6, Variable::Type::CONTINUOUS}, $2->Evaluate(), $4->Evaluate());
+                    driver.DeclareVariable(Variable{*$6, Variable::Type::CONTINUOUS}, $2->Evaluate(), $4->Evaluate());
                     delete $2;
                     delete $4;
                     delete $6;
                 }
         |       expr ID TK_SEMICOLON {
-                    driver.context_
-                        .DeclareVariable(Variable{*$2, Variable::Type::CONTINUOUS}, $1->Evaluate(), $1->Evaluate());
+                    driver.DeclareVariable(Variable{*$2, Variable::Type::CONTINUOUS}, $1->Evaluate(), $1->Evaluate());
                     delete $1;
                     delete $2;
         }
@@ -153,7 +150,7 @@ ctr_decl_list:  ctr_decl
         ;
 
 ctr_decl:        formula TK_SEMICOLON {
-                     driver.context_.Assert(*$1);
+                     driver.Assert(*$1);
                      delete $1;
         }
         ;
@@ -162,14 +159,18 @@ ctr_decl:        formula TK_SEMICOLON {
 // Cost
 // ====
 opt_cost_decl_sec: /* nothing */
-	|	 cost_decl_sec
+	|	 TK_COST TK_COLON cost_decl_list
 	;
 
-cost_decl_sec: TK_COST TK_COLON expr TK_SEMICOLON {
-		   driver.context_.Minimize(*$3);
-		   delete $3;
-		}
-		;
+cost_decl_list:  cost_decl
+	| 	cost_decl cost_decl_list
+	;
+
+cost_decl:     expr TK_SEMICOLON {
+                     driver.Minimize(*$1);
+                     delete $1;
+        }
+        ;
 
 // =======
 // Formula
@@ -210,7 +211,7 @@ formula:
 expr:           DOUBLE { $$ = new Expression{$1}; }
         |       ID {
 	    try {
-		const Variable& var = driver.context_.lookup_variable(*$1);
+		const Variable& var = driver.lookup_variable(*$1);
 	        $$ = new Expression{var};
             } catch (std::runtime_error& e) {
 		std::cerr << @1 << " : " << e.what() << std::endl;

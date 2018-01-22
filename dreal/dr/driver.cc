@@ -9,6 +9,7 @@
 #include <experimental/optional>
 
 #include "dreal/dr/scanner.h"
+#include "dreal/solver/expression_evaluator.h"
 #include "dreal/util/logging.h"
 
 namespace dreal {
@@ -55,16 +56,46 @@ void DrDriver::error(const class location& l, const string& m) {
 
 void DrDriver::error(const string& m) { log()->error("{}", m); }
 
-void DrDriver::CheckSat() {
+const Variable& DrDriver::lookup_variable(const std::string& name) {
+  return context_.lookup_variable(name);
+}
+
+void DrDriver::DeclareVariable(const Variable& v) {
+  context_.DeclareVariable(v);
+}
+
+void DrDriver::DeclareVariable(const Variable& v, const Expression& lb,
+                               const Expression& ub) {
+  context_.DeclareVariable(v, lb, ub);
+}
+
+void DrDriver::Assert(const Formula& f) { constraints_.push_back(f); }
+
+void DrDriver::Minimize(const Expression& f) { objectives_.push_back(f); }
+
+void DrDriver::Solve() {
+  // Add constraints.
+  for (const Formula& f : constraints_) {
+    context_.Assert(f);
+  }
+  // Add objective functions.
+  if (!objectives_.empty()) {
+    context_.Minimize(objectives_);
+  }
   const optional<Box> model{context_.CheckSat()};
   if (model) {
     cout << "delta-sat with delta = " << context_.config().precision() << endl;
     if (context_.config().produce_models()) {
       cout << *model << endl;
+      for (const Expression& f : objectives_) {
+        cout << "Found minimum for " << f << " is "
+             << ExpressionEvaluator(f)(*model).mid() << endl;
+      }
     }
   } else {
     cout << "unsat" << endl;
   }
+  context_.Exit();
 }
 
 }  // namespace dreal
