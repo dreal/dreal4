@@ -1,0 +1,9 @@
+# Eggholder
+# https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_single-objective_optimization
+
+var:
+    [-512, 512] x;
+    [-512, 512] y;
+
+cost:
+    -(y + 47) * sin(sqrt(abs(x/2 + y + 47))) - x * sin(sqrt(abs(x - y - 47)));

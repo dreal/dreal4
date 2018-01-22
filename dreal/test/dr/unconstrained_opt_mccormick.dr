@@ -1,0 +1,9 @@
+# McCormick
+# https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_single-objective_optimization
+
+var:
+    [-1.5, 4] x;
+    [-3, 4] y;
+
+cost:
+    sin(x + y) + (x - y)^2 - 1.5 * x + 2.5 * y + 1;

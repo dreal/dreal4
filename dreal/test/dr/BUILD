@@ -57,6 +57,26 @@ dr_test(
 )
 
 dr_test(
+    name = "unconstrained_opt_eggholder",
+    size = "small",
+)
+
+dr_test(
+    name = "unconstrained_opt_mccormick",
+    size = "small",
+)
+
+dr_test(
+    name = "unconstrained_opt_poly1",
+    size = "small",
+)
+
+dr_test(
+    name = "unconstrained_opt_sincos",
+    size = "small",
+)
+
+dr_test(
     name = "constrained_opt_rosenbrock_cubic",
     size = "small",
 )
