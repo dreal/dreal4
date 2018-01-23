@@ -4,7 +4,6 @@
 exports_files([
     "CPPLINT.cfg",
     ".clang-format",
-    "VERSION",
 ])
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
