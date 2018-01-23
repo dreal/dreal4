@@ -2,7 +2,7 @@
 
 set -e
 
-read VERSION < $1
+VERSION=$1
 
 if type "brew" > /dev/null; then
     # brew is available, so use it.

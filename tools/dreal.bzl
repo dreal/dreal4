@@ -2,6 +2,7 @@
 # Based on Drake's drake.bzl file,
 # https://github.com/RobotLocomotion/drake/blob/master/tools/drake.bzl.
 
+DREAL_VERSION = "4.18.01.2"
 # The CXX_FLAGS will be enabled for all C++ rules in the project
 # building with any compiler.
 CXX_FLAGS = [

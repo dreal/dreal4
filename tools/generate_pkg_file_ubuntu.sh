@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-read VERSION < $1
+VERSION=$1
 
 cat <<EOF
 prefix=/usr

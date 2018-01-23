@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-read VERSION < $1
+VERSION=$1
 VERSION_ARRAY=( ${VERSION//./ } )
 MAJOR=${VERSION_ARRAY[0]}
 MINOR=${VERSION_ARRAY[1]}

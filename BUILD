@@ -8,19 +8,17 @@ exports_files([
 ])
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
+load("//tools:dreal.bzl", "dreal_cc_library", "DREAL_VERSION")
 
 genrule(
     name = "generate_pkg_file",
-    srcs = [
-        ":VERSION",
-    ],
     outs = [
         "dreal.pc",
     ],
     cmd =
         select({
-            "@//tools:linux": "$(location //tools:generate_pkg_file_ubuntu) $(location //:VERSION) > $@",
-            "@//conditions:default": "$(location //tools:generate_pkg_file_osx) $(location //:VERSION) > $@",
+            "@//tools:linux": "$(location //tools:generate_pkg_file_ubuntu) %s > $@" % DREAL_VERSION,
+            "@//conditions:default": "$(location //tools:generate_pkg_file_osx) %s > $@" % DREAL_VERSION,
         }),
     tools = [
         "//tools:generate_pkg_file_osx",
@@ -81,10 +79,8 @@ pkg_deb(
     maintainer = "Soonho Kong <soonho.kong@gmail.com>",
     package = "dreal",
     tags = ["manual"],
-    version_file = "VERSION",
+    version = DREAL_VERSION,
 )
-
-load("//tools:dreal.bzl", "dreal_cc_library")
 
 # External users need to include only this target and `dreal/dreal.h` header.
 dreal_cc_library(

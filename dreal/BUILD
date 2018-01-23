@@ -2,18 +2,15 @@
 # This file contains rules for Bazel; see https://bazel.io/ .
 
 load("//:tools/cpplint.bzl", "cpplint")
-load("//tools:dreal.bzl", "dreal_cc_binary", "dreal_cc_library")
+load("//tools:dreal.bzl", "dreal_cc_binary", "dreal_cc_library", "DREAL_VERSION")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 genrule(
     name = "generate_version_header",
-    srcs = [
-        "//:VERSION",
-    ],
     outs = [
         "version.h",
     ],
-    cmd = "$(location //tools:generate_version_header) $(location //:VERSION) > $@",
+    cmd = "$(location //tools:generate_version_header) %s > $@" % DREAL_VERSION,
     tools = [
         "//tools:generate_version_header",
     ],
