@@ -108,7 +108,7 @@ pkg_tar(
         ":headers",
     ],
     extension = "tar.gz",
-    package_dir = "/usr/include/dreal/smt2",
+    package_dir = "include/dreal/smt2",
     tags = ["manual"],
 )
 

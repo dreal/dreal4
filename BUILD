@@ -8,7 +8,7 @@ exports_files([
 ])
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
-load("//tools:dreal.bzl", "dreal_cc_library", "DREAL_VERSION")
+load("//tools:dreal.bzl", "dreal_cc_library", "DREAL_VERSION", "DREAL_PREFIX")
 
 genrule(
     name = "generate_pkg_file",
@@ -17,7 +17,7 @@ genrule(
     ],
     cmd =
         select({
-            "@//tools:linux": "$(location //tools:generate_pkg_file_ubuntu) %s > $@" % DREAL_VERSION,
+            "@//tools:linux": "$(location //tools:generate_pkg_file_ubuntu) %s %s> $@" % (DREAL_VERSION, DREAL_PREFIX),
             "@//conditions:default": "$(location //tools:generate_pkg_file_osx) %s > $@" % DREAL_VERSION,
         }),
     tools = [
@@ -30,7 +30,7 @@ pkg_tar(
     name = "package_pkg_file",
     srcs = ["dreal.pc"],
     extension = "tar.gz",
-    package_dir = "/usr/lib/pkgconfig",
+    package_dir = "lib/pkgconfig",
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
@@ -39,7 +39,7 @@ pkg_tar(
     name = "package_license_file",
     srcs = ["LICENSE.txt"],
     extension = "tar.gz",
-    package_dir = "/usr/share/doc/dreal",
+    package_dir = "share/doc/dreal",
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
@@ -47,6 +47,7 @@ pkg_tar(
 pkg_tar(
     name = "archive",
     extension = "tar.gz",
+    package_dir = DREAL_PREFIX,
     tags = ["manual"],
     deps = [
         ":package_license_file",

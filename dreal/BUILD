@@ -76,7 +76,7 @@ pkg_tar(
         ":headers",
     ],
     extension = "tar.gz",
-    package_dir = "/usr/include/dreal",
+    package_dir = "include/dreal",
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
@@ -88,8 +88,7 @@ pkg_tar(
     ],
     extension = "tar.gz",
     mode = "0755",
-    package_dir = "/usr/bin",
-    strip_prefix = "/dreal",
+    package_dir = "bin",
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
@@ -100,7 +99,7 @@ pkg_tar(
         ":libdreal.so",
     ],
     extension = "tar.gz",
-    package_dir = "/usr/lib",
+    package_dir = "lib",
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )

@@ -59,7 +59,7 @@ pkg_tar(
         ":headers",
     ],
     extension = "tar.gz",
-    package_dir = "/usr/include/dreal/api",
+    package_dir = "include/dreal/api",
     tags = ["manual"],
     visibility = ["//visibility:public"],
 )
