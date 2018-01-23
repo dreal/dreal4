@@ -66,14 +66,16 @@ pkg_tar(
 pkg_deb(
     name = "package_debian",
     architecture = "amd64",
-    built_using = "bazel (0.8.1)",
+    built_using = "bazel (0.9.0)",
     data = ":archive",
     depends = [
         "bison",
         "coinor-libclp-dev",
         "flex",
-        "pkg-config",
+        "libbz2-dev",
         "libibex-dev",
+        "libnlopt-dev",
+        "pkg-config",
     ],
     description = "SMT solver for nonlinear theories",
     homepage = "http://dreal.github.io",
