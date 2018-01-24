@@ -94,6 +94,40 @@ void Context::Impl::Assert(const Formula& f) {
   }
 }
 
+namespace {
+// It is possible that a solution box has a dimension whose diameter
+// is larger than delta when the given constraints are not tight.
+// This function tighten the box @p box so that every dimension has a
+// width smaller than delta.
+void Tighten(Box* box, const double delta) {
+  for (int i = 0; i < box->size(); ++i) {
+    auto& interval = (*box)[i];
+    if (interval.diam() > delta) {
+      const Variable& var{box->variable(i)};
+      switch (var.get_type()) {
+        case Variable::Type::BINARY:
+          // Always pick 1.0
+          interval = 1.0;
+          break;
+        case Variable::Type::BOOLEAN:
+          // Always pick True (1.0)
+          interval = 1.0;
+          break;
+        case Variable::Type::CONTINUOUS: {
+          const double mid{interval.mid()};
+          const double half_delta{delta / 2.0};
+          interval &= Box::Interval(mid - half_delta, mid + half_delta);
+        } break;
+        case Variable::Type::INTEGER: {
+          const double mid{interval.mid()};
+          interval = static_cast<int>(mid);
+        } break;
+      }
+    }
+  }
+}
+}  // namespace
+
 optional<Box> Context::Impl::CheckSat() {
   DREAL_LOG_DEBUG("Context::CheckSat()");
   DREAL_LOG_TRACE("Context::CheckSat: Box =\n{}", box());
@@ -108,6 +142,8 @@ optional<Box> Context::Impl::CheckSat() {
   }
   // If stack_ = ∅ or stack_ = {true}, it's trivially SAT.
   if (stack_.empty() || (stack_.size() == 1 && is_true(stack_.first()))) {
+    Tighten(&box(), config_.precision());
+    DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", box());
     return box();
   }
   sat_solver_.AddFormulas(stack_.get_vector());
@@ -134,7 +170,9 @@ optional<Box> Context::Impl::CheckSat() {
         if (theory_solver.CheckSat(box(), assertions)) {
           // SAT from TheorySolver.
           DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = delta-SAT");
-          const Box model{theory_solver.GetModel()};
+          Box model{theory_solver.GetModel()};
+          Tighten(&model, config_.precision());
+          DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", model);
           return model;
         } else {
           // UNSAT from TheorySolver.
@@ -149,6 +187,8 @@ optional<Box> Context::Impl::CheckSat() {
           sat_solver_.AddLearnedClause(explanation);
         }
       } else {
+        Tighten(&box(), config_.precision());
+        DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", box());
         return box();
       }
     } else {

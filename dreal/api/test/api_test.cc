@@ -167,5 +167,26 @@ TEST_F(ApiTest, Minimize2) {
   }
 }
 
+TEST_F(ApiTest, CheckSatisfiabilityDisjunction) {
+  const double delta{0.001};
+  const Variable b1{"b1", Variable::Type::BOOLEAN};
+  const Variable b2{"b2", Variable::Type::BOOLEAN};
+  const Variable b3{"b3", Variable::Type::BOOLEAN};
+  const auto result = CheckSatisfiability(b1 || !b2 || b3, delta);
+  const Box& solution{*result};
+
+  EXPECT_EQ(solution[b1].diam(), 0);
+  EXPECT_EQ(solution[b2].diam(), 0);
+  EXPECT_EQ(solution[b3].diam(), 0);
+
+  const double v1{solution[b1].mid()};
+  const double v2{solution[b2].mid()};
+  const double v3{solution[b3].mid()};
+  EXPECT_TRUE(v1 == 1.0 || v1 == 0.0);
+  EXPECT_TRUE(v2 == 1.0 || v2 == 0.0);
+  EXPECT_TRUE(v3 == 1.0 || v3 == 0.0);
+  EXPECT_TRUE(v1 || !v2 || v3);
+}
+
 }  // namespace
 }  // namespace dreal
