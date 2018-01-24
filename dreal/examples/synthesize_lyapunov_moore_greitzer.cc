@@ -35,15 +35,15 @@ void synthesize_lyapunov_moore_greitzer() {
   Config config;
   config.mutable_precision() = 0.001;
   config.mutable_use_polytope_in_forall() = true;
-  config.mutable_use_local_optimization() = true;
+  // config.mutable_use_local_optimization() = true;
 
   // clang-format off
   const auto result = SynthesizeLyapunov(
       {x1, x2},
       {x1_dot, x2_dot},
       V,
-      0.01 /* lb of ball */, 10 /* ub of ball */,
-      -100 /* lb of q_i */, 100.0 /* ub of q_i */,
+      0.3 /* lb of ball */, 0.5 /* ub of ball */,
+      -10.0 /* lb of q_i */, 10.0 /* ub of q_i */,
       config);
   // clang-format on
 
