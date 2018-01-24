@@ -91,16 +91,21 @@ Box CounterexampleRefiner::Refine(Box box) {
   }
   // 2. call optimizer
   double optimal_value{0.0};
-  const nlopt_result result = opt_->Optimize(&init_, &optimal_value, env);
-  if (result >= 0 || result == NLOPT_ROUNDOFF_LIMITED) {
-    // 3. move the solution values from x into box.
-    i = 0;
-    for (const Variable& var : forall_vec_) {
-      box[var] = init_[i++];
+  try {
+    const nlopt_result result = opt_->Optimize(&init_, &optimal_value, env);
+    if (result >= 0 || result == NLOPT_ROUNDOFF_LIMITED) {
+      // 3. move the solution values from x into box.
+      i = 0;
+      for (const Variable& var : forall_vec_) {
+        box[var] = init_[i++];
+      }
+    } else {
+      DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}", result);
     }
-  } else {
-    DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}", result);
+    return box;
+  } catch (std::exception& e) {
+    DREAL_LOG_DEBUG("LOCAL OPT FAILED: Exception {}", e.what());
+    return box;
   }
-  return box;
 }
 }  // namespace dreal
