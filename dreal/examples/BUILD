@@ -5,6 +5,22 @@ load("//:tools/cpplint.bzl", "cpplint")
 load(
     "//tools:dreal.bzl",
     "dreal_cc_binary",
+    "dreal_cc_library",
+)
+
+dreal_cc_library(
+    name = "control",
+    srcs = [
+        "control.cc",
+    ],
+    hdrs = [
+        "control.h",
+    ],
+    deps = [
+        "//dreal/api",
+        "//dreal/solver",
+        "//dreal/util:assert",
+    ],
 )
 
 dreal_cc_binary(
@@ -14,33 +30,62 @@ dreal_cc_binary(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//dreal/api",
-        "//dreal/solver",
-        "//dreal/util:assert",
+        ":control",
     ],
 )
 
 dreal_cc_binary(
-    name = "synthesize_lyapunov",
+    name = "synthesize_lyapunov_simple",
     srcs = [
-        "synthesize_lyapunov.cc",
+        "synthesize_lyapunov_simple.cc",
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//dreal/api",
-        "//dreal/solver",
-        "//dreal/util:assert",
+        ":control",
     ],
 )
 
 dreal_cc_binary(
-    name = "sat_checker",
+    name = "synthesize_lyapunov_normalized_pendulum",
     srcs = [
-        "sat_checker.cc",
+        "synthesize_lyapunov_normalized_pendulum.cc",
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//dreal/solver",
+        ":control",
+    ],
+)
+
+dreal_cc_binary(
+    name = "synthesize_lyapunov_damped_mathieu",
+    srcs = [
+        "synthesize_lyapunov_damped_mathieu.cc",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":control",
+    ],
+)
+
+dreal_cc_binary(
+    name = "synthesize_lyapunov_moore_greitzer",
+    srcs = [
+        "synthesize_lyapunov_moore_greitzer.cc",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":control",
+    ],
+)
+
+dreal_cc_binary(
+    name = "synthesize_lyapunov_power_train",
+    srcs = [
+        "synthesize_lyapunov_power_train.cc",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        ":control",
     ],
 )
 
