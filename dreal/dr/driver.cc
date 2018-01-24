@@ -10,10 +10,10 @@
 
 #include "dreal/dr/scanner.h"
 #include "dreal/solver/expression_evaluator.h"
-#include "dreal/util/logging.h"
 
 namespace dreal {
 
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::experimental::optional;
@@ -51,10 +51,10 @@ bool DrDriver::parse_string(const string& input, const string& sname) {
 }
 
 void DrDriver::error(const class location& l, const string& m) {
-  log()->error("{} : {}", l, m);
+  cerr << l << " : " << m << endl;
 }
 
-void DrDriver::error(const string& m) { log()->error("{}", m); }
+void DrDriver::error(const string& m) { cerr << m << endl; }
 
 const Variable& DrDriver::lookup_variable(const std::string& name) {
   return context_.lookup_variable(name);

@@ -90,7 +90,6 @@ dreal_cc_library(
         ":sort",
         "//dreal/solver",
         "//dreal/symbolic",
-        "//dreal/util:logging",
     ],
 )
 

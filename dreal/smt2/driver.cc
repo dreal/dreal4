@@ -9,10 +9,10 @@
 #include <experimental/optional>
 
 #include "dreal/smt2/scanner.h"
-#include "dreal/util/logging.h"
 
 namespace dreal {
 
+using std::cerr;
 using std::cout;
 using std::endl;
 using std::experimental::optional;
@@ -50,10 +50,10 @@ bool Smt2Driver::parse_string(const string& input, const string& sname) {
 }
 
 void Smt2Driver::error(const class location& l, const string& m) {
-  log()->error("{} : {}", l, m);
+  cerr << l << " : " << m << endl;
 }
 
-void Smt2Driver::error(const string& m) { log()->error("{}", m); }
+void Smt2Driver::error(const string& m) { cerr << m << endl; }
 
 void Smt2Driver::CheckSat() {
   const optional<Box> model{context_.CheckSat()};
