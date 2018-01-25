@@ -68,13 +68,14 @@ pkg_deb(
     built_using = "bazel (0.9.0)",
     data = ":archive",
     depends = [
-        "bison",
         "coinor-libclp-dev",
-        "flex",
         "libbz2-dev",
         "libibex-dev",
         "libnlopt-dev",
-        "pkg-config",
+        # The followings are Build-Depends:
+        # "bison",
+        # "flex",
+        # "pkg-config",
     ],
     description = "SMT solver for nonlinear theories",
     homepage = "http://dreal.github.io",
