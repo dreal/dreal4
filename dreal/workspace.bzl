@@ -15,6 +15,9 @@ def dreal_workspace():
     pkg_config_repository(
         name = "nlopt",  # LGPL2 + MIT
         modname = "nlopt",
+        pkg_config_paths = [
+            "/usr/local/opt/nlopt/lib/pkgconfig",
+        ]
     )
     github_archive(
         name = "drake_symbolic", # BSD
