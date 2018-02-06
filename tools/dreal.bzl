@@ -3,6 +3,7 @@
 # https://github.com/RobotLocomotion/drake/blob/master/tools/drake.bzl.
 
 DREAL_VERSION = "4.18.01.3"
+
 DREAL_PREFIX = "opt/dreal/%s" % DREAL_VERSION
 
 # The CXX_FLAGS will be enabled for all C++ rules in the project

@@ -8,13 +8,6 @@ workspace(name = "dreal")
 load("//tools:github.bzl", "github_archive")
 
 github_archive(
-    name = "io_kythe_dreal",  # Apache-2.0
-    commit = "ee2e00de4b72e9ed9f1b819898b5238c03d10dd6",
-    repository = "dreal-deps/kythe",
-    sha256 = "7229c5d5a471fd26bcc50b5202568dc9c3035d7375312eb92ded9230e9f6886f",
-)
-
-github_archive(
     name = "google_styleguide",  # GOOGLE
     build_file = "//tools:google_styleguide.BUILD",
     commit = "15f2836d9fea3835d541d4d327ccf053d4052822",

@@ -1,13 +1,16 @@
 # -*- python -*-
 load("//tools:github.bzl", "github_archive")
-load("@io_kythe_dreal//tools/build_rules/config:pkg_config.bzl", "pkg_config_package")
+load("//tools:third_party/com_github_robotlocomotion_drake/tools/workspace/pkg_config.bzl", "pkg_config_repository")
 
 def dreal_workspace():
-    pkg_config_package(
+    pkg_config_repository(
         name = "ibex", # LGPL3
         modname = "ibex",
+        pkg_config_paths = [
+            "/opt/libibex/2.6.5/share/pkgconfig",
+        ],
     )
-    pkg_config_package(
+    pkg_config_repository(
         name = "nlopt",  # LGPL2 + MIT
         modname = "nlopt",
     )
