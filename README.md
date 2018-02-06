@@ -40,6 +40,8 @@ How to Install dReal
 macOS 10.12 (Sierra) / 10.13 (High Sierra):
 
 ```bash
+brew tap dreal-deps/coinor
+brew tap dreal-deps/ibex
 brew install dreal/dreal/dreal
 ```
 
@@ -73,7 +75,7 @@ Install Prerequsites
 macOS 10.12 (Sierra) / 10.13 (High Sierra):
 
 ```bash
-brew install bazel pkg-config dreal-deps/ibex/ibex nlopt
+brew install bazel pkg-config dreal-deps/ibex/ibex@2.6.5 nlopt
 ```
 
 Ubuntu 14.04 LTS / 16.04 LTS

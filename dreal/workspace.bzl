@@ -7,7 +7,7 @@ def dreal_workspace():
         name = "ibex", # LGPL3
         modname = "ibex",
         pkg_config_paths = [
-            "/opt/libibex/2.6.5/share/pkgconfig",
+            "/usr/local/opt/ibex@2.6.5/share/pkgconfig",
         ],
     )
     pkg_config_repository(
