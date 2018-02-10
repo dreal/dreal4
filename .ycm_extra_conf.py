@@ -21,6 +21,10 @@ if platform == "linux" or platform == "linux2":
   CLP_INCLUDES = [
     '%s/coin' % PLATFORM_INCLUDE_PATH,
   ]
+  IBEX_INCLUDES = [
+    '%s/ibex' % PLATFORM_INCLUDE_PATH,
+    '%s/ibex/3rd' % PLATFORM_INCLUDE_PATH,
+  ]
 elif platform == "darwin":
   PLATFORM_INCLUDE_PATH = "/usr/local/include"
   PLATFORM_SPECIFIC_SYSTEM_INCLUDES = [
@@ -35,12 +39,9 @@ elif platform == "darwin":
     '%s/clp/coin' % PLATFORM_INCLUDE_PATH,
     '%s/coinutils/coin' % PLATFORM_INCLUDE_PATH,
   ]
+  IBEX_INCLUDES = ["/usr/local/opt/ibex@2.6.5/include" + path for path in ["/", "/ibex", "/ibex/3rd"]]
 
-SYSTEM_INCLUDES = [
-  # ibex
-  '%s/ibex' % PLATFORM_INCLUDE_PATH,
-  '%s/ibex/3rd' % PLATFORM_INCLUDE_PATH,
-] + CLP_INCLUDES + [
+SYSTEM_INCLUDES = IBEX_INCLUDES + CLP_INCLUDES + [
   # External packages
   '%s/spdlog/include' % BAZEL_EXTERNAL,
   '%s/fmt' % BAZEL_EXTERNAL,
