@@ -314,6 +314,16 @@ formula:
                     delete $3;
                     delete $4;
         }
+        |       '('TK_ITE formula formula formula ')' {
+	    //    if(f1) then f2 else f3
+	    // -> (f1 => f2) ∧ (¬f1 => f3)
+	    // -> (¬f1 ∨ f2) ∧ (f1 ∨ f3)
+	    $$ = new Formula((!*$3 || *$4) && (*$3 || *$5));
+            delete $3;
+            delete $4;
+            delete $5;
+            }
+		
         ;
 
 sort:           SYMBOL { $$ = ParseSort(*$1); delete $1; }
