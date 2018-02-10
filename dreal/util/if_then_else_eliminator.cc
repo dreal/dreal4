@@ -218,8 +218,8 @@ class CheckIfThenElseInForall {
  private:
   // Handle expressions.
   bool Visit(const Expression& e) { return VisitExpression<bool>(this, e); }
-  bool VisitVariable(const Expression& e) { return false; }
-  bool VisitConstant(const Expression& e) { return false; }
+  bool VisitVariable(const Expression&) { return false; }
+  bool VisitConstant(const Expression&) { return false; }
   bool VisitAddition(const Expression& e) {
     for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
       const Expression& e_i{p.first};
@@ -267,14 +267,14 @@ class CheckIfThenElseInForall {
   bool VisitMax(const Expression& e) {
     return Visit(get_first_argument(e)) || Visit(get_second_argument(e));
   }
-  bool VisitIfThenElse(const Expression& e) { return true; }
-  bool VisitUninterpretedFunction(const Expression& e) { return false; }
+  bool VisitIfThenElse(const Expression&) { return true; }
+  bool VisitUninterpretedFunction(const Expression&) { return false; }
 
   // Handle formula
   bool Visit(const Formula& f) { return VisitFormula<bool>(this, f); }
-  bool VisitFalse(const Formula& f) { return false; }
-  bool VisitTrue(const Formula& f) { return false; }
-  bool VisitVariable(const Formula& f) { return false; }
+  bool VisitFalse(const Formula&) { return false; }
+  bool VisitTrue(const Formula&) { return false; }
+  bool VisitVariable(const Formula&) { return false; }
   bool VisitEqualTo(const Formula& f) {
     return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
   }
@@ -310,7 +310,7 @@ class CheckIfThenElseInForall {
     return false;
   }
   bool VisitNegation(const Formula& f) { return Visit(get_operand(f)); }
-  bool VisitForall(const Formula& f) { return true; }
+  bool VisitForall(const Formula&) { return true; }
 
   // Makes VisitFormula a friend of this class so that it can use private
   // operator()s.

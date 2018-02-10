@@ -58,6 +58,7 @@ dreal_cc_library(
         "//dreal/util:box",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
+        "//dreal/util:if_then_else_eliminator",
         "//dreal/util:logging",
         "//dreal/util:math",
         "//dreal/util:nnfizer",

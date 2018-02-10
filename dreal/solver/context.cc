@@ -12,6 +12,7 @@
 #include "dreal/solver/theory_solver.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
+#include "dreal/util/if_then_else_eliminator.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/scoped_vector.h"
 
@@ -85,7 +86,12 @@ void Context::Impl::Assert(const Formula& f) {
     return;
   }
   if (FilterAssertion(f, &box()) == FilterAssertionResult::NotFiltered) {
-    stack_.push_back(f);
+    IfThenElseEliminator ite_eliminator;
+    const Formula no_ite{ite_eliminator.Process(f)};
+    for (const Variable& ite_var : ite_eliminator.variables()) {
+      DeclareVariable(ite_var);
+    }
+    stack_.push_back(no_ite);
     return;
   } else {
     DREAL_LOG_DEBUG("Context::Assert: {} is not added.", f);
