@@ -53,6 +53,20 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "if_then_else_eliminator",
+    srcs = [
+        "if_then_else_eliminator.cc",
+    ],
+    hdrs = [
+        "if_then_else_eliminator.h",
+    ],
+    deps = [
+        "//dreal/symbolic",
+        "//dreal/util:logging",
+    ],
+)
+
+dreal_cc_library(
     name = "tseitin_cnfizer",
     srcs = [
         "tseitin_cnfizer.cc",
