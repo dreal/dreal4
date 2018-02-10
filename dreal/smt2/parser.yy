@@ -277,6 +277,13 @@ formula:
                 /* SYMBOL { $$ = new Formula{driver.context_.lookup_variable(*$1)}; } */
                 TK_TRUE { $$ = new Formula(Formula::True()); }
         |       TK_FALSE { $$ = new Formula(Formula::False()); }
+        |       '('TK_EQ formula formula ')' {
+	    //    (f1 = f2)
+	    // -> (f1 ⇔ f2)
+	    // -> (f1 ∧ f2) ∨ (¬f1 ∧ ¬f2)
+	    $$ = new Formula((*$3 && *$4) || (!*$3 && !*$4));
+	    delete $3; delete $4;
+	}
         |       '('TK_EQ expr expr ')' { $$ = new Formula(*$3 == *$4); delete $3; delete $4; }
         |       '('TK_LT expr expr ')' { $$ = new Formula(*$3 < *$4); delete $3; delete $4; }
         |       '('TK_LTE expr expr ')' { $$ = new Formula(*$3 <= *$4); delete $3; delete $4; }
