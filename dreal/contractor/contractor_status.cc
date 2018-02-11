@@ -32,23 +32,34 @@ ibex::BitSet& ContractorStatus::mutable_output() { return output_; }
 
 void ContractorStatus::AddUsedConstraint(const Formula& f) {
   if (box_.empty()) {
-    unsat_witness_.insert(f);
-  } else {
-    used_constraints_.insert(f);
+    for (const Variable& v : f.GetFreeVariables()) {
+      AddUnsatWitness(v);
+    }
   }
+  used_constraints_.insert(f);
 }
 
 void ContractorStatus::AddUsedConstraint(const vector<Formula>& formulas) {
-  if (box_.empty()) {
-    unsat_witness_.insert(formulas.begin(), formulas.end());
-  } else {
-    used_constraints_.insert(formulas.begin(), formulas.end());
+  for (const Formula& f : formulas) {
+    AddUsedConstraint(f);
   }
 }
 
+void ContractorStatus::AddUnsatWitness(const Variable& var) {
+  unsat_witness_.insert(var);
+}
+
 unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
-    unordered_set<Formula, hash_value<Formula>> explanation,
+    const Variables& unsat_witness,
     const unordered_set<Formula, hash_value<Formula>>& used_constraints) {
+  // Set up the initial explanation based on variables.
+  unordered_set<Formula, hash_value<Formula>> explanation;
+  for (const Formula& f_i : used_constraints) {
+    if (HaveIntersection(unsat_witness, f_i.GetFreeVariables())) {
+      explanation.insert(f_i);
+    }
+  }
+
   bool keep_going = true;
   while (keep_going) {
     keep_going = false;

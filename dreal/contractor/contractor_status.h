@@ -45,6 +45,9 @@ class ContractorStatus {
   /// Add a formula @p formulas into the used constraints.
   void AddUsedConstraint(const std::vector<Formula>& formulas);
 
+  /// Add a variable @p var which is directly responsible for the unsat.
+  void AddUnsatWitness(const Variable& var);
+
   /// Updates the contractor status by taking join with @p contractor_status.
   ///
   /// @pre The boxes of this and @p contractor_status have the same variables
@@ -71,9 +74,9 @@ class ContractorStatus {
   // over-approximation of an explanation.
   std::unordered_set<Formula, hash_value<Formula>> used_constraints_;
 
-  // A set of constraints directly responsible for the unsat result. This
+  // A set of variables directly responsible for the unsat result. This
   // is used to generate an explanation.
-  std::unordered_set<Formula, hash_value<Formula>> unsat_witness_;
+  Variables unsat_witness_;
 };
 
 /// Returns a join of @p contractor_status1 and @p contractor_status2.

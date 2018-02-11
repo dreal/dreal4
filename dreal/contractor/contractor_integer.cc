@@ -39,6 +39,7 @@ void ContractorInteger::Prune(ContractorStatus* contractor_status) const {
       } else {
         // [new_lb, new_ub] = empty
         box.set_empty();
+        contractor_status->AddUnsatWitness(box.variable(idx));
         contractor_status->mutable_output().fill(
             0, contractor_status->box().size() - 1);
         return;
