@@ -23,6 +23,7 @@ dreal_cc_library(
         "nlopt_optimizer.h",
     ],
     deps = [
+        "//dreal/solver:config",
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:box",

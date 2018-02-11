@@ -7,6 +7,7 @@
 
 #include <nlopt.h>
 
+#include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/nnfizer.h"
@@ -44,7 +45,7 @@ class NloptOptimizer {
   ///
   /// @see http://nlopt.readthedocs.io/en/latest/NLopt_Algorithms, for
   /// possible values of NLopt Algorithms.
-  NloptOptimizer(nlopt_algorithm algorithm, Box bound, double delta);
+  NloptOptimizer(nlopt_algorithm algorithm, Box bound, const Config& config);
 
   /// Deleted copy-constructor.
   NloptOptimizer(const NloptOptimizer&) = delete;

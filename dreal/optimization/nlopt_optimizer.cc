@@ -89,14 +89,25 @@ ostream& operator<<(ostream& os, const CachedExpression& expression) {
 // NloptOptimizer
 // --------------
 NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
-                               const double delta)
-    : box_{move(bound)}, delta_{delta} {
+                               const Config& config)
+    : box_{move(bound)}, delta_{config.precision()} {
   DREAL_ASSERT(delta_ > 0.0);
   DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: Box = \n{}", box_);
   opt_ = nlopt_create(algorithm, box_.size());
 
   // Set tolerance.
-  nlopt_set_ftol_rel(opt_, delta_);
+  nlopt_set_ftol_rel(opt_, config.nlopt_ftol_rel());
+  nlopt_set_ftol_abs(opt_, config.nlopt_ftol_abs());
+  nlopt_set_maxeval(opt_, config.nlopt_maxeval());
+  nlopt_set_maxtime(opt_, config.nlopt_maxtime());
+  DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: ftol_rel = {}",
+                  config.nlopt_ftol_rel());
+  DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: ftol_abs = {}",
+                  config.nlopt_ftol_abs());
+  DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: maxeval = {}",
+                  config.nlopt_maxeval());
+  DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: maxtime = {}",
+                  config.nlopt_maxtime());
 
   // Set bounds.
   const auto lower_bounds = make_unique<double[]>(box_.size());
@@ -104,7 +115,7 @@ NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
   for (int i = 0; i < box_.size(); ++i) {
     lower_bounds[i] = box_[i].lb();
     upper_bounds[i] = box_[i].ub();
-    DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer {} ∈ [{}, {}",
+    DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer {} ∈ [{}, {}]",
                     box_.variable(i), lower_bounds[i], upper_bounds[i]);
   }
   const nlopt_result nlopt_result_lb{
