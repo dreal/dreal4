@@ -29,7 +29,7 @@ class ContractorForall;
 class ContractorCell {
  public:
   /// Constructs a cell with @p kind and @p input.
-  ContractorCell(Contractor::Kind kind, ibex::BitSet input,
+  ContractorCell(Contractor::Kind kind, const ibex::BitSet& input,
                  const Config& config);
 
   /// Deleted default constructor.

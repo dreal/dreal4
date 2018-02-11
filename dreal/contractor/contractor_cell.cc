@@ -13,7 +13,6 @@
 #include "dreal/contractor/contractor_worklist_fixpoint.h"
 #include "dreal/util/assert.h"
 
-using std::move;
 using std::ostream;
 using std::shared_ptr;
 using std::static_pointer_cast;
@@ -21,9 +20,9 @@ using std::vector;
 
 namespace dreal {
 
-ContractorCell::ContractorCell(const Contractor::Kind kind, ibex::BitSet input,
-                               const Config& config)
-    : kind_{kind}, input_{move(input)}, config_{config} {}
+ContractorCell::ContractorCell(const Contractor::Kind kind,
+                               const ibex::BitSet& input, const Config& config)
+    : kind_{kind}, input_{input}, config_{config} {}
 
 Contractor::Kind ContractorCell::kind() const { return kind_; }
 
