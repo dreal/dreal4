@@ -20,36 +20,40 @@ class GenericContractorGenerator {
   /// when it processes conjunctions. Otherwise, it uses
   /// `ContractorIbexFwdbwd`.
   Contractor Generate(const Formula& f, const Box& box,
-                      bool use_polytope) const;
+                      const Config& config) const;
 
  private:
-  Contractor Visit(const Formula& f, const Box& box, bool use_polytope) const;
-  Contractor VisitFalse(const Formula&, const Box&, bool) const;
-  Contractor VisitTrue(const Formula&, const Box&, bool) const;
-  Contractor VisitVariable(const Formula&, const Box&, bool) const;
+  Contractor Visit(const Formula& f, const Box& box,
+                   const Config& config) const;
+  Contractor VisitFalse(const Formula&, const Box&, const Config& config) const;
+  Contractor VisitTrue(const Formula&, const Box&, const Config& config) const;
+  Contractor VisitVariable(const Formula&, const Box&,
+                           const Config& config) const;
   Contractor VisitEqualTo(const Formula& f, const Box& box,
-                          bool use_polytope) const;
+                          const Config& config) const;
   Contractor VisitNotEqualTo(const Formula& f, const Box& box,
-                             bool use_polytope) const;
+                             const Config& config) const;
   Contractor VisitGreaterThan(const Formula& f, const Box& box,
-                              bool use_polytope) const;
+                              const Config& config) const;
   Contractor VisitGreaterThanOrEqualTo(const Formula& f, const Box& box,
-                                       bool use_polytope) const;
+                                       const Config& config) const;
   Contractor VisitLessThan(const Formula& f, const Box& box,
-                           bool use_polytope) const;
+                           const Config& config) const;
   Contractor VisitLessThanOrEqualTo(const Formula& f, const Box& box,
-                                    bool use_polytope) const;
+                                    const Config& config) const;
   Contractor VisitConjunction(const Formula& f, const Box& box,
-                              bool use_polytope) const;
+                              const Config& config) const;
   Contractor VisitDisjunction(const Formula& f, const Box& box,
-                              bool use_polytope) const;
-  Contractor VisitNegation(const Formula& f, const Box&, bool) const;
-  Contractor VisitForall(const Formula&, const Box&, bool) const;
+                              const Config& config) const;
+  Contractor VisitNegation(const Formula& f, const Box&,
+                           const Config& config) const;
+  Contractor VisitForall(const Formula&, const Box&,
+                         const Config& config) const;
 
   // Makes VisitFormula a friend of this class so that it can use private
   // methods.
   friend Contractor drake::symbolic::VisitFormula<Contractor>(
       const GenericContractorGenerator*, const Formula&, const dreal::Box&,
-      const bool&);
+      const Config&);
 };
 }  // namespace dreal
