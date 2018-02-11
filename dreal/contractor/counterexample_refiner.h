@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "dreal/optimization/nlopt_optimizer.h"
+#include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -17,11 +18,12 @@ class CounterexampleRefiner {
   /// Constructs CounterexampleRefiner.
   /// @param query Counterexample query.
   /// @param forall_variables universally quantified variables. They are
-  /// decision variables that we consider in the local optimization.
+  ///                         decision variables that we consider in the
+  ///                         local optimization.
   ///
   /// @pre @p query is a conjunction.
   CounterexampleRefiner(const Formula& query, Variables forall_variables,
-                        double precision);
+                        const Config& config);
 
   /// Refines an initial solution and returns an improved one if possible.
   Box Refine(Box box);

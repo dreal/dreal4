@@ -14,7 +14,7 @@ using std::vector;
 
 CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
                                              Variables forall_variables,
-                                             const double precision)
+                                             const Config& config)
     : init_(forall_variables.size(), 0.0),
       forall_variables_{move(forall_variables)} {
   DREAL_ASSERT(is_conjunction(query));
@@ -39,11 +39,11 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
   // objective function.
   if (IsDifferentiable(query)) {
     // See https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#slsqp
-    opt_ = make_unique<NloptOptimizer>(NLOPT_LD_SLSQP, box, precision);
+    opt_ = make_unique<NloptOptimizer>(NLOPT_LD_SLSQP, box, config);
   } else {
     // See
     // https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#newuoa-bound-constraints
-    opt_ = make_unique<NloptOptimizer>(NLOPT_LN_NEWUOA_BOUND, box, precision);
+    opt_ = make_unique<NloptOptimizer>(NLOPT_LN_NEWUOA_BOUND, box, config);
   }
   Expression objective{};
   for (const Formula& f : formulas) {
