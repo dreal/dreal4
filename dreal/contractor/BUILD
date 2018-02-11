@@ -131,6 +131,13 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "contractor_join_test",
+    deps = [
+        ":contractor",
+    ],
+)
+
+dreal_cc_googletest(
     name = "contractor_seq_test",
     deps = [
         ":contractor",
