@@ -327,6 +327,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "lia_01",
+    size = "small",
+)
+
+smt2_test(
     name = "max_01",
     size = "small",
 )

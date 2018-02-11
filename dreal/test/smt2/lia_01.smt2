@@ -1,0 +1,6 @@
+(set-logic QF_NRA)
+(declare-fun i () Int [0, 5])
+(declare-fun j () Int [0, 5])
+(assert (= (+ (* 2 i)  (* 3 j)) 5))
+(assert (= (+ (* -3 i) (* 4 j)) 6))
+(check-sat)
