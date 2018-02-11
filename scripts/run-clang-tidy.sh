@@ -10,7 +10,7 @@ clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
            -I./ \
            -x c++ \
            -I bazel-genfiles \
-	   `pkg-config ibex --cflags` \
+	   `PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig/ pkg-config ibex --cflags` \
            -isystem ${BAZEL_EXTERNAL}/spdlog/include \
            -isystem ${BAZEL_EXTERNAL}/fmt \
            -isystem ${BAZEL_EXTERNAL}/drake_symbolic \
@@ -19,6 +19,7 @@ clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
            -isystem ${BAZEL_EXTERNAL}/picosat \
            -isystem /usr/local/opt/llvm/include/c++/v1 \
            -isystem /usr/local/include \
+           -isystem /usr/local/opt/flex/include \
            -isystem /usr/local/opt/flex/include \
 
 if [ ${LAST_ARG} == "--fix" ];
