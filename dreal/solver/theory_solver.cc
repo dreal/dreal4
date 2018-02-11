@@ -79,7 +79,7 @@ optional<Contractor> TheorySolver::BuildContractor(
     const vector<Formula>& assertions) {
   Box& box = contractor_status_.mutable_box();
   if (assertions.empty()) {
-    return make_contractor_integer(box);
+    return make_contractor_integer(box, config_);
   }
   vector<Contractor> ctcs;
   for (const Formula& f : assertions) {
@@ -107,12 +107,11 @@ optional<Contractor> TheorySolver::BuildContractor(
         const double inner_delta{epsilon * 0.99};
         DREAL_ASSERT(inner_delta < epsilon && epsilon < delta);
         const Contractor ctc{make_contractor_forall<Context>(
-            f, box, epsilon, inner_delta, config_.use_polytope_in_forall(),
-            config_.use_local_optimization())};
-        ctcs.emplace_back(
-            make_contractor_fixpoint(DefaultTerminationCondition, {ctc}));
+            f, box, epsilon, inner_delta, config_)};
+        ctcs.emplace_back(make_contractor_fixpoint(DefaultTerminationCondition,
+                                                   {ctc}, config_));
       } else {
-        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, box));
+        ctcs.emplace_back(make_contractor_ibex_fwdbwd(f, box, config_));
       }
       // Add it to the cache.
       contractor_cache_.emplace_hint(it, f, ctcs.back());
@@ -122,16 +121,17 @@ optional<Contractor> TheorySolver::BuildContractor(
     }
   }
   // Add integer contractor.
-  ctcs.push_back(make_contractor_integer(box));
+  ctcs.push_back(make_contractor_integer(box, config_));
 
   if (config_.use_polytope()) {
     // Add polytope contractor.
-    ctcs.push_back(make_contractor_ibex_polytope(assertions, box));
+    ctcs.push_back(make_contractor_ibex_polytope(assertions, box, config_));
   }
   if (config_.use_worklist_fixpoint()) {
-    return make_contractor_worklist_fixpoint(DefaultTerminationCondition, ctcs);
+    return make_contractor_worklist_fixpoint(DefaultTerminationCondition, ctcs,
+                                             config_);
   } else {
-    return make_contractor_fixpoint(DefaultTerminationCondition, ctcs);
+    return make_contractor_fixpoint(DefaultTerminationCondition, ctcs, config_);
   }
 }
 
