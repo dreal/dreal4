@@ -243,8 +243,12 @@ ostream& operator<<(ostream& os, const Box& box) {
     os << var << " : ";
     if (var.get_type() == Variable::Type::INTEGER ||
         var.get_type() == Variable::Type::BINARY) {
-      os << "[" << static_cast<int>(interval.lb()) << ", "
-         << static_cast<int>(interval.ub()) << "]";
+      if (interval.is_empty()) {
+        os << "[ empty ]";
+      } else {
+        os << "[" << static_cast<int>(interval.lb()) << ", "
+           << static_cast<int>(interval.ub()) << "]";
+      }
     } else {
       os << interval;
     }
