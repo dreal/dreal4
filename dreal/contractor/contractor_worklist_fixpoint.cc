@@ -26,9 +26,11 @@ void UpdateWorklist(const ibex::BitSet& output,
 }  // namespace
 
 ContractorWorklistFixpoint::ContractorWorklistFixpoint(
-    TerminationCondition term_cond, vector<Contractor> contractors)
+    TerminationCondition term_cond, vector<Contractor> contractors,
+    const Config& config)
     : ContractorCell{Contractor::Kind::WORKLIST_FIXPOINT,
-                     ibex::BitSet::empty(ComputeInputSize(contractors))},
+                     ibex::BitSet::empty(ComputeInputSize(contractors)),
+                     config},
       term_cond_{move(term_cond)},
       contractors_{move(contractors)},
       input_to_contractors_{static_cast<size_t>(ComputeInputSize(contractors_)),

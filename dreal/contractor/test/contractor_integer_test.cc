@@ -28,7 +28,7 @@ TEST_F(ContractorIntegerTest, Sat) {
   box_[z_] = Box::Interval(0.0, 1.0);       // z : Int
   ContractorStatus cs{box_};
 
-  Contractor ctc{make_contractor_integer(box_)};
+  Contractor ctc{make_contractor_integer(box_, Config{})};
 
   // Inputs: only int variables (y and z)
   EXPECT_FALSE(ctc.input()[0]);
@@ -62,7 +62,7 @@ TEST_F(ContractorIntegerTest, Unsat) {
   box_[z_] = Box::Interval(0.0, 1.0);   // z : Int
   ContractorStatus cs{box_};
 
-  Contractor ctc{make_contractor_integer(box_)};
+  Contractor ctc{make_contractor_integer(box_, Config{})};
 
   // Inputs: only int variables (y and z)
   EXPECT_FALSE(ctc.input()[0]);

@@ -15,7 +15,7 @@ class ContractorSeq : public ContractorCell {
   ContractorSeq() = delete;
 
   /// Constructor a sequential contractor from a {C₁, ..., Cₙ}.
-  explicit ContractorSeq(std::vector<Contractor> contractors);
+  ContractorSeq(std::vector<Contractor> contractors, const Config& config);
 
   /// Deleted copy constructor.
   ContractorSeq(const ContractorSeq&) = delete;

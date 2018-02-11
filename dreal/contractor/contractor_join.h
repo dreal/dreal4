@@ -16,7 +16,7 @@ class ContractorJoin : public ContractorCell {
   ContractorJoin() = delete;
 
   /// Constructs a join contractor from a {C₁, ..., Cₙ}.
-  explicit ContractorJoin(std::vector<Contractor> contractors);
+  ContractorJoin(std::vector<Contractor> contractors, const Config& config);
 
   /// Deleted copy constructor.
   ContractorJoin(const ContractorJoin&) = delete;

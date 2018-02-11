@@ -7,7 +7,7 @@ namespace dreal {
 class ContractorId : public ContractorCell {
  public:
   /// Constructs ID contractor.
-  ContractorId();
+  explicit ContractorId(const Config& config);
 
   /// Deleted copy constructor.
   ContractorId(const ContractorId&) = delete;

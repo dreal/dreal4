@@ -29,7 +29,7 @@ TEST_F(ContractorIbexFwdbwdTest, Sat) {
   box_[y_] = Box::Interval(0.2, 0.3);
   box_[z_] = Box::Interval(0.0, 1.0);
   ContractorStatus cs{box_};
-  const ContractorIbexFwdbwd ctc{f, box_};
+  const ContractorIbexFwdbwd ctc{f, box_, Config{}};
 
   // Inputs
   EXPECT_TRUE(ctc.input()[0]);
@@ -63,7 +63,7 @@ TEST_F(ContractorIbexFwdbwdTest, Unsat) {
   box_[y_] = Box::Interval(0.2, 0.3);
   box_[z_] = Box::Interval(0.0, 1.0);
   ContractorStatus cs{box_};
-  const ContractorIbexFwdbwd ctc{f, box_};
+  const ContractorIbexFwdbwd ctc{f, box_, Config{}};
 
   // Inputs: only x and y.
   EXPECT_TRUE(ctc.input()[0]);
@@ -87,7 +87,7 @@ TEST_F(ContractorIbexFwdbwdTest, Unsat) {
 TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20) {
   const Formula f{y_ + z_ == x_};
   ContractorStatus cs{box_};
-  const ContractorIbexFwdbwd ctc{f, box_};
+  const ContractorIbexFwdbwd ctc{f, box_, Config{}};
   Box& box = cs.mutable_box();
 
   box[x_] = 0.7;

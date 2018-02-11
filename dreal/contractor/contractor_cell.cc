@@ -21,14 +21,17 @@ using std::vector;
 
 namespace dreal {
 
-ContractorCell::ContractorCell(const Contractor::Kind kind, ibex::BitSet input)
-    : kind_{kind}, input_{move(input)} {}
+ContractorCell::ContractorCell(const Contractor::Kind kind, ibex::BitSet input,
+                               const Config& config)
+    : kind_{kind}, input_{move(input)}, config_{config} {}
 
 Contractor::Kind ContractorCell::kind() const { return kind_; }
 
 const ibex::BitSet& ContractorCell::input() const { return input_; }
 
 ibex::BitSet& ContractorCell::mutable_input() { return input_; }
+
+const Config& ContractorCell::config() const { return config_; }
 
 // Returns max(c₁.input().max(), ..., cₙ.input().max()).
 // This is used in ContractorSeq, ContractorFixpoint, and

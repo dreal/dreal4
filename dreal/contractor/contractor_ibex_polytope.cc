@@ -37,9 +37,10 @@ struct ExprCtrDeleter {
 // Implementation of ContractorIbexPolytope
 //---------------------------------------
 ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
-                                               const Box& box)
+                                               const Box& box,
+                                               const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
-                     ibex::BitSet::empty(box.size())},
+                     ibex::BitSet::empty(box.size()), config},
       formulas_{move(formulas)},
       ibex_converter_{box},
       old_iv_{1 /* Will be overwritten anyway */} {

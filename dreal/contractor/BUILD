@@ -46,6 +46,7 @@ dreal_cc_library(
     deps = [
         ":contractor_status",
         ":counterexample_refiner",
+        "//dreal/solver:config",
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:exception",

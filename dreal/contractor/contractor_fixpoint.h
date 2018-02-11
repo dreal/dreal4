@@ -22,7 +22,7 @@ class ContractorFixpoint : public ContractorCell {
   /// Constructs a fixpoint contractor with a termination condition
   /// (Box × Box → Bool) and a sequence of Contractors {C₁, ..., Cₙ}.
   ContractorFixpoint(TerminationCondition term_cond,
-                     std::vector<Contractor> contractors);
+                     std::vector<Contractor> contractors, const Config& config);
 
   /// Deleted copy constructor.
   ContractorFixpoint(const ContractorFixpoint&) = delete;

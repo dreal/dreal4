@@ -9,9 +9,9 @@ using std::ostream;
 
 namespace dreal {
 
-ContractorInteger::ContractorInteger(const Box& box)
-    : ContractorCell{Contractor::Kind::INTEGER,
-                     ibex::BitSet::empty(box.size())} {
+ContractorInteger::ContractorInteger(const Box& box, const Config& config)
+    : ContractorCell{Contractor::Kind::INTEGER, ibex::BitSet::empty(box.size()),
+                     config} {
   ibex::BitSet& input{mutable_input()};
   for (int i = 0; i < box.size(); ++i) {
     const Variable::Type type{box.variable(i).get_type()};

@@ -70,7 +70,8 @@ class ContractorStat {
 
 }  // namespace
 
-Contractor::Contractor() : ptr_{make_shared<ContractorId>()} {}
+Contractor::Contractor(const Config& config)
+    : ptr_{make_shared<ContractorId>(config)} {}
 
 Contractor::Contractor(shared_ptr<ContractorCell> ptr) : ptr_{move(ptr)} {}
 
@@ -84,58 +85,65 @@ void Contractor::Prune(ContractorStatus* cs) const {
 
 Contractor::Kind Contractor::kind() const { return ptr_->kind(); }
 
-Contractor make_contractor_id() { return Contractor{}; }
+Contractor make_contractor_id(const Config& config) {
+  return Contractor{config};
+}
 
-Contractor make_contractor_integer(const Box& box) {
+Contractor make_contractor_integer(const Box& box, const Config& config) {
   if (any_of(box.variables().begin(), box.variables().end(),
              [](const Variable& v) {
                const Variable::Type type{v.get_type()};
                return type == Variable::Type::INTEGER ||
                       type == Variable::Type::BINARY;
              })) {
-    return Contractor{make_shared<ContractorInteger>(box)};
+    return Contractor{make_shared<ContractorInteger>(box, config)};
   } else {
-    return make_contractor_id();
+    return make_contractor_id(config);
   }
 }
 
-Contractor make_contractor_seq(const vector<Contractor>& contractors) {
-  return Contractor{make_shared<ContractorSeq>(Flatten(contractors))};
+Contractor make_contractor_seq(const vector<Contractor>& contractors,
+                               const Config& config) {
+  return Contractor{make_shared<ContractorSeq>(Flatten(contractors), config)};
 }
 
-Contractor make_contractor_ibex_fwdbwd(Formula f, const Box& box) {
-  return Contractor{make_shared<ContractorIbexFwdbwd>(move(f), box)};
+Contractor make_contractor_ibex_fwdbwd(Formula f, const Box& box,
+                                       const Config& config) {
+  return Contractor{make_shared<ContractorIbexFwdbwd>(move(f), box, config)};
 }
 
 Contractor make_contractor_ibex_polytope(vector<Formula> formulas,
-                                         const Box& box) {
-  return Contractor{make_shared<ContractorIbexPolytope>(move(formulas), box)};
+                                         const Box& box, const Config& config) {
+  return Contractor{
+      make_shared<ContractorIbexPolytope>(move(formulas), box, config)};
 }
 
 Contractor make_contractor_fixpoint(TerminationCondition term_cond,
-                                    const vector<Contractor>& contractors) {
+                                    const vector<Contractor>& contractors,
+                                    const Config& config) {
   vector<Contractor> ctcs{Flatten(contractors)};
   if (ctcs.empty()) {
-    return make_contractor_id();
+    return make_contractor_id(config);
   } else {
     return Contractor{
-        make_shared<ContractorFixpoint>(move(term_cond), move(ctcs))};
+        make_shared<ContractorFixpoint>(move(term_cond), move(ctcs), config)};
   }
 }
 
 Contractor make_contractor_worklist_fixpoint(
-    TerminationCondition term_cond, const vector<Contractor>& contractors) {
+    TerminationCondition term_cond, const vector<Contractor>& contractors,
+    const Config& config) {
   vector<Contractor> ctcs{Flatten(contractors)};
   if (ctcs.empty()) {
-    return make_contractor_id();
+    return make_contractor_id(config);
   } else {
-    return Contractor{
-        make_shared<ContractorWorklistFixpoint>(move(term_cond), move(ctcs))};
+    return Contractor{make_shared<ContractorWorklistFixpoint>(
+        move(term_cond), move(ctcs), config)};
   }
 }
 
-Contractor make_contractor_join(vector<Contractor> vec) {
-  return Contractor{make_shared<ContractorJoin>(move(vec))};
+Contractor make_contractor_join(vector<Contractor> vec, const Config& config) {
+  return Contractor{make_shared<ContractorJoin>(move(vec), config)};
 }
 
 ostream& operator<<(ostream& os, const Contractor& ctc) {

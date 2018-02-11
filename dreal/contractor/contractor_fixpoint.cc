@@ -12,9 +12,11 @@ using std::vector;
 namespace dreal {
 
 ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
-                                       vector<Contractor> contractors)
+                                       vector<Contractor> contractors,
+                                       const Config& config)
     : ContractorCell{Contractor::Kind::FIXPOINT,
-                     ibex::BitSet::empty(ComputeInputSize(contractors))},
+                     ibex::BitSet::empty(ComputeInputSize(contractors)),
+                     config},
       term_cond_{move(term_cond)},
       contractors_{move(contractors)},
       old_iv_{1 /* will be updated anyway */} {

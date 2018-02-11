@@ -42,9 +42,10 @@ class ContractorIbexFwdbwdStat {
 //---------------------------------------
 // Implementation of ContractorIbexFwdbwd
 //---------------------------------------
-ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box)
+ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
+                                           const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
-                     ibex::BitSet::empty(box.size())},
+                     ibex::BitSet::empty(box.size()), config},
       f_{move(f)},
       ibex_converter_{box},
       old_iv_{1 /* Will be overwritten anyway */} {

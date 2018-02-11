@@ -3,9 +3,10 @@
 using std::ostream;
 
 namespace dreal {
-ContractorId::ContractorId()
+ContractorId::ContractorId(const Config& config)
     : ContractorCell{Contractor::Kind::ID,
-                     ibex::BitSet::empty(1) /* this is meaningless */} {}
+                     ibex::BitSet::empty(1) /* this is meaningless */, config} {
+}
 
 void ContractorId::Prune(ContractorStatus*) const {
   // No op.

@@ -16,7 +16,8 @@ namespace dreal {
 class ContractorIbexPolytope : public ContractorCell {
  public:
   /// Constructs IbexPolytope contractor using @p f and @p vars.
-  ContractorIbexPolytope(std::vector<Formula> formulas, const Box& box);
+  ContractorIbexPolytope(std::vector<Formula> formulas, const Box& box,
+                         const Config& config);
 
   /// Deleted copy constructor.
   ContractorIbexPolytope(const ContractorIbexPolytope&) = delete;

@@ -10,9 +10,11 @@ using std::vector;
 
 namespace dreal {
 
-ContractorJoin::ContractorJoin(vector<Contractor> contractors)
+ContractorJoin::ContractorJoin(vector<Contractor> contractors,
+                               const Config& config)
     : ContractorCell{Contractor::Kind::JOIN,
-                     ibex::BitSet::empty(ComputeInputSize(contractors))},
+                     ibex::BitSet::empty(ComputeInputSize(contractors)),
+                     config},
       contractors_{move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());
   ibex::BitSet& input{mutable_input()};

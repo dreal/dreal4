@@ -19,7 +19,7 @@ class ContractorIbexFwdbwd : public ContractorCell {
   ContractorIbexFwdbwd() = delete;
 
   /// Constructs IbexFwdbwd contractor using @p f and @p box.
-  ContractorIbexFwdbwd(Formula f, const Box& box);
+  ContractorIbexFwdbwd(Formula f, const Box& box, const Config& config);
 
   /// Deleted copy constructor.
   ContractorIbexFwdbwd(const ContractorIbexFwdbwd&) = delete;

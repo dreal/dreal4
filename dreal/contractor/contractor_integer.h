@@ -15,7 +15,7 @@ namespace dreal {
 // box.
 class ContractorInteger : public ContractorCell {
  public:
-  explicit ContractorInteger(const Box& box);
+  ContractorInteger(const Box& box, const Config& config);
 
   /// Deleted copy constructor.
   ContractorInteger(const ContractorInteger&) = delete;

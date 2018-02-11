@@ -8,6 +8,7 @@
 
 #include "dreal/contractor/contractor.h"
 #include "dreal/contractor/contractor_status.h"
+#include "dreal/solver/config.h"
 
 namespace dreal {
 
@@ -28,7 +29,8 @@ class ContractorForall;
 class ContractorCell {
  public:
   /// Constructs a cell with @p kind and @p input.
-  ContractorCell(Contractor::Kind kind, ibex::BitSet input);
+  ContractorCell(Contractor::Kind kind, ibex::BitSet input,
+                 const Config& config);
 
   /// Deleted default constructor.
   ContractorCell() = delete;
@@ -57,6 +59,9 @@ class ContractorCell {
   /// Returns its input.
   ibex::BitSet& mutable_input();
 
+  /// Returns config.
+  const Config& config() const;
+
   /// Performs pruning on @p cs.
   virtual void Prune(ContractorStatus* cs) const = 0;
 
@@ -66,6 +71,7 @@ class ContractorCell {
  private:
   const Contractor::Kind kind_;
   ibex::BitSet input_;
+  const Config& config_;
 };
 
 /// Returns max(c₁.input().max(), ..., cₙ.input().max()).

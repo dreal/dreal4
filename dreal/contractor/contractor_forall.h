@@ -49,29 +49,35 @@ template <typename ContextType>
 class ContractorForall : public ContractorCell {
  public:
   /// Constructs Forall contractor using @p f and @p box. @p epsilon is
-  /// used to strengthen ¬φ and @p delta is used to solve (¬φ)⁻ᵟ¹.
+  /// used to strengthen ¬φ and @p inner_delta is used to solve (¬φ)⁻ᵟ¹.
   ///
-  /// @pre epsilon > delta > 0.0
-  ContractorForall(Formula f, const Box& box, double epsilon, double delta,
-                   bool use_polytope, bool use_local_optimization)
+  /// @pre 0.0 < inner_delta < epsilon < config.precision().
+  ContractorForall(Formula f, const Box& box, double epsilon,
+                   double inner_delta, const Config& config)
       : ContractorCell{Contractor::Kind::FORALL,
-                       ibex::BitSet::empty(box.size())},
+                       ibex::BitSet::empty(box.size()), config},
         f_{std::move(f)},
         quantified_variables_{get_quantified_variables(f_)},
         strengthend_negated_nested_f_{Nnfizer{}.Convert(
             DeltaStrengthen(!get_quantified_formula(f_), epsilon), true)},
-        contractor_{GenericContractorGenerator{}.Generate(
-            get_quantified_formula(f_), ExtendBox(box, quantified_variables_),
-            use_polytope)},
-        use_local_optimization_{use_local_optimization} {
+        contractor_{config /* This one will be updated anyway. */},
+        context_for_counterexample_{config} {
     DREAL_ASSERT(epsilon > 0.0);
-    DREAL_ASSERT(delta > 0.0);
-    DREAL_ASSERT(epsilon > delta);
+    DREAL_ASSERT(inner_delta > 0.0);
+    DREAL_ASSERT(config.precision() > epsilon);
+    DREAL_ASSERT(epsilon > inner_delta);
     DREAL_ASSERT(!is_false(strengthend_negated_nested_f_));
 
     // Setup context:
+    // 0. Setup context, config, and the contractor for finding counterexamples.
+    context_for_counterexample_.mutable_config().mutable_precision() =
+        inner_delta;
+    context_for_counterexample_.mutable_config().mutable_use_polytope() =
+        config.use_polytope_in_forall();
+    contractor_ = GenericContractorGenerator{}.Generate(
+        get_quantified_formula(f_), ExtendBox(box, quantified_variables_),
+        context_for_counterexample_.config());
     // 1. Add exist/forall variables.
-    context_for_counterexample_.mutable_config().mutable_precision() = delta;
     for (const Variable& exist_var : box.variables()) {
       context_for_counterexample_.DeclareVariable(exist_var);
     }
@@ -94,9 +100,10 @@ class ContractorForall : public ContractorCell {
     for (const Variable& v : f_.GetFreeVariables()) {
       input.add(box.index(v));
     }
-    if (use_local_optimization_) {
+    if (this->config().use_local_optimization()) {
       refiner_ = std::make_unique<CounterexampleRefiner>(
-          strengthend_negated_nested_f_, quantified_variables_, delta);
+          strengthend_negated_nested_f_, quantified_variables_,
+          context_for_counterexample_.config());
     }
   }
 
@@ -132,7 +139,7 @@ class ContractorForall : public ContractorCell {
         DREAL_LOG_DEBUG("ContractorForall::Prune: Counterexample found:\n{}",
                         counterexample);
 
-        if (use_local_optimization_) {
+        if (config().use_local_optimization()) {
           counterexample = refiner_->Refine(counterexample);
         }
 
@@ -204,10 +211,9 @@ class ContractorForall : public ContractorCell {
 
 template <typename ContextType>
 Contractor make_contractor_forall(Formula f, const Box& box, double epsilon,
-                                  double delta, bool use_polytope,
-                                  bool use_local_optimization) {
+                                  double inner_delta, const Config& config) {
   return Contractor{std::make_shared<ContractorForall<ContextType>>(
-      std::move(f), box, epsilon, delta, use_polytope, use_local_optimization)};
+      std::move(f), box, epsilon, inner_delta, config)};
 }
 
 /// Converts @p contractor to ContractorForall.
