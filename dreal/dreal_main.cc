@@ -48,15 +48,17 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */,
            "Display usage instructions.", "-h", "-help", "--help", "--usage");
 
-  const double d[1] = {0.0};
-  auto* const precision_option_validator = new ez::ezOptionValidator(
-      ez::ezOptionValidator::D, ez::ezOptionValidator::GT, d, 1);
+  auto* const positive_double_option_validator =
+      new ez::ezOptionValidator("d" /* double */, "gt", "0");
+
+  auto* const positive_int_option_validator =
+      new ez::ezOptionValidator("s4" /* 4byte integer */, "gt", "0");
 
   opt_.add("0.001" /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
            "Precision (default = 0.001)\n", "--precision",
-           precision_option_validator);
+           positive_double_option_validator);
 
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
@@ -94,6 +96,31 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */,
            "Use local optimization algorithm for exist-forall problems.\n",
            "--local-optimization");
+
+  opt_.add("1e-6" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "[NLopt] Relative tolerance on function value (default = 1e-6)\n",
+           "--nlopt-ftol-rel", positive_double_option_validator);
+
+  opt_.add("1e-6" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "[NLopt] Absolute tolerance on function value (default = 1e-6)\n",
+           "--nlopt-ftol-abs", positive_double_option_validator);
+
+  opt_.add("100" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "[NLopt] Number of maximum function evaluations (default = 100)\n",
+           "--nlopt-maxeval", positive_int_option_validator);
+
+  opt_.add(
+      "0.1" /* Default */, false /* Required? */,
+      1 /* Number of args expected. */,
+      0 /* Delimiter if expecting multiple args. */,
+      "[NLopt] Maximum optimization time (in second) (default = 0.01 sec)\n",
+      "--nlopt-maxtime", positive_double_option_validator);
 
   auto* const verbose_option_validator = new ez::ezOptionValidator(
       "t", "in", "trace,debug,info,warning,error,critical,off", true);
@@ -149,8 +176,6 @@ bool MainProgram::ValidateOptions() {
 void MainProgram::ExtractOptions() {
   // Temporary variables used to set options.
   string verbosity;
-  double precision{0.0};
-
   opt_.get("--verbose")->getString(verbosity);
   if (verbosity == "trace") {
     log()->set_level(spdlog::level::trace);
@@ -168,6 +193,7 @@ void MainProgram::ExtractOptions() {
     log()->set_level(spdlog::level::off);
   }
   // --precision
+  double precision{0.0};
   if (opt_.isSet("--precision")) {
     opt_.get("--precision")->getDouble(precision);
     config_.mutable_precision().set_from_command_line(precision);
@@ -207,6 +233,42 @@ void MainProgram::ExtractOptions() {
     config_.mutable_use_local_optimization().set_from_command_line(true);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --local-optimization = {}",
                     config_.use_local_optimization());
+  }
+
+  // --nlopt-ftol-rel
+  double nlopt_ftol_rel{0.0};
+  if (opt_.isSet("--nlopt-ftol-rel")) {
+    opt_.get("--nlopt-ftol-rel")->getDouble(nlopt_ftol_rel);
+    config_.mutable_nlopt_ftol_rel().set_from_command_line(nlopt_ftol_rel);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-ftol-rel = {}",
+                    config_.nlopt_ftol_rel());
+  }
+
+  // --nlopt-ftol-abs
+  double nlopt_ftol_abs{0.0};
+  if (opt_.isSet("--nlopt-ftol-abs")) {
+    opt_.get("--nlopt-ftol-abs")->getDouble(nlopt_ftol_abs);
+    config_.mutable_nlopt_ftol_abs().set_from_command_line(nlopt_ftol_abs);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-ftol-abs = {}",
+                    config_.nlopt_ftol_abs());
+  }
+
+  // --nlopt-maxeval
+  int nlopt_maxeval{0};
+  if (opt_.isSet("--nlopt-maxeval")) {
+    opt_.get("--nlopt-maxeval")->getInt(nlopt_maxeval);
+    config_.mutable_nlopt_maxeval().set_from_command_line(nlopt_maxeval);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-maxeval = {}",
+                    config_.nlopt_maxeval());
+  }
+
+  // --nlopt-maxtime
+  double nlopt_maxtime{0.0};
+  if (opt_.isSet("--nlopt-maxtime")) {
+    opt_.get("--nlopt-maxtime")->getDouble(nlopt_maxtime);
+    config_.mutable_nlopt_maxtime().set_from_command_line(nlopt_maxtime);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-maxtime = {}",
+                    config_.nlopt_maxtime());
   }
 }
 
