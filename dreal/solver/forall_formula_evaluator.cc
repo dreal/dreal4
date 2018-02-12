@@ -25,11 +25,8 @@ namespace {
 // Given f = [(e₁(x, y) ≥ 0) ∨ ... ∨ (eₙ(x, y) ≥ 0)], build an
 // evaluator for each (eᵢ(x, y) ≥ 0) and return a vector of
 // evaluators.
-vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
-  DREAL_LOG_DEBUG("BuildFormulaEvaluators");
-  const Formula& quantified_formula{get_quantified_formula(f)};
-  DREAL_ASSERT(is_clause(quantified_formula));
-  const set<Formula>& disjuncts{get_operands(quantified_formula)};
+vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(
+    const set<Formula>& disjuncts) {
   vector<RelationalFormulaEvaluator> evaluators;
   evaluators.reserve(disjuncts.size());
   for (const Formula& disjunct : disjuncts) {
@@ -42,6 +39,16 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
   return evaluators;
 }
 
+vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
+  DREAL_LOG_DEBUG("BuildFormulaEvaluators");
+  const Formula& quantified_formula{get_quantified_formula(f)};
+  DREAL_ASSERT(is_clause(quantified_formula));
+  if (is_disjunction(quantified_formula)) {
+    return BuildFormulaEvaluators(get_operands(quantified_formula));
+  } else {
+    return BuildFormulaEvaluators(std::set<Formula>{quantified_formula});
+  }
+}
 }  // namespace
 
 ForallFormulaEvaluator::ForallFormulaEvaluator(Formula f, const double epsilon,

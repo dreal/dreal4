@@ -26,8 +26,16 @@ Formula NaiveCnfizer::Visit(const Formula& f) const {
 Formula NaiveCnfizer::VisitFalse(const Formula& f) const { return f; }
 Formula NaiveCnfizer::VisitTrue(const Formula& f) const { return f; }
 Formula NaiveCnfizer::VisitVariable(const Formula& f) const { return f; }
-Formula NaiveCnfizer::VisitEqualTo(const Formula& f) const { return f; }
-Formula NaiveCnfizer::VisitNotEqualTo(const Formula& f) const { return f; }
+Formula NaiveCnfizer::VisitEqualTo(const Formula& f) const {
+  const Expression& lhs{get_lhs_expression(f)};
+  const Expression& rhs{get_rhs_expression(f)};
+  return (lhs >= rhs) && (lhs <= rhs);
+}
+Formula NaiveCnfizer::VisitNotEqualTo(const Formula& f) const {
+  const Expression& lhs{get_lhs_expression(f)};
+  const Expression& rhs{get_rhs_expression(f)};
+  return (lhs > rhs) || (lhs < rhs);
+}
 Formula NaiveCnfizer::VisitGreaterThan(const Formula& f) const { return f; }
 Formula NaiveCnfizer::VisitGreaterThanOrEqualTo(const Formula& f) const {
   return f;
