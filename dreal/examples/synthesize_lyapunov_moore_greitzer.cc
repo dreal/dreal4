@@ -33,9 +33,9 @@ void synthesize_lyapunov_moore_greitzer() {
 
   // Synthesize one.
   Config config;
-  config.mutable_precision() = 0.001;
+  config.mutable_precision() = 0.01;
   config.mutable_use_polytope_in_forall() = true;
-  // config.mutable_use_local_optimization() = true;
+  config.mutable_use_local_optimization() = true;
 
   // clang-format off
   const auto result = SynthesizeLyapunov(

@@ -21,13 +21,15 @@ void check_lyapunov_example1() {
   const Variable x2{"x2"};
   Config config;
   config.mutable_precision() = 1e-5;
-  // clang-format off
-  CheckLyapunov({x1, x2},
-                {x2, -sin(x1)},
-                (1 - cos(x1)) + 0.5 * x2 * x2,
-                0.001, M_PI * M_PI,
-                config);
-  // clang-format on
+  const auto result =
+      CheckLyapunov({x1, x2}, {x2, -sin(x1)}, (1 - cos(x1)) + 0.5 * x2 * x2,
+                    0.001, M_PI * M_PI, config);
+  if (result) {
+    std::cerr << "Not a L-function. Here is a counterexample:\n"
+              << *result << std::endl;
+  } else {
+    std::cerr << "L function!" << std::endl;
+  }
 }
 
 void check_lyapunov_example2() {
@@ -38,14 +40,15 @@ void check_lyapunov_example2() {
   const Variable x2{"x2"};
   Config config;
   config.mutable_precision() = 1e-5;
-  // clang-format off
-  CheckLyapunov({x1, x2},
-                {-x2 - pow(x1, 3),
-                  x1 - pow(x2, 3)},
-                x1 * x1 + x2 * x2,
-                0.1, 0.5,
-                config);
-  // clang-format on
+  const auto result =
+      CheckLyapunov({x1, x2}, {-x2 - pow(x1, 3), x1 - pow(x2, 3)},
+                    x1 * x1 + x2 * x2, 0.1, 0.5, config);
+  if (result) {
+    std::cerr << "Not a L-function. Here is a counterexample:\n"
+              << *result << std::endl;
+  } else {
+    std::cerr << "L function!" << std::endl;
+  }
 }
 }  // namespace
 }  // namespace dreal

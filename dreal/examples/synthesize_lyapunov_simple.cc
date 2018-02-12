@@ -20,7 +20,7 @@ void synthesize_lyapunov_simple() {
   const Variable c3{"c3"};
 
   Config config;
-  config.mutable_precision() = 0.001;
+  config.mutable_precision() = 0.0001;
   config.mutable_use_polytope_in_forall() = true;
   config.mutable_use_local_optimization() = true;
 
@@ -29,8 +29,8 @@ void synthesize_lyapunov_simple() {
   const auto result =
       SynthesizeLyapunov({x1, x2}, {-x2 - pow(x1, 3), x1 - pow(x2, 3)},
                          V,
-                         0.1, 0.2,  /* lb&ub of ball */
-                         -2, 2, /* lb&ub of c_i */
+                         0.2, 1.0,  /* lb&ub of ball */
+                         0, 2, /* lb&ub of c_i */
                          config);
   // clang-format on
   if (result) {

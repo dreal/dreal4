@@ -84,7 +84,7 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x,
                                  const Expression& V, const double ball_lb,
                                  const double ball_ub, const double c_lb,
                                  const double c_ub, Config config) {
-  // ∃c.∀x. x ∈ ball → (V(c, x) ≥ 0 ∧ V̇(c, x) ≤ 0)
+  // ∃c.∀x. x ∈ ball → (V(c, x) > 0 ∧ V̇(c, x) < 0)
   // ball = ∑xᵢ².
   const Expression ball =
       accumulate(x.begin(), x.end(), Expression::Zero(),
@@ -97,12 +97,18 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x,
     lie_derivative_of_V += f[i] * V.Differentiate(x[i]);
   }
 
-  // Add: ∀x. x ∈ Ball → (V(c, x) ≥  0 V̇(c, x) ≤ 0)
+  // Add: ∀x. x ∈ Ball → (V(c, x) > 0 ∧ V̇(c, x) < 0)
   // Note that we use (ball_lb)² and (ball_ub)² to avoid sqrt(ball).
   const Formula ball_in_bound =
       (ball_lb * ball_lb <= ball) && (ball <= ball_ub * ball_ub);
+
+  // const Formula nested_condition = imply(
+  //     ball_in_bound, (V > config.precision() * 10) &&
+  //                        (lie_derivative_of_V < -config.precision() * 10));
+
   const Formula nested_condition =
-      imply(ball_in_bound, V > 0 && lie_derivative_of_V <= 0);
+      imply(ball_in_bound, (V > 0.0) && (lie_derivative_of_V < -0.0));
+
   Variables forall_variables;
   forall_variables.insert(x.begin(), x.end());
   Formula condition = forall(forall_variables, nested_condition);
@@ -122,6 +128,7 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x,
   condition = condition && (V.Substitute(subst_zero) == 0.0);
 
   // Find c, the coefficients of V.
+  std::cerr << condition << std::endl;
   const auto result = CheckSatisfiability(condition, config);
 
   // Double check the solution by calling CheckLyapunov.
@@ -134,14 +141,19 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x,
     }
     // Double check, using a smaller delta!
     config.mutable_precision() = config.precision() * 0.1;
-    const auto confirm = CheckLyapunov(x, f, V.Substitute(subst_solution),
-                                       ball_lb, ball_ub, move(config));
+    const Expression found_V = V.Substitute(subst_solution);
+    std::cout << "Found V = " << found_V << std::endl;
+    const auto confirm =
+        CheckLyapunov(x, f, found_V, ball_lb, ball_ub, move(config));
     if (!confirm) {
+      std::cout << "Confirmed! Found V = " << found_V << std::endl;
       return solution;
     } else {
+      std::cout << "CE Found = " << *confirm << std::endl;
       return {};
     }
   } else {
+    std::cout << "Failed to find V." << std::endl;
     return {};
   }
 }
@@ -171,7 +183,7 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x, const Variable& t,
       (ball_lb * ball_lb <= ball) && (ball <= ball_ub * ball_ub);
   const Formula t_in_bound = (t_lb <= t) && (t <= t_ub);
   const Formula nested_condition =
-      imply(ball_in_bound && t_in_bound, V > 0 && lie_derivative_of_V <= 0);
+      imply(ball_in_bound && t_in_bound, V > 0 && lie_derivative_of_V < 0);
   Variables forall_variables;
   forall_variables.insert(x.begin(), x.end());
   forall_variables.insert(t);
@@ -192,6 +204,7 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x, const Variable& t,
   condition = condition && (V.Substitute(subst_zero) == 0.0);
 
   // Find c, the coefficients of V.
+  std::cerr << condition << std::endl;
   const auto result = CheckSatisfiability(condition, config);
 
   // Double check the solution by calling CheckLyapunov.
@@ -204,15 +217,19 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x, const Variable& t,
     }
     // Double check, using a smaller delta!
     config.mutable_precision() = config.precision() * 0.1;
-    const auto confirm =
-        CheckLyapunov(x, t, f, V.Substitute(subst_solution), ball_lb, ball_ub,
-                      t_lb, t_ub, move(config));
+    const Expression found_V = V.Substitute(subst_solution);
+    std::cout << "Found V = " << found_V << std::endl;
+    const auto confirm = CheckLyapunov(x, t, f, found_V, ball_lb, ball_ub, t_lb,
+                                       t_ub, move(config));
     if (!confirm) {
+      std::cout << "Confirmed! Found V = " << found_V << std::endl;
       return solution;
     } else {
+      std::cout << "CE Found = " << *confirm << std::endl;
       return {};
     }
   } else {
+    std::cout << "Failed to find V." << std::endl;
     return {};
   }
 }

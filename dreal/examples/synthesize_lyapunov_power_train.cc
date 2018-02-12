@@ -55,16 +55,17 @@ void synthesize_lyapunov_power_train() {
       p_est * p_est, p_est * i, i * i,     p,     r,     p_est,     i};
 
   int k = 0;
+  const double scaling_factor{100.0};
   for (size_t idx1 = 0; idx1 < monomials.size(); ++idx1) {
     for (size_t idx2 = idx1; idx2 < monomials.size(); ++idx2) {
       const Variable q_k{"q_" + std::to_string(++k)};
-      V += monomials[idx1] * monomials[idx2] * q_k;
+      V += monomials[idx1] * monomials[idx2] * scaling_factor * q_k;
     }
   }
 
   // Synthesize one.
   Config config;
-  config.mutable_precision() = 0.001;
+  config.mutable_precision() = 0.05;
   config.mutable_use_polytope_in_forall() = true;
   config.mutable_use_local_optimization() = true;
 
@@ -73,8 +74,9 @@ void synthesize_lyapunov_power_train() {
       SynthesizeLyapunov({p, r, p_est, i},
                          {p_dot, r_dot, p_est_dot, i_dot},
                          V,
-                         0.001 /* lb of ball */, 0.1 /* ub of ball */,
-                         0.1 /* lb of q_i */, 10.0 /* ub of q_i */,
+                         0.1 /* lb of ball */, 1.0 /* ub of ball */,
+                         -100.0 / scaling_factor /* lb of q_i */,
+                         100.0 / scaling_factor/* ub of q_i */,
                          config);
   // clang-format on
   if (result) {

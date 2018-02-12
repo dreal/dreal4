@@ -27,6 +27,11 @@ void synthesize_lyapunov_damped_mathieu() {
   config.mutable_use_polytope_in_forall() = true;
   config.mutable_use_local_optimization() = true;
 
+  config.mutable_nlopt_ftol_rel() = 1e-6;
+  config.mutable_nlopt_ftol_abs() = 1e-6;
+  config.mutable_nlopt_maxeval() = 30;
+  config.mutable_nlopt_maxtime() = 0.01;
+
   // Check if the solution in the paper is indeed a solution.
   const Expression V_candidate{98.0 * x1 * x1 + 55.0 * x2 * x2 +
                                48.0 * x1 * x2};
