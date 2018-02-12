@@ -119,6 +119,46 @@ class ContractorForall : public ContractorCell {
   /// Deleted move assign operator.
   ContractorForall& operator=(ContractorForall&&) = delete;
 
+  bool PruneWithCounterexample(ContractorStatus* cs, Box* const current_box,
+                               const Box& counterexample) const {
+    // Need to prune the current_box using counterexample.
+    ContractorStatus contractor_status(counterexample);
+    // 1.1.1. Set up exist_var parts for pruning
+    for (const Variable& exist_var : current_box->variables()) {
+      contractor_status.mutable_box()[exist_var] = (*current_box)[exist_var];
+    }
+    // 1.1.2. Set up universal_var parts from
+    // counterexample. Narrow down the forall variables part by
+    // taking the mid-points of counterexample.
+    for (const Variable& forall_var : get_quantified_variables(f_)) {
+      contractor_status.mutable_box()[forall_var] =
+          counterexample[forall_var].mid();
+    }
+    contractor_.Prune(&contractor_status);
+    if (contractor_status.box().empty()) {
+      // If the pruning result is empty, there is nothing more to do. Exit
+      // the loop.
+      cs->mutable_output().fill(0, cs->box().size() - 1);
+      current_box->set_empty();
+      return true;
+    } else {
+      // Otherwise, we update the current box and keep looping.
+      bool changed = false;
+      for (int i = 0; i < cs->box().size(); ++i) {
+        if (cs->box()[i] != contractor_status.box()[i]) {
+          cs->mutable_output().add(i);
+          (*current_box)[i] = contractor_status.box()[i];
+          changed = true;
+        }
+      }
+      if (!changed) {
+        // We reached at a fixed-point.
+        return true;
+      }
+    }
+    return false;
+  }
+
   /// Default destructor.
   ~ContractorForall() override = default;
 
@@ -142,41 +182,10 @@ class ContractorForall : public ContractorCell {
         if (config().use_local_optimization()) {
           counterexample = refiner_->Refine(counterexample);
         }
-
-        // Need to prune the current_box using counterexample.
-        ContractorStatus contractor_status(counterexample);
-        // 1.1.1. Set up exist_var parts for pruning
-        for (const Variable& exist_var : current_box.variables()) {
-          contractor_status.mutable_box()[exist_var] = current_box[exist_var];
-        }
-        // 1.1.2. Set up universal_var parts from
-        // counterexample. Narrow down the forall variables part by
-        // taking the mid-points of counterexample.
-        for (const Variable& forall_var : get_quantified_variables(f_)) {
-          contractor_status.mutable_box()[forall_var] =
-              counterexample[forall_var].mid();
-        }
-        contractor_.Prune(&contractor_status);
-        if (contractor_status.box().empty()) {
-          // If the pruning result is empty, there is nothing more to do. Exit
-          // the loop.
-          cs->mutable_output().fill(0, cs->box().size() - 1);
-          current_box.set_empty();
+        bool need_to_break_the_loop =
+            PruneWithCounterexample(cs, &current_box, counterexample);
+        if (need_to_break_the_loop) {
           break;
-        } else {
-          // Otherwise, we update the current box and keep looping.
-          bool changed = false;
-          for (int i = 0; i < cs->box().size(); ++i) {
-            if (cs->box()[i] != contractor_status.box()[i]) {
-              cs->mutable_output().add(i);
-              current_box[i] = contractor_status.box()[i];
-              changed = true;
-            }
-          }
-          if (!changed) {
-            // We reached at a fixed-point.
-            break;
-          }
         }
       } else {
         // 1.2. No counterexample found.
