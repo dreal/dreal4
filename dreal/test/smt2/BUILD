@@ -518,11 +518,6 @@ smt2_test(
 )
 
 smt2_test(
-    name = "zenna_05",
-    size = "small",
-)
-
-smt2_test(
     name = "zenna_07",
     size = "small",
 )
