@@ -17,7 +17,7 @@ using std::set;
 //  - Then it cnfizes each `b ⇔ f` and make a conjunction of them.
 Formula NaiveCnfizer::Convert(const Formula& f) const {
   // TODO(soonho): Using cache if needed.
-  return Visit(nnfizer_.Convert(f));
+  return Visit(nnfizer_.Convert(f, true /* push_negation_into_relationals */));
 }
 
 Formula NaiveCnfizer::Visit(const Formula& f) const {
