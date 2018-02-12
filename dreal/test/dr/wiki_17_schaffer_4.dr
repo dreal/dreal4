@@ -1,0 +1,12 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+prec: 0.000001
+
+var:
+    [-100, 100] x;
+    [-100, 100] y;
+
+# Global minimum is:
+#        f(0, 1.25313) = 0.292579
+
+cost:
+    0.5 + ((cos(sin(abs(x^2 - y^2))))^2 - 0.5) / (1 + 0.001 * (x^2 + y^2)^2);

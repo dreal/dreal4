@@ -1,0 +1,12 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.001
+
+var:
+    [-10, 10] x;
+    [-10, 10] y;
+
+# Global minimum is f(1, 1) = 0
+
+cost:
+    (sin(3 * 3.141592 * x))^2 + (x - 1)^2 * (1 + (sin(3 * 3.141592 * y))^2)
+    + (y - 1)^2 * (1 + (sin(2 * 3.141592 * y))^2);

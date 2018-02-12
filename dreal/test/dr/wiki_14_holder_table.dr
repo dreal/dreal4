@@ -1,0 +1,15 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.001
+
+var:
+    [-10, 10] x;
+    [-10, 10] y;
+
+# Global minimum is:
+#        f( 8.05502,  9.66459) = -19.2085
+#        f( 8.05502, -9.66459) = -19.2085
+#        f(-8.05502,  9.66459) = -19.2085
+#        f(-8.05502, -9.66459) = -19.2085
+
+cost:
+    -abs(sin(x) * cos(y) * exp(abs(1 - sqrt(x^2 + y^2) / 3.141592)));

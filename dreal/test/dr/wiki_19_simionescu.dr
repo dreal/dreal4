@@ -1,0 +1,15 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+prec: 0.001
+
+var:
+    [-1.25, 1.25] x;
+    [-1.25, 1.25] y;
+
+# Global minimum is:
+#        f(+-0.85586214, -+0.85586214) = -0.072625
+
+cost:
+    0.1 * x * y;
+
+ctr:
+    x^2 + y^2 <= (1 + 0.2 * cos(8 * atan(x / y)))^2;

@@ -1,0 +1,11 @@
+var:
+    [-10, 10] x1;
+    [-10, 10] x2;
+
+# Global minimum is located at x* = f(-0.024403,0.210612)
+# f(x*) = -3.30686865
+
+cost:
+    exp(sin(50 * x1)) + sin(60 * exp(x2))
+    + sin(70 * sin(x1)) + sin(sin(80 * x2))
+    - sin(10 * (x1 + x2)) + 0.25 * (x1^2 + x2^2);

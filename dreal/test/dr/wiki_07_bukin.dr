@@ -1,0 +1,11 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.000001
+
+var:
+    [-15, -5] x;
+    [-3, 3] y;
+
+# Global minimum is f(-10, 1) = 0
+
+cost:
+    100 * sqrt(abs(y - 0.01 * x^2)) + 0.01 * abs(x + 10);

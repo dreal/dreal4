@@ -1,0 +1,12 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.01
+
+var:
+    [-512, 512] x;
+    [-512, 512] y;
+
+# Global minimum is: f(512, 404.2319) = -959.6407
+
+cost:
+    -(y + 47) * sin(sqrt(abs(x / 2 + y + 47)))
+    - x * sin(sqrt(abs(x - y - 47)));

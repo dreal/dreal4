@@ -107,10 +107,14 @@ dr_test(
     ],
 )
 
-dr_test(
-    name = "constrained_opt_townsend",
-    size = "small",
-)
+# dr_test(
+#     name = "constrained_opt_townsend",
+#     size = "small",
+#     args = [
+#         "--precision 0.001",
+#         "--local-optimization",
+#     ],
+# )
 
 dr_test(
     name = "constrained_opt_simionescu",

@@ -1,0 +1,13 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.001
+
+var:
+    [-4.5, 4.5] x;
+    [-4.5, 4.5] y;
+
+# Global minimum is f(3, 0.5) = 0
+
+cost:
+    (1.5 - x + x*y)^2 +
+    (2.25 - x + x*y^2)^2 +
+    (2.625 - x + x*y^3)^2;

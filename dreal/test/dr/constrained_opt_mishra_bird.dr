@@ -1,13 +1,13 @@
 # Mishra's Bird function - constrained
 # From https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_constrained_optimization
 var:
-	[-6, 6] x;
-	[-6, 6] y;
+	[-10, 0] x;
+	[-6.5, 0] y;
 
 ctr:
-	(x + 5)^2 + (y + 5)^2 >= 25;
+	(x + 5)^2 + (y + 5)^2 < 25;
 
 cost:
-	  sin(x) * exp((1 - cos(y))^2)
-	+ cos(y) * exp((1 - sin(x))^2)
+	  sin(y) * exp((1 - cos(x))^2)
+	+ cos(x) * exp((1 - sin(y))^2)
 	+ (x - y)^2;

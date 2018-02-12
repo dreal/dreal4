@@ -1,0 +1,13 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.001
+
+var:
+    [-5, 5] x1;
+    [-5, 5] x2;
+
+# Global minimum is:
+#        -39.16617 n < f(-2.903534, ..., -2.903534) < 39.16616 * n
+
+cost:
+    ((x1^4 - 16*x1^2 + 5*x1) +
+     (x2^4 - 16*x2^2 + 5*x2)) / 2;

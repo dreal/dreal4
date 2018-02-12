@@ -1,0 +1,13 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.001
+
+var:
+    [-5, 5] x;
+    [-5, 5] y;
+
+# Global minimum is f(0, 0) = 0
+
+cost:
+     -20 * exp(-0.2 * sqrt(0.5 * (x^2 + y^2)))
+     - exp(0.5 * (cos(2 * 3.141592 * x) + cos(2 * 3.141592 * y)))
+     + 2.71828182846 + 20;

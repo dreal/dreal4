@@ -1,0 +1,12 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+prec: 0.001
+
+var:
+    [-1.5, 4] x;
+    [  -3, 4] y;
+
+# Global minimum is:
+#        f(-0.54719, -1.54719) = 1.9133
+
+cost:
+    sin(x + y) + (x - y)^2 - 1.5 * x + 2.5 * y + 1;

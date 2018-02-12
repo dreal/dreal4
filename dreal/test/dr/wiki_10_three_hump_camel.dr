@@ -1,0 +1,11 @@
+# From: https://en.wikipedia.org/wiki/Test_functions_for_optimization
+# prec: 0.001
+
+var:
+    [-5, 5] x;
+    [-5, 5] y;
+
+# Global minimum is f(0, 0) = 0
+
+cost:
+    2 * x^2 - 1.05 * x^4 + x^6 / 6 + x*y + y^2;
