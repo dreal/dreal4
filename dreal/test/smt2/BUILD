@@ -442,6 +442,16 @@ smt2_test(
 )
 
 smt2_test(
+    name = "tai_sin_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "tai_sin_03",
+    size = "small",
+)
+
+smt2_test(
     name = "trivial_01",
     size = "small",
 )
