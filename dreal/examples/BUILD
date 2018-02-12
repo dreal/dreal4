@@ -89,4 +89,15 @@ dreal_cc_binary(
     ],
 )
 
+dreal_cc_binary(
+    name = "program_synthesis_abs",
+    srcs = [
+        "program_synthesis_abs.cc",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//dreal/api",
+    ],
+)
+
 cpplint()
