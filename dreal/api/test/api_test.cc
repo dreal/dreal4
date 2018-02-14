@@ -188,5 +188,27 @@ TEST_F(ApiTest, CheckSatisfiabilityDisjunction) {
   EXPECT_TRUE(v1 || !v2 || v3);
 }
 
+TEST_F(ApiTest, CheckSatisfiabilityIfThenElse1) {
+  const double delta{0.001};
+  const Formula f1{if_then_else(x_ > y_, x_, y_) == z_};
+  const Formula f2{x_ == 100};
+  const Formula f3{y_ == 50};
+  const auto result = CheckSatisfiability(f1 && f2 && f3, delta);
+  ASSERT_TRUE(result);
+  const Box& solution{*result};
+  EXPECT_EQ(solution[z_].mid(), 100);
+}
+
+TEST_F(ApiTest, CheckSatisfiabilityIfThenElse2) {
+  const double delta{0.001};
+  const Formula f1{if_then_else(x_ > y_, x_, y_) == z_};
+  const Formula f2{x_ == 50};
+  const Formula f3{y_ == 100};
+  const auto result = CheckSatisfiability(f1 && f2 && f3, delta);
+  ASSERT_TRUE(result);
+  const Box& solution{*result};
+  EXPECT_EQ(solution[z_].mid(), 100);
+}
+
 }  // namespace
 }  // namespace dreal
