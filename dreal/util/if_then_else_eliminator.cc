@@ -164,23 +164,23 @@ Formula IfThenElseEliminator::VisitEqualTo(const Formula& f) {
 }
 
 Formula IfThenElseEliminator::VisitNotEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) == Visit(get_rhs_expression(f));
+  return Visit(get_lhs_expression(f)) != Visit(get_rhs_expression(f));
 }
 
 Formula IfThenElseEliminator::VisitGreaterThan(const Formula& f) {
-  return Visit(get_lhs_expression(f)) == Visit(get_rhs_expression(f));
+  return Visit(get_lhs_expression(f)) > Visit(get_rhs_expression(f));
 }
 
 Formula IfThenElseEliminator::VisitGreaterThanOrEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) == Visit(get_rhs_expression(f));
+  return Visit(get_lhs_expression(f)) >= Visit(get_rhs_expression(f));
 }
 
 Formula IfThenElseEliminator::VisitLessThan(const Formula& f) {
-  return Visit(get_lhs_expression(f)) == Visit(get_rhs_expression(f));
+  return Visit(get_lhs_expression(f)) < Visit(get_rhs_expression(f));
 }
 
 Formula IfThenElseEliminator::VisitLessThanOrEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) == Visit(get_rhs_expression(f));
+  return Visit(get_lhs_expression(f)) <= Visit(get_rhs_expression(f));
 }
 
 Formula IfThenElseEliminator::VisitConjunction(const Formula& f) {
