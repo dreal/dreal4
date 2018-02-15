@@ -246,6 +246,16 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "if_then_else_eliminator_test",
+    tags = ["unit"],
+    deps = [
+        ":if_then_else_eliminator",
+        "//dreal/api",
+        "//dreal/symbolic:symbolic_test_util",
+    ],
+)
+
+dreal_cc_googletest(
     name = "nnfizer_test",
     tags = ["unit"],
     deps = [
