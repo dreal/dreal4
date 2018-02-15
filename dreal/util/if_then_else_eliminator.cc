@@ -3,11 +3,13 @@
 #include <algorithm>  // To suppress cpplint on max.
 #include <set>
 #include <stdexcept>
+#include <string>
 
 #include "dreal/util/logging.h"
 
 using std::runtime_error;
 using std::set;
+using std::to_string;
 using std::unordered_set;
 
 namespace dreal {
@@ -132,7 +134,8 @@ Expression IfThenElseEliminator::VisitMax(const Expression& e) {
 }
 
 Expression IfThenElseEliminator::VisitIfThenElse(const Expression& e) {
-  const Variable new_var{"ITE"};
+  static int counter{0};
+  const Variable new_var{"ITE" + to_string(counter++)};
   ite_variables_.insert(new_var);
   const Formula c{Visit(get_conditional_formula(e))};
   const Expression e1{Visit(get_then_expression(e))};
