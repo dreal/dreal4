@@ -1,10 +1,5 @@
 #pragma once
 
-#ifndef NDEBUG
-#define SPDLOG_DEBUG_ON 1
-#define SPDLOG_TRACE_ON 1
-#endif
-
 #include "fmt/ostream.h"
 #include "spdlog/spdlog.h"
 
@@ -24,27 +19,19 @@ namespace dreal {
 /// Please check https://github.com/gabime/spdlog for more information.
 spdlog::logger* log();
 
-#ifndef NDEBUG
-#define DREAL_LOG_TRACE(fmt, ...)            \
-  do {                                       \
-    SPDLOG_TRACE(log(), fmt, ##__VA_ARGS__); \
+#define DREAL_LOG_TRACE(fmt, ...)                  \
+  do {                                             \
+    if (log()->should_log(spdlog::level::trace)) { \
+      log()->trace(fmt, ##__VA_ARGS__);            \
+    }                                              \
   } while (0)
 
-#define DREAL_LOG_DEBUG(fmt, ...)            \
-  do {                                       \
-    SPDLOG_DEBUG(log(), fmt, ##__VA_ARGS__); \
+#define DREAL_LOG_DEBUG(fmt, ...)                  \
+  do {                                             \
+    if (log()->should_log(spdlog::level::debug)) { \
+      log()->debug(fmt, ##__VA_ARGS__);            \
+    }                                              \
   } while (0)
-#else
-#define DREAL_LOG_TRACE(fmt, ...)     \
-  do {                                \
-    log()->trace(fmt, ##__VA_ARGS__); \
-  } while (0)
-
-#define DREAL_LOG_DEBUG(fmt, ...)     \
-  do {                                \
-    log()->debug(fmt, ##__VA_ARGS__); \
-  } while (0)
-#endif
 
 #define DREAL_LOG_INFO(fmt, ...)     \
   do {                               \
