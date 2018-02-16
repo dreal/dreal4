@@ -1,5 +1,6 @@
 #include "dreal/solver/context.h"
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <ostream>
@@ -17,6 +18,7 @@
 #include "dreal/util/scoped_vector.h"
 
 using std::experimental::optional;
+using std::find_if;
 using std::isfinite;
 using std::make_shared;
 using std::numeric_limits;
@@ -207,8 +209,21 @@ optional<Box> Context::Impl::CheckSat() {
 
 void Context::Impl::DeclareVariable(const Variable& v) {
   DREAL_LOG_DEBUG("Context::DeclareVariable({})", v);
-  name_to_var_map_.emplace(v.get_name(), v);
-  box().Add(v);
+  const auto& variables = box().variables();
+  if (find_if(variables.begin(), variables.end(), [&v](const Variable& v_) {
+        return v.equal_to(v_);
+      }) == variables.end()) {
+    // v is not in box.
+    box().Add(v);
+    auto it = name_to_var_map_.find(v.get_name());
+    if (it == name_to_var_map_.end()) {
+      // There is no entry of (v.get_name(), v) in name_to_var_map_.
+      name_to_var_map_.emplace_hint(it, v.get_name(), v);
+    } else {
+      // Update the entry.
+      it->second = v;
+    }
+  }
 }
 
 void Context::Impl::DeclareVariable(const Variable& v, const Expression& lb,
