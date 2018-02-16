@@ -197,6 +197,7 @@ TEST_F(ApiTest, CheckSatisfiabilityIfThenElse1) {
   ASSERT_TRUE(result);
   const Box& solution{*result};
   EXPECT_EQ(solution[z_].mid(), 100);
+  EXPECT_EQ(solution.size(), 3);
 }
 
 TEST_F(ApiTest, CheckSatisfiabilityIfThenElse2) {
@@ -208,6 +209,7 @@ TEST_F(ApiTest, CheckSatisfiabilityIfThenElse2) {
   ASSERT_TRUE(result);
   const Box& solution{*result};
   EXPECT_EQ(solution[z_].mid(), 100);
+  EXPECT_EQ(solution.size(), 3);
 }
 
 }  // namespace
