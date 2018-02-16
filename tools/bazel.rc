@@ -7,7 +7,6 @@ build --strip=never
 
 # Default test options.
 test --test_output=errors
-test --test_summary=terse
 build --crosstool_top=//tools:default-toolchain
 
 ### Cpplint. ###
