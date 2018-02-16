@@ -256,6 +256,14 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "logging_test",
+    tags = ["unit"],
+    deps = [
+        ":logging",
+    ],
+)
+
+dreal_cc_googletest(
     name = "nnfizer_test",
     tags = ["unit"],
     deps = [
