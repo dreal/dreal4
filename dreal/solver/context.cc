@@ -43,6 +43,7 @@ class Context::Impl {
   ~Impl() = default;
 
   void Assert(const Formula& f);
+  std::experimental::optional<Box> CheckSatCore();
   std::experimental::optional<Box> CheckSat();
   void DeclareVariable(const Variable& v);
   void DeclareVariable(const Variable& v, const Expression& lb,
@@ -134,9 +135,23 @@ void Tighten(Box* box, const double delta) {
     }
   }
 }
+
+// The parameter @p box might include non-model variables
+// (i.e. variables introduced by if-then-else elimination). This
+// function creates a new box which is free of those non-model
+// variables. The return value will be passed to users.
+Box ExtractModel(const Box& box) {
+  Box new_box;
+  for (const Variable& v : box.variables()) {
+    if (v.is_model_variable()) {
+      new_box.Add(v, box[v].lb(), box[v].ub());
+    }
+  }
+  return new_box;
+}
 }  // namespace
 
-optional<Box> Context::Impl::CheckSat() {
+optional<Box> Context::Impl::CheckSatCore() {
   DREAL_LOG_DEBUG("Context::CheckSat()");
   DREAL_LOG_TRACE("Context::CheckSat: Box =\n{}", box());
   if (box().empty()) {
@@ -179,8 +194,6 @@ optional<Box> Context::Impl::CheckSat() {
           // SAT from TheorySolver.
           DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = delta-SAT");
           Box model{theory_solver.GetModel()};
-          Tighten(&model, config_.precision());
-          DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", model);
           return model;
         } else {
           // UNSAT from TheorySolver.
@@ -195,8 +208,6 @@ optional<Box> Context::Impl::CheckSat() {
           sat_solver_.AddLearnedClause(explanation);
         }
       } else {
-        Tighten(&box(), config_.precision());
-        DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", box());
         return box();
       }
     } else {
@@ -204,6 +215,18 @@ optional<Box> Context::Impl::CheckSat() {
       DREAL_LOG_DEBUG("Context::CheckSat() - Sat Check = UNSAT");
       return {};
     }
+  }
+}
+
+optional<Box> Context::Impl::CheckSat() {
+  auto result = CheckSatCore();
+  if (result) {
+    // In case of delta-sat, do post-processing.
+    Tighten(&(*result), config_.precision());
+    DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", *result);
+    return ExtractModel(*result);
+  } else {
+    return result;
   }
 }
 
