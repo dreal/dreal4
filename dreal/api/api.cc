@@ -52,31 +52,16 @@ optional<Box> Minimize(const Expression& objective, const Formula& constraint,
 
 optional<Box> Minimize(const Expression& objective, const Formula& constraint,
                        Config config) {
-  // We encode the following optimization problem:
-  //
-  //   argminₓ objective(x) such that constraint(x) holds
-  //
-  // into the following logic formula:
-  //
-  //   ϕ = ∃x. constraint(x) ∧ [∀y. constraint(y) ⇒ objective(x) ≤ objective(y)]
-  //
-  // and checks the δ-satisfiability of ϕ.
-
-  // Maps an exist_variable to a forall_variable.
-  ExpressionSubstitution subst;
-  Variables forall_variables;
-  for (const Variable& exist_variable : objective.GetVariables()) {
-    const Variable forall_variable{"forall_" + exist_variable.get_name(),
-                                   exist_variable.get_type()};
-    forall_variables += forall_variable;
-    subst.emplace(exist_variable, forall_variable);
+  Context context{move(config)};
+  for (const Variable& v : constraint.GetFreeVariables()) {
+    context.DeclareVariable(v);
   }
-  const Formula constraint_y{constraint.Substitute(subst)};
-  const Expression objective_y{objective.Substitute(subst)};
-  const Formula phi{
-      constraint &&
-      forall(forall_variables, imply(constraint_y, objective <= objective_y))};
-  return CheckSatisfiability(phi, move(config));
+  for (const Variable& v : objective.GetVariables()) {
+    context.DeclareVariable(v);
+  }
+  context.Assert(constraint);
+  context.Minimize(objective);
+  return context.CheckSat();
 }
 
 bool Minimize(const Expression& objective, const Formula& constraint,
