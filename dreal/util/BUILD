@@ -208,6 +208,17 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "scoped_unordered_map",
+    hdrs = [
+        "scoped_unordered_map.h",
+    ],
+    deps = [
+        ":assert",
+        ":exception",
+    ],
+)
+
+dreal_cc_library(
     name = "scoped_vector",
     hdrs = [
         "scoped_vector.h",
@@ -286,6 +297,14 @@ dreal_cc_googletest(
     deps = [
         ":predicate_abstractor",
         "//dreal/symbolic:symbolic_test_util",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "scoped_unordered_map_test",
+    tags = ["unit"],
+    deps = [
+        ":scoped_unordered_map",
     ],
 )
 
