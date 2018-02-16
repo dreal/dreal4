@@ -6,7 +6,10 @@ package(
 
 cc_library(
     name = "fmt",
-    srcs = glob(["fmt/*.cc"]),
-    hdrs = glob(["fmt/*.h"]),
+    hdrs = glob([
+        "fmt/*.cc",
+        "fmt/*.h",
+    ]),
+    defines = ["FMT_HEADER_ONLY=1"],
     includes = ["."],
 )
