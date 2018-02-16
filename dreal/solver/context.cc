@@ -371,7 +371,7 @@ void Context::Impl::SetOption(const string& key, const string& val) {
     } else if (val == "false") {
       config_.mutable_use_polytope().set_from_file(false);
     } else {
-      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: " + key + " = " +
+      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: {} = {}", key,
                                 val);
     }
   }
@@ -381,7 +381,7 @@ void Context::Impl::SetOption(const string& key, const string& val) {
     } else if (val == "false") {
       config_.mutable_use_polytope_in_forall().set_from_file(false);
     } else {
-      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: " + key + " = " +
+      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: {} = {}", key,
                                 val);
     }
   }
@@ -390,7 +390,7 @@ void Context::Impl::SetOption(const string& key, const string& val) {
 const Variable& Context::Impl::lookup_variable(const string& name) {
   const auto it = name_to_var_map_.find(name);
   if (it == name_to_var_map_.cend()) {
-    throw DREAL_RUNTIME_ERROR(name + " is not found in the context.");
+    throw DREAL_RUNTIME_ERROR("{} is not found in the context.", name);
   }
   return it->second;
 }
@@ -423,9 +423,8 @@ void Context::Maximize(const Expression& f) { impl_->Minimize({-f}); }
 void Context::Pop(int n) {
   DREAL_LOG_DEBUG("Context::Pop({})", n);
   if (n <= 0) {
-    ostringstream oss;
-    oss << "Context::Pop(n) called with n = " << n << " which is not positive.";
-    throw DREAL_RUNTIME_ERROR(oss.str());
+    throw DREAL_RUNTIME_ERROR(
+        "Context::Pop(n) called with n = {} which is not positive.", n);
   }
   while (n-- > 0) {
     impl_->Pop();
@@ -435,10 +434,8 @@ void Context::Pop(int n) {
 void Context::Push(int n) {
   DREAL_LOG_DEBUG("Context::Push({})", n);
   if (n <= 0) {
-    ostringstream oss;
-    oss << "Context::Push(n) called with n = " << n
-        << " which is not positive.";
-    throw DREAL_RUNTIME_ERROR(oss.str());
+    throw DREAL_RUNTIME_ERROR(
+        "Context::Push(n) called with n = {} which is not positive.", n);
   }
   while (n-- > 0) {
     impl_->Push();

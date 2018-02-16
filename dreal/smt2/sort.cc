@@ -17,7 +17,7 @@ Sort ParseSort(const string& s) {
   if (s == "Bool") {
     return Sort::Bool;
   }
-  throw DREAL_RUNTIME_ERROR(s + " is not {Real, Int, Bool}.");
+  throw DREAL_RUNTIME_ERROR("{} is not one of {Real, Int, Bool}.", s);
 }
 
 ostream& operator<<(ostream& os, const Sort& sort) {

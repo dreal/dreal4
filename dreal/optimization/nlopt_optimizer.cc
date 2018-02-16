@@ -1,6 +1,5 @@
 #include "dreal/optimization/nlopt_optimizer.h"
 
-#include <sstream>
 #include <utility>
 
 #include "dreal/util/assert.h"
@@ -12,7 +11,6 @@ namespace dreal {
 using std::make_unique;
 using std::move;
 using std::ostream;
-using std::ostringstream;
 using std::vector;
 
 namespace {
@@ -153,10 +151,8 @@ void NloptOptimizer::AddConstraint(const Formula& formula) {
       return AddRelationalConstraint(nnfizer_.Convert(negated_formula));
     }
   }
-  ostringstream oss;
-  oss << "NloptOptimizer::AddConstraint: "
-      << "Unsupported formula: " << formula;
-  throw DREAL_RUNTIME_ERROR(oss.str());
+  throw DREAL_RUNTIME_ERROR(
+      "NloptOptimizer::AddConstraint: Unsupported formula {}.", formula);
 }
 
 void NloptOptimizer::AddRelationalConstraint(const Formula& formula) {
@@ -182,10 +178,9 @@ void NloptOptimizer::AddRelationalConstraint(const Formula& formula) {
     constraints_.push_back(move(cached_expression));
     equality = true;
   } else {
-    ostringstream oss;
-    oss << "NloptOptimizer::AddRelationalConstraint: "
-        << "Unsupported formula: " << formula;
-    throw DREAL_RUNTIME_ERROR(oss.str());
+    throw DREAL_RUNTIME_ERROR(
+        "NloptOptimizer::AddRelationalConstraint: Unsupported formula {}.",
+        formula);
   }
 
   if (equality) {

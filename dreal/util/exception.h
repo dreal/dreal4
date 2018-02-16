@@ -2,11 +2,13 @@
 
 #include <fmt/format.h>
 
-namespace dreal {
 #include <stdexcept>
 
-#define DREAL_RUNTIME_ERROR(message) \
-  std::runtime_error(fmt::format("{}:{} {}.", message, __FILE__, __LINE__))
+namespace dreal {
+
+#define DREAL_RUNTIME_ERROR(message, ...)                        \
+  std::runtime_error(fmt::format("{}:{} ", __FILE__, __LINE__) + \
+                     fmt::format(message, ##__VA_ARGS__))
 
 #define DREAL_UNREACHABLE() \
   throw DREAL_RUNTIME_ERROR("Should not be reachable.")  // LCOV_EXCL_LINE

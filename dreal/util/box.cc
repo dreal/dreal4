@@ -4,7 +4,6 @@
 #include <cmath>
 #include <functional>
 #include <limits>
-#include <sstream>
 #include <utility>
 
 #include "dreal/util/assert.h"
@@ -20,7 +19,6 @@ using std::make_pair;
 using std::make_shared;
 using std::numeric_limits;
 using std::ostream;
-using std::ostringstream;
 using std::pair;
 using std::unordered_map;
 using std::vector;
@@ -144,10 +142,9 @@ pair<double, int> Box::MaxDiam() const {
 pair<Box, Box> Box::bisect(const int i) const {
   const Variable& var{(*idx_to_var_)[i]};
   if (!values_[i].is_bisectable()) {
-    ostringstream oss;
-    oss << "Variable " << var << " = " << values_[i]
-        << " is not bisectable but Box::bisect is called.";
-    throw DREAL_RUNTIME_ERROR(oss.str());
+    throw DREAL_RUNTIME_ERROR(
+        "Variable {} = {} is not bisectable but Box::bisect is called.", var,
+        values_[i]);
   }
   switch (var.get_type()) {
     case Variable::Type::CONTINUOUS:
@@ -167,9 +164,7 @@ pair<Box, Box> Box::bisect(const Variable& var) const {
   if (it != var_to_idx_->end()) {
     return bisect(it->second);
   } else {
-    ostringstream oss;
-    oss << "Variable " << var << " is not found in this box.";
-    throw DREAL_RUNTIME_ERROR(oss.str());
+    throw DREAL_RUNTIME_ERROR("Variable {} is not found in this box.", var);
   }
   return bisect((*var_to_idx_)[var]);
 }
