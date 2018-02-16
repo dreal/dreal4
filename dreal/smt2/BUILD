@@ -90,6 +90,7 @@ dreal_cc_library(
         ":sort",
         "//dreal/solver",
         "//dreal/symbolic",
+        "//dreal/util:scoped_unordered_map",
     ],
 )
 

@@ -150,17 +150,14 @@ command_declare_fun:
                     switch ($6) {
                       case Sort::Bool:
                         driver
-                            .context_
                             .DeclareVariable(Variable{*$3, Variable::Type::BOOLEAN});
                         break;
                       case Sort::Int:
                         driver
-                            .context_
                             .DeclareVariable(Variable{*$3, Variable::Type::INTEGER});
                         break;
                       case Sort::Real:
                         driver
-                            .context_
                             .DeclareVariable(Variable{*$3, Variable::Type::CONTINUOUS});
                         break;
                     }
@@ -171,17 +168,14 @@ command_declare_fun:
                     switch ($6) {
                       case Sort::Bool:
                         driver
-                            .context_
                             .DeclareVariable(Variable{*$3, Variable::Type::BOOLEAN}, *$8, *$10);
                         break;
                       case Sort::Int:
                         driver
-                            .context_
                             .DeclareVariable(Variable{*$3, Variable::Type::INTEGER}, *$8, *$10);
                         break;
                       case Sort::Real:
                         driver
-                            .context_
                             .DeclareVariable(Variable{*$3, Variable::Type::CONTINUOUS}, *$8, *$10);
                         break;
                     }
@@ -274,7 +268,7 @@ formula_list:   formula { $$ = new std::vector<Formula>(1, *$1); delete $1; }
         ;
 
 formula:
-                /* SYMBOL { $$ = new Formula{driver.context_.lookup_variable(*$1)}; } */
+                /* SYMBOL { $$ = new Formula{driver.lookup_variable(*$1)}; } */
                 TK_TRUE { $$ = new Formula(Formula::True()); }
         |       TK_FALSE { $$ = new Formula(Formula::False()); }
         |       '('TK_EQ formula formula ')' {
@@ -336,7 +330,7 @@ expr:           DOUBLE { $$ = new Expression{$1}; }
         |       INT { $$ = new Expression{static_cast<double>($1)}; }
         |       SYMBOL {
 	    try {
-		const Variable& var = driver.context_.lookup_variable(*$1);
+		const Variable& var = driver.lookup_variable(*$1);
 	        $$ = new Expression{var};
             } catch (std::runtime_error& e) {
 		std::cerr << @1 << " : " << e.what() << std::endl;

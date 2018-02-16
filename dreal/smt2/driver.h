@@ -5,6 +5,7 @@
 #include "dreal/smt2/location.hh"
 #include "dreal/smt2/scanner.h"
 #include "dreal/solver/context.h"
+#include "dreal/util/scoped_unordered_map.h"
 
 namespace dreal {
 
@@ -59,6 +60,22 @@ class Smt2Driver {
   /// Calls context_.CheckSat() and print proper output messages to cout.
   void CheckSat();
 
+  /// Declare a variable @p v.
+  void DeclareVariable(const Variable& v);
+
+  /// Declare a variable @p v which is bounded by an interval `[lb, ub]`.
+  void DeclareVariable(const Variable& v, const Expression& lb,
+                       const Expression& ub);
+
+  /// Returns a variable associated with a name @p name.
+  ///
+  /// @throws if no variable is associated with @p name.
+  const Variable& lookup_variable(const std::string& name);
+
+  //-----------------
+  // (public) Members
+  //-----------------
+
   /// enable debug output in the flex scanner
   bool trace_scanning_{false};
 
@@ -74,6 +91,9 @@ class Smt2Driver {
 
   /** The context filled during parsing of the expressions. */
   Context context_;
+
+  /** Scoped map from a string to a corresponding Variable. */
+  ScopedUnorderedMap<std::string, Variable> scope_;
 };
 
 }  // namespace dreal

@@ -67,4 +67,23 @@ void Smt2Driver::CheckSat() {
   }
 }
 
+void Smt2Driver::DeclareVariable(const Variable& v) {
+  scope_.insert(v.get_name(), v);
+  context_.DeclareVariable(v);
+}
+
+void Smt2Driver::DeclareVariable(const Variable& v, const Expression& lb,
+                                 const Expression& ub) {
+  scope_.insert(v.get_name(), v);
+  context_.DeclareVariable(v, lb, ub);
+}
+
+const Variable& Smt2Driver::lookup_variable(const string& name) {
+  const auto it = scope_.find(name);
+  if (it == scope_.cend()) {
+    throw DREAL_RUNTIME_ERROR("{} is an undeclared variable.", name);
+  }
+  return it->second;
+}
+
 }  // namespace dreal
