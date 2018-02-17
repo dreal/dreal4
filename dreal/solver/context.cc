@@ -57,7 +57,6 @@ class Context::Impl {
   void SetLogic(const Logic& logic);
   void SetOption(const std::string& key, double val);
   void SetOption(const std::string& key, const std::string& val);
-  const Variable& lookup_variable(const std::string& name);
   const Config& config() const { return config_; }
   Config& mutable_config() { return config_; }
 
@@ -66,7 +65,6 @@ class Context::Impl {
 
   Config config_;
   std::experimental::optional<Logic> logic_{};
-  std::unordered_map<std::string, Variable> name_to_var_map_;
   std::unordered_map<std::string, std::string> info_;
   std::unordered_map<std::string, std::string> option_;
 
@@ -238,14 +236,6 @@ void Context::Impl::DeclareVariable(const Variable& v) {
       }) == variables.end()) {
     // v is not in box.
     box().Add(v);
-    auto it = name_to_var_map_.find(v.get_name());
-    if (it == name_to_var_map_.end()) {
-      // There is no entry of (v.get_name(), v) in name_to_var_map_.
-      name_to_var_map_.emplace_hint(it, v.get_name(), v);
-    } else {
-      // Update the entry.
-      it->second = v;
-    }
   }
 }
 
@@ -387,14 +377,6 @@ void Context::Impl::SetOption(const string& key, const string& val) {
   }
 }
 
-const Variable& Context::Impl::lookup_variable(const string& name) {
-  const auto it = name_to_var_map_.find(name);
-  if (it == name_to_var_map_.cend()) {
-    throw DREAL_RUNTIME_ERROR("{} is not found in the context.", name);
-  }
-  return it->second;
-}
-
 Context::Context() : Context{Config{}} {}
 
 Context::Context(Config config) : impl_{make_shared<Impl>(config)} {}
@@ -462,10 +444,6 @@ void Context::SetOption(const string& key, const double val) {
 
 void Context::SetOption(const string& key, const string& val) {
   impl_->SetOption(key, val);
-}
-
-const Variable& Context::lookup_variable(const string& name) {
-  return impl_->lookup_variable(name);
 }
 
 const Config& Context::config() const { return impl_->config(); }

@@ -75,11 +75,6 @@ class Context {
   /// Sets an option @p key with a value @p val.
   void SetOption(const std::string& key, const std::string& val);
 
-  /// Returns a variable associated with a name @p name.
-  ///
-  /// @throws if no variable is associated with @p name.
-  const Variable& lookup_variable(const std::string& name);
-
   const Config& config() const;
 
   Config& mutable_config();
