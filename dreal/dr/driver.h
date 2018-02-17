@@ -5,6 +5,7 @@
 #include "dreal/dr/location.hh"
 #include "dreal/dr/scanner.h"
 #include "dreal/solver/context.h"
+#include "dreal/util/scoped_unordered_map.h"
 
 namespace dreal {
 
@@ -57,6 +58,8 @@ class DrDriver {
   void error(const std::string& m);
 
   /// Returns a variable associated with a name @p name.
+  ///
+  /// @throws if no variable is associated with @p name.
   const Variable& lookup_variable(const std::string& name);
 
   /// Declare a variable @p v.
@@ -91,10 +94,10 @@ class DrDriver {
  private:
   /** The context filled during parsing of the expressions. */
   Context context_;
-
- private:
   std::vector<Formula> constraints_;
   std::vector<Expression> objectives_;
+  /** Scoped map from a string to a corresponding Variable. */
+  ScopedUnorderedMap<std::string, Variable> scope_;
 };
 
 }  // namespace dreal

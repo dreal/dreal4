@@ -57,15 +57,21 @@ void DrDriver::error(const class location& l, const string& m) {
 void DrDriver::error(const string& m) { cerr << m << endl; }
 
 const Variable& DrDriver::lookup_variable(const std::string& name) {
-  return context_.lookup_variable(name);
+  const auto it = scope_.find(name);
+  if (it == scope_.cend()) {
+    throw DREAL_RUNTIME_ERROR("{} is an undeclared variable.", name);
+  }
+  return it->second;
 }
 
 void DrDriver::DeclareVariable(const Variable& v) {
+  scope_.insert(v.get_name(), v);
   context_.DeclareVariable(v);
 }
 
 void DrDriver::DeclareVariable(const Variable& v, const Expression& lb,
                                const Expression& ub) {
+  scope_.insert(v.get_name(), v);
   context_.DeclareVariable(v, lb, ub);
 }
 

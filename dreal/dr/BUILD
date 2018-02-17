@@ -45,6 +45,7 @@ dreal_cc_library(
     deps = [
         "//dreal/solver",
         "//dreal/symbolic",
+        "//dreal/util:scoped_unordered_map",
     ],
 )
 
