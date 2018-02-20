@@ -1,5 +1,5 @@
 (set-logic QF_NRA)
-(set-info :precision 0.000001)
+(set-option :precision 0.000001)
 (set-option :polytope true)
 (declare-fun x1 () Real)
 (declare-fun x2 () Real)

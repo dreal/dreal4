@@ -1,5 +1,5 @@
 (set-logic QF_NRA)
-(set-info :precision 0.0000001)
+(set-option :precision 0.0000001)
 (declare-fun omega3 () Real)
 (assert (>= omega3 0.49766302108764654))
 (assert (<= omega3 0.4976634979248047))

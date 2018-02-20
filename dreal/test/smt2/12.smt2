@@ -1,5 +1,5 @@
 (set-logic QF_NRA)
-(set-info :precision 0.0000001)
+(set-option :precision 0.0000001)
 (declare-fun x () Real)
 (declare-fun y () Real)
 (assert (< 0.01 x))

@@ -325,10 +325,6 @@ string to_string(const double) {
 void Context::Impl::SetInfo(const string& key, const double val) {
   DREAL_LOG_DEBUG("Context::SetInfo({} ↦ {})", key, val);
   info_[key] = to_string(val);
-  if (key == ":precision") {
-    DREAL_ASSERT(val > 0.0);
-    config_.mutable_precision().set_from_file(val);
-  }
 }
 
 void Context::Impl::SetInfo(const string& key, const string& val) {
@@ -350,6 +346,13 @@ void Context::Impl::SetLogic(const Logic& logic) {
 void Context::Impl::SetOption(const string& key, const double val) {
   DREAL_LOG_DEBUG("Context::SetOption({} ↦ {})", key, val);
   option_[key] = to_string(val);
+  if (key == ":precision") {
+    if (val <= 0.0) {
+      throw DREAL_RUNTIME_ERROR("Precision has to be positive (input = {}).",
+                                val);
+    }
+    return config_.mutable_precision().set_from_file(val);
+  }
 }
 
 void Context::Impl::SetOption(const string& key, const string& val) {

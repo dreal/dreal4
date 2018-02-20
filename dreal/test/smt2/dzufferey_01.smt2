@@ -1,4 +1,4 @@
-(set-info :precision 0.1)
+(set-option :precision 0.1)
 (set-logic QF_NRA)
 (declare-fun base.dx_dt () Real)
 (declare-fun base.q_a () Real)
