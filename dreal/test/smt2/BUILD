@@ -541,3 +541,98 @@ smt2_test(
     name = "zenna_08",
     size = "small",
 )
+
+smt2_test(
+    name = "cgd8d_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "cgd8d_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_abs",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_abs_simplified",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_beale",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_04",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_05",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_06",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_07",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_08",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_09",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_10",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_zenna_01",
+    size = "small",
+)
