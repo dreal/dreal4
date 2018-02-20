@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "dreal/util/assert.h"
+#include "dreal/util/logging.h"
 
 using std::move;
 using std::unordered_set;
@@ -31,6 +32,8 @@ const ibex::BitSet& ContractorStatus::output() const { return output_; }
 ibex::BitSet& ContractorStatus::mutable_output() { return output_; }
 
 void ContractorStatus::AddUsedConstraint(const Formula& f) {
+  DREAL_LOG_DEBUG("ContractorStatus::AddUsedConstraint({}) box is empty? {}", f,
+                  box_.empty());
   if (box_.empty()) {
     for (const Variable& v : f.GetFreeVariables()) {
       AddUnsatWitness(v);
@@ -46,12 +49,16 @@ void ContractorStatus::AddUsedConstraint(const vector<Formula>& formulas) {
 }
 
 void ContractorStatus::AddUnsatWitness(const Variable& var) {
+  DREAL_LOG_DEBUG("ContractorStatus::AddUnsatWitness({})", var);
   unsat_witness_.insert(var);
 }
 
 unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
     const Variables& unsat_witness,
     const unordered_set<Formula, hash_value<Formula>>& used_constraints) {
+  if (unsat_witness.empty()) {
+    return {};
+  }
   // Set up the initial explanation based on variables.
   unordered_set<Formula, hash_value<Formula>> explanation;
   for (const Formula& f_i : used_constraints) {
@@ -81,7 +88,6 @@ unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
 
 unordered_set<Formula, hash_value<Formula>> ContractorStatus::Explanation()
     const {
-  DREAL_ASSERT(!unsat_witness_.empty());
   return GenerateExplanation(unsat_witness_, used_constraints_);
 }
 
