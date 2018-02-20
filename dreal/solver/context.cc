@@ -355,28 +355,41 @@ void Context::Impl::SetOption(const string& key, const double val) {
   }
 }
 
+namespace {
+bool ParseBooleanOption(const string& key, const string& val) {
+  if (val == "true") {
+    return true;
+  }
+  if (val == "false") {
+    return false;
+  }
+  throw DREAL_RUNTIME_ERROR("Unknown value {} is provided for option {}", val,
+                            key);
+}
+}  // namespace
+
 void Context::Impl::SetOption(const string& key, const string& val) {
   DREAL_LOG_DEBUG("Context::SetOption({} ↦ {})", key, val);
   option_[key] = val;
   if (key == ":polytope") {
-    if (val == "true") {
-      config_.mutable_use_polytope().set_from_file(true);
-    } else if (val == "false") {
-      config_.mutable_use_polytope().set_from_file(false);
-    } else {
-      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: {} = {}", key,
-                                val);
-    }
+    return config_.mutable_use_polytope().set_from_file(
+        ParseBooleanOption(key, val));
   }
   if (key == ":forall-polytope") {
-    if (val == "true") {
-      config_.mutable_use_polytope_in_forall().set_from_file(true);
-    } else if (val == "false") {
-      config_.mutable_use_polytope_in_forall().set_from_file(false);
-    } else {
-      throw DREAL_RUNTIME_ERROR("Fail to interpret the option: {} = {}", key,
-                                val);
-    }
+    return config_.mutable_use_polytope_in_forall().set_from_file(
+        ParseBooleanOption(key, val));
+  }
+  if (key == ":local-optimization") {
+    return config_.mutable_use_local_optimization().set_from_file(
+        ParseBooleanOption(key, val));
+  }
+  if (key == ":worklist-fixpoint") {
+    return config_.mutable_use_worklist_fixpoint().set_from_file(
+        ParseBooleanOption(key, val));
+  }
+  if (key == ":produce-models") {
+    return config_.mutable_produce_models().set_from_file(
+        ParseBooleanOption(key, val));
   }
 }
 
