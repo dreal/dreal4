@@ -60,6 +60,10 @@ class Smt2Driver {
   /// Calls context_.CheckSat() and print proper output messages to cout.
   void CheckSat();
 
+  /// Register a variable @p v in the scope. Note that it does not
+  /// declare the variable in the context.
+  void RegisterVariable(const Variable& v);
+
   /// Declare a variable @p v.
   void DeclareVariable(const Variable& v);
 
@@ -71,6 +75,12 @@ class Smt2Driver {
   ///
   /// @throws if no variable is associated with @p name.
   const Variable& lookup_variable(const std::string& name);
+
+  void PushScope() { scope_.push(); }
+
+  void PopScope() { scope_.pop(); }
+
+  Variable ParseVariableSort(const std::string& name, Sort s);
 
   //-----------------
   // (public) Members
@@ -92,6 +102,7 @@ class Smt2Driver {
   /** The context filled during parsing of the expressions. */
   Context context_;
 
+ private:
   /** Scoped map from a string to a corresponding Variable. */
   ScopedUnorderedMap<std::string, Variable> scope_;
 };

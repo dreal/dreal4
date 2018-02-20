@@ -1,7 +1,10 @@
 %{
 
+#include <cmath>
 #include <iostream>
 #include <string>
+#include <tuple>
+#include <utility>
 
 #include "dreal/smt2/logic.h"
 #include "dreal/smt2/sort.h"
@@ -65,6 +68,8 @@
     Formula*                  formulaVal;
     std::vector<Formula>*     formulaListVal;
     std::vector<Expression>*  exprListVal;
+    std::tuple<Variable, double, double>* forallVariableVal;
+    std::pair<Variables, Formula>*        forallVariablesVal;
 }
 
 %token TK_EXCLAMATION TK_BINARY TK_DECIMAL TK_HEXADECIMAL TK_NUMERAL TK_STRING
@@ -98,6 +103,9 @@
 %type <formulaVal>     formula
 %type <formulaListVal> formula_list
 
+%type <forallVariablesVal>   variable_sort_list
+%type <forallVariableVal>    variable_sort
+			
 %{
 
 #include "dreal/smt2/driver.h"
@@ -316,8 +324,59 @@ formula:
             delete $3;
             delete $4;
             delete $5;
+	}
+	|	'(' TK_FORALL forall_enter_scope '(' variable_sort_list ')' formula forall_exit_scope ')' {
+	    const Variables& vars = $5->first;
+	    const Formula& domain = $5->second;
+	    $$ = new Formula(forall(vars, imply(domain, *$7)));
+	    delete $5;
+	    delete $7;
+        }
+        ;
+
+forall_enter_scope: /* */ {
+            driver.PushScope();
+	}
+	;
+
+forall_exit_scope: /* */ {
+            driver.PopScope();
+        }
+        ;
+
+variable_sort_list: /* empty list */ { $$ = new std::pair<Variables, Formula>(Variables{}, Formula::True()); }
+        |       variable_sort variable_sort_list {
+            const Variable& v = std::get<0>(*$1);
+            const double lb = std::get<1>(*$1);
+            const double ub = std::get<2>(*$1);
+            $2->first.insert(v);
+            if (std::isfinite(lb)) {
+                $2->second = $2->second && (lb <= v);
             }
-		
+            if (std::isfinite(ub)) {
+                $2->second = $2->second && (v <= ub);
+            }
+            delete $1; $$ = $2;
+        }
+        ;
+
+variable_sort: '(' SYMBOL sort ')' {
+            const Variable v = driver.ParseVariableSort(*$2, $3);
+            const double inf = std::numeric_limits<double>::infinity();
+	    driver.RegisterVariable(v);
+            $$ = new std::tuple<Variable, double, double>(v, -inf, inf);
+            delete $2;
+        }
+        |       '(' SYMBOL sort '[' expr ',' expr ']' ')' {
+            const Variable v = driver.ParseVariableSort(*$2, $3);
+            const double lb = $5->Evaluate();
+            const double ub = $7->Evaluate();
+	    driver.RegisterVariable(v);
+            $$ = new std::tuple<Variable, double, double>(v, lb, ub);
+            delete $2;
+            delete $5;
+            delete $7;
+	}
         ;
 
 sort:           SYMBOL { $$ = ParseSort(*$1); delete $1; }
