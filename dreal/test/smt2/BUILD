@@ -287,6 +287,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "hex_02",
+    size = "small",
+)
+
+smt2_test(
     name = "int_01",
     size = "small",
 )
