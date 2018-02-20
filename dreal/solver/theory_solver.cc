@@ -12,6 +12,7 @@
 #include "dreal/solver/icp.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/stat.h"
 
 namespace dreal {
 
@@ -55,15 +56,15 @@ bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
   return true;
 }
 
-class TheorySolverStat {
+class TheorySolverStat : public Stat {
  public:
-  TheorySolverStat() = default;
+  explicit TheorySolverStat(const bool enabled) : Stat{enabled} {}
   TheorySolverStat(const TheorySolverStat&) = default;
   TheorySolverStat(TheorySolverStat&&) = default;
   TheorySolverStat& operator=(const TheorySolverStat&) = default;
   TheorySolverStat& operator=(TheorySolverStat&&) = default;
-  ~TheorySolverStat() {
-    if (DREAL_LOG_INFO_ENABLED) {
+  ~TheorySolverStat() override {
+    if (enabled()) {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of CheckSat",
             "Theory level", num_check_sat_);
@@ -163,7 +164,7 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
 }
 
 bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
-  static TheorySolverStat stat;
+  static TheorySolverStat stat{DREAL_LOG_INFO_ENABLED};
   stat.num_check_sat_++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
   DREAL_ASSERT(!box.empty());

@@ -63,6 +63,7 @@ dreal_cc_library(
         "//dreal/util:math",
         "//dreal/util:nnfizer",
         "//dreal/util:scoped_vector",
+        "//dreal/util:stat",
     ],
 )
 
@@ -80,6 +81,7 @@ dreal_cc_library(
         "//dreal/util:exception",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
+        "//dreal/util:stat",
         "//dreal/util:tseitin_cnfizer",
         "@picosat//:picosat",
     ],

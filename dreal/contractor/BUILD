@@ -54,6 +54,7 @@ dreal_cc_library(
         "//dreal/util:logging",
         "//dreal/util:math",
         "//dreal/util:nnfizer",
+        "//dreal/util:stat",
         "@ibex//:ibex",
     ],
 )

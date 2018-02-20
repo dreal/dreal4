@@ -6,6 +6,7 @@
 
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/stat.h"
 
 using std::cout;
 using std::experimental::nullopt;
@@ -94,15 +95,15 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
 // A class to show statistics information at destruction. We have a
 // static instance in Icp::CheckSat() to keep track of the numbers of
 // branching and pruning operations.
-class IcpStat {
+class IcpStat : public Stat {
  public:
-  IcpStat() = default;
+  explicit IcpStat(bool enabled) : Stat{enabled} {}
   IcpStat(const IcpStat&) = default;
   IcpStat(IcpStat&&) = default;
   IcpStat& operator=(const IcpStat&) = default;
   IcpStat& operator=(IcpStat&&) = default;
-  ~IcpStat() {
-    if (DREAL_LOG_INFO_ENABLED) {
+  ~IcpStat() override {
+    if (enabled()) {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Branching",
             "ICP level", num_branch_);
@@ -163,7 +164,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(const Box& box,
 }
 
 bool Icp::CheckSat(ContractorStatus* const cs) {
-  static IcpStat stat;
+  static IcpStat stat{DREAL_LOG_INFO_ENABLED};
   DREAL_LOG_DEBUG("Icp::CheckSat()");
   // Stack of Box x BranchingPoint.
   vector<pair<Box, int>> stack;

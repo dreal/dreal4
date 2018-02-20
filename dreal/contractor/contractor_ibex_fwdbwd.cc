@@ -5,6 +5,7 @@
 
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
+#include "dreal/util/stat.h"
 
 using std::cout;
 using std::make_unique;
@@ -15,16 +16,16 @@ using std::ostringstream;
 namespace dreal {
 
 namespace {
-class ContractorIbexFwdbwdStat {
+class ContractorIbexFwdbwdStat : public Stat {
  public:
-  ContractorIbexFwdbwdStat() = default;
+  explicit ContractorIbexFwdbwdStat(const bool enabled) : Stat{enabled} {};
   ContractorIbexFwdbwdStat(const ContractorIbexFwdbwdStat&) = default;
   ContractorIbexFwdbwdStat(ContractorIbexFwdbwdStat&&) = default;
   ContractorIbexFwdbwdStat& operator=(const ContractorIbexFwdbwdStat&) =
       default;
   ContractorIbexFwdbwdStat& operator=(ContractorIbexFwdbwdStat&&) = default;
-  ~ContractorIbexFwdbwdStat() {
-    if (DREAL_LOG_INFO_ENABLED) {
+  ~ContractorIbexFwdbwdStat() override {
+    if (enabled()) {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n",
             "Total # of ibex-fwdbwd Pruning", "Pruning level", num_pruning_);
@@ -64,7 +65,7 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
 }
 
 void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
-  static ContractorIbexFwdbwdStat stat;
+  static ContractorIbexFwdbwdStat stat{DREAL_LOG_INFO_ENABLED};
   if (ctc_) {
     Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
     old_iv_ = iv;

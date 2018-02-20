@@ -13,6 +13,7 @@
 #include "dreal/contractor/contractor_join.h"
 #include "dreal/contractor/contractor_seq.h"
 #include "dreal/contractor/contractor_worklist_fixpoint.h"
+#include "dreal/util/stat.h"
 
 using std::any_of;
 using std::cout;
@@ -51,15 +52,15 @@ vector<Contractor> Flatten(const vector<Contractor>& contractors) {
 // A class to show statistics information at destruction. We have a
 // static instance in Contractor::Prune() to keep track of the number
 // of pruning operations.
-class ContractorStat {
+class ContractorStat : public Stat {
  public:
-  ContractorStat() = default;
+  explicit ContractorStat(const bool enabled) : Stat{enabled} {}
   ContractorStat(const ContractorStat&) = default;
   ContractorStat(ContractorStat&&) = default;
   ContractorStat& operator=(const ContractorStat&) = default;
   ContractorStat& operator=(ContractorStat&&) = default;
-  ~ContractorStat() {
-    if (DREAL_LOG_INFO_ENABLED) {
+  ~ContractorStat() override {
+    if (enabled()) {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Pruning",
             "Contractor level", num_prune_);
@@ -78,7 +79,7 @@ Contractor::Contractor(shared_ptr<ContractorCell> ptr) : ptr_{move(ptr)} {}
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 
 void Contractor::Prune(ContractorStatus* cs) const {
-  static ContractorStat stat;
+  static ContractorStat stat{DREAL_LOG_INFO_ENABLED};
   stat.num_prune_++;
   ptr_->Prune(cs);
 }

@@ -67,6 +67,13 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "stat",
+    hdrs = [
+        "stat.h",
+    ],
+)
+
+dreal_cc_library(
     name = "tseitin_cnfizer",
     srcs = [
         "tseitin_cnfizer.cc",

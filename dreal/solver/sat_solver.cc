@@ -5,6 +5,7 @@
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/stat.h"
 
 namespace dreal {
 
@@ -69,15 +70,15 @@ void SatSolver::AddClause(const Formula& f) {
 }
 
 namespace {
-class SatSolverStat {
+class SatSolverStat : public Stat {
  public:
-  SatSolverStat() = default;
+  explicit SatSolverStat(const bool enabled) : Stat{enabled} {};
   SatSolverStat(const SatSolverStat&) = default;
   SatSolverStat(SatSolverStat&&) = default;
   SatSolverStat& operator=(const SatSolverStat&) = default;
   SatSolverStat& operator=(SatSolverStat&&) = default;
-  ~SatSolverStat() {
-    if (DREAL_LOG_INFO_ENABLED) {
+  ~SatSolverStat() override {
+    if (enabled()) {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of CheckSat",
             "SAT level", num_check_sat_);
@@ -89,7 +90,7 @@ class SatSolverStat {
 }  // namespace
 
 std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
-  static SatSolverStat stat;
+  static SatSolverStat stat{DREAL_LOG_INFO_ENABLED};
   DREAL_LOG_DEBUG("SatSolver::CheckSat(#vars = {}, #clauses = {})",
                   picosat_variables(sat_),
                   picosat_added_original_clauses(sat_));
