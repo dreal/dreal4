@@ -60,6 +60,7 @@ typedef dreal::Smt2Parser::token_type token_type;
 whitespace      [\x09 \xA0]
 printable_char  [\x20-\x7E\xA0-xFF]
 digit           [0-9]
+hex             [0-9a-fA-F]
 letter          [a-zA-Z]
 numeral         0|[1-9][0-9]*
 decimal         {numeral}\.0*{numeral}
@@ -188,7 +189,7 @@ simple_symbol   {sym_begin}{sym_continue}*
     return token::DOUBLE;
 }
 
-"-"?"0"("x"|"X")[0-9]\.[0-9a-fA-F]+"p"("+"|"-")?[0-9]+  {
+[-+]?0[xX]({hex}+\.?|{hex}*\.{hex}+)([pP][-+]?[0-9]+)? {
     yylval->doubleVal = atof(yytext);
     return token::DOUBLE;
 }
