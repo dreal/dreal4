@@ -39,11 +39,12 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
   // objective function.
   if (IsDifferentiable(query)) {
     // See https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#slsqp
-    opt_ = make_unique<NloptOptimizer>(NLOPT_LD_SLSQP, box, config);
+    opt_ = make_unique<NloptOptimizer>(nlopt::algorithm::LD_SLSQP, box, config);
   } else {
     // See
-    // https://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#newuoa-bound-constraints
-    opt_ = make_unique<NloptOptimizer>(NLOPT_LN_NEWUOA_BOUND, box, config);
+    // http://nlopt.readthedocs.io/en/latest/NLopt_Algorithms/#cobyla-constrained-optimization-by-linear-approximations
+    opt_ =
+        make_unique<NloptOptimizer>(nlopt::algorithm::LN_COBYLA, box, config);
   }
   Expression objective{};
   for (const Formula& f : formulas) {
@@ -92,15 +93,34 @@ Box CounterexampleRefiner::Refine(Box box) {
   // 2. call optimizer
   double optimal_value{0.0};
   try {
-    const nlopt_result result = opt_->Optimize(&init_, &optimal_value, env);
-    if (result >= 0 || result == NLOPT_ROUNDOFF_LIMITED) {
-      // 3. move the solution values from x into box.
-      i = 0;
-      for (const Variable& var : forall_vec_) {
-        box[var] = init_[i++];
-      }
-    } else {
-      DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}", result);
+    const nlopt::result result = opt_->Optimize(&init_, &optimal_value, env);
+    switch (result) {
+      case nlopt::result::FAILURE:
+        DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}", "FAILURE");
+        break;
+      case nlopt::result::INVALID_ARGS:
+        DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}",
+                        "INVALID_ARGS");
+        break;
+      case nlopt::result::OUT_OF_MEMORY:
+        DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}",
+                        "OUT_OF_MEMORY");
+        break;
+      case nlopt::result::FORCED_STOP:
+        DREAL_LOG_ERROR("LOCAL OPT FAILED: nlopt error-code {}", "FORCED_STOP");
+        break;
+      case nlopt::result::SUCCESS:
+      case nlopt::result::STOPVAL_REACHED:
+      case nlopt::result::FTOL_REACHED:
+      case nlopt::result::XTOL_REACHED:
+      case nlopt::result::MAXEVAL_REACHED:
+      case nlopt::result::MAXTIME_REACHED:
+      case nlopt::result::ROUNDOFF_LIMITED:
+        // 3. move the solution values from x into box.
+        i = 0;
+        for (const Variable& var : forall_vec_) {
+          box[var] = init_[i++];
+        }
     }
     return box;
   } catch (std::exception& e) {

@@ -86,18 +86,19 @@ ostream& operator<<(ostream& os, const CachedExpression& expression) {
 // --------------
 // NloptOptimizer
 // --------------
-NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
+NloptOptimizer::NloptOptimizer(const nlopt::algorithm algorithm, Box bound,
                                const Config& config)
-    : box_{move(bound)}, delta_{config.precision()} {
+    : opt_{algorithm, static_cast<unsigned>(bound.size())},
+      box_{move(bound)},
+      delta_{config.precision()} {
   DREAL_ASSERT(delta_ > 0.0);
   DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: Box = \n{}", box_);
-  opt_ = nlopt_create(algorithm, box_.size());
 
   // Set tolerance.
-  nlopt_set_ftol_rel(opt_, config.nlopt_ftol_rel());
-  nlopt_set_ftol_abs(opt_, config.nlopt_ftol_abs());
-  nlopt_set_maxeval(opt_, config.nlopt_maxeval());
-  nlopt_set_maxtime(opt_, config.nlopt_maxtime());
+  opt_.set_ftol_rel(config.nlopt_ftol_rel());
+  opt_.set_ftol_abs(config.nlopt_ftol_abs());
+  opt_.set_maxeval(config.nlopt_maxeval());
+  opt_.set_maxtime(config.nlopt_maxtime());
   DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: ftol_rel = {}",
                   config.nlopt_ftol_rel());
   DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: ftol_abs = {}",
@@ -108,30 +109,23 @@ NloptOptimizer::NloptOptimizer(const nlopt_algorithm algorithm, Box bound,
                   config.nlopt_maxtime());
 
   // Set bounds.
-  const auto lower_bounds = make_unique<double[]>(box_.size());
-  const auto upper_bounds = make_unique<double[]>(box_.size());
+  vector<double> lower_bounds(box_.size(), 0.0);
+  vector<double> upper_bounds(box_.size(), 0.0);
   for (int i = 0; i < box_.size(); ++i) {
     lower_bounds[i] = box_[i].lb();
     upper_bounds[i] = box_[i].ub();
     DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer {} ∈ [{}, {}]",
                     box_.variable(i), lower_bounds[i], upper_bounds[i]);
   }
-  const nlopt_result nlopt_result_lb{
-      nlopt_set_lower_bounds(opt_, lower_bounds.get())};
-  DREAL_ASSERT(nlopt_result_lb == NLOPT_SUCCESS);
-  const nlopt_result nlopt_result_ub{
-      nlopt_set_upper_bounds(opt_, upper_bounds.get())};
-  DREAL_ASSERT(nlopt_result_ub == NLOPT_SUCCESS);
+  opt_.set_lower_bounds(lower_bounds);
+  opt_.set_upper_bounds(upper_bounds);
 }
-
-NloptOptimizer::~NloptOptimizer() { nlopt_destroy(opt_); }
 
 void NloptOptimizer::SetMinObjective(const Expression& objective) {
   DREAL_LOG_DEBUG("NloptOptimizer::SetMinObjective({})", objective);
   objective_ = CachedExpression{objective, box_};
-  const nlopt_result result{nlopt_set_min_objective(
-      opt_, NloptOptimizerEvaluate, static_cast<void*>(&objective_))};
-  DREAL_ASSERT(result == NLOPT_SUCCESS);
+  opt_.set_min_objective(NloptOptimizerEvaluate,
+                         static_cast<void*>(&objective_));
 }
 
 void NloptOptimizer::AddConstraint(const Formula& formula) {
@@ -184,13 +178,13 @@ void NloptOptimizer::AddRelationalConstraint(const Formula& formula) {
   }
 
   if (equality) {
-    nlopt_add_equality_constraint(opt_, NloptOptimizerEvaluate,
-                                  static_cast<void*>(constraints_.back().get()),
-                                  delta_);
+    opt_.add_equality_constraint(NloptOptimizerEvaluate,
+                                 static_cast<void*>(constraints_.back().get()),
+                                 delta_);
   } else {
-    nlopt_add_inequality_constraint(
-        opt_, NloptOptimizerEvaluate,
-        static_cast<void*>(constraints_.back().get()), delta_);
+    opt_.add_inequality_constraint(
+        &NloptOptimizerEvaluate, static_cast<void*>(constraints_.back().get()),
+        delta_);
   }
 }
 
@@ -200,14 +194,14 @@ void NloptOptimizer::AddConstraints(const vector<Formula>& formulas) {
   }
 }
 
-nlopt_result NloptOptimizer::Optimize(vector<double>* const x,
-                                      double* const opt_f) {
-  return nlopt_optimize(opt_, x->data(), opt_f);
+nlopt::result NloptOptimizer::Optimize(vector<double>* const x,
+                                       double* const opt_f) {
+  return opt_.optimize(*x, *opt_f);
 }
 
-nlopt_result NloptOptimizer::Optimize(vector<double>* const x,
-                                      double* const opt_f,
-                                      const Environment& env) {
+nlopt::result NloptOptimizer::Optimize(vector<double>* const x,
+                                       double* const opt_f,
+                                       const Environment& env) {
   // Update objective_ and constraints_ with env.
   objective_.mutable_environment() = env;
   for (auto& constraint_ptr : constraints_) {

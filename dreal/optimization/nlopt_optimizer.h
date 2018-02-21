@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <nlopt.h>
+#include <nlopt.hpp>
 
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
@@ -45,7 +45,7 @@ class NloptOptimizer {
   ///
   /// @see http://nlopt.readthedocs.io/en/latest/NLopt_Algorithms, for
   /// possible values of NLopt Algorithms.
-  NloptOptimizer(nlopt_algorithm algorithm, Box bound, const Config& config);
+  NloptOptimizer(nlopt::algorithm algorithm, Box bound, const Config& config);
 
   /// Deleted copy-constructor.
   NloptOptimizer(const NloptOptimizer&) = delete;
@@ -60,7 +60,7 @@ class NloptOptimizer {
   NloptOptimizer& operator=(NloptOptimizer&&) = delete;
 
   /// Destructor.
-  ~NloptOptimizer();
+  ~NloptOptimizer() = default;
 
   /// Specifies the objective function.
   void SetMinObjective(const Expression& objective);
@@ -85,7 +85,7 @@ class NloptOptimizer {
   /// Runs optimization. Uses @p x as an initial value for the
   /// optimization and updates it with a solution. @p opt_f will be
   /// updated with the found optimal value.
-  nlopt_result Optimize(std::vector<double>* x, double* opt_f);
+  nlopt::result Optimize(std::vector<double>* x, double* opt_f);
 
   /// Runs optimization.
   ///
@@ -93,11 +93,11 @@ class NloptOptimizer {
   /// non-decision variables. If this is the case, @p env should be
   /// provided so that we can have full information to evaluate those
   /// functions.
-  nlopt_result Optimize(std::vector<double>* x, double* opt_f,
-                        const Environment& env);
+  nlopt::result Optimize(std::vector<double>* x, double* opt_f,
+                         const Environment& env);
 
  private:
-  nlopt_opt opt_;
+  nlopt::opt opt_;
   const Box box_;
   const double delta_{0.0};
   CachedExpression objective_;
