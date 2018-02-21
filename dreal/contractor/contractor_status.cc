@@ -57,7 +57,7 @@ unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
     const Variables& unsat_witness,
     const unordered_set<Formula, hash_value<Formula>>& used_constraints) {
   if (unsat_witness.empty()) {
-    return {};
+    return unordered_set<Formula, hash_value<Formula>>();
   }
   // Set up the initial explanation based on variables.
   unordered_set<Formula, hash_value<Formula>> explanation;
