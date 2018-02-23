@@ -636,3 +636,83 @@ smt2_test(
     name = "exist_forall_zenna_01",
     size = "small",
 )
+
+smt2_test(
+    name = "bool_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "hansen_hockey",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-backoff",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML5",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML6",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML7",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML8",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML2-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML2",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML3-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML3",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML4-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML4",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML5-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML5",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-simple",
+    size = "small",
+)
