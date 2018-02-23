@@ -4,17 +4,10 @@ set -e
 
 VERSION=$1
 
-if type "brew" > /dev/null; then
-    # brew is available, so use it.
-    echo "cellar=`brew --cellar`"
-else
-    # brew is not available. We need to replace this later.
-    echo "cellar=HOMEBREW_CELLAR"
-fi
-
 cat <<EOF
-libdir=\${cellar}/dreal/${VERSION}/lib
-includedir=\${cellar}/dreal/${VERSION}/include
+prefix=HOMEBREW_PREFIX/opt/dreal
+libdir=\${prefix}/lib
+includedir=\${prefix}/include
 
 Name: dReal
 Description: SMT Solver for Nonlinear Theories
