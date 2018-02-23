@@ -20,6 +20,7 @@
 // The following include should come first before parser.yy.hh.
 // Do not alpha-sort them.
 #include "dreal/smt2/sort.h"
+#include "dreal/smt2/term.h"
 #include "dreal/symbolic/symbolic.h"
 
 #include "dreal/smt2/parser.yy.hh"
