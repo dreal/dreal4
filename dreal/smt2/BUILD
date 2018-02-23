@@ -44,6 +44,20 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "term",
+    srcs = [
+        "term.cc",
+    ],
+    hdrs = [
+        "term.h",
+    ],
+    deps = [
+        "//dreal/symbolic",
+        "//dreal/util:exception",
+    ],
+)
+
+dreal_cc_library(
     name = "logic",
     srcs = [
         "logic.cc",
@@ -88,6 +102,7 @@ dreal_cc_library(
     deps = [
         ":logic",
         ":sort",
+        ":term",
         "//dreal/solver",
         "//dreal/symbolic",
         "//dreal/util:scoped_unordered_map",
