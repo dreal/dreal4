@@ -89,12 +89,12 @@ matrix:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov"
     - os: osx
-      osx_image: xcode8.3
+      osx_image: xcode9.2  # macOS-10.12
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt"
     - os: osx
-      osx_image: xcode9
+      osx_image: xcode9.3beta  # macOS-10.13
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt"
