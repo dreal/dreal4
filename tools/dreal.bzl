@@ -2,7 +2,7 @@
 # Based on Drake's drake.bzl file,
 # https://github.com/RobotLocomotion/drake/blob/master/tools/drake.bzl.
 
-DREAL_VERSION = "4.18.02.3"
+DREAL_VERSION = "4.18.02.4"
 
 DREAL_PREFIX = "opt/dreal/%s" % DREAL_VERSION
 
