@@ -236,6 +236,20 @@ dreal_cc_library(
     ],
 )
 
+dreal_cc_library(
+    name = "string_to_interval",
+    hdrs = [
+        "string_to_interval.h",
+    ],
+    srcs = [
+        "string_to_interval.cc",
+    ],
+    deps = [
+        "//dreal/util:box",
+    ],
+)
+
+
 # -----
 # Tests
 # -----
@@ -320,6 +334,14 @@ dreal_cc_googletest(
     tags = ["unit"],
     deps = [
         ":scoped_vector",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "string_to_interval_test",
+    tags = ["unit"],
+    deps = [
+        ":string_to_interval",
     ],
 )
 
