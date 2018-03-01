@@ -10,9 +10,9 @@ load("//tools:github.bzl", "github_archive")
 github_archive(
     name = "google_styleguide",  # GOOGLE
     build_file = "//tools:google_styleguide.BUILD",
-    commit = "15f2836d9fea3835d541d4d327ccf053d4052822",
+    commit = "209d38166b1a56b177de486d894d39ae6822eee6",
     repository = "google/styleguide",
-    sha256 = "448d528447e7e8c363b3757605ecfd6e8a779a6ff2dd4bb321e4739aa1a59981",
+    sha256 = "7f2026b7085c32aaf99e7588f0c49b05a126ea1e2e6a635dc60b67dc5c789cb0",
 )
 
 github_archive(
