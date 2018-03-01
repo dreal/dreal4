@@ -2,3 +2,4 @@ bazel-*
 logs/
 compile_commands.json
 .DS_Store
+doxygen_cxx
