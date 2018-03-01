@@ -1,6 +1,6 @@
 # -*- python -*-
 
-_DEFAULT_TEMPLATE = Label("//tools:third_party/com_github_robotlocomotion_drake/tools/workspace/pkg_config.BUILD.tpl")
+_DEFAULT_TEMPLATE = Label("//third_party:com_github_robotlocomotion_drake/tools/workspace/pkg_config.BUILD.tpl")
 
 _DEFAULT_STATIC = False
 

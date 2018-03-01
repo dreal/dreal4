@@ -3,7 +3,7 @@
 
 load("//tools:cpplint.bzl", "cpplint")
 load("//tools:dreal.bzl", "dreal_cc_library")
-load("//tools:third_party/com_github_google_kythe/tools/build_rules/lexyacc.bzl", "genlex", "genyacc")
+load("//third_party:com_github_google_kythe/tools/build_rules/lexyacc.bzl", "genlex", "genyacc")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 package(default_visibility = ["//visibility:public"])
