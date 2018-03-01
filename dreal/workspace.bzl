@@ -1,6 +1,6 @@
 # -*- python -*-
 load("//tools:github.bzl", "github_archive")
-load("//tools:third_party/com_github_robotlocomotion_drake/tools/workspace/pkg_config.bzl", "pkg_config_repository")
+load("//third_party:com_github_robotlocomotion_drake/tools/workspace/pkg_config.bzl", "pkg_config_repository")
 
 def dreal_workspace():
     pkg_config_repository(
