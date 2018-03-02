@@ -242,7 +242,11 @@ void Context::Impl::DeclareVariable(const Variable& v) {
 void Context::Impl::DeclareVariable(const Variable& v, const Expression& lb,
                                     const Expression& ub) {
   DeclareVariable(v);
-  SetInterval(v, lb.Evaluate(), ub.Evaluate());
+  const double lb_fp =
+      is_real_constant(lb) ? get_lb_of_real_constant(lb) : lb.Evaluate();
+  const double ub_fp =
+      is_real_constant(ub) ? get_ub_of_real_constant(ub) : ub.Evaluate();
+  SetInterval(v, lb_fp, ub_fp);
 }
 
 void Context::Impl::Minimize(const vector<Expression>& functions) {
