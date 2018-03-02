@@ -55,8 +55,7 @@ class SatSolver {
 
   /// Given a @p formulas = {f₁, ..., fₙ}, adds a clause (¬f₁ ∨ ... ∨ ¬ fₙ) to
   /// the solver.
-  void AddLearnedClause(
-      const std::unordered_set<Formula, hash_value<Formula>>& formulas);
+  void AddLearnedClause(const std::unordered_set<Formula>& formulas);
 
   /// Checks the satisfiability of the current configuration.
   ///

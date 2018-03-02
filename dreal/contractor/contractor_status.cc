@@ -53,14 +53,14 @@ void ContractorStatus::AddUnsatWitness(const Variable& var) {
   unsat_witness_.insert(var);
 }
 
-unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
+unordered_set<Formula> GenerateExplanation(
     const Variables& unsat_witness,
-    const unordered_set<Formula, hash_value<Formula>>& used_constraints) {
+    const unordered_set<Formula>& used_constraints) {
   if (unsat_witness.empty()) {
-    return unordered_set<Formula, hash_value<Formula>>();
+    return unordered_set<Formula>();
   }
   // Set up the initial explanation based on variables.
-  unordered_set<Formula, hash_value<Formula>> explanation;
+  unordered_set<Formula> explanation;
   for (const Formula& f_i : used_constraints) {
     if (HaveIntersection(unsat_witness, f_i.GetFreeVariables())) {
       explanation.insert(f_i);
@@ -86,8 +86,7 @@ unordered_set<Formula, hash_value<Formula>> GenerateExplanation(
   return explanation;
 }
 
-unordered_set<Formula, hash_value<Formula>> ContractorStatus::Explanation()
-    const {
+unordered_set<Formula> ContractorStatus::Explanation() const {
   return GenerateExplanation(unsat_witness_, used_constraints_);
 }
 

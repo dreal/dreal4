@@ -197,7 +197,7 @@ optional<Box> Context::Impl::CheckSatCore() {
         } else {
           // UNSAT from TheorySolver.
           DREAL_LOG_DEBUG("Context::CheckSat() - Theroy Check = UNSAT");
-          const unordered_set<Formula, hash_value<Formula>>& explanation{
+          const unordered_set<Formula>& explanation{
               theory_solver.GetExplanation()};
           DREAL_LOG_DEBUG(
               "Context::CheckSat() - size of explanation = {} - stack "

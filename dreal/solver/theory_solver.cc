@@ -187,8 +187,7 @@ Box TheorySolver::GetModel() const {
   return contractor_status_.box();
 }
 
-const unordered_set<Formula, hash_value<Formula>> TheorySolver::GetExplanation()
-    const {
+const unordered_set<Formula> TheorySolver::GetExplanation() const {
   return contractor_status_.Explanation();
 }
 

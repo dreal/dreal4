@@ -56,8 +56,7 @@ class PredicateAbstractor {
 
   std::unordered_map<Variable, Formula, hash_value<Variable>>
       var_to_formula_map_;
-  std::unordered_map<Formula, Variable, hash_value<Formula>>
-      formula_to_var_map_;
+  std::unordered_map<Formula, Variable> formula_to_var_map_;
 
   // Makes VisitFormula a friend of this class so that it can use private
   // operator()s.

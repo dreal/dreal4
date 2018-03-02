@@ -45,8 +45,7 @@ void SatSolver::AddFormulas(const vector<Formula>& formulas) {
   }
 }
 
-void SatSolver::AddLearnedClause(
-    const unordered_set<Formula, hash_value<Formula>>& formulas) {
+void SatSolver::AddLearnedClause(const unordered_set<Formula>& formulas) {
   for (const Formula& f : formulas) {
     AddLiteral(!predicate_abstractor_.Convert(f));
   }

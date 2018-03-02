@@ -28,7 +28,7 @@ class TheorySolver {
   Box GetModel() const;
 
   /// Gets a list of used constraints.
-  const std::unordered_set<Formula, hash_value<Formula>> GetExplanation() const;
+  const std::unordered_set<Formula> GetExplanation() const;
 
  private:
   // Builds a contractor using @p box and @p assertions. It returns
@@ -44,10 +44,8 @@ class TheorySolver {
   const Config& config_;
   ContractorStatus contractor_status_;
 
-  std::unordered_map<Formula, Contractor, hash_value<Formula>>
-      contractor_cache_;
-  std::unordered_map<Formula, FormulaEvaluator, hash_value<Formula>>
-      formula_evaluator_cache_;
+  std::unordered_map<Formula, Contractor> contractor_cache_;
+  std::unordered_map<Formula, FormulaEvaluator> formula_evaluator_cache_;
 };
 
 }  // namespace dreal
