@@ -114,6 +114,7 @@ dreal_cc_googletest(
     name = "contractor_ibex_fwdbwd_test",
     deps = [
         ":contractor",
+        "//dreal/util:string_to_interval",
     ],
 )
 

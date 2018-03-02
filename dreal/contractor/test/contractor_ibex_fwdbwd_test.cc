@@ -8,6 +8,7 @@
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/interval.h"
+#include "dreal/util/string_to_interval.h"
 
 namespace dreal {
 namespace {
@@ -90,9 +91,9 @@ TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20) {
   const ContractorIbexFwdbwd ctc{f, box_, Config{}};
   Box& box = cs.mutable_box();
 
-  box[x_] = 0.7;
-  box[y_] = 0.0647;
-  box[z_] = 0.6353;
+  box[x_] = StringToInterval("0.7");
+  box[y_] = StringToInterval("0.0647");
+  box[z_] = StringToInterval("0.6353");
   ctc.Prune(&cs);
 
   // After pruning, the box is still not empty.
