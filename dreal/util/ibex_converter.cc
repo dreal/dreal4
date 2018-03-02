@@ -289,8 +289,16 @@ const ExprCtr* IbexConverter::VisitVariable(const Formula&, const bool) {
 const ExprCtr* IbexConverter::VisitEqualTo(const Formula& f,
                                            const bool polarity) {
   if (polarity) {
-    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) =
-                 *Visit(0.0));
+    const ExprNode* lhs{Visit(get_lhs_expression(f))};
+    const ExprNode* rhs{Visit(get_rhs_expression(f))};
+    const ExprCtr* ret{&(*lhs = *rhs)};
+    if (rhs->is_zero()) {
+      // In this case, `rhs` is not included in the `ret`. We delete
+      // this to avoid memory leak. See
+      // https://github.com/ibex-team/ibex-lib/blob/af48e38847414818913b6954e1b1b3050aa14593/src/symbolic/ibex_ExprCtr.h#L53-L55
+      delete rhs;
+    }
+    return ret;
   } else {
     return nullptr;
   }
@@ -303,24 +311,36 @@ const ExprCtr* IbexConverter::VisitNotEqualTo(const Formula& f,
 
 const ExprCtr* IbexConverter::VisitGreaterThan(const Formula& f,
                                                const bool polarity) {
+  const ExprNode* lhs{Visit(get_lhs_expression(f))};
+  const ExprNode* rhs{Visit(get_rhs_expression(f))};
+  const ExprCtr* ret{nullptr};
   if (polarity) {
-    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) >
-             *Visit(0.0));
+    ret = &(*lhs > *rhs);
   } else {
-    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) <=
-             *Visit(0.0));
+    ret = &(*lhs <= *rhs);
   }
+  if (rhs->is_zero()) {
+    // See VisitEqualTo.
+    delete rhs;
+  }
+  return ret;
 }
 
 const ExprCtr* IbexConverter::VisitGreaterThanOrEqualTo(const Formula& f,
                                                         const bool polarity) {
+  const ExprNode* lhs{Visit(get_lhs_expression(f))};
+  const ExprNode* rhs{Visit(get_rhs_expression(f))};
+  const ExprCtr* ret{nullptr};
   if (polarity) {
-    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) >=
-             *Visit(0.0));
+    ret = &(*lhs >= *rhs);
   } else {
-    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) <
-             *Visit(0.0));
+    ret = &(*lhs < *rhs);
   }
+  if (rhs->is_zero()) {
+    // See VisitEqualTo.
+    delete rhs;
+  }
+  return ret;
 }
 
 const ExprCtr* IbexConverter::VisitLessThan(const Formula& f,
