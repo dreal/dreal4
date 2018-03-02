@@ -52,7 +52,7 @@ typedef dreal::Smt2Parser::token_type token_type;
 %option stack
 
 %option yylineno
-			
+                        
 /* The following paragraph suffices to track locations accurately. Each time
  * yylex is invoked, the begin position is moved onto the end position. */
 %{
