@@ -95,7 +95,7 @@ const ExprNode* IbexConverter::VisitConstant(const Expression& e) {
   // We bloat the constant c into a smallest interval [lb, ub] to avoid
   // numerical issues.
   const double c{get_constant_value(e)};
-  return &ibex::ExprConstant::new_scalar(BloatPoint(c));
+  return &ibex::ExprConstant::new_scalar(c);
 }
 
 const ExprNode* IbexConverter::VisitRealConstant(const Expression& e) {
