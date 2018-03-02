@@ -321,6 +321,7 @@ class IsDifferentiableVisitor {
   // Handle Expressions.
   bool VisitVariable(const Expression&) const { return true; }
   bool VisitConstant(const Expression&) const { return true; }
+  bool VisitRealConstant(const Expression&) const { return true; }
   bool VisitAddition(const Expression& e) const {
     for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
       const Expression& e_i{p.first};

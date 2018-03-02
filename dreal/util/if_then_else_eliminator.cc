@@ -39,6 +39,10 @@ Expression IfThenElseEliminator::VisitConstant(const Expression& e) {
   return e;
 }
 
+Expression IfThenElseEliminator::VisitRealConstant(const Expression& e) {
+  return e;
+}
+
 Expression IfThenElseEliminator::VisitAddition(const Expression& e) {
   // e = c₀ + ∑ᵢ cᵢ * eᵢ
   Expression ret{get_constant_in_addition(e)};
@@ -228,6 +232,7 @@ class CheckIfThenElseInForall {
   bool Visit(const Expression& e) { return VisitExpression<bool>(this, e); }
   bool VisitVariable(const Expression&) { return false; }
   bool VisitConstant(const Expression&) { return false; }
+  bool VisitRealConstant(const Expression&) { return false; }
   bool VisitAddition(const Expression& e) {
     for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
       const Expression& e_i{p.first};

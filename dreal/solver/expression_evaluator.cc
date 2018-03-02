@@ -38,6 +38,13 @@ Box::Interval ExpressionEvaluator::VisitConstant(const Expression& e,
   return Box::Interval{c};
 }
 
+Box::Interval ExpressionEvaluator::VisitRealConstant(const Expression& e,
+                                                     const Box&) const {
+  const double lb{get_lb_of_real_constant(e)};
+  const double ub{get_ub_of_real_constant(e)};
+  return Box::Interval{lb, ub};
+}
+
 Box::Interval ExpressionEvaluator::VisitAddition(const Expression& e,
                                                  const Box& box) const {
   const double c{get_constant_in_addition(e)};

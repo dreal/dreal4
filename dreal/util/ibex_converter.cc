@@ -98,6 +98,13 @@ const ExprNode* IbexConverter::VisitConstant(const Expression& e) {
   return &ibex::ExprConstant::new_scalar(BloatPoint(c));
 }
 
+const ExprNode* IbexConverter::VisitRealConstant(const Expression& e) {
+  // Case e := [lb, ub].
+  const double lb{get_lb_of_real_constant(e)};
+  const double ub{get_ub_of_real_constant(e)};
+  return &ibex::ExprConstant::new_scalar(ibex::Interval(lb, ub));
+}
+
 const ExprNode* IbexConverter::VisitAddition(const Expression& e) {
   const double c{get_constant_in_addition(e)};
   const ExprNode* ret{nullptr};
