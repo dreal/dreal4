@@ -188,18 +188,18 @@ simple_symbol   {sym_begin}{sym_continue}*
 }
 
 [-+]?((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {
-    yylval->doubleVal = atof(yytext);
+    yylval->doubleVal = new std::string(yytext, yyleng);
     return token::DOUBLE;
 }
 
 [-+]?((([0-9]+)|([0-9]+\.)))                            {
-    yylval->doubleVal = atof(yytext);
+    yylval->doubleVal = new std::string(yytext, yyleng);
     return token::DOUBLE;
 }
 
 [-+]?0[xX]({hex}+\.?|{hex}*\.{hex}+)([pP][-+]?[0-9]+)? {
-    yylval->doubleVal = atof(yytext);
-    return token::DOUBLE;
+    yylval->hexfloatVal = atof(yytext);
+    return token::HEXFLOAT;
 }
 
 {simple_symbol} {

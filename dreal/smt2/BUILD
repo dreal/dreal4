@@ -106,6 +106,7 @@ dreal_cc_library(
         "//dreal/solver",
         "//dreal/symbolic",
         "//dreal/util:scoped_unordered_map",
+        "//dreal/util:string_to_interval",
     ],
 )
 

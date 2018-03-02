@@ -63,7 +63,8 @@
 {
     dreal::Sort               sortVal;
     int                       intVal;
-    double                    doubleVal;
+    std::string*              doubleVal;
+    double                    hexfloatVal;
     std::string*              stringVal;
     Term*                     termVal;
     std::vector<Term>*        termListVal;
@@ -91,6 +92,7 @@
 
 %token                 END          0        "end of file"
 %token <doubleVal>     DOUBLE                "double"
+%token <hexfloatVal>   HEXFLOAT              "hexfloat"
 %token <intVal>        INT                   "int"
 %token <stringVal>     SYMBOL                "symbol"
 %token <stringVal>     KEYWORD               "keyword"
@@ -223,8 +225,8 @@ command_set_info:
         |       '(' TK_SET_INFO KEYWORD DOUBLE ')' {
                     driver
                         .context_
-                        .SetInfo(*$3, $4);
-                    delete $3;
+                        .SetInfo(*$3, std::stod(*$4));
+                    delete $3; delete $4;
                 }
                 ;
 command_set_logic:
@@ -246,8 +248,8 @@ command_set_option:
         |       '('TK_SET_OPTION KEYWORD DOUBLE ')' {
                     driver
                         .context_
-                        .SetOption(*$3, $4);
-                    delete $3;
+                        .SetOption(*$3, std::stod(*$4));
+                    delete $3; delete $4;
                 }
         |       '('TK_SET_OPTION KEYWORD TK_TRUE ')' {
                     driver
@@ -363,7 +365,19 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             $$ = new Term(forall(vars, imply(domain, $7->formula())));
             delete $5; delete $7;
         }
-        |       DOUBLE { $$ = new Term{$1}; }
+        |       DOUBLE {
+            const Box::Interval i{StringToInterval(*$1)};
+            const double parsed{std::stod(*$1)};
+            delete $1;
+            if (i.diam() == 0) {
+                // point => floating-point constant expression.
+                $$ = new Term{i.mid()};
+            } else {
+                // interval => real constant expression.
+                $$ = new Term{real_constant(i.lb(), i.ub(), i.lb() == parsed)};
+            }
+        }
+        |       HEXFLOAT { $$ = new Term{$1}; }
         |       INT { $$ = new Term{static_cast<double>($1)}; }
         |       SYMBOL {
             try {
