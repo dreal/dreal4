@@ -49,7 +49,7 @@ bool Smt2Driver::parse_string(const string& input, const string& sname) {
   return parse_stream(iss, sname);
 }
 
-void Smt2Driver::error(const class location& l, const string& m) {
+void Smt2Driver::error(const location& l, const string& m) {
   cerr << l << " : " << m << endl;
 }
 

@@ -50,7 +50,7 @@ bool DrDriver::parse_string(const string& input, const string& sname) {
   return parse_stream(iss, sname);
 }
 
-void DrDriver::error(const class location& l, const string& m) {
+void DrDriver::error(const location& l, const string& m) {
   cerr << l << " : " << m << endl;
 }
 
