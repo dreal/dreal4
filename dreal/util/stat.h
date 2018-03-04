@@ -6,6 +6,7 @@ namespace dreal {
 class Stat {
  public:
   explicit Stat(bool enabled) : enabled_{enabled} {}
+  Stat(const Stat&) = default;
   Stat(Stat&&) = default;
   Stat& operator=(const Stat&) = default;
   Stat& operator=(Stat&&) = default;
