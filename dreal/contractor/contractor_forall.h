@@ -44,6 +44,7 @@ Box RefineCounterexample(const Formula& query,
 ///            Use the CE to reduce B into B'. That is compute,
 ///
 ///            B' = Contract(φ(x₁, ..., xₙ, b₁, ..., bₘ), B)
+///
 /// </pre>
 template <typename ContextType>
 class ContractorForall : public ContractorCell {
