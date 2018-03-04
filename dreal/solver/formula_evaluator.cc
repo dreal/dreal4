@@ -45,7 +45,7 @@ ostream& operator<<(ostream& os, const FormulaEvaluationResult& result) {
   return os << "[" << result.type() << ", " << result.evaluation() << "]";
 }
 
-FormulaEvaluator::FormulaEvaluator(shared_ptr<FormulaEvaluatorCell> ptr)
+FormulaEvaluator::FormulaEvaluator(std::shared_ptr<FormulaEvaluatorCell> ptr)
     : ptr_{move(ptr)} {
   DREAL_ASSERT(ptr_);
 }

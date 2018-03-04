@@ -74,7 +74,7 @@ class ContractorStat : public Stat {
 Contractor::Contractor(const Config& config)
     : ptr_{make_shared<ContractorId>(config)} {}
 
-Contractor::Contractor(shared_ptr<ContractorCell> ptr) : ptr_{move(ptr)} {}
+Contractor::Contractor(std::shared_ptr<ContractorCell> ptr) : ptr_{move(ptr)} {}
 
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 
