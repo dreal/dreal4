@@ -35,9 +35,9 @@ class ScopedUnorderedMap {
 
   ScopedUnorderedMap() = default;
   ScopedUnorderedMap(const ScopedUnorderedMap&) = default;
-  ScopedUnorderedMap(ScopedUnorderedMap&&) = default;
+  ScopedUnorderedMap(ScopedUnorderedMap&&) noexcept = default;
   ScopedUnorderedMap& operator=(const ScopedUnorderedMap&) = default;
-  ScopedUnorderedMap& operator=(ScopedUnorderedMap&&) = default;
+  ScopedUnorderedMap& operator=(ScopedUnorderedMap&&) noexcept = default;
   ~ScopedUnorderedMap() = default;
 
   // Iterators.
