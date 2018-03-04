@@ -20,6 +20,7 @@ class CounterexampleRefiner {
   /// @param forall_variables universally quantified variables. They are
   ///                         decision variables that we consider in the
   ///                         local optimization.
+  /// @param config Configuration to use for finding counterexamples.
   ///
   /// @pre @p query is a conjunction.
   CounterexampleRefiner(const Formula& query, Variables forall_variables,
