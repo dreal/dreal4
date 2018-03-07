@@ -38,8 +38,8 @@ def dreal_workspace():
     github_archive(
         name = "fmt", # BSD2
         repository = "fmtlib/fmt",
-        commit = "3.0.1",
-        sha256 = "dce62ab75a161dd4353a98364feb166d35e7eea382169d59d9ce842c49c55bad",
+        commit = "4.1.0",
+        sha256 = "46628a2f068d0e33c716be0ed9dcae4370242df135aed663a180b9fd8e36733d",
         build_file = str(Label("//tools:fmt.BUILD")),
     )
     github_archive(
