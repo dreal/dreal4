@@ -13,6 +13,8 @@ CXX_FLAGS = [
     "-Werror=ignored-qualifiers",
     "-Werror=overloaded-virtual",
     "-Werror=old-style-cast",
+    "-Werror=deprecated",
+    "-Werror=deprecated-declarations",
 ]
 
 # The CLANG_FLAGS will be enabled for all C++ rules in the project when
