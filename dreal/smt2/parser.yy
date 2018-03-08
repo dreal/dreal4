@@ -222,6 +222,13 @@ command_set_info:
                     delete $3;
                     delete $4;
                 }
+        |       '(' TK_SET_INFO KEYWORD STRING ')' {
+                    driver
+                        .context_
+                        .SetInfo(*$3, *$4);
+                    delete $3;
+                    delete $4;
+                }
         |       '(' TK_SET_INFO KEYWORD DOUBLE ')' {
                     driver
                         .context_
