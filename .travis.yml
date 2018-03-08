@@ -48,6 +48,13 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-4.9', 'clang-6.0']
+      env:
+        - COMPILER="--compiler=clang-6.0" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
           sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
           packages: ['g++-4.9', 'clang-5.0']
       env:
