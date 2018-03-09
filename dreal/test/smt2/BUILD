@@ -192,11 +192,6 @@ smt2_test(
 )
 
 smt2_test(
-    name = "fabian_01",
-    size = "small",
-)
-
-smt2_test(
     name = "fedor_01",
     size = "small",
 )
