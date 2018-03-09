@@ -154,47 +154,27 @@ command_check_sat:
                 ;
 command_declare_fun:
                 '(' TK_DECLARE_FUN SYMBOL '(' ')' sort ')' {
-                    switch ($6) {
-                      case Sort::Bool:
-                        driver
-                            .DeclareVariable(Variable{*$3, Variable::Type::BOOLEAN});
-                        break;
-                      case Sort::Int:
-                        driver
-                            .DeclareVariable(Variable{*$3, Variable::Type::INTEGER});
-                        break;
-                      case Sort::Real:
-                        driver
-                            .DeclareVariable(Variable{*$3, Variable::Type::CONTINUOUS});
-                        break;
-                    }
+                    driver.DeclareVariable(*$3, $6);
                     delete $3;
                 }
         |
                 '(' TK_DECLARE_FUN SYMBOL '(' ')' sort '[' term ',' term ']' ')' {
-                    switch ($6) {
-                      case Sort::Bool:
-                        driver
-                            .DeclareVariable(Variable{*$3, Variable::Type::BOOLEAN},
-                                             $8->expression(),
-                                             $10->expression());
-                        break;
-                      case Sort::Int:
-                        driver
-                            .DeclareVariable(Variable{*$3, Variable::Type::INTEGER},
-                                             $8->expression(),
-                                             $10->expression());
-                        break;
-                      case Sort::Real:
-                        driver
-                            .DeclareVariable(Variable{*$3, Variable::Type::CONTINUOUS},
-                                             $8->expression(),
-                                             $10->expression());
-                        break;
-                    }
+                    driver.DeclareVariable(*$3, $6, *$8, *$10);
                     delete $3;
                     delete $8;
                     delete $10;
+                }
+        |
+                '(' TK_DECLARE_CONST SYMBOL sort ')' {
+                    driver.DeclareVariable(*$3, $4);
+                    delete $3;
+                }
+        |
+                '(' TK_DECLARE_CONST SYMBOL sort '[' term ',' term ']' ')' {
+                    driver.DeclareVariable(*$3, $4, *$6, *$8);
+                    delete $3;
+                    delete $6;
+                    delete $8;
                 }
                 ;
 

@@ -71,15 +71,17 @@ void Smt2Driver::RegisterVariable(const Variable& v) {
   scope_.insert(v.get_name(), v);
 }
 
-void Smt2Driver::DeclareVariable(const Variable& v) {
+void Smt2Driver::DeclareVariable(const std::string& name, Sort sort) {
+  Variable v{ ParseVariableSort(name, sort) };
   RegisterVariable(v);
   context_.DeclareVariable(v);
 }
 
-void Smt2Driver::DeclareVariable(const Variable& v, const Expression& lb,
-                                 const Expression& ub) {
+void Smt2Driver::DeclareVariable(const std::string& name, Sort sort,
+                                 const Term& lb, const Term& ub) {
+  Variable v{ ParseVariableSort(name, sort) };
   RegisterVariable(v);
-  context_.DeclareVariable(v, lb, ub);
+  context_.DeclareVariable(v, lb.expression(), ub.expression());
 }
 
 const Variable& Smt2Driver::lookup_variable(const string& name) {
@@ -91,18 +93,7 @@ const Variable& Smt2Driver::lookup_variable(const string& name) {
 }
 
 Variable Smt2Driver::ParseVariableSort(const std::string& name, const Sort s) {
-  switch (s) {
-    case Sort::Bool:
-      return Variable{name, Variable::Type::BOOLEAN};
-      break;
-    case Sort::Int:
-      return Variable{name, Variable::Type::INTEGER};
-      break;
-    case Sort::Real:
-      return Variable{name, Variable::Type::CONTINUOUS};
-      break;
-  }
-  DREAL_UNREACHABLE();
+  return Variable{name, SortToType(s)};
 }
 
 }  // namespace dreal

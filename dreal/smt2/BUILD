@@ -39,6 +39,7 @@ dreal_cc_library(
         "sort.h",
     ],
     deps = [
+        "//dreal/symbolic",
         "//dreal/util:exception",
     ],
 )

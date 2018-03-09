@@ -31,4 +31,17 @@ ostream& operator<<(ostream& os, const Sort& sort) {
   }
   DREAL_UNREACHABLE();
 }
+
+Variable::Type SortToType(Sort sort) {
+  switch (sort) {
+    case Sort::Bool:
+      return Variable::Type::BOOLEAN;
+    case Sort::Int:
+      return Variable::Type::INTEGER;
+    case Sort::Real:
+      return Variable::Type::CONTINUOUS;
+  }
+  DREAL_UNREACHABLE();
+}
+
 }  // namespace dreal
