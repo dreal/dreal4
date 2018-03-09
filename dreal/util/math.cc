@@ -1,12 +1,13 @@
 #include "dreal/util/math.h"
 
 #include <cmath>
-#include <climits>
 
 #include "dreal/util/exception.h"
 
 using std::modf;
 using std::numeric_limits;
+
+static const int64_t MAX_SAFE_INT_DBL = 9007199254740991L;  // 2**53-1
 
 namespace dreal {
 bool is_integer(const double v) {
@@ -19,15 +20,12 @@ bool is_integer(const double v) {
   return modf(v, &intpart) == 0.0;
 }
 
-long strtol_checked(const char *s) {
-  char *endptr;
-  long result = strtol(s, &endptr, 10);  // specified to return `long`
-  if (result == LONG_MAX || result == LONG_MIN) {
+int64_t strtol_checked(const char *s) {
+  double d = strtod_checked(s);
+  if (!is_integer(d) || d > MAX_SAFE_INT_DBL || d < -MAX_SAFE_INT_DBL) {
     throw DREAL_RUNTIME_ERROR("Input integer {} is too large", s);
-  } else if (*endptr || endptr == s) {
-    throw DREAL_RUNTIME_ERROR("Input integer {} is invalid", s);
   }
-  return result;
+  return static_cast<int64_t>(d);
 }
 
 double strtod_checked(const char *s) {

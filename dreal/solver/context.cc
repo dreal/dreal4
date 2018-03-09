@@ -422,7 +422,7 @@ void Context::Minimize(const vector<Expression>& functions) {
 
 void Context::Maximize(const Expression& f) { impl_->Minimize({-f}); }
 
-void Context::Pop(long n) {
+void Context::Pop(int64_t n) {
   DREAL_LOG_DEBUG("Context::Pop({})", n);
   if (n <= 0) {
     throw DREAL_RUNTIME_ERROR(
@@ -433,7 +433,7 @@ void Context::Pop(long n) {
   }
 }
 
-void Context::Push(long n) {
+void Context::Push(int64_t n) {
   DREAL_LOG_DEBUG("Context::Push({})", n);
   if (n <= 0) {
     throw DREAL_RUNTIME_ERROR(

@@ -52,10 +52,10 @@ class Context {
   void Maximize(const Expression& f);
 
   /// Pops @p n stacks.
-  void Pop(long n);
+  void Pop(int64_t n);
 
   /// Pushes @p n stacks.
-  void Push(long n);
+  void Push(int64_t n);
 
   /// Sets an info @p key with a value @p val.
   void SetInfo(const std::string& key, double val);

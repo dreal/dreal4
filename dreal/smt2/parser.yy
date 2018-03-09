@@ -63,7 +63,7 @@
 %union
 {
     dreal::Sort               sortVal;
-    long                      intVal;
+    int64_t                   intVal;
     std::string*              doubleVal;
     double                    hexfloatVal;
     std::string*              stringVal;
