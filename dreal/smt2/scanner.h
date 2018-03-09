@@ -23,6 +23,7 @@
 #include "dreal/smt2/term.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/math.h"
 #include "dreal/util/string_to_interval.h"
 
 #include "dreal/smt2/parser.yy.hh"
