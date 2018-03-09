@@ -133,17 +133,17 @@ dr_yycolumn += yyleng;
 }
 
 (0|[1-9][0-9]*) {
-    yylval->doubleVal = atof(yytext);
+    yylval->doubleVal = std::stod(yytext);
     return token::DOUBLE;
 }
 
 ((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {
-    yylval->doubleVal = atof(yytext);
+    yylval->doubleVal = std::stod(yytext);
     return token::DOUBLE;
 }
 
 ((([0-9]+)|([0-9]+\.)))                            {
-    yylval->doubleVal = atof(yytext);
+    yylval->doubleVal = std::stod(yytext);
     return token::DOUBLE;
 }
 
