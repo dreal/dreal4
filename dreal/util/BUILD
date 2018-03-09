@@ -166,6 +166,9 @@ dreal_cc_library(
     hdrs = [
         "math.h",
     ],
+    deps = [
+        ":exception",
+    ],
 )
 
 dreal_cc_library(
