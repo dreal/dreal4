@@ -183,7 +183,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 }
 
 [-+]?(0|[1-9][0-9]*) {
-    yylval->intVal = atoi(yytext);
+    yylval->intVal = std::stoi(yytext);
     return token::INT;
 }
 
@@ -198,7 +198,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 }
 
 [-+]?0[xX]({hex}+\.?|{hex}*\.{hex}+)([pP][-+]?[0-9]+)? {
-    yylval->hexfloatVal = atof(yytext);
+    yylval->hexfloatVal = std::stod(yytext);
     return token::HEXFLOAT;
 }
 
