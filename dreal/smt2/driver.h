@@ -60,9 +60,9 @@ class Smt2Driver {
   /// Calls context_.CheckSat() and print proper output messages to cout.
   void CheckSat();
 
-  /// Register a variable @p v in the scope. Note that it does not
-  /// declare the variable in the context.
-  void RegisterVariable(const Variable& v);
+  /// Register a variable with name @p name and sort @p s in the scope. Note
+  /// that it does not declare the variable in the context.
+  Variable RegisterVariable(const std::string& name, Sort sort);
 
   /// Declare a variable with name @p name and sort @p sort.
   void DeclareVariable(const std::string& name, Sort sort);

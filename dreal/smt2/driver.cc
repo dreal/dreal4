@@ -67,20 +67,20 @@ void Smt2Driver::CheckSat() {
   }
 }
 
-void Smt2Driver::RegisterVariable(const Variable& v) {
+Variable Smt2Driver::RegisterVariable(const std::string& name, Sort sort) {
+  Variable v{ ParseVariableSort(name, sort) };
   scope_.insert(v.get_name(), v);
+  return v;
 }
 
 void Smt2Driver::DeclareVariable(const std::string& name, Sort sort) {
-  Variable v{ ParseVariableSort(name, sort) };
-  RegisterVariable(v);
+  Variable v{ RegisterVariable(name, sort) };
   context_.DeclareVariable(v);
 }
 
 void Smt2Driver::DeclareVariable(const std::string& name, Sort sort,
                                  const Term& lb, const Term& ub) {
-  Variable v{ ParseVariableSort(name, sort) };
-  RegisterVariable(v);
+  Variable v{ RegisterVariable(name, sort) };
   context_.DeclareVariable(v, lb.expression(), ub.expression());
 }
 
