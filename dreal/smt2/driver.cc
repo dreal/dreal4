@@ -84,6 +84,20 @@ void Smt2Driver::DeclareVariable(const std::string& name, Sort sort,
   context_.DeclareVariable(v, lb.expression(), ub.expression());
 }
 
+std::string Smt2Driver::MakeUniqueName(const std::string& name) {
+  std::ostringstream oss;
+  // The \ character ensures that the name cannot occur in an SMT-LIBv2 file.
+  oss << "L" << nextUniqueId_++ << "\\" << name;
+  return oss.str();
+}
+
+Variable Smt2Driver::DeclareLocalVariable(const std::string& name, Sort sort) {
+  Variable v{ ParseVariableSort(MakeUniqueName(name), sort) };
+  scope_.insert(name, v);  // v is not inserted under its own name.
+  context_.DeclareVariable(v);
+  return v;
+}
+
 const Variable& Smt2Driver::lookup_variable(const string& name) {
   const auto it = scope_.find(name);
   if (it == scope_.cend()) {

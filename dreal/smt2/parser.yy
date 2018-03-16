@@ -71,8 +71,8 @@
     std::vector<Term>*        termListVal;
     std::tuple<Variable, double, double>* forallVariableVal;
     std::pair<Variables, Formula>*        forallVariablesVal;
-    std::pair<Variable, Term>*              letBindVal;
-    std::vector<std::pair<Variable, Term>>* letBindsVal;
+    std::pair<std::string, Term>*              letBindVal;
+    std::vector<std::pair<std::string, Term>>* letBindsVal;
 }
 
 %token TK_EXCLAMATION TK_BINARY TK_DECIMAL TK_HEXADECIMAL TK_NUMERAL TK_STRING
@@ -357,13 +357,8 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             $$ = new Term(forall(vars, imply(domain, $7->formula())));
             delete $5; delete $7;
         }
-        |       '(' TK_LET enter_scope '(' var_binding_list ')' term exit_scope ')' {
-            if ($7->type() == Term::Type::FORMULA) {
-              $$ = new Term($7->formula());
-            } else {
-              $$ = new Term($7->expression());
-            }
-            delete $5; delete $7;
+        |       '(' TK_LET enter_scope let_binding_list term exit_scope ')' {
+            $$ = $5;
         }
         |       DOUBLE {
             const Box::Interval i{StringToInterval(*$1)};
@@ -503,6 +498,26 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             }
         ;
 
+let_binding_list: '(' var_binding_list ')' {
+            // Locals must be bound simultaneously.
+            for (auto& binding : *$2) {
+                std::string& name{ binding.first };
+                Term& term{ binding.second };
+                bool is_formula = term.type() == Term::Type::FORMULA;
+                Sort sort = is_formula ? Sort::Bool : Sort::Real;
+                Variable v{ driver.DeclareLocalVariable(name, sort) };
+                if (is_formula) {
+                    Formula fv{v};
+                    const Formula& ft{ term.formula() };
+                    driver.context_.Assert((fv && ft) || (!fv && !ft));
+                } else {
+                    driver.context_.Assert(Expression{v} == term.expression());
+                }
+            }
+            delete $2;
+        }
+        ;
+
 enter_scope: /* */ {
             driver.PushScope();
         }
@@ -550,7 +565,7 @@ sort:           SYMBOL { $$ = ParseSort(*$1); delete $1; }
                 ;
 
 var_binding_list: /* empty list */ {
-            $$ = new std::vector<std::pair<Variable, Term>>;
+            $$ = new std::vector<std::pair<std::string, Term>>;
         }
         | var_binding var_binding_list {
             $2->push_back(*$1);
@@ -560,9 +575,7 @@ var_binding_list: /* empty list */ {
         ;
 
 var_binding: '(' SYMBOL term ')' {
-            Sort sort = $3->type() == Term::Type::FORMULA ? Sort::Bool : Sort::Real;
-            const Variable v = driver.RegisterVariable(*$2, sort);
-            $$ = new std::pair<Variable, Term>(v, *$3);
+            $$ = new std::pair<std::string, Term>(*$2, *$3);
             delete $2;
             delete $3;
         }

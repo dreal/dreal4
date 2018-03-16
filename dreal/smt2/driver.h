@@ -72,6 +72,10 @@ class Smt2Driver {
   void DeclareVariable(const std::string& name, Sort sort,
                        const Term& lb, const Term& ub);
 
+  /// Declare a new variable with label @p name that is globally unique and
+  /// cannot occur in an SMT-LIBv2 file.
+  Variable DeclareLocalVariable(const std::string& name, Sort sort);
+
   /// Returns a variable associated with a name @p name.
   ///
   /// @throws if no variable is associated with @p name.
@@ -82,6 +86,8 @@ class Smt2Driver {
   void PopScope() { scope_.pop(); }
 
   Variable ParseVariableSort(const std::string& name, Sort s);
+
+  std::string MakeUniqueName(const std::string& name);
 
   //-----------------
   // (public) Members
@@ -106,6 +112,9 @@ class Smt2Driver {
  private:
   /** Scoped map from a string to a corresponding Variable. */
   ScopedUnorderedMap<std::string, Variable> scope_;
+
+  /// Sequential value concatenated to names to make them unique.
+  int64_t nextUniqueId_{};
 };
 
 }  // namespace dreal
