@@ -711,3 +711,28 @@ smt2_test(
     name = "osmosis-simple",
     size = "small",
 )
+
+smt2_test(
+    name = "let_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_04",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_05",
+    size = "small",
+)
