@@ -736,3 +736,8 @@ smt2_test(
     name = "let_05",
     size = "small",
 )
+
+smt2_test(
+    name = "let_06",
+    size = "small",
+)
