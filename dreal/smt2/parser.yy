@@ -71,6 +71,8 @@
     std::vector<Term>*        termListVal;
     std::tuple<Variable, double, double>* forallVariableVal;
     std::pair<Variables, Formula>*        forallVariablesVal;
+    std::pair<std::string, Term>*              letBindVal;
+    std::vector<std::pair<std::string, Term>>* letBindsVal;
 }
 
 %token TK_EXCLAMATION TK_BINARY TK_DECIMAL TK_HEXADECIMAL TK_NUMERAL TK_STRING
@@ -105,6 +107,8 @@
 
 %type <forallVariablesVal>   variable_sort_list
 %type <forallVariableVal>    variable_sort
+%type <letBindsVal>   var_binding_list
+%type <letBindVal>    var_binding
                         
 %{
 
@@ -347,11 +351,14 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             }
             delete $3; delete $4; delete $5;
         }
-        |       '(' TK_FORALL forall_enter_scope '(' variable_sort_list ')' term forall_exit_scope ')' {
+        |       '(' TK_FORALL enter_scope '(' variable_sort_list ')' term exit_scope ')' {
             const Variables& vars = $5->first;
             const Formula& domain = $5->second;
             $$ = new Term(forall(vars, imply(domain, $7->formula())));
             delete $5; delete $7;
+        }
+        |       '(' TK_LET enter_scope let_binding_list term exit_scope ')' {
+            $$ = $5;
         }
         |       DOUBLE {
             const Box::Interval i{StringToInterval(*$1)};
@@ -491,12 +498,32 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             }
         ;
 
-forall_enter_scope: /* */ {
+let_binding_list: '(' var_binding_list ')' {
+            // Locals must be bound simultaneously.
+            for (auto& binding : *$2) {
+                const std::string& name{ binding.first };
+                const Term& term{ binding.second };
+                const bool is_formula = term.type() == Term::Type::FORMULA;
+                const Sort sort = is_formula ? Sort::Bool : Sort::Real;
+                const Variable v{ driver.DeclareLocalVariable(name, sort) };
+                if (is_formula) {
+                    const Formula fv{v};
+                    const Formula& ft{ term.formula() };
+                    driver.context_.Assert((fv && ft) || (!fv && !ft));
+                } else {
+                    driver.context_.Assert(Expression{v} == term.expression());
+                }
+            }
+            delete $2;
+        }
+        ;
+
+enter_scope: /* */ {
             driver.PushScope();
         }
         ;
 
-forall_exit_scope: /* */ {
+exit_scope: /* */ {
             driver.PopScope();
         }
         ;
@@ -518,17 +545,15 @@ variable_sort_list: /* empty list */ { $$ = new std::pair<Variables, Formula>(Va
         ;
 
 variable_sort: '(' SYMBOL sort ')' {
-            const Variable v = driver.ParseVariableSort(*$2, $3);
+            const Variable v = driver.RegisterVariable(*$2, $3);
             const double inf = std::numeric_limits<double>::infinity();
-            driver.RegisterVariable(v);
             $$ = new std::tuple<Variable, double, double>(v, -inf, inf);
             delete $2;
         }
         |       '(' SYMBOL sort '[' term ',' term ']' ')' {
-            const Variable v = driver.ParseVariableSort(*$2, $3);
+            const Variable v = driver.RegisterVariable(*$2, $3);
             const double lb = $5->expression().Evaluate();
             const double ub = $7->expression().Evaluate();
-            driver.RegisterVariable(v);
             $$ = new std::tuple<Variable, double, double>(v, lb, ub);
             delete $2;
             delete $5;
@@ -538,6 +563,23 @@ variable_sort: '(' SYMBOL sort ')' {
 
 sort:           SYMBOL { $$ = ParseSort(*$1); delete $1; }
                 ;
+
+var_binding_list: /* empty list */ {
+            $$ = new std::vector<std::pair<std::string, Term>>;
+        }
+        | var_binding var_binding_list {
+            $2->push_back(*$1);
+            $$ = $2;
+            delete $1;
+        }
+        ;
+
+var_binding: '(' SYMBOL term ')' {
+            $$ = new std::pair<std::string, Term>(*$2, *$3);
+            delete $2;
+            delete $3;
+        }
+        ;
 
 
 %% /*** Additional Code ***/

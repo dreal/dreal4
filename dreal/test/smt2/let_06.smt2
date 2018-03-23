@@ -1,0 +1,6 @@
+(set-logic QF_NRA)
+(declare-const a Real)
+(declare-const b Real)
+(assert (let ((c (= a 5)) (d (> b 0))) (and c d)))
+(check-sat)
+(exit)

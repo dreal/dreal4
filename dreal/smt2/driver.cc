@@ -19,6 +19,7 @@ using std::experimental::optional;
 using std::ifstream;
 using std::istream;
 using std::istringstream;
+using std::ostringstream;
 using std::move;
 using std::string;
 
@@ -67,21 +68,35 @@ void Smt2Driver::CheckSat() {
   }
 }
 
-void Smt2Driver::RegisterVariable(const Variable& v) {
+Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {
+  Variable v{ ParseVariableSort(name, sort) };
   scope_.insert(v.get_name(), v);
+  return v;
 }
 
-void Smt2Driver::DeclareVariable(const std::string& name, Sort sort) {
-  Variable v{ ParseVariableSort(name, sort) };
-  RegisterVariable(v);
+void Smt2Driver::DeclareVariable(const string& name, const Sort sort) {
+  Variable v{ RegisterVariable(name, sort) };
   context_.DeclareVariable(v);
 }
 
-void Smt2Driver::DeclareVariable(const std::string& name, Sort sort,
+void Smt2Driver::DeclareVariable(const string& name, const Sort sort,
                                  const Term& lb, const Term& ub) {
-  Variable v{ ParseVariableSort(name, sort) };
-  RegisterVariable(v);
+  Variable v{ RegisterVariable(name, sort) };
   context_.DeclareVariable(v, lb.expression(), ub.expression());
+}
+
+string Smt2Driver::MakeUniqueName(const string& name) {
+  ostringstream oss;
+  // The \ character ensures that the name cannot occur in an SMT-LIBv2 file.
+  oss << "L" << nextUniqueId_++ << "\\" << name;
+  return oss.str();
+}
+
+Variable Smt2Driver::DeclareLocalVariable(const string& name, const Sort sort) {
+  Variable v{ ParseVariableSort(MakeUniqueName(name), sort) };
+  scope_.insert(name, v);  // v is not inserted under its own name.
+  context_.DeclareVariable(v);
+  return v;
 }
 
 const Variable& Smt2Driver::lookup_variable(const string& name) {
@@ -92,7 +107,7 @@ const Variable& Smt2Driver::lookup_variable(const string& name) {
   return it->second;
 }
 
-Variable Smt2Driver::ParseVariableSort(const std::string& name, const Sort s) {
+Variable Smt2Driver::ParseVariableSort(const string& name, const Sort s) {
   return Variable{name, SortToType(s)};
 }
 
