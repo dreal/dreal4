@@ -501,13 +501,13 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
 let_binding_list: '(' var_binding_list ')' {
             // Locals must be bound simultaneously.
             for (auto& binding : *$2) {
-                std::string& name{ binding.first };
-                Term& term{ binding.second };
-                bool is_formula = term.type() == Term::Type::FORMULA;
-                Sort sort = is_formula ? Sort::Bool : Sort::Real;
-                Variable v{ driver.DeclareLocalVariable(name, sort) };
+                const std::string& name{ binding.first };
+                const Term& term{ binding.second };
+                const bool is_formula = term.type() == Term::Type::FORMULA;
+                const Sort sort = is_formula ? Sort::Bool : Sort::Real;
+                const Variable v{ driver.DeclareLocalVariable(name, sort) };
                 if (is_formula) {
-                    Formula fv{v};
+                    const Formula fv{v};
                     const Formula& ft{ term.formula() };
                     driver.context_.Assert((fv && ft) || (!fv && !ft));
                 } else {
