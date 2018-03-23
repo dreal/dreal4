@@ -33,6 +33,8 @@ build:asan --copt -fsanitize=address
 build:asan --copt -O1
 build:asan --copt -fno-omit-frame-pointer
 build:asan --linkopt -fsanitize=address
+test:asan --test_tag_filters=-no_asan,-no_lsan
+test:asan --test_timeout=120,600,1800,7200
 
 ### LSan build. ###
 build:lsan --action_env=LSAN_OPTIONS
@@ -40,6 +42,8 @@ build:lsan --copt -fsanitize=leak
 build:lsan --copt -O1
 build:lsan --copt -fno-omit-frame-pointer
 build:lsan --linkopt -fsanitize=leak
+test:lsan --test_tag_filters=-no_asan,-no_lsan
+test:lsan --test_timeout=120,600,1800,7200
 
 ### TSan build. ###
 build:tsan --action_env=TSAN_OPTIONS
@@ -47,6 +51,8 @@ build:tsan --copt -fsanitize=thread
 build:tsan --copt -O1
 build:tsan --copt -fno-omit-frame-pointer
 build:tsan --linkopt -fsanitize=thread
+test:tsan --test_tag_filters=-no_tsan
+test:tsan --test_timeout=180,900,2700,10800
 
 ### UBSan build. ###
 build:ubsan --action_env=UBSAN_OPTIONS
@@ -54,6 +60,8 @@ build:ubsan --copt -fsanitize=undefined
 build:ubsan --copt -O1
 build:ubsan --copt -fno-omit-frame-pointer
 build:ubsan --linkopt -fsanitize=undefined
+test:ubsan --test_tag_filters=-no_ubsan
+test:ubsan --test_timeout=120,600,1800,7200
 
 ### Kcov coverage build. ###
 build:kcov --copt -g
