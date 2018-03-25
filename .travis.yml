@@ -129,7 +129,7 @@ install:
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
       brew update;
-      brew install bazel pkg-config dreal-deps/ibex/ibex@2.6.5 nlopt || true;
+      brew install bazel pkg-config dreal-deps/ibex/ibex@2.6.5 nlopt python@2 || true;
       BAZEL_LOCAL_RESOURCES=2048,2,1.0;
       TEST_TAG_FILTERS=unit;
     fi
