@@ -22,6 +22,10 @@ def dreal_workspace():
             "/usr/local/opt/nlopt/lib/pkgconfig",
         ]
     )
+    pkg_config_repository(
+        name = "python",
+        modname = "python",
+    )
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",
@@ -48,4 +52,11 @@ def dreal_workspace():
         commit = "4ee7aa1d1c645df8fa9daa07f2be17c6d03b35fc", # v965
         sha256 = "1be461d3659d4e3dc957a718ed295941c38dc822fd22a67f4cb5d180f0b6a7a3",
         build_file = str(Label("//tools:picosat.BUILD")),
+    )
+    github_archive(
+        name = "pybind11", # BSD
+        repository = "pybind/pybind11",
+        commit = "v2.2.2",
+        sha256 = "b639a2b2cbf1c467849660801c4665ffc1a4d0a9e153ae1996ed6f21c492064e",
+        build_file = str(Label("//tools:pybind11.BUILD")),
     )

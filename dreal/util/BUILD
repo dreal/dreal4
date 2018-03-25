@@ -6,6 +6,7 @@ load(
     "//tools:dreal.bzl",
     "dreal_cc_googletest",
     "dreal_cc_library",
+    "dreal_pybind_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -35,7 +36,7 @@ dreal_cc_library(
         ":logging",
         ":math",
         "//dreal/symbolic",
-        "@ibex//:ibex",
+        "@ibex",
     ],
 )
 
@@ -141,7 +142,7 @@ dreal_cc_library(
         ":logging",
         ":math",
         "//dreal/symbolic",
-        "@ibex//:ibex",
+        "@ibex",
     ],
 )
 
@@ -238,17 +239,16 @@ dreal_cc_library(
 
 dreal_cc_library(
     name = "string_to_interval",
-    hdrs = [
-        "string_to_interval.h",
-    ],
     srcs = [
         "string_to_interval.cc",
+    ],
+    hdrs = [
+        "string_to_interval.h",
     ],
     deps = [
         "//dreal/util:box",
     ],
 )
-
 
 # -----
 # Tests
@@ -352,6 +352,51 @@ dreal_cc_googletest(
         ":tseitin_cnfizer",
         "//dreal/symbolic:symbolic_test_util",
     ],
+)
+
+# ----------------------
+# Bindings
+# ----------------------
+dreal_pybind_library(
+    name = "util_py",
+    cc_deps = [
+        ":box",
+        "//dreal/symbolic",
+    ],
+    cc_srcs = ["util_py.cc"],
+    py_deps = [
+        "//dreal/symbolic:symbolic_py",
+    ],
+    py_srcs = ["__init__.py"],
+)
+
+py_test(
+    name = "util_test_py",
+    srcs = [
+        "test/util_test.py",
+    ],
+    main = "test/util_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        ":util_py",
+    ],
+)
+
+pkg_tar(
+    name = "package_python",
+    srcs = [
+        ":_util_py.so",
+        ":util_py",
+    ],
+    extension = "tar.gz",
+    package_dir = "lib/python2.7/site-packages/dreal/util",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
 )
 
 # ----------------------
