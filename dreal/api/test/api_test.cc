@@ -114,7 +114,7 @@ TEST_F(ApiTest, CheckSatisfiabilityUnsat) {
 }
 
 TEST_F(ApiTest, Minimize1) {
-  // minimize 2x² + 6x + 5 s.t. -4 ≤ x ≤ 0
+  // minimize 2x² + 6x + 5 s.t. -10 ≤ x ≤ 10
   const Expression objective{2 * x_ * x_ + 6 * x_ + 5};
   const Formula constraint{-10 <= x_ && x_ <= 10};
   const double delta{0.01};
