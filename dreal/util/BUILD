@@ -6,6 +6,7 @@ load(
     "//tools:dreal.bzl",
     "dreal_cc_googletest",
     "dreal_cc_library",
+    "dreal_generate_file",
     "dreal_pybind_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
@@ -357,6 +358,13 @@ dreal_cc_googletest(
 # ----------------------
 # Bindings
 # ----------------------
+dreal_generate_file(
+    name = "init_py",
+    out = "__init__.py",
+    content = "from dreal.util._util_py import *",
+    visibility = ["//visibility:private"],
+)
+
 dreal_pybind_library(
     name = "util_py",
     cc_deps = [
@@ -367,7 +375,7 @@ dreal_pybind_library(
     py_deps = [
         "//dreal/symbolic:symbolic_py",
     ],
-    py_srcs = ["__init__.py"],
+    py_srcs = [":init_py"],
 )
 
 py_test(

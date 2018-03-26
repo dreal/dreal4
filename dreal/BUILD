@@ -2,7 +2,13 @@
 # This file contains rules for Bazel; see https://bazel.io/ .
 
 load("//:tools/cpplint.bzl", "cpplint")
-load("//tools:dreal.bzl", "dreal_cc_binary", "dreal_cc_library", "DREAL_VERSION")
+load(
+    "//tools:dreal.bzl",
+    "dreal_cc_binary",
+    "dreal_cc_library",
+    "dreal_generate_file",
+    "DREAL_VERSION",
+)
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 genrule(
@@ -61,10 +67,19 @@ cc_binary(
 # ----------------------
 # Bindings
 # ----------------------
+dreal_generate_file(
+    name = "init_py",
+    out = "__init__.py",
+    content = """from dreal.symbolic import *
+from dreal.util import *
+from dreal.api import *""",
+    visibility = ["//visibility:private"],
+)
+
 pkg_tar(
     name = "package_python",
     srcs = [
-        "__init__.py",
+        ":init_py",
     ],
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal",
