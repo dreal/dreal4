@@ -2,7 +2,7 @@
 # Based on Drake's drake.bzl file,
 # https://github.com/RobotLocomotion/drake/blob/master/tools/drake.bzl.
 
-DREAL_VERSION = "4.18.02.4"
+DREAL_VERSION = "4.18.03.1"
 
 DREAL_PREFIX = "opt/dreal/%s" % DREAL_VERSION
 
@@ -60,6 +60,7 @@ def _platform_copts(rule_copts, cc_test = 0):
         "//tools:clang3.9-linux": CLANG_FLAGS + rule_copts,
         "//tools:clang4.0-linux": CLANG_FLAGS + rule_copts,
         "//tools:clang5.0-linux": CLANG_FLAGS + rule_copts,
+        "//tools:clang6.0-linux": CLANG_FLAGS + rule_copts,
         "//tools:apple": CLANG_FLAGS + rule_copts,
         "//conditions:default": rule_copts,
     })
