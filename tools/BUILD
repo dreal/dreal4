@@ -47,14 +47,12 @@ sh_binary(
 # installed on Mac as /usr/bin/gcc as well as /usr/bin/clang, and the
 # wrapper script invokes the former.
 #
-# On Linux, we support --compiler strings "clang-3.9", "gcc-4.9", and
-# "gcc-5", each of which does exactly what you would
-# expect. "clang-3.9" is the default for convenience, because the
-# install instructions provide it on both Trusty and Xenial. No
-# wrapper script is needed for any of these compilers, so the
-# cc_toolchain rule does not provide one. Supports for "clang-4",
-# "clang-5", "clang-6", "gcc-6", and "gcc-7" are experimental without
-# any guarantees. Note that it is not in our supported configurations yet.
+# On Linux, we support --compiler strings "clang-3.9", "clang-4.0",
+# "clang-5.0", "clang-6.0", "gcc-5", "gcc-6", and "gcc-7" each of
+# which does exactly what you would expect. "clang-4.0" is the default
+# for convenience, because the install instructions provide it on both
+# Trusty and Xenial. No wrapper script is needed for any of these
+# compilers, so the cc_toolchain rule does not provide one.
 cc_toolchain_suite(
     name = "default-toolchain",
     toolchains = {
@@ -63,7 +61,6 @@ cc_toolchain_suite(
         "k8|clang-4.0": "cc_toolchain_linux",
         "k8|clang-5.0": "cc_toolchain_linux",
         "k8|clang-6.0": "cc_toolchain_linux",
-        "k8|gcc-4.9": "cc_toolchain_linux",
         "k8|gcc-5": "cc_toolchain_linux",
         "k8|gcc-6": "cc_toolchain_linux",
         "k8|gcc-7": "cc_toolchain_linux",
@@ -181,9 +178,9 @@ config_setting(
 )
 
 config_setting(
-    name = "gcc4.9-linux",
+    name = "clang6.0-linux",
     values = {
-        "compiler": "gcc-4.9",
+        "compiler": "clang-6.0",
         "cpu": "k8",
     },
 )
