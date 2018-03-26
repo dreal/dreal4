@@ -16,6 +16,14 @@ github_archive(
 )
 
 github_archive(
+    name = "pycodestyle",  # Expat
+    build_file = "//tools:pycodestyle.BUILD",
+    commit = "368e62cb6c57ff386b5a08659a5a9d2866b80a2f",
+    repository = "PyCQA/pycodestyle",
+    sha256 = "29cb8bdd6119dc56a6b555896010cb8976bfd2124c6f0ab63ebd84ef2845ca09",
+)
+
+github_archive(
     name = "ezoptionparser",  # MIT
     build_file = "//tools:ezoptionparser.BUILD",
     commit = "b42ee9e166ddc66dd2e02a178592917fb58bbdb7",
