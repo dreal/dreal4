@@ -307,3 +307,16 @@ def dr_test(
         ] + data_files,
         main = "test.py",
         **kwargs)
+
+# Generate a file with specified content
+def _generate_file_impl(ctx):
+    ctx.file_action(output = ctx.outputs.out, content = ctx.attr.content)
+    
+dreal_generate_file = rule(
+    attrs = {
+        "content": attr.string(),
+        "out": attr.output(mandatory = True),
+    },
+    output_to_genfiles = True,
+    implementation = _generate_file_impl,
+)
