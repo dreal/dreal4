@@ -62,8 +62,7 @@ build:ubsan --copt -O1
 build:ubsan --copt -fno-omit-frame-pointer
 build:ubsan --linkopt -fsanitize=undefined
 # https://groups.google.com/forum/#!topic/bazel-discuss/15h4GPixeGI
-build:ubsan --linkopt /usr/lib/llvm-4.0/lib/clang/4.0.0/lib/linux/libclang_rt.ubsan_standalone_cxx-x86_64.a #noqa
-build:ubsan --linkopt /usr/lib/llvm-4.0/lib/clang/4.0.0/lib/linux/libclang_rt.ubsan_standalone-x86_64.a #noqa
+build:ubsan --linkopt -lubsan
 test:ubsan --test_tag_filters=-no_ubsan
 test:ubsan --test_timeout=120,600,1800,7200
 

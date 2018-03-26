@@ -38,32 +38,25 @@ matrix:
           packages: ['g++-5']
       env:
         - COMPILER="--compiler=gcc-5" BUILD_TYPE="-c dbg"
-    - compiler: gcc
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9']
-      env:
-        - COMPILER="--compiler=gcc-4.9" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang-6.0']
+          packages: ['g++-5', 'clang-6.0']
       env:
         - COMPILER="--compiler=clang-6.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang-5.0']
+          packages: ['g++-5', 'clang-5.0']
       env:
         - COMPILER="--compiler=clang-5.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang-4.0']
+          packages: ['g++-5', 'clang-4.0']
       env:
         - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
@@ -76,45 +69,46 @@ matrix:
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang-4.0']
+          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'clang-6.0']
       env:
-        - COMPILER="--compiler=clang-4.0" CONFIG="--config asan"
+        - COMPILER="--compiler=clang-6.0" CONFIG="--config asan"
+        - TEST_TAG_FILTERS="-no_asan"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang-4.0']
+          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'clang-6.0']
       env:
-        - COMPILER="--compiler=clang-4.0" CONFIG="--config ubsan"
+        - COMPILER="--compiler=clang-6.0" CONFIG="--config ubsan"
+        - TEST_TAG_FILTERS="-no_ubsan"
     - compiler: clang
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'clang-3.9']
+          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'clang-6.0']
       env:
-        - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
+        - COMPILER="--compiler=clang-6.0" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov"
+        - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode8.3  # macOS-10.12
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt"
+        - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode9.3beta  # macOS-10.13
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt"
+        - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode9.3beta  # macOS-10.13
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt" CONFIG="--config asan"
-    - os: osx
-      osx_image: xcode9.3beta  # macOS-10.13
-      compiler: clang
-      env:
-        - COMPILER="" BUILD_TYPE="-c opt" CONFIG="--config ubsan"
+        - TEST_TAG_FILTERS="unit,-no_asan"
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
@@ -125,13 +119,11 @@ install:
       wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb;
       sudo dpkg -i bazel_${BAZEL_VERSION}-linux-x86_64.deb;
       BAZEL_LOCAL_RESOURCES=2048,1,1.0;
-      TEST_TAG_FILTERS=;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
       brew update;
       brew install bazel pkg-config dreal-deps/ibex/ibex@2.6.5 nlopt python@2 || true;
       BAZEL_LOCAL_RESOURCES=2048,2,1.0;
-      TEST_TAG_FILTERS=unit;
     fi
   - if [ "${COV}" == "ON" ]; then
       sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
@@ -143,7 +135,6 @@ install:
       make -j;
       sudo cp src/kcov /usr/bin/;
       cd ../../;
-      TEST_TAG_FILTERS=unit;
     fi
 
 script:
