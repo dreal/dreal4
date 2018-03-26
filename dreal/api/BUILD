@@ -2,6 +2,7 @@
 # This file contains rules for Bazel; see https://bazel.io/ .
 
 load("//:tools/cpplint.bzl", "cpplint")
+load("//:tools/python_lint.bzl", "python_lint")
 load(
     "//tools:dreal.bzl",
     "dreal_cc_googletest",
@@ -121,3 +122,5 @@ pkg_tar(
 )
 
 cpplint()
+
+python_lint()
