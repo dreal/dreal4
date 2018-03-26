@@ -6,6 +6,7 @@ load(
     "//tools:dreal.bzl",
     "dreal_cc_googletest",
     "dreal_cc_library",
+    "dreal_pybind_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -45,6 +46,48 @@ dreal_cc_googletest(
         ":symbolic",
         ":symbolic_test_util",
     ],
+)
+
+# ----------------------
+# Bindings
+# ----------------------
+dreal_pybind_library(
+    name = "symbolic_py",
+    cc_deps = [
+        ":symbolic",
+    ],
+    cc_srcs = ["symbolic_py.cc"],
+    py_deps = [],
+    py_srcs = ["__init__.py"],
+)
+
+py_test(
+    name = "symbolic_test_py",
+    srcs = [
+        "test/symbolic_test.py",
+    ],
+    main = "test/symbolic_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        ":symbolic_py",
+    ],
+)
+
+pkg_tar(
+    name = "package_python",
+    srcs = [
+        ":_symbolic_py.so",
+        ":symbolic_py",
+    ],
+    extension = "tar.gz",
+    package_dir = "lib/python2.7/site-packages/dreal/symbolic",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
 )
 
 # ----------------------

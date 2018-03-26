@@ -36,7 +36,7 @@ dreal_cc_binary(
         "//dreal/smt2",
         "//dreal/util:filesystem",
         "//dreal/util:logging",
-        "@ezoptionparser//:ezoptionparser",
+        "@ezoptionparser",
     ],
 )
 
@@ -56,6 +56,20 @@ cc_binary(
         "//dreal/util:box",
         "@drake_symbolic",
     ],
+)
+
+# ----------------------
+# Bindings
+# ----------------------
+pkg_tar(
+    name = "package_python",
+    srcs = [
+        "__init__.py",
+    ],
+    extension = "tar.gz",
+    package_dir = "lib/python2.7/site-packages/dreal",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
 )
 
 # ----------------------

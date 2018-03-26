@@ -10,6 +10,7 @@ DREAL_PREFIX = "opt/dreal/%s" % DREAL_VERSION
 # building with any compiler.
 CXX_FLAGS = [
     "-Werror=all",
+    "-Werror=attributes",
     "-Werror=ignored-qualifiers",
     "-Werror=overloaded-virtual",
     "-Werror=old-style-cast",
@@ -99,6 +100,36 @@ def dreal_cc_library(
         deps = deps,
         copts = _platform_copts(copts),
         **kwargs)
+
+def dreal_pybind_library(
+        name,
+        py_srcs = [],
+        py_deps = [],
+        cc_srcs = [],
+        cc_deps = []):
+    """Creates a rule to declare a pybind library.
+    """
+    cc_so_name = "_" + name + ".so"
+    dreal_cc_binary(
+        name = cc_so_name,
+        srcs = cc_srcs,
+        linkshared = 1,
+        linkstatic = 1,
+        deps = cc_deps + [
+            "@pybind11",
+        ],
+        copts = [
+            # "-fvisibility=hidden",
+        ],
+    )
+    native.py_library(
+        name = name,
+        srcs = py_srcs,
+        data = [
+            cc_so_name,
+        ],
+        deps = py_deps,
+    )
 
 def dreal_cc_binary(
         name,
