@@ -86,7 +86,7 @@ matrix:
           sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
           packages: ['g++-4.9', 'clang-4.0']
       env:
-        - COMPILER="--compiler=clang-4.0" CONFIG="--config lsan"
+        - COMPILER="--compiler=clang-4.0" CONFIG="--config ubsan"
     - compiler: clang
       addons:
         apt:
@@ -105,6 +105,16 @@ matrix:
       compiler: clang
       env:
         - COMPILER="" BUILD_TYPE="-c opt"
+    - os: osx
+      osx_image: xcode9.3beta  # macOS-10.13
+      compiler: clang
+      env:
+        - COMPILER="" BUILD_TYPE="-c opt" CONFIG="--config asan"
+    - os: osx
+      osx_image: xcode9.3beta  # macOS-10.13
+      compiler: clang
+      env:
+        - COMPILER="" BUILD_TYPE="-c opt" CONFIG="--config ubsan"
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
