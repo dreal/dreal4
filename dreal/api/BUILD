@@ -6,8 +6,11 @@ load(
     "//tools:dreal.bzl",
     "dreal_cc_googletest",
     "dreal_cc_library",
+    "dreal_pybind_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+
+package(default_visibility = ["//visibility:public"])
 
 # ---------
 # Libraries
@@ -20,7 +23,6 @@ dreal_cc_library(
     hdrs = [
         "api.h",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         "//dreal/solver",
         "//dreal/symbolic",
@@ -40,6 +42,51 @@ dreal_cc_googletest(
     deps = [
         ":api",
     ],
+)
+
+# ----------------------
+# Bindings
+# ----------------------
+dreal_pybind_library(
+    name = "api_py",
+    cc_deps = [
+        ":api",
+    ],
+    cc_srcs = ["api_py.cc"],
+    py_deps = [
+        "//dreal/symbolic:symbolic_py",
+        "//dreal/util:util_py",
+    ],
+    py_srcs = ["__init__.py"],
+)
+
+py_test(
+    name = "api_test_py",
+    srcs = [
+        "test/api_test.py",
+    ],
+    main = "test/api_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        ":api_py",
+    ],
+)
+
+pkg_tar(
+    name = "package_python",
+    srcs = [
+        ":_api_py.so",
+        ":api_py",
+    ],
+    extension = "tar.gz",
+    package_dir = "lib/python2.7/site-packages/dreal/api",
+    tags = ["manual"],
+    visibility = ["//visibility:public"],
 )
 
 # ----------------------
