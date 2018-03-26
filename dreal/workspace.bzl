@@ -23,8 +23,11 @@ def dreal_workspace():
         ]
     )
     pkg_config_repository(
-        name = "python",
-        modname = "python",
+        name = "python2",
+        modname = "python2",
+        pkg_config_paths = [
+            "/usr/local/opt/python@2/lib/pkgconfig",
+        ]
     )
     github_archive(
         name = "drake_symbolic", # BSD

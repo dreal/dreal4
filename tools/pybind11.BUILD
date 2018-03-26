@@ -32,6 +32,6 @@ cc_library(
     ],
     includes = ["include"],
     deps = [
-        "@python",
+        "@python2",
     ],
 )
