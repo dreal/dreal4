@@ -22,6 +22,21 @@ class Context {
   /// Constructs a context with an empty configuration.
   Context();
 
+  /// Deleted copy constructor.
+  Context(const Context& context) = delete;
+
+  /// Move constructor.
+  Context(Context&& context);
+
+  /// Destructor (Defaulted in .cc file. Needed here for compilation).
+  ~Context();
+
+  /// Deleted copy-assign.
+  Context& operator=(const Context&) = delete;
+
+  /// Deleted move-assign.
+  Context& operator=(Context&&) = delete;
+
   /// Constructs a context with @p config.
   explicit Context(Config config);
 
@@ -75,10 +90,13 @@ class Context {
   /// Sets an option @p key with a value @p val.
   void SetOption(const std::string& key, const std::string& val);
 
+  /// Returns a const reference of configuration.
   const Config& config() const;
 
+  /// Returns a mutable reference of configuration.
   Config& mutable_config();
 
+  /// Returns the version string.
   static std::string version();
 
  private:
@@ -87,7 +105,6 @@ class Context {
   // file.
   class Impl;
 
-  // TODO(soonho): use copyable unique_ptr to improve performance.
-  std::shared_ptr<Impl> impl_{};
+  std::unique_ptr<Impl> impl_{};
 };
 }  // namespace dreal

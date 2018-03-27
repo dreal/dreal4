@@ -17,10 +17,9 @@
 #include "dreal/util/logging.h"
 #include "dreal/util/scoped_vector.h"
 
-using std::experimental::optional;
 using std::find_if;
 using std::isfinite;
-using std::make_shared;
+using std::make_unique;
 using std::numeric_limits;
 using std::ostringstream;
 using std::pair;
@@ -28,6 +27,7 @@ using std::set;
 using std::string;
 using std::unordered_set;
 using std::vector;
+using std::experimental::optional;
 
 namespace dreal {
 
@@ -399,7 +399,11 @@ void Context::Impl::SetOption(const string& key, const string& val) {
 
 Context::Context() : Context{Config{}} {}
 
-Context::Context(Config config) : impl_{make_shared<Impl>(config)} {}
+Context::Context(Context&& context) : impl_{std::move(context.impl_)} {}
+
+Context::~Context() = default;
+
+Context::Context(Config config) : impl_{make_unique<Impl>(config)} {}
 
 void Context::Assert(const Formula& f) { impl_->Assert(f); }
 
