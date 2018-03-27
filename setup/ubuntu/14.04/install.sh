@@ -6,7 +6,7 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
-add-apt-repository ppa:ubuntu-toolchain-r/test -y  # libstdc++6
+apt-cache search --names-only '^g\+\+-5$' | grep "g++-5" || add-apt-repository ppa:ubuntu-toolchain-r/test -y 
 add-apt-repository ppa:dreal/dreal -y  # For libibex-dev
 apt update
 apt install --no-install-recommends -y $(tr '\n' ' ' <<EOF

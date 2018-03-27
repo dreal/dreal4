@@ -6,9 +6,9 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
-add-apt-repository ppa:ubuntu-toolchain-r/test -y  # g++-5
+apt-cache search --names-only '^g\+\+-5$' | grep "g++-5" || add-apt-repository ppa:ubuntu-toolchain-r/test -y 
+apt-cache search --names-only '^openjdk-8-jdk$' | grep "openjdk-8-jdk" || add-apt-repository ppa:openjdk-r/ppa -y 
 add-apt-repository ppa:dreal/dreal -y  # For libibex-dev
-add-apt-repository ppa:openjdk-r/ppa -y  # For openjdk-8-jdk
 apt update;
 apt install -y --no-install-recommends $(tr '\n' ' ' <<EOF
 bison
