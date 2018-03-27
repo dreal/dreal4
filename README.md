@@ -23,7 +23,8 @@ The following packages are required to build dReal:
  - [Flex](https://www.gnu.org/software/flex) and [Bison](https://www.gnu.org/software/bison)
  - [Clp](https://projects.coin-or.org/Clp)
  - [IBEX](https://github.com/ibex-team/ibex-lib)
- - [nlopt](http://nlopt.readthedocs.io) - [LGPL/MIT](https://raw.githubusercontent.com/stevengj/nlopt/master/COPYING)
+ - [nlopt](http://nlopt.readthedocs.io)
+ - [python2.7](https://www.python.org/downloads/release/python-2714/)
 
 dReal is using the following external packages. It checks out the sources of them and builds internally. No installation required for them:
 
@@ -33,38 +34,25 @@ dReal is using the following external packages. It checks out the sources of the
  - [ezOptionParser](http://ezoptionparser.sourceforge.net) - [MIT](https://raw.githubusercontent.com/dreal-deps/ezoptionparser/master/MIT-LICENSE)
  - [fmtlib](http://fmtlib.net/latest/index.html) - [BSD 2-Clause](https://raw.githubusercontent.com/fmtlib/fmt/master/LICENSE.rst)
  - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
+ - [pybind11](http://pybind11.readthedocs.io/en/master) - [BSD 3-Clause](https://raw.githubusercontent.com/pybind/pybind11/master/LICENSE)
 
 How to Install dReal
 ====================
 
-macOS 10.12 (Sierra) / 10.13 (High Sierra):
+macOS 10.13 / 10.12 / 10.11:
 
 ```bash
-brew tap dreal-deps/coinor
-brew tap dreal-deps/ibex
-brew install dreal/dreal/dreal
+./setup/mac/install.sh
+dreal
 ```
 
-Ubuntu 14.04 LTS:
+Ubuntu 16.04 / Ubuntu 14.04:
+
 ```bash
-sudo add-apt-repository ppa:dreal/dreal -y
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev libnlopt-dev
-sudo apt upgrade libstdc++6
-wget https://dl.bintray.com/dreal/dreal/dreal_4.18.02.2_amd64.deb
-dpkg -i dreal_4.18.02.2_amd64.deb
+sudo ./setup/ubuntu/`lsb_release -r -s`/install.sh
+/opt/dreal/4.18.03.1/bin/dreal
 ```
 
-Ubuntu 16.04 LTS:
-```bash
-sudo apt install -y software-properties-common  # for add-apt-repository
-sudo add-apt-repository ppa:dreal/dreal -y
-sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev libnlopt-dev
-wget https://dl.bintray.com/dreal/dreal/dreal_4.18.02.2_amd64.deb
-dpkg -i dreal_4.18.02.2_amd64.deb
-```
 
 How to Build dReal
 ==================
@@ -72,18 +60,16 @@ How to Build dReal
 Install Prerequsites
 --------------------
 
-macOS 10.12 (Sierra) / 10.13 (High Sierra):
+macOS 10.13 / 10.12 / 10.11:
 
 ```bash
-brew install bazel pkg-config dreal-deps/ibex/ibex@2.6.5 nlopt
+./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 14.04 LTS / 16.04 LTS
+Ubuntu 16.04 / 14.04
 
 ```bash
-sudo add-apt-repository ppa:dreal/dreal -y
-sudo apt update
-sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libbz2-dev libnlopt-dev
+sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh
 ```
 
 Build and Test
@@ -99,10 +85,10 @@ By default, it builds a release build. To build a debug-build, run
 `bazel build //... -c dbg`. In macOS, pass `--config=apple_debug` to
 allow lldb/gdb to show symbols.
 
-In Ubuntu, it uses `clang-4.0` as a default compiler. To use other
+In Ubuntu, we use `g++-5` as a default compiler. To use other
 compilers, pass `--compiler` option to bazel (for example `--compiler
-gcc-5`). See
-[tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L47-L75)
+clang-4.0`). See
+[tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L50-L68)
 file for more information.
 
 Build Debian Package
@@ -126,12 +112,76 @@ bazel-compilation-database-0.2/generate.sh
 How to Use dReal as a Library
 =============================
 
-After following the install steps,
-[pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config)
-should work. That is, `pkg-config dreal --cflags` and `pkg-config
-dreal --libs` should provide necessary information to use dReal.
-
-We have also prepared the following example projects using dReal as a
+We have prepared the following example projects using dReal as a
 library:
+
  - [dreal-cmake-example-project](https://github.com/dreal/dreal-cmake-example-project)
  - [dreal-bazel-example-project](https://github.com/dreal/dreal-bazel-example-project)
+
+If you want to use
+[pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config),
+you need to set up `PKG_CONFIG_PATH` as follows:
+
+macOS 10.13 / 10.12 / 10.11:
+
+```bash
+export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
+```
+
+Ubuntu 16.04 / 14.04:
+
+```bash
+export PKG_CONFIG_PATH=/opt/dreal/4.18.03.1/lib/pkgconfig:/opt/libibex/2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
+```
+
+Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
+provide necessary information to use dReal. Note that setting up
+`PKG_CONFIG_PATH` is necessary to avoid possible conflicts (i.e. with
+`ibex` formula in Mac).
+
+
+Python Binding
+==============
+
+Some of the functionality of dReal is accessible through Python. After
+following the install instructions above, you need to set up
+`PYTHONPATH` environment variable.
+
+macOS 10.13 / 10.12 / 10.11:
+
+```bash
+export PYTHONPATH=/usr/local/opt/dreal/lib/python2.7/site-packages:${PYTHONPATH}
+```
+
+Ubuntu 16.04 / 14.04:
+
+```bash
+export PYTHONPATH=/opt/dreal/4.18.03.1/lib/python2.7/site-packages:${PYTHONPATH}
+```
+
+To test it, run `python2` in a terminal and type the followings:
+
+```python
+from dreal.symbolic import Variable, logical_and, sin, cos
+from dreal.api import CheckSatisfiability, Minimize
+
+x = Variable("x")
+y = Variable("y")
+z = Variable("z")
+
+f_sat = logical_and(0 <= x, x <= 10,
+					0 <= y, y <= 10,
+					0 <= z, z <= 10,
+					sin(x) + cos(y) == z)
+
+result = CheckSatisfiability(f_sat, 0.001)
+print(result)
+```
+
+The last `print` statement should give:
+
+```
+x : [1.247234518484574339, 1.247580203674002686]
+y : [8.929064928123818135, 8.929756298502674383]
+z : [0.06815055407334302817, 0.06858905276351445757]
+```
