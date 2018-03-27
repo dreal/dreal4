@@ -40,7 +40,6 @@ class Context::Impl {
   Config& mutable_config() { return config_; }
 
  private:
-  std::experimental::optional<Box> CheckSatCore();
   Box& box() { return boxes_.last(); }
 
   Config config_;

@@ -123,33 +123,34 @@ void Context::Impl::Assert(const Formula& f) {
   }
 }
 
-optional<Box> Context::Impl::CheckSatCore() {
+namespace {
+optional<Box> CheckSatCore(const Config& config,
+                           const ScopedVector<Formula>& stack, Box box,
+                           SatSolver* const sat_solver) {
   DREAL_LOG_DEBUG("Context::CheckSatCore()");
-  DREAL_LOG_TRACE("Context::CheckSat: Box =\n{}", box());
-  if (box().empty()) {
+  DREAL_LOG_TRACE("Context::CheckSat: Box =\n{}", box);
+  if (box.empty()) {
     return {};
   }
-  // If false ∈ stack_, it's UNSAT.
-  for (const auto& f : stack_.get_vector()) {
+  // If false ∈ stack, it's UNSAT.
+  for (const auto& f : stack.get_vector()) {
     if (is_false(f)) {
       return {};
     }
   }
-  // If stack_ = ∅ or stack_ = {true}, it's trivially SAT.
-  if (stack_.empty() || (stack_.size() == 1 && is_true(stack_.first()))) {
-    Tighten(&box(), config_.precision());
-    DREAL_LOG_DEBUG("Context::CheckSatCore() - Found Model\n{}", box());
-    return box();
+  // If stack = ∅ or stack = {true}, it's trivially SAT.
+  if (stack.empty() || (stack.size() == 1 && is_true(stack.first()))) {
+    DREAL_LOG_DEBUG("Context::CheckSatCore() - Found Model\n{}", box);
+    return box;
   }
-  sat_solver_.AddFormulas(stack_.get_vector());
-
-  TheorySolver theory_solver{config_, box()};
+  sat_solver->AddFormulas(stack.get_vector());
+  TheorySolver theory_solver{config, box};
   while (true) {
-    const auto optional_model = sat_solver_.CheckSat();
+    const auto optional_model = sat_solver->CheckSat();
     if (optional_model) {
       const vector<pair<Variable, bool>>& boolean_model{optional_model->first};
       for (const pair<Variable, bool>& p : boolean_model) {
-        box()[p.first] = p.second ? 1.0 : 0.0;  // true -> 1.0 and false -> 0.0
+        box[p.first] = p.second ? 1.0 : 0.0;  // true -> 1.0 and false -> 0.0
       }
       const vector<pair<Variable, bool>>& theory_model{optional_model->second};
       if (!theory_model.empty()) {
@@ -159,10 +160,10 @@ optional<Box> Context::Impl::CheckSatCore() {
         vector<Formula> assertions;
         assertions.reserve(theory_model.size());
         for (const pair<Variable, bool>& p : theory_model) {
-          assertions.push_back(p.second ? sat_solver_.theory_literal(p.first)
-                                        : !sat_solver_.theory_literal(p.first));
+          assertions.push_back(p.second ? sat_solver->theory_literal(p.first)
+                                        : !sat_solver->theory_literal(p.first));
         }
-        if (theory_solver.CheckSat(box(), assertions)) {
+        if (theory_solver.CheckSat(box, assertions)) {
           // SAT from TheorySolver.
           DREAL_LOG_DEBUG("Context::CheckSatCore() - Theroy Check = delta-SAT");
           Box model{theory_solver.GetModel()};
@@ -175,11 +176,11 @@ optional<Box> Context::Impl::CheckSatCore() {
           DREAL_LOG_DEBUG(
               "Context::CheckSatCore() - size of explanation = {} - stack "
               "size = {}",
-              explanation.size(), stack_.get_vector().size());
-          sat_solver_.AddLearnedClause(explanation);
+              explanation.size(), stack.get_vector().size());
+          sat_solver->AddLearnedClause(explanation);
         }
       } else {
-        return box();
+        return box;
       }
     } else {
       // UNSAT from SATSolver. Escape the loop.
@@ -188,9 +189,10 @@ optional<Box> Context::Impl::CheckSatCore() {
     }
   }
 }
+}  // namespace
 
 optional<Box> Context::Impl::CheckSat() {
-  auto result = CheckSatCore();
+  auto result = CheckSatCore(config_, stack_, box(), &sat_solver_);
   if (result) {
     // In case of delta-sat, do post-processing.
     Tighten(&(*result), config_.precision());
