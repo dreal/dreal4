@@ -112,17 +112,11 @@ matrix:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-      sudo add-apt-repository ppa:dreal/dreal -y;
-      sudo apt update;
-      sudo apt install bison coinor-libclp-dev flex pkg-config libibex-dev libnlopt-dev;
-      BAZEL_VERSION=0.11.1;
-      wget https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/bazel_${BAZEL_VERSION}-linux-x86_64.deb;
-      sudo dpkg -i bazel_${BAZEL_VERSION}-linux-x86_64.deb;
+      sudo ./setup/ubuntu/14.04/install_prereqs.sh;
       BAZEL_LOCAL_RESOURCES=2048,1,1.0;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-      brew update;
-      brew install bazel pkg-config dreal-deps/ibex/ibex@2.6.5 nlopt python@2 || true;
+      ./setup/mac/install_prereqs.sh;
       BAZEL_LOCAL_RESOURCES=2048,2,1.0;
     fi
   - if [ "${COV}" == "ON" ]; then
