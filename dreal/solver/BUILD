@@ -85,7 +85,7 @@ dreal_cc_library(
         "//dreal/util:predicate_abstractor",
         "//dreal/util:stat",
         "//dreal/util:tseitin_cnfizer",
-        "@picosat//:picosat",
+        "@picosat",
     ],
 )
 
@@ -107,6 +107,14 @@ dreal_cc_library(
 # -----
 # Tests
 # -----
+dreal_cc_googletest(
+    name = "context_test",
+    tags = ["unit"],
+    deps = [
+        ":solver",
+    ],
+)
+
 dreal_cc_googletest(
     name = "expression_evaluator_test",
     tags = ["unit"],
