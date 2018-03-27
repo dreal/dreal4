@@ -26,7 +26,7 @@ class Context {
   Context(const Context& context) = delete;
 
   /// Move constructor.
-  Context(Context&& context);
+  Context(Context&& context) noexcept;
 
   /// Destructor (Defaulted in .cc file. Needed here for compilation).
   ~Context();
@@ -105,6 +105,6 @@ class Context {
   // file.
   class Impl;
 
-  std::unique_ptr<Impl> impl_{};
+  std::unique_ptr<Impl> impl_;
 };
 }  // namespace dreal
