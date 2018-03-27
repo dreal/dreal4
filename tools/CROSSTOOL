@@ -17,11 +17,10 @@ default_toolchain {
   toolchain_identifier: "local_darwin"
 }
 
-# We use Clang on Ubuntu by default. To use gcc, specify
-# --compiler=gcc-5 (Xenial) or
+# We use g++-5 on Ubuntu by default.
 default_toolchain {
   cpu: "k8"
-  toolchain_identifier: "clang-4.0-linux"
+  toolchain_identifier: "gcc-5-linux"
 }
 
 # GCC 7.x on Linux
