@@ -13,6 +13,7 @@ apt update;
 apt install -y --no-install-recommends $(tr '\n' ' ' <<EOF
 bison
 flex
+g++
 g++-5
 libpython2.7-dev
 openjdk-8-jdk
