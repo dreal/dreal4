@@ -6,6 +6,6 @@ if [[ "${EUID}" -eq 0 ]]; then
   exit 1
 fi
 
-brew tap dreal-deps/ibex
+brew tap dreal/dreal
 brew update
-brew install bazel pkg-config ibex@2.6.5 nlopt python@2
+brew install dreal --only-dependencies --build-from-source
