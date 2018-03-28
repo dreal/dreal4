@@ -91,6 +91,11 @@ clang-4.0`). See
 [tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L50-L68)
 file for more information.
 
+C++ Documentation
+-----------------
+
+Please check https://dreal.github.io/dreal4.
+
 Build Debian Package
 --------------------
 
