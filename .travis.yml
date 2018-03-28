@@ -119,7 +119,7 @@ install:
       ./setup/mac/install_prereqs.sh;
       BAZEL_LOCAL_RESOURCES=2048,2,1.0;
     fi
-  - if [ "${COV}" == "ON" ]; then
+  - if [ "${TRAVIS_REPO_SLUG}" == "dreal/dreal4" ] && [ "${COV}" == "ON" ]; then
       sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
       git clone https://github.com/SimonKagstrom/kcov --depth 1;
       cd kcov;
@@ -145,7 +145,7 @@ script:
       --test_tag_filters=${TEST_TAG_FILTERS}
 
 after_success:
-  - if [ "${COV}" == "ON" ]; then
+  - if [ "${TRAVIS_REPO_SLUG}" == "dreal/dreal4" ] && [ "${COV}" == "ON" ]; then
       bash <(curl -s https://codecov.io/bash) -s bazel-kcov -t ${CODECOV_TOKEN};
     fi
 
