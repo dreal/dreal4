@@ -21,7 +21,7 @@ EOF
 DREAL_VERSION=4.18.03.2
 DREAL_DEBNAME=dreal_${DREAL_VERSION}_amd64.deb
 DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
-DREAL_SHA256=0428d2de2364b724829b49de233fcac77f22496cccac7808df9523327c10dbf0
+DREAL_SHA256=9bcd93a5429b9cb842543ca739847d4aa34e7f662f8711aadfd2d45b74f84c71
 apt install --no-install-recommends wget -y
 wget ${DREAL_URL}
 if echo "${DREAL_SHA256}  ${DREAL_DEBNAME}" | sha256sum -c; then
