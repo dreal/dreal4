@@ -18,19 +18,42 @@ open a PR.
    Guide](https://google.github.io/styleguide/cppguide.html) and
    [PEP8 - Style Guide for Python Code
    ](https://www.python.org/dev/peps/pep-0008/). We have code linters
-   integrated in testing. Please make sure that you code do not
-   generate warnings.
+   ([cpplint](https://github.com/google/styleguide/tree/gh-pages/cpplint)
+   and (pycodestyle)[https://github.com/PyCQA/pycodestyle]) integrated
+   in testing. Please make sure that you code do not generate
+   warnings.
+   
+1. **{DOCUMENTATION}** Please document your classes, methods, and
+   functions. For C++, we use
+   [Doxygen](https://www.stack.nl/~dimitri/doxygen/manual/index.html). For
+   Python, we follow [PEP
+   257](https://www.python.org/dev/peps/pep-0257/) and [PEP
+   8](https://www.python.org/dev/peps/pep-0008/).
+
+
+1. **{COMMIT MESSAGE}** We follow a `<type>(<scope>):<Subject>`-style
+   for git commit-message convention. Please check [our
+   commits](https://github.com/dreal/dreal4/commits/master) and read
+   [this
+   doc](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit)
+   for more information.
 
 1. **{TEST COVERAGE}** Please write enough test cases for your
-   changes. We have [kcov]() setup which you can check the
-   code-coverage locally.
+   changes. To check the code-coverage, install
+   [kcov](https://github.com/SimonKagstrom/kcov) and run the
+   following:
+   
+   ```bash
+   bazel test --config kcov //...
+   # Open bazel-kcov/index.html
+   ```
 
 1. **{PR SIZE}** Please make sure that your PR is small enough to
    review. If your PR includes more than *750 lines of changes*,
    please consider split it into multiple PRs. `git diff --stat`
    should give you a good summary of the size of your PR.
 
-1. **{BUILD}** Please make sure that your changes compile. In ubuntu,
+1. **{BUILD}** Please make sure that your changes compile. On Ubuntu,
    build your code with *both* of gcc and clang:
    
    ```bash
