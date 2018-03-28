@@ -19,7 +19,7 @@ open a PR.
    [PEP8 - Style Guide for Python Code
    ](https://www.python.org/dev/peps/pep-0008/). We have code linters
    ([cpplint](https://github.com/google/styleguide/tree/gh-pages/cpplint)
-   and (pycodestyle)[https://github.com/PyCQA/pycodestyle]) integrated
+   and [pycodestyle](https://github.com/PyCQA/pycodestyle)) integrated
    in testing. Please make sure that you code do not generate
    warnings.
    
