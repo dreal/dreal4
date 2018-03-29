@@ -29,6 +29,14 @@ def dreal_workspace():
             "/usr/local/opt/python@2/lib/pkgconfig",
         ]
     )
+    # We do not use this one, yet.
+    pkg_config_repository(
+        name = "python3",
+        modname = "python3",
+        pkg_config_paths = [
+            "/usr/local/opt/python@3/lib/pkgconfig",
+        ]
+    )
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",
