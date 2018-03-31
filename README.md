@@ -148,19 +148,12 @@ provide necessary information to use dReal. Note that setting up
 Python Binding
 ==============
 
-Some of the functionality of dReal is accessible through Python. After
-following the install instructions above, you need to set up
-`PYTHONPATH` environment variable.
-
-macOS 10.13 / 10.12 / 10.11:
+Some of the functionality of dReal is accessible through Python2. On
+Ubuntu 16.04 / 14.04, you need to set up the `PYTHONPATH` environment
+variable. On macOS, you do not need this step.
 
 ```bash
-export PYTHONPATH=/usr/local/opt/dreal/lib/python2.7/site-packages:${PYTHONPATH}
-```
-
-Ubuntu 16.04 / 14.04:
-
-```bash
+# Only on Ubuntu 16.04 / 14.04:
 export PYTHONPATH=/opt/dreal/4.18.03.2/lib/python2.7/site-packages:${PYTHONPATH}
 ```
 
@@ -190,3 +183,7 @@ x : [1.247234518484574339, 1.247580203674002686]
 y : [8.929064928123818135, 8.929756298502674383]
 z : [0.06815055407334302817, 0.06858905276351445757]
 ```
+
+Python3 support is experimental for now. Please read [this
+comment](https://github.com/dreal/dreal4/issues/69#issuecomment-377085510)
+for instructions.
