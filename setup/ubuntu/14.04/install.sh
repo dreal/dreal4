@@ -18,10 +18,10 @@ EOF
 )
 
 # Install bazel
-DREAL_VERSION=4.18.03.2
+DREAL_VERSION=4.18.03.3
 DREAL_DEBNAME=dreal_${DREAL_VERSION}_amd64.deb
 DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
-DREAL_SHA256=9bcd93a5429b9cb842543ca739847d4aa34e7f662f8711aadfd2d45b74f84c71
+DREAL_SHA256=3da3153bedc23798dc37a2549d170eedd3685ff1660dfafe5fce44162a90c34b
 apt install --no-install-recommends wget -y
 wget ${DREAL_URL}
 if echo "${DREAL_SHA256}  ${DREAL_DEBNAME}" | sha256sum -c; then
