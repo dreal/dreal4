@@ -37,7 +37,7 @@ open a PR.
    [this
    doc](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit)
    for more information.
-
+   
 1. **{TEST COVERAGE}** Please write enough test cases for your
    changes. To check the code-coverage, install
    [kcov](https://github.com/SimonKagstrom/kcov) and run the
@@ -66,6 +66,13 @@ open a PR.
    pass with your changes. Run
 
    ```bash
+   bazel test //...
+   ```
+
+1. **{REBASE}** Please make sure 1) to rebase your commits on top of the latest `upstream/master` branch and 2) check that your changes still compile and pass all the tests. If you need more information about git-rebase, please read [merging-vs-rebasing](https://www.atlassian.com/git/tutorials/merging-vs-rebasing) and [git-merge-vs-rebase-whats-the-diff](https://hackernoon.com/git-merge-vs-rebase-whats-the-diff-76413c117333).
+
+   ```bash
+   git rebase upstream/master
    bazel test //...
    ```
 
