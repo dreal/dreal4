@@ -89,6 +89,14 @@ def setup_pkg_config_repository(repository_ctx):
         if linkopt.startswith("-L"):
             linkopts[i] = "-Wl,-rpath " + linkopt[2:] + " " + linkopt
             continue
+
+        # On macOS, we need to pass `-undefined dynamic_lookup`
+        # instead of `-lpython2.7` or `lpython3.x`.
+        os_name = repository_ctx.os.name
+        if os_name == "mac os x" and linkopt.startswith("-lpython"):
+            linkopts[i] = "-undefined dynamic_lookup"
+            continue
+
         # Switches stay put.
         if linkopt.startswith("-"):
             continue
