@@ -48,26 +48,26 @@ def dreal_workspace():
         repository = "gabime/spdlog",
         commit = "v0.13.0",
         sha256 = "d798a6ca19165f0a18a43938859359269f5a07fd8e0eb83ab8674739c9e8f361",
-        build_file = str(Label("//tools:spdlog.BUILD")),
+        build_file = str(Label("//tools:spdlog.BUILD.bazel")),
     )
     github_archive(
         name = "fmt", # BSD2
         repository = "fmtlib/fmt",
         commit = "4.1.0",
         sha256 = "46628a2f068d0e33c716be0ed9dcae4370242df135aed663a180b9fd8e36733d",
-        build_file = str(Label("//tools:fmt.BUILD")),
+        build_file = str(Label("//tools:fmt.BUILD.bazel")),
     )
     github_archive(
         name = "picosat", # MIT
         repository = "dreal-deps/picosat",
         commit = "4ee7aa1d1c645df8fa9daa07f2be17c6d03b35fc", # v965
         sha256 = "1be461d3659d4e3dc957a718ed295941c38dc822fd22a67f4cb5d180f0b6a7a3",
-        build_file = str(Label("//tools:picosat.BUILD")),
+        build_file = str(Label("//tools:picosat.BUILD.bazel")),
     )
     github_archive(
         name = "pybind11", # BSD
         repository = "pybind/pybind11",
         commit = "v2.2.2",
         sha256 = "b639a2b2cbf1c467849660801c4665ffc1a4d0a9e153ae1996ed6f21c492064e",
-        build_file = str(Label("//tools:pybind11.BUILD")),
+        build_file = str(Label("//tools:pybind11.BUILD.bazel")),
     )
