@@ -1,5 +1,3 @@
-# -*- python -*-
-
 # Taken from
 # https://raw.githubusercontent.com/RobotLocomotion/drake/b617a1990340ccb7c841c5884632abcbfa081812/tools/workspace/gtest/gtest.BUILD.bazel
 

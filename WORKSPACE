@@ -1,8 +1,3 @@
-# -*- python -*-
-
-# This file marks a workspace root for the Bazel build system. see
-# http://bazel.io/ .
-
 workspace(name = "dreal")
 
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/github.bzl", "github_archive")

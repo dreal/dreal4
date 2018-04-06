@@ -1,6 +1,3 @@
-# -*- python -*-
-# This file contains rules for Bazel; see https://bazel.io/ .
-
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl", "cpplint")
 load("//tools:dreal.bzl", "dreal_cc_googletest")
 
@@ -10,7 +7,7 @@ cc_test(
     srcs = ["ibex_test.cc"],
     tags = ["extlib"],
     deps = [
-        "@ibex//:ibex",
+        "@ibex",
     ],
 )
 
@@ -19,7 +16,7 @@ dreal_cc_googletest(
     srcs = ["ibex_bitset_test.cc"],
     tags = ["extlib"],
     deps = [
-        "@ibex//:ibex",
+        "@ibex",
     ],
 )
 
@@ -34,7 +31,7 @@ cc_test(
     ],
     tags = ["extlib"],
     deps = [
-        "@ibex//:ibex",
+        "@ibex",
     ],
 )
 
@@ -62,7 +59,7 @@ cc_test(
     srcs = ["spdlog_test.cc"],
     tags = ["extlib"],
     deps = [
-        "@spdlog//:spdlog",
+        "@spdlog",
     ],
 )
 

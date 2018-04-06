@@ -1,5 +1,3 @@
-# -*- python -*-
-
 package(default_visibility = ["//visibility:public"])
 
 # We can't set name="cpplint" here because that's the directory name so the

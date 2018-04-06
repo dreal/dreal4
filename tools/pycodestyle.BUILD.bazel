@@ -1,5 +1,3 @@
-# -*- python -*-
-#
 # Copied from https://github.com/RobotLocomotion/drake/blob/2c6558385589226cc4b9146baf6a143ebcadb9f7/tools/workspace/pycodestyle/package.BUILD.bazel
 
 load("@dreal//tools:dreal.bzl", "dreal_generate_file")

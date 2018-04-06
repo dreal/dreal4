@@ -1,6 +1,3 @@
-# -*- python -*-
-# This file contains rules for Bazel; see https://bazel.io/ .
-
 cc_library(
     name = "minisat",
     srcs = [
