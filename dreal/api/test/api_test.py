@@ -46,13 +46,14 @@ class ApiTest(unittest.TestCase):
         self.assertEqual(result, False)
         self.assertEqual(b, b_copy)  # Unchanged
 
-    def test_minimize(self):
-        result = Minimize(objective, constraint, 0.01)
+    def test_minimize1(self):
+        result = Minimize(objective, constraint, 0.00001)
         self.assertTrue(result)
         self.assertAlmostEqual(result[x].mid(), -1.5, places=2)
 
+    def test_minimize2(self):
         b = Box([x])
-        result = Minimize(objective, constraint, 0.01, b)
+        result = Minimize(objective, constraint, 0.00001, b)
         self.assertTrue(result)
         self.assertAlmostEqual(b[x].mid(), -1.5, places=2)
 
