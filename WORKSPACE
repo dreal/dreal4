@@ -5,7 +5,7 @@
 
 workspace(name = "dreal")
 
-load("//tools:github.bzl", "github_archive")
+load("//third_party:com_github_robotlocomotion_drake/tools/workspace/github.bzl", "github_archive")
 
 github_archive(
     name = "google_styleguide",  # GOOGLE

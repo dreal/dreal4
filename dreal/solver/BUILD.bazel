@@ -1,7 +1,7 @@
 # -*- python -*-
 # This file contains rules for Bazel; see https://bazel.io/ .
 
-load("//:tools/cpplint.bzl", "cpplint")
+load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl", "cpplint")
 load("//tools:dreal.bzl", "dreal_cc_googletest", "dreal_cc_library")
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
