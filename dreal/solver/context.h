@@ -16,7 +16,10 @@
 
 namespace dreal {
 
-/// TODO(soonho): add documentation.
+/// Context class that holds a set of constraints and provide
+/// Assert/Push/Pop/CheckSat functionalities.
+///
+/// @note The implementation details are in context_impl.h file.
 class Context {
  public:
   /// Constructs a context with an empty configuration.

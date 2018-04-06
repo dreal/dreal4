@@ -47,8 +47,10 @@ class Context::Impl {
   std::unordered_map<std::string, std::string> info_;
   std::unordered_map<std::string, std::string> option_;
 
-  ScopedVector<Box> boxes_;  // Stack of boxes. The top one is the current box.
-  ScopedVector<Formula> stack_;  // Stack of asserted formulas.
+  // Stack of boxes. The top one is the current box.
+  ScopedVector<Box> boxes_;
+  // Stack of asserted formulas.
+  ScopedVector<Formula> stack_;
   SatSolver sat_solver_;
 };
 
