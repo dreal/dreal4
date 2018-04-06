@@ -108,7 +108,7 @@ void Context::Impl::Assert(const Formula& f) {
     return;
   }
   if (FilterAssertion(f, &box()) == FilterAssertionResult::NotFiltered) {
-    DREAL_LOG_DEBUG("Context::Assert: {} is added.", f);
+    DREAL_LOG_DEBUG("ContextImpl::Assert: {} is added.", f);
     IfThenElseEliminator ite_eliminator;
     const Formula no_ite{ite_eliminator.Process(f)};
     for (const Variable& ite_var : ite_eliminator.variables()) {
@@ -117,7 +117,7 @@ void Context::Impl::Assert(const Formula& f) {
     stack_.push_back(no_ite);
     return;
   } else {
-    DREAL_LOG_DEBUG("Context::Assert: {} is not added.", f);
+    DREAL_LOG_DEBUG("ContextImpl::Assert: {} is not added.", f);
     DREAL_LOG_DEBUG("Box=\n{}", box());
     return;
   }
@@ -127,8 +127,8 @@ namespace {
 optional<Box> CheckSatCore(const Config& config,
                            const ScopedVector<Formula>& stack, Box box,
                            SatSolver* const sat_solver) {
-  DREAL_LOG_DEBUG("Context::CheckSatCore()");
-  DREAL_LOG_TRACE("Context::CheckSat: Box =\n{}", box);
+  DREAL_LOG_DEBUG("ContextImpl::CheckSatCore()");
+  DREAL_LOG_TRACE("ContextImpl::CheckSat: Box =\n{}", box);
   if (box.empty()) {
     return {};
   }
@@ -140,7 +140,7 @@ optional<Box> CheckSatCore(const Config& config,
   }
   // If stack = ∅ or stack = {true}, it's trivially SAT.
   if (stack.empty() || (stack.size() == 1 && is_true(stack.first()))) {
-    DREAL_LOG_DEBUG("Context::CheckSatCore() - Found Model\n{}", box);
+    DREAL_LOG_DEBUG("ContextImpl::CheckSatCore() - Found Model\n{}", box);
     return box;
   }
   sat_solver->AddFormulas(stack.get_vector());
@@ -155,7 +155,7 @@ optional<Box> CheckSatCore(const Config& config,
       const vector<pair<Variable, bool>>& theory_model{optional_model->second};
       if (!theory_model.empty()) {
         // SAT from SATSolver.
-        DREAL_LOG_DEBUG("Context::CheckSatCore() - Sat Check = SAT");
+        DREAL_LOG_DEBUG("ContextImpl::CheckSatCore() - Sat Check = SAT");
 
         vector<Formula> assertions;
         assertions.reserve(theory_model.size());
@@ -165,16 +165,17 @@ optional<Box> CheckSatCore(const Config& config,
         }
         if (theory_solver.CheckSat(box, assertions)) {
           // SAT from TheorySolver.
-          DREAL_LOG_DEBUG("Context::CheckSatCore() - Theroy Check = delta-SAT");
+          DREAL_LOG_DEBUG(
+              "ContextImpl::CheckSatCore() - Theroy Check = delta-SAT");
           Box model{theory_solver.GetModel()};
           return model;
         } else {
           // UNSAT from TheorySolver.
-          DREAL_LOG_DEBUG("Context::CheckSatCore() - Theroy Check = UNSAT");
+          DREAL_LOG_DEBUG("ContextImpl::CheckSatCore() - Theroy Check = UNSAT");
           const unordered_set<Formula>& explanation{
               theory_solver.GetExplanation()};
           DREAL_LOG_DEBUG(
-              "Context::CheckSatCore() - size of explanation = {} - stack "
+              "ContextImpl::CheckSatCore() - size of explanation = {} - stack "
               "size = {}",
               explanation.size(), stack.get_vector().size());
           sat_solver->AddLearnedClause(explanation);
@@ -184,7 +185,7 @@ optional<Box> CheckSatCore(const Config& config,
       }
     } else {
       // UNSAT from SATSolver. Escape the loop.
-      DREAL_LOG_DEBUG("Context::CheckSatCore() - Sat Check = UNSAT");
+      DREAL_LOG_DEBUG("ContextImpl::CheckSatCore() - Sat Check = UNSAT");
       return {};
     }
   }
@@ -196,7 +197,7 @@ optional<Box> Context::Impl::CheckSat() {
   if (result) {
     // In case of delta-sat, do post-processing.
     Tighten(&(*result), config_.precision());
-    DREAL_LOG_DEBUG("Context::CheckSat() - Found Model\n{}", *result);
+    DREAL_LOG_DEBUG("ContextImpl::CheckSat() - Found Model\n{}", *result);
     return ExtractModel(*result);
   } else {
     return result;
@@ -204,7 +205,7 @@ optional<Box> Context::Impl::CheckSat() {
 }
 
 void Context::Impl::DeclareVariable(const Variable& v) {
-  DREAL_LOG_DEBUG("Context::DeclareVariable({})", v);
+  DREAL_LOG_DEBUG("ContextImpl::DeclareVariable({})", v);
   const auto& variables = box().variables();
   if (find_if(variables.begin(), variables.end(), [&v](const Variable& v_) {
         return v.equal_to(v_);
@@ -279,14 +280,14 @@ void Context::Impl::Minimize(const vector<Expression>& functions) {
 }
 
 void Context::Impl::Pop() {
-  DREAL_LOG_DEBUG("Context::Pop()");
+  DREAL_LOG_DEBUG("ContextImpl::Pop()");
   stack_.pop();
   boxes_.pop();
   sat_solver_.Pop();
 }
 
 void Context::Impl::Push() {
-  DREAL_LOG_DEBUG("Context::Push()");
+  DREAL_LOG_DEBUG("ContextImpl::Push()");
   sat_solver_.Push();
   boxes_.push();
   boxes_.push_back(boxes_.last());
@@ -294,28 +295,28 @@ void Context::Impl::Push() {
 }
 
 void Context::Impl::SetInfo(const string& key, const double val) {
-  DREAL_LOG_DEBUG("Context::SetInfo({} ↦ {})", key, val);
+  DREAL_LOG_DEBUG("ContextImpl::SetInfo({} ↦ {})", key, val);
   info_[key] = to_string(val);
 }
 
 void Context::Impl::SetInfo(const string& key, const string& val) {
-  DREAL_LOG_DEBUG("Context::SetInfo({} ↦ {})", key, val);
+  DREAL_LOG_DEBUG("ContextImpl::SetInfo({} ↦ {})", key, val);
   info_[key] = val;
 }
 
 void Context::Impl::SetInterval(const Variable& v, const double lb,
                                 const double ub) {
-  DREAL_LOG_DEBUG("Context::SetInterval({} = [{}, {}])", v, lb, ub);
+  DREAL_LOG_DEBUG("ContextImpl::SetInterval({} = [{}, {}])", v, lb, ub);
   box()[v] = Box::Interval{lb, ub};
 }
 
 void Context::Impl::SetLogic(const Logic& logic) {
-  DREAL_LOG_DEBUG("Context::SetLogic({})", logic);
+  DREAL_LOG_DEBUG("ContextImpl::SetLogic({})", logic);
   logic_ = logic;
 }
 
 void Context::Impl::SetOption(const string& key, const double val) {
-  DREAL_LOG_DEBUG("Context::SetOption({} ↦ {})", key, val);
+  DREAL_LOG_DEBUG("ContextImpl::SetOption({} ↦ {})", key, val);
   option_[key] = to_string(val);
   if (key == ":precision") {
     if (val <= 0.0) {
@@ -327,7 +328,7 @@ void Context::Impl::SetOption(const string& key, const double val) {
 }
 
 void Context::Impl::SetOption(const string& key, const string& val) {
-  DREAL_LOG_DEBUG("Context::SetOption({} ↦ {})", key, val);
+  DREAL_LOG_DEBUG("ContextImpl::SetOption({} ↦ {})", key, val);
   option_[key] = val;
   if (key == ":polytope") {
     return config_.mutable_use_polytope().set_from_file(
