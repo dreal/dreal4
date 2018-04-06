@@ -216,12 +216,17 @@ void Context::Impl::DeclareVariable(const Variable& v, const Expression& lb,
 
 void Context::Impl::Minimize(const vector<Expression>& functions) {
   // Given objective functions f₁(x), ... fₙ(x) and the current
-  // constraints ϕᵢ which involves x. it constructs a universally
-  // quantified formula ψ:
+  // constraints ϕᵢ which involves x. this method encodes them into a
+  // universally quantified formula ψ:
   //
   //    ψ = ∀y. (⋀ᵢ ϕᵢ(y)) → (f₁(x) ≤ f₁(y) ∨ ... ∨ fₙ(x) ≤ fₙ(y))
   //      = ∀y. ¬(⋀ᵢ ϕᵢ(y)) ∨ (f₁(x) ≤ f₁(y) ∨ ... ∨ fₙ(x) ≤ fₙ(y))
   //      = ∀y. (∨ᵢ ¬ϕᵢ(y)) ∨ (f₁(x) ≤ f₁(y) ∨ ... ∨ fₙ(x) ≤ fₙ(y)).
+  //
+  // Here we introduce existential variables zᵢ for fᵢ(x) to have
+  //
+  //    ψ =  ∃z₁...zₙ. (z₁ = f₁(x) ∧ ... ∧ zₙ = fₙ(x)) ∧
+  //              [∀y. (∨ᵢ ¬ϕᵢ(y)) ∨ (z₁ ≤ f₁(y) ∨ ... ∨ zₙ ≤ fₙ(y))].
   //
   // Note that when we have more than one objective function, this
   // encoding scheme denotes Pareto optimality.
@@ -261,10 +266,16 @@ void Context::Impl::Minimize(const vector<Expression>& functions) {
     }
   }
   Formula quantified{make_disjunction(set_of_negated_phi)};  // ∨ᵢ ¬ϕᵢ(y)
-  for (const Expression& f : functions) {
-    quantified = quantified || (f <= f.Substitute(subst));
+  Formula new_z_block;  // This will have (z₁ = f₁(x) ∧ ... ∧ zₙ = fₙ(x)).
+  static int counter{0};
+  for (const Expression& f_i : functions) {
+    const Variable z_i{"Z" + std::to_string(counter++),
+                       Variable::Type::CONTINUOUS};
+    AddToBox(z_i);
+    new_z_block = new_z_block && (z_i == f_i);
+    quantified = quantified || (z_i <= f_i.Substitute(subst));
   }
-  const Formula psi{forall(quantified_variables, quantified)};
+  const Formula psi{new_z_block && forall(quantified_variables, quantified)};
   return Assert(psi);
 }
 
