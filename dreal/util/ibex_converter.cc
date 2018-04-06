@@ -31,6 +31,7 @@ IbexConverter::IbexConverter(const vector<Variable>& variables)
     // Update ibex::Array<const ibex::ExprSymbol>
     var_array_.add(*v);
   }
+  zero_ = &ibex::ExprConstant::new_scalar(0.0);
 }
 
 IbexConverter::IbexConverter(const Box& box) : IbexConverter{box.variables()} {}
@@ -43,6 +44,7 @@ IbexConverter::~IbexConverter() {
       delete p.second;
     }
   }
+  delete zero_;
 }
 
 const ExprCtr* IbexConverter::Convert(const Formula& f) {
@@ -289,16 +291,7 @@ const ExprCtr* IbexConverter::VisitVariable(const Formula&, const bool) {
 const ExprCtr* IbexConverter::VisitEqualTo(const Formula& f,
                                            const bool polarity) {
   if (polarity) {
-    const ExprNode* lhs{Visit(get_lhs_expression(f))};
-    const ExprNode* rhs{Visit(get_rhs_expression(f))};
-    const ExprCtr* ret{&(*lhs = *rhs)};
-    if (rhs->is_zero()) {
-      // In this case, `rhs` is not included in the `ret`. We delete
-      // this to avoid memory leak. See
-      // https://github.com/ibex-team/ibex-lib/blob/af48e38847414818913b6954e1b1b3050aa14593/src/symbolic/ibex_ExprCtr.h#L53-L55
-      delete rhs;
-    }
-    return ret;
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) = *zero_);
   } else {
     return nullptr;
   }
@@ -311,36 +304,20 @@ const ExprCtr* IbexConverter::VisitNotEqualTo(const Formula& f,
 
 const ExprCtr* IbexConverter::VisitGreaterThan(const Formula& f,
                                                const bool polarity) {
-  const ExprNode* lhs{Visit(get_lhs_expression(f))};
-  const ExprNode* rhs{Visit(get_rhs_expression(f))};
-  const ExprCtr* ret{nullptr};
   if (polarity) {
-    ret = &(*lhs > *rhs);
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) > *zero_);
   } else {
-    ret = &(*lhs <= *rhs);
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) <= *zero_);
   }
-  if (rhs->is_zero()) {
-    // See VisitEqualTo.
-    delete rhs;
-  }
-  return ret;
 }
 
 const ExprCtr* IbexConverter::VisitGreaterThanOrEqualTo(const Formula& f,
                                                         const bool polarity) {
-  const ExprNode* lhs{Visit(get_lhs_expression(f))};
-  const ExprNode* rhs{Visit(get_rhs_expression(f))};
-  const ExprCtr* ret{nullptr};
   if (polarity) {
-    ret = &(*lhs >= *rhs);
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) >= *zero_);
   } else {
-    ret = &(*lhs < *rhs);
+    return &(*Visit(get_lhs_expression(f) - get_rhs_expression(f)) < *zero_);
   }
-  if (rhs->is_zero()) {
-    // See VisitEqualTo.
-    delete rhs;
-  }
-  return ret;
 }
 
 const ExprCtr* IbexConverter::VisitLessThan(const Formula& f,

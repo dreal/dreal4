@@ -120,6 +120,11 @@ class IbexConverter {
 
   ibex::Array<const ibex::ExprSymbol> var_array_;
 
+  // Represents the value `0.0`. We use this to avoid possible
+  // memory-leak caused by IBEX code: See
+  // https://github.com/ibex-team/ibex-lib/blob/af48e38847414818913b6954e1b1b3050aa14593/src/symbolic/ibex_ExprCtr.h#L53-L55
+  const ibex::ExprNode* zero_;
+
   // Makes VisitFormula a friend of this class so that it can use private
   // operator()s.
   friend const ibex::ExprCtr*
