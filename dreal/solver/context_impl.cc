@@ -10,7 +10,6 @@
 #include <utility>
 
 #include "dreal/solver/filter_assertion.h"
-#include "dreal/solver/theory_solver.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/if_then_else_eliminator.h"
@@ -80,9 +79,9 @@ bool ParseBooleanOption(const string& key, const string& val) {
 }
 }  // namespace
 
-Context::Impl::Impl() { boxes_.push_back(Box{}); }
+Context::Impl::Impl() : Impl{Config{}} {}
 
-Context::Impl::Impl(Config config) : config_{config} {
+Context::Impl::Impl(Config config) : config_{config}, theory_solver_{config_} {
   boxes_.push_back(Box{});
 }
 
@@ -110,10 +109,9 @@ void Context::Impl::Assert(const Formula& f) {
   }
 }
 
-namespace {
-optional<Box> CheckSatCore(const Config& config,
-                           const ScopedVector<Formula>& stack, Box box,
-                           SatSolver* const sat_solver) {
+optional<Box> Context::Impl::CheckSatCore(const ScopedVector<Formula>& stack,
+                                          Box box,
+                                          SatSolver* const sat_solver) {
   DREAL_LOG_DEBUG("ContextImpl::CheckSatCore()");
   DREAL_LOG_TRACE("ContextImpl::CheckSat: Box =\n{}", box);
   if (box.empty()) {
@@ -131,7 +129,6 @@ optional<Box> CheckSatCore(const Config& config,
     return box;
   }
   sat_solver->AddFormulas(stack.get_vector());
-  TheorySolver theory_solver{config, box};
   while (true) {
     const auto optional_model = sat_solver->CheckSat();
     if (optional_model) {
@@ -150,17 +147,17 @@ optional<Box> CheckSatCore(const Config& config,
           assertions.push_back(p.second ? sat_solver->theory_literal(p.first)
                                         : !sat_solver->theory_literal(p.first));
         }
-        if (theory_solver.CheckSat(box, assertions)) {
+        if (theory_solver_.CheckSat(box, assertions)) {
           // SAT from TheorySolver.
           DREAL_LOG_DEBUG(
               "ContextImpl::CheckSatCore() - Theroy Check = delta-SAT");
-          Box model{theory_solver.GetModel()};
+          Box model{theory_solver_.GetModel()};
           return model;
         } else {
           // UNSAT from TheorySolver.
           DREAL_LOG_DEBUG("ContextImpl::CheckSatCore() - Theroy Check = UNSAT");
           const unordered_set<Formula>& explanation{
-              theory_solver.GetExplanation()};
+              theory_solver_.GetExplanation()};
           DREAL_LOG_DEBUG(
               "ContextImpl::CheckSatCore() - size of explanation = {} - stack "
               "size = {}",
@@ -177,10 +174,9 @@ optional<Box> CheckSatCore(const Config& config,
     }
   }
 }
-}  // namespace
 
 optional<Box> Context::Impl::CheckSat() {
-  auto result = CheckSatCore(config_, stack_, box(), &sat_solver_);
+  auto result = CheckSatCore(stack_, box(), &sat_solver_);
   if (result) {
     // In case of delta-sat, do post-processing.
     Tighten(&(*result), config_.precision());

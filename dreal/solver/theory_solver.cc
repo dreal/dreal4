@@ -22,8 +22,8 @@ using std::numeric_limits;
 using std::unordered_set;
 using std::vector;
 
-TheorySolver::TheorySolver(const Config& config, const Box& box)
-    : config_{config}, contractor_status_{box} {}
+TheorySolver::TheorySolver(const Config& config)
+    : config_{config}, icp_{config_} {}
 
 namespace {
 bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
@@ -77,8 +77,9 @@ class TheorySolverStat : public Stat {
 }  // namespace
 
 optional<Contractor> TheorySolver::BuildContractor(
-    const vector<Formula>& assertions) {
-  Box& box = contractor_status_.mutable_box();
+    const vector<Formula>& assertions,
+    ContractorStatus* const contractor_status) {
+  Box& box = contractor_status->mutable_box();
   if (assertions.empty()) {
     return make_contractor_integer(box, config_);
   }
@@ -89,7 +90,7 @@ optional<Contractor> TheorySolver::BuildContractor(
         /* No OP */
         break;
       case FilterAssertionResult::FilteredWithChange:
-        contractor_status_.AddUsedConstraint(f);
+        contractor_status->AddUsedConstraint(f);
         if (box.empty()) {
           return {};
         }
@@ -167,28 +168,36 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   static TheorySolverStat stat{DREAL_LOG_INFO_ENABLED};
   stat.num_check_sat_++;
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
-  DREAL_ASSERT(!box.empty());
-  contractor_status_ = ContractorStatus(box);
+  ContractorStatus contractor_status(box);
 
   // Icp Step
-  const optional<Contractor> contractor{BuildContractor(assertions)};
+  const optional<Contractor> contractor{
+      BuildContractor(assertions, &contractor_status)};
   if (contractor) {
-    Icp icp(*contractor, BuildFormulaEvaluator(assertions),
-            config_.precision());
-    icp.CheckSat(&contractor_status_);
-    return !contractor_status_.box().empty();
+    icp_.CheckSat(*contractor, BuildFormulaEvaluator(assertions),
+                  &contractor_status);
+    if (contractor_status.box().empty()) {
+      explanation_ = contractor_status.Explanation();
+      return false;
+    } else {
+      model_ = contractor_status.box();
+      return true;
+    }
+    return !contractor_status.box().empty();
+  } else {
+    DREAL_ASSERT(contractor_status.box().empty());
+    explanation_ = contractor_status.Explanation();
+    return false;
   }
-  DREAL_ASSERT(contractor_status_.box().empty());
-  return false;
 }
 
-Box TheorySolver::GetModel() const {
-  DREAL_LOG_DEBUG("TheorySolver::GetModel():\n{}", contractor_status_.box());
-  return contractor_status_.box();
+const Box& TheorySolver::GetModel() const {
+  DREAL_LOG_DEBUG("TheorySolver::GetModel():\n{}", model_);
+  return model_;
 }
 
-const unordered_set<Formula> TheorySolver::GetExplanation() const {
-  return contractor_status_.Explanation();
+const unordered_set<Formula>& TheorySolver::GetExplanation() const {
+  return explanation_;
 }
 
 }  // namespace dreal
