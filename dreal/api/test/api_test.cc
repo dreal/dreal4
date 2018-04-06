@@ -212,5 +212,31 @@ TEST_F(ApiTest, CheckSatisfiabilityIfThenElse2) {
   EXPECT_EQ(solution.size(), 3);
 }
 
+TEST_F(ApiTest, SatCheckDeterministicOutput) {
+  const Formula f1{0 <= x_ && x_ <= 5};
+  const Formula f2{0 <= y_ && y_ <= 5};
+  const Formula f3{0 <= z_ && z_ <= 5};
+  const Formula f4{2 * x_ + y_ == z_};
+
+  const auto result1 = CheckSatisfiability(f1 && f2 && f3 && f4, 0.001);
+  const auto result2 = CheckSatisfiability(f1 && f2 && f3 && f4, 0.001);
+  ASSERT_TRUE(result1);
+  ASSERT_TRUE(result2);
+  EXPECT_EQ(*result1, *result2);
+}
+
+TEST_F(ApiTest, MinimizeCheckDeterministicOutput) {
+  // Calling the same API twice and check that the outputs are identical.
+  const Expression objective{2 * x_ * x_ + 6 * x_ + 5};
+  const Formula constraint{-10 <= x_ && x_ <= 10};
+  const double delta{0.01};
+
+  const auto result1 = Minimize(objective, constraint, delta);
+  const auto result2 = Minimize(objective, constraint, delta);
+  ASSERT_TRUE(result1);
+  ASSERT_TRUE(result2);
+  ASSERT_EQ(*result1, *result2);
+}
+
 }  // namespace
 }  // namespace dreal
