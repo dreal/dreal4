@@ -19,9 +19,11 @@ namespace py = pybind11;
 PYBIND11_MODULE(_symbolic_py, m) {
   m.doc() = "Symbolic variable, variables, expression, and formula";
 
-  py::class_<Variable>(m, "Variable")
-      .def(py::init<const string&>())
+  py::class_<Variable> variable(m, "Variable");
+  variable.def(py::init<const string&>())
+      .def(py::init<const string&, Variable::Type>())
       .def("get_id", &Variable::get_id)
+      .def("get_type", &Variable::get_type)
       .def("__str__", &Variable::to_string)
       .def("__repr__",
            [](const Variable& self) {
@@ -89,6 +91,12 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def(py::self != Expression())
       .def(py::self != py::self)
       .def(py::self != double());
+
+  py::enum_<Variable::Type>(variable, "Type")
+      .value("Real", Variable::Type::CONTINUOUS)
+      .value("Int", Variable::Type::INTEGER)
+      .value("Bool", Variable::Type::BOOLEAN)
+      .export_values();
 
   py::class_<Variables>(m, "Variables")
       .def(py::init<>())
@@ -241,6 +249,13 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def("max", &max);
 
   m.def("if_then_else", &if_then_else);
+  m.def("forall",
+        [](const std::vector<Variable>& vec, const Formula& f) {
+          Variables vars;
+          vars.insert(vec.begin(), vec.end());
+          return forall(std::move(vars), f);
+        })
+      .def("forall", &forall);
 
   py::class_<Formula>(m, "Formula")
       .def("GetFreeVariables", &Formula::GetFreeVariables)
@@ -274,11 +289,18 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def_static("True", &Formula::True)
       .def_static("False", &Formula::False);
 
+  // __logical_and and __logical_or will be extended as `And` and `Or`
+  // in `__init__.py` to accept an arbitrary number of arguments.
   m.def("__logical_and",
         [](const Formula& a, const Formula& b) { return a && b; })
       .def("__logical_or",
-           [](const Formula& a, const Formula& b) { return a || b; })
-      .def("logical_not", [](const Formula& a) { return !a; });
+           [](const Formula& a, const Formula& b) { return a || b; });
+
+  m.def("logical_not", [](const Formula& a) { return !a; })
+      .def("logical_imply",
+           [](const Formula& a, const Formula& b) { return imply(a, b); })
+      .def("logical_iff",
+           [](const Formula& a, const Formula& b) { return iff(a, b); });
 
   py::implicitly_convertible<double, Expression>();
   py::implicitly_convertible<Variable, Expression>();

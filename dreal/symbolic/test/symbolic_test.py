@@ -1,5 +1,6 @@
 from dreal.symbolic import Variable, Variables, Expression, Formula
 from dreal.symbolic import logical_not, logical_and, logical_or
+from dreal.symbolic import logical_imply, logical_iff, forall
 from dreal.symbolic import abs, sin, cos, tan, exp, log, sqrt
 from dreal.symbolic import asin, acos, atan, sinh, cosh, tanh, atan2
 from dreal.symbolic import min, max, if_then_else
@@ -19,6 +20,14 @@ e_y = Expression(y)
 
 
 class SymbolicVariableTest(unittest.TestCase):
+    def test_type(self):
+        real_var = Variable("x", Variable.Real)
+        self.assertEqual(real_var.get_type(), Variable.Real)
+        int_var = Variable("x", Variable.Int)
+        self.assertEqual(int_var.get_type(), Variable.Int)
+        bool_var = Variable("x", Variable.Bool)
+        self.assertEqual(bool_var.get_type(), Variable.Bool)
+
     def test_addition(self):
         self.assertEqual(str(x + y), "(x + y)")
         self.assertEqual(str(x + 1), "(1 + x)")
@@ -91,8 +100,14 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(str(-(x + 1)), "(-1 - x)")
 
     def test_logical(self):
-        self.assertEqual(str(logical_not(x == 0)),
-                         "!((x = 0))")
+        f1 = (x == 0)
+        f2 = (y == 0)
+        self.assertEqual(str(logical_not(f1)), "!((x = 0))")
+        self.assertEqual(str(logical_imply(f1, f2)),
+                         str(logical_or(logical_not(f1), f2)))
+        self.assertEqual(str(logical_iff(f1, f2)),
+                         str(logical_and(logical_imply(f1, f2),
+                                         logical_imply(f2, f1))))
 
         # Test single-operand logical statements
         self.assertEqual(str(logical_and(x >= 1)), "(x >= 1)")
@@ -461,6 +476,12 @@ class TestSymbolicFormula(unittest.TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(x > y), '<Formula "(x > y)">')
+
+    def test_forall(self):
+        self.assertEqual(str(forall(Variables([x, y, z]), x == 0)),
+                         "forall({x, y, z}. (x = 0))")
+        self.assertEqual(str(forall([x, y, z], x == 0)),
+                         "forall({x, y, z}. (x = 0))")
 
 
 if __name__ == '__main__':

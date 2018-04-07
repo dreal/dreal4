@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 from dreal.symbolic import Variable, logical_and, sin, cos
+from dreal.symbolic import logical_imply, forall
 from dreal.api import CheckSatisfiability, Minimize
 from dreal.util import Box
+import math
 import unittest
 
 x = Variable("x")
@@ -52,6 +55,28 @@ class ApiTest(unittest.TestCase):
         result = Minimize(objective, constraint, 0.01, b)
         self.assertTrue(result)
         self.assertAlmostEqual(b[x].mid(), -1.5, places=2)
+
+    def test_minimize_via_forall(self):
+        # To minimize f(X) s.t. φ(x), this test encodes
+        # the problem into a first-order logic formula.
+        #
+        #    ∃X. φ(X) ∧ [∀Y φ(Y) ⇒ (f(X) ≤ f(Y))]
+        #
+        # Here we use f(x) = sin(x)cos(x)
+        #             φ(X) = (0 ≤ x) ∧ (x ≤ π)
+        def f(x):
+            return sin(x) * cos(x)
+
+        def phi(x):
+            return logical_and(0 <= x, x <= math.pi)
+
+        problem = logical_and(phi(x),
+                              forall([y],
+                                     logical_and(logical_imply(phi(y),
+                                                               f(x) <= f(y)))))
+        result = CheckSatisfiability(problem, 0.01)
+        self.assertTrue(result)
+        self.assertAlmostEqual(result[x].mid(), math.pi * 3 / 4, places=3)
 
 
 if __name__ == '__main__':
