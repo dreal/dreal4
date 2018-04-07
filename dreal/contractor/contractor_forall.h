@@ -165,6 +165,8 @@ class ContractorForall : public ContractorCell {
 
   void Prune(ContractorStatus* cs) const override {
     Box& current_box = cs->mutable_box();
+    Config& config_for_counterexample{
+        context_for_counterexample_.mutable_config()};
     while (true) {
       // 1. Find Counterexample.
       for (const Variable& exist_var : current_box.variables()) {
@@ -172,6 +174,9 @@ class ContractorForall : public ContractorCell {
                                                 current_box[exist_var].lb(),
                                                 current_box[exist_var].ub());
       }
+      // Alternate the stacking order.
+      config_for_counterexample.mutable_stack_left_box_first() =
+          !config_for_counterexample.stack_left_box_first();
       std::experimental::optional<Box> counterexample_opt =
           context_for_counterexample_.CheckSat();
       if (counterexample_opt) {

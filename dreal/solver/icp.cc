@@ -155,6 +155,8 @@ optional<ibex::BitSet> Icp::EvaluateBox(
 bool Icp::CheckSat(const Contractor& contractor,
                    const vector<FormulaEvaluator>& formula_evaluators,
                    ContractorStatus* const cs) {
+  // Use the stacking policy set by the configuration.
+  stack_left_box_first_ = config_.stack_left_box_first();
   static IcpStat stat{DREAL_LOG_INFO_ENABLED};
   DREAL_LOG_DEBUG("Icp::CheckSat()");
   // Stack of Box x BranchingPoint.
