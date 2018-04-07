@@ -51,9 +51,13 @@ class Config {
   /// Returns a mutable OptionValue for 'use_local_optimization'.
   OptionValue<bool>& mutable_use_local_optimization();
 
-  // ---------------------
-  // NLopt-related options
-  // ---------------------
+  /// @name NLopt Options
+  ///
+  /// Specifies stopping criteria of NLopt. See
+  /// https://nlopt.readthedocs.io/en/latest/NLopt_Reference/#stopping-criteria
+  /// for more information.
+  ///
+  /// @{
 
   /// Returns relative tolerance on function value in NLopt.
   double nlopt_ftol_rel() const;
@@ -78,6 +82,8 @@ class Config {
 
   /// Returns a mutable OptionValue for `nlopt_maxtime`.
   OptionValue<double>& mutable_nlopt_maxtime();
+
+  /// @}
 
  private:
   // NOTE: Make sure to match the default values specified here with the ones
