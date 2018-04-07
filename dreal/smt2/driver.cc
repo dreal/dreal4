@@ -16,13 +16,13 @@ using std::cerr;
 using std::cout;
 using std::cin;
 using std::endl;
-using std::experimental::optional;
 using std::ifstream;
 using std::istream;
 using std::istringstream;
-using std::ostringstream;
 using std::move;
+using std::ostringstream;
 using std::string;
+using std::experimental::optional;
 
 Smt2Driver::Smt2Driver(Context context) : context_{move(context)} {}
 
@@ -74,19 +74,19 @@ void Smt2Driver::CheckSat() {
 }
 
 Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {
-  Variable v{ ParseVariableSort(name, sort) };
+  const Variable v{ParseVariableSort(name, sort)};
   scope_.insert(v.get_name(), v);
   return v;
 }
 
 void Smt2Driver::DeclareVariable(const string& name, const Sort sort) {
-  Variable v{ RegisterVariable(name, sort) };
+  const Variable v{RegisterVariable(name, sort)};
   context_.DeclareVariable(v);
 }
 
 void Smt2Driver::DeclareVariable(const string& name, const Sort sort,
                                  const Term& lb, const Term& ub) {
-  Variable v{ RegisterVariable(name, sort) };
+  const Variable v{RegisterVariable(name, sort)};
   context_.DeclareVariable(v, lb.expression(), ub.expression());
 }
 
@@ -98,9 +98,10 @@ string Smt2Driver::MakeUniqueName(const string& name) {
 }
 
 Variable Smt2Driver::DeclareLocalVariable(const string& name, const Sort sort) {
-  Variable v{ ParseVariableSort(MakeUniqueName(name), sort) };
+  const Variable v{ParseVariableSort(MakeUniqueName(name), sort)};
   scope_.insert(name, v);  // v is not inserted under its own name.
-  context_.DeclareVariable(v);
+  context_.DeclareVariable(
+      v, false /* This local variable is not a model variable. */);
   return v;
 }
 
