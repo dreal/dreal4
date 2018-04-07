@@ -36,6 +36,13 @@ OptionValue<bool>& Config::mutable_use_local_optimization() {
   return use_local_optimization_;
 }
 
+bool Config::stack_left_box_first() const {
+  return stack_left_box_first_.get();
+}
+OptionValue<bool>& Config::mutable_stack_left_box_first() {
+  return stack_left_box_first_;
+}
+
 double Config::nlopt_ftol_rel() const { return nlopt_ftol_rel_.get(); }
 
 OptionValue<double>& Config::mutable_nlopt_ftol_rel() {

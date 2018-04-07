@@ -51,6 +51,13 @@ class Config {
   /// Returns a mutable OptionValue for 'use_local_optimization'.
   OptionValue<bool>& mutable_use_local_optimization();
 
+  /// Returns whether the ICP algorithm stacks the left box first
+  /// after branching.
+  bool stack_left_box_first() const;
+
+  /// Returns a mutable OptionValue for 'stack_left_box_first'.
+  OptionValue<bool>& mutable_stack_left_box_first();
+
   /// @name NLopt Options
   ///
   /// Specifies stopping criteria of NLopt. See
@@ -94,6 +101,7 @@ class Config {
   OptionValue<bool> use_polytope_in_forall_{false};
   OptionValue<bool> use_worklist_fixpoint_{false};
   OptionValue<bool> use_local_optimization_{false};
+  OptionValue<bool> stack_left_box_first_{false};
 
   // --------------------------------------------------------------------------
   // NLopt options (stopping criteria)
