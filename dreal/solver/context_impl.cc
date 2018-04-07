@@ -202,15 +202,17 @@ void Context::Impl::AddToBox(const Variable& v) {
   }
 }
 
-void Context::Impl::DeclareVariable(const Variable& v) {
+void Context::Impl::DeclareVariable(const Variable& v,
+                                    const bool is_model_variable) {
   DREAL_LOG_DEBUG("ContextImpl::DeclareVariable({})", v);
   AddToBox(v);
-  mark_model_variable(v);
+  if (is_model_variable) {
+    mark_model_variable(v);
+  }
 }
 
-void Context::Impl::DeclareVariable(const Variable& v, const Expression& lb,
-                                    const Expression& ub) {
-  DeclareVariable(v);
+void Context::Impl::SetDomain(const Variable& v, const Expression& lb,
+                              const Expression& ub) {
   const double lb_fp =
       is_real_constant(lb) ? get_lb_of_real_constant(lb) : lb.Evaluate();
   const double ub_fp =

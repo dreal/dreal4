@@ -27,11 +27,15 @@ void Context::Assert(const Formula& f) { impl_->Assert(f); }
 
 optional<Box> Context::CheckSat() { return impl_->CheckSat(); }
 
-void Context::DeclareVariable(const Variable& v) { impl_->DeclareVariable(v); }
+void Context::DeclareVariable(const Variable& v, const bool is_model_variable) {
+  impl_->DeclareVariable(v, is_model_variable);
+}
 
 void Context::DeclareVariable(const Variable& v, const Expression& lb,
-                              const Expression& ub) {
-  impl_->DeclareVariable(v, lb, ub);
+                              const Expression& ub,
+                              const bool is_model_variable) {
+  impl_->DeclareVariable(v, is_model_variable);
+  impl_->SetDomain(v, lb, ub);
 }
 
 void Context::Exit() { DREAL_LOG_DEBUG("Context::Exit()"); }

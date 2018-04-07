@@ -25,9 +25,8 @@ class Context::Impl {
 
   void Assert(const Formula& f);
   std::experimental::optional<Box> CheckSat();
-  void DeclareVariable(const Variable& v);
-  void DeclareVariable(const Variable& v, const Expression& lb,
-                       const Expression& ub);
+  void DeclareVariable(const Variable& v, bool is_model_variable);
+  void SetDomain(const Variable& v, const Expression& lb, const Expression& ub);
   void Minimize(const std::vector<Expression>& functions);
   void Pop();
   void Push();
