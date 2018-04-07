@@ -49,12 +49,17 @@ class Context {
   /// Checks the satisfiability of the asserted formulas.
   std::experimental::optional<Box> CheckSat();
 
-  /// Declare a variable @p v.
-  void DeclareVariable(const Variable& v);
+  /// Declare a variable @p v. By default @p v is considered as a
+  /// model variable. If @p is_model_variable is false, it is declared as
+  /// a non-model variable and will not appear in the model.
+  void DeclareVariable(const Variable& v, bool is_model_variable = true);
 
-  /// Declare a variable @p v which is bounded by an interval `[lb, ub]`.
+  /// Declare a variable @p v which is bounded by an interval `[lb,
+  /// ub]`. By default @p v is considered as a model variable. If @p
+  /// is_model_variable is false, it is declared as a non-model variable
+  /// and will not appear in the model.
   void DeclareVariable(const Variable& v, const Expression& lb,
-                       const Expression& ub);
+                       const Expression& ub, bool is_model_variable = true);
 
   /// Closes the context.
   void Exit();
