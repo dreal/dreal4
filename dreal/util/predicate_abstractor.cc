@@ -56,11 +56,7 @@ Formula PredicateAbstractor::VisitAtomic(const Formula& f) {
   ss << "b(" << f << ")";
   auto it = formula_to_var_map_.find(f);
   if (it == formula_to_var_map_.end()) {
-    const Variable bvar{ss.str(), Variable::Type::BOOLEAN,
-                        /* This is a variable introduced by a
-                         * pre-processing and should not appear to a
-                         * user. */
-                        false};
+    const Variable bvar{ss.str(), Variable::Type::BOOLEAN};
     Add(bvar, f);
     return Formula{bvar};
   } else {

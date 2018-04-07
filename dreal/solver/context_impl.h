@@ -4,6 +4,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "dreal/solver/sat_solver.h"
@@ -40,7 +41,27 @@ class Context::Impl {
   Config& mutable_config() { return config_; }
 
  private:
+  // Add the variable @p v to the current box. This is used to
+  // introduce a non-model variable to solver. For a model variable,
+  // `DeclareVariable` should be used. But `DeclareVariable` should be
+  // called from outside of this class. Any methods in this class
+  // should not call it directly.
+  void AddToBox(const Variable& v);
+
+  // Returns the current box in the stack.
   Box& box() { return boxes_.last(); }
+
+  // Marks variable @p v as a model variable
+  void mark_model_variable(const Variable& v);
+
+  // Checks if the variable @p v is a model variable or not.
+  bool is_model_variable(const Variable& v) const;
+
+  // Extracts a model from the @p box. Note that @p box might include
+  // non-model variables (i.e. variables introduced by if-then-else
+  // elimination). This function creates a new box which is free of
+  // those non-model variables.
+  Box ExtractModel(const Box& box) const;
 
   Config config_;
   std::experimental::optional<Logic> logic_{};
@@ -52,6 +73,7 @@ class Context::Impl {
   // Stack of asserted formulas.
   ScopedVector<Formula> stack_;
   SatSolver sat_solver_;
+  std::unordered_set<Variable::Id> model_variables_;
 };
 
 }  // namespace dreal

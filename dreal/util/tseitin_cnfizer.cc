@@ -97,11 +97,7 @@ Formula TseitinCnfizer::VisitForall(const Formula& f) {
   } else {
     static size_t id{0};
     const Variable bvar{string("forall") + to_string(id++),
-                        Variable::Type::BOOLEAN,
-                        /* This is a variable introduced by a
-                         * pre-processing and should not appear to a
-                         * user. */
-                        false};
+                        Variable::Type::BOOLEAN};
     map_.emplace(bvar, make_conjunction(new_clauses));
     return Formula{bvar};
   }
@@ -114,11 +110,8 @@ Formula TseitinCnfizer::VisitConjunction(const Formula& f) {
   const set<Formula> transformed_operands{::dreal::map(
       get_operands(f),
       [this](const Formula& formula) { return this->Visit(formula); })};
-  const Variable bvar{string("conj") + to_string(id++), Variable::Type::BOOLEAN,
-                      /* This is a variable introduced by a
-                       * pre-processing and should not appear to a
-                       * user. */
-                      false};
+  const Variable bvar{string("conj") + to_string(id++),
+                      Variable::Type::BOOLEAN};
   map_.emplace(bvar, make_conjunction(transformed_operands));
   return Formula{bvar};
 }
@@ -128,11 +121,8 @@ Formula TseitinCnfizer::VisitDisjunction(const Formula& f) {
   const set<Formula>& transformed_operands{::dreal::map(
       get_operands(f),
       [this](const Formula& formula) { return this->Visit(formula); })};
-  const Variable bvar{string("disj") + to_string(id++), Variable::Type::BOOLEAN,
-                      /* This is a variable introduced by a
-                       * pre-processing and should not appear to a
-                       * user. */
-                      false};
+  const Variable bvar{string("disj") + to_string(id++),
+                      Variable::Type::BOOLEAN};
   map_.emplace(bvar, make_disjunction(transformed_operands));
   return Formula{bvar};
 }
@@ -142,11 +132,7 @@ Formula TseitinCnfizer::VisitNegation(const Formula& f) {
   if (is_atomic(operand)) {
     return f;
   } else {
-    const Variable bvar{"neg", Variable::Type::BOOLEAN,
-                        /* This is a variable introduced by a
-                         * pre-processing and should not appear to a
-                         * user. */
-                        false};
+    const Variable bvar{"neg", Variable::Type::BOOLEAN};
     const Formula transformed_operand{Visit(operand)};
     map_.emplace(bvar, !transformed_operand);
     return Formula{bvar};

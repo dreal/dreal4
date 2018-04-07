@@ -62,20 +62,6 @@ void Tighten(Box* box, const double delta) {
   }
 }
 
-// The parameter @p box might include non-model variables
-// (i.e. variables introduced by if-then-else elimination). This
-// function creates a new box which is free of those non-model
-// variables. The return value will be passed to users.
-Box ExtractModel(const Box& box) {
-  Box new_box;
-  for (const Variable& v : box.variables()) {
-    if (v.is_model_variable()) {
-      new_box.Add(v, box[v].lb(), box[v].ub());
-    }
-  }
-  return new_box;
-}
-
 string to_string(const double) {
   ostringstream oss;
   oss.precision(numeric_limits<double>::max_digits10 + 2);
@@ -112,7 +98,8 @@ void Context::Impl::Assert(const Formula& f) {
     IfThenElseEliminator ite_eliminator;
     const Formula no_ite{ite_eliminator.Process(f)};
     for (const Variable& ite_var : ite_eliminator.variables()) {
-      DeclareVariable(ite_var);
+      // Note that the following does not mark `ite_var` as a model variable.
+      AddToBox(ite_var);
     }
     stack_.push_back(no_ite);
     return;
@@ -204,8 +191,8 @@ optional<Box> Context::Impl::CheckSat() {
   }
 }
 
-void Context::Impl::DeclareVariable(const Variable& v) {
-  DREAL_LOG_DEBUG("ContextImpl::DeclareVariable({})", v);
+void Context::Impl::AddToBox(const Variable& v) {
+  DREAL_LOG_DEBUG("ContextImpl::AddToBox({})", v);
   const auto& variables = box().variables();
   if (find_if(variables.begin(), variables.end(), [&v](const Variable& v_) {
         return v.equal_to(v_);
@@ -213,6 +200,12 @@ void Context::Impl::DeclareVariable(const Variable& v) {
     // v is not in box.
     box().Add(v);
   }
+}
+
+void Context::Impl::DeclareVariable(const Variable& v) {
+  DREAL_LOG_DEBUG("ContextImpl::DeclareVariable({})", v);
+  AddToBox(v);
+  mark_model_variable(v);
 }
 
 void Context::Impl::DeclareVariable(const Variable& v, const Expression& lb,
@@ -351,4 +344,27 @@ void Context::Impl::SetOption(const string& key, const string& val) {
         ParseBooleanOption(key, val));
   }
 }
+
+Box Context::Impl::ExtractModel(const Box& box) const {
+  if (static_cast<int>(model_variables_.size()) == box.size()) {
+    // Every variable is a model variable. Simply return the @p box.
+    return box;
+  }
+  Box new_box;
+  for (const Variable& v : box.variables()) {
+    if (is_model_variable(v)) {
+      new_box.Add(v, box[v].lb(), box[v].ub());
+    }
+  }
+  return new_box;
+}
+
+bool Context::Impl::is_model_variable(const Variable& v) const {
+  return (model_variables_.find(v.get_id()) != model_variables_.end());
+}
+
+void Context::Impl::mark_model_variable(const Variable& v) {
+  model_variables_.insert(v.get_id());
+}
+
 }  // namespace dreal
