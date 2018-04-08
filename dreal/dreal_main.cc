@@ -75,6 +75,15 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */, "Debug parsing\n",
            "--debug-parsing");
 
+  auto* const format_option_validator = new ez::ezOptionValidator(
+      "t", "in", "auto,dr,smt2", false);
+  opt_.add("auto" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "File format. Any one of these (default = auto):\n"
+           "smt2, dr, auto (use file extension)\n", "--format",
+           format_option_validator);
+
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
@@ -278,16 +287,20 @@ int MainProgram::Run() {
   }
   ExtractOptions();
   const string& filename{*args_[0]};
-  if (!file_exists(filename)) {
+  if (filename != "-" && !file_exists(filename)) {
     cerr << "File not found: " << filename << "\n" << endl;
     PrintUsage();
     return 1;
   }
   const string extension{get_extension(filename)};
-  if (extension == "smt2") {
+  string formatOpt;
+  opt_.get("--format")->getString(formatOpt);
+  if (formatOpt == "smt2" ||
+      (formatOpt == "auto" && (extension == "smt2" || filename == "-"))) {
     RunSmt2(filename, config_, opt_.isSet("--debug-scanning"),
             opt_.isSet("--debug-parsing"));
-  } else if (extension == "dr") {
+  } else if (formatOpt == "dr" ||
+             (formatOpt == "auto" && extension == "dr")) {
     RunDr(filename, config_, opt_.isSet("--debug-scanning"),
           opt_.isSet("--debug-parsing"));
   } else {
