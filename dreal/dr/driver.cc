@@ -15,6 +15,7 @@ namespace dreal {
 
 using std::cerr;
 using std::cout;
+using std::cin;
 using std::endl;
 using std::experimental::optional;
 using std::ifstream;
@@ -38,6 +39,9 @@ bool DrDriver::parse_stream(istream& in, const string& sname) {
 }
 
 bool DrDriver::parse_file(const string& filename) {
+  if (filename == "-") {
+    return parse_stream(cin, "(stdin)");
+  }
   ifstream in(filename.c_str());
   if (!in.good()) {
     return false;
