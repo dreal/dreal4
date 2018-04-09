@@ -39,7 +39,8 @@ bool DrDriver::parse_stream(istream& in, const string& sname) {
 }
 
 bool DrDriver::parse_file(const string& filename) {
-  if (filename == "-") {
+  if (filename == "") {
+    // Option --in passed to dreal.
     return parse_stream(cin, "(stdin)");
   }
   ifstream in(filename.c_str());
