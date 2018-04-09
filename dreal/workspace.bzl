@@ -39,8 +39,8 @@ def dreal_workspace():
     github_archive(
         name = "drake_symbolic", # BSD
         repository = "dreal-deps/drake-symbolic",
-        commit = "cefce827eb5d1b6d8e55bfac7c96e554cb6193f2",
-        sha256 = "2d5918a705122084be21b6efa1ba0f4295b69b3e8ad4e769533f53f3cf19a1c0",
+        commit = "35a8d5e5bc8e7e53b04e1f7cf70e26d559757d7b",
+        sha256 = "cb25768ceed19267b3d0ee554bc85b2a2af3f92953efc5cd479dba63a5fdf72c",
     )
     github_archive(
         name = "spdlog", # MIT
