@@ -435,6 +435,20 @@ class TestSymbolicExpression(unittest.TestCase):
     def test_repr(self):
         self.assertEqual(repr(e_x), '<Expression "x">')
 
+    def test_evaluate(self):
+        env = {x: 3, y: 4}
+        self.assertEqual((x + y).Evaluate(env), 7)
+
+    def test_evaluate_partial(self):
+        env = {x: 3}
+        self.assertEqual((x + y).EvaluatePartial(env), 3 + y)
+
+    def test_substitute(self):
+        e = x + y
+        self.assertEqual(e.Substitute(x, 1.0), 1.0 + y)
+        self.assertEqual(e.Substitute(x, y), 2 * y)
+        self.assertEqual(e.Substitute(x, x + 5), x + y + 5)
+
 
 class TestSymbolicFormula(unittest.TestCase):
     def test_get_free_variables(self):

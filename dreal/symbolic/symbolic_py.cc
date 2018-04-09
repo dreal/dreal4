@@ -145,6 +145,31 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def("to_string", &Expression::to_string)
       .def("Expand", &Expression::Expand)
       .def("Evaluate", [](const Expression& self) { return self.Evaluate(); })
+      .def("Evaluate",
+           [](const Expression& self, const Environment::map& env) {
+             Environment e;
+             return self.Evaluate(Environment{env});
+           })
+      .def("EvaluatePartial",
+           [](const Expression& self, const Environment::map& env) {
+             return self.EvaluatePartial(Environment{env});
+           })
+      .def("Substitute",
+           [](const Expression& self, const Variable& var,
+              const Expression& e) { return self.Substitute(var, e); })
+      .def("Substitute",
+           [](const Expression& self, const ExpressionSubstitution& s) {
+             return self.Substitute(s);
+           })
+      .def("Substitute",
+           [](const Expression& self, const FormulaSubstitution& s) {
+             return self.Substitute(s);
+           })
+      .def("Substitute",
+           [](const Expression& self, const ExpressionSubstitution& expr_subst,
+              const FormulaSubstitution& formula_subst) {
+             return self.Substitute(expr_subst, formula_subst);
+           })
       // Addition
       .def(py::self + py::self)
       .def(py::self + Variable())
@@ -268,6 +293,7 @@ PYBIND11_MODULE(_symbolic_py, m) {
                         const Formula& other) { return !self.EqualTo(other); })
       .def("__hash__",
            [](const Formula& self) { return std::hash<Formula>{}(self); })
+      .def("__nonzero__", [](const Formula& f) { return f.Evaluate(); })
       .def_static("True", &Formula::True)
       .def_static("False", &Formula::False);
 
