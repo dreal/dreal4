@@ -124,6 +124,7 @@ class SymbolicVariableTest(unittest.TestCase):
                          "((y = 2) or (x >= 1) or (x <= 2))")
 
     def test_functions_with_variable(self):
+        self.assertEqual(str(log(x)), "log(x)")
         self.assertEqual(str(abs(x)), "abs(x)")
         self.assertEqual(str(exp(x)), "exp(x)")
         self.assertEqual(str(sqrt(x)), "sqrt(x)")
@@ -153,6 +154,7 @@ class TestSymbolicVariables(unittest.TestCase):
     def test_constructor_list(self):
         vars = Variables([x, y, z])
         self.assertEqual(vars.size(), 3)
+        self.assertEqual(len(vars), 3)
 
     def test_to_string(self):
         vars = Variables([x, y, z])
@@ -188,13 +190,8 @@ class TestSymbolicVariables(unittest.TestCase):
     def test_include(self):
         vars = Variables([x, y, z])
         self.assertTrue(vars.include(y))
-
-    def test_to_string(self):
-        vars = Variables()
-        vars.insert(x)
-        vars.insert(y)
-        vars.insert(z)
-        self.assertEqual(vars.to_string(), "{x, y, z}")
+        self.assertTrue(y in vars)
+        self.assertFalse(w in vars)
 
     def test_subset_properties(self):
         vars1 = Variables([x, y, z])
@@ -251,6 +248,14 @@ class TestSymbolicVariables(unittest.TestCase):
         vars2 = Variables([y, w])
         vars3 = intersect(vars1, vars2)  # = [y]
         self.assertEqual(vars3, Variables([y]))
+
+    def test_iter(self):
+        vars = Variables([x, y, z])
+        count = 0
+        for var in vars:
+            self.assertTrue(var in vars)
+            count = count + 1
+        self.assertEqual(count, len(vars))
 
 
 class TestSymbolicExpression(unittest.TestCase):
