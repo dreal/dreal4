@@ -49,14 +49,6 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def(double() / py::self)
       // Pow.
       .def("__pow__",
-           [](const Variable& self, double other) { return pow(self, other); },
-           py::is_operator())
-      .def("__pow__",
-           [](const Variable& self, const Variable& other) {
-             return pow(self, other);
-           },
-           py::is_operator())
-      .def("__pow__",
            [](const Variable& self, const Expression& other) {
              return pow(self, other);
            },
@@ -191,10 +183,6 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def(py::self /= double())
       // Pow.
       .def("__pow__", [](const Expression& self,
-                         const double other) { return pow(self, other); })
-      .def("__pow__", [](const Expression& self,
-                         const Variable& other) { return pow(self, other); })
-      .def("__pow__", [](const Expression& self,
                          const Expression& other) { return pow(self, other); })
       // TODO(soonho): need to add this to drake-symbolic
       // Unary Plus.
@@ -265,12 +253,6 @@ PYBIND11_MODULE(_symbolic_py, m) {
              return self.Substitute(var, e);
            })
       .def("Substitute",
-           [](const Formula& self, const Variable& var1, const Variable& var2) {
-             return self.Substitute(var1, var2);
-           })
-      .def("Substitute", [](const Formula& self, const Variable& var,
-                            const double c) { return self.Substitute(var, c); })
-      .def("Substitute",
            [](const Formula& self, const ExpressionSubstitution& s) {
              return self.Substitute(s);
            })
@@ -302,6 +284,7 @@ PYBIND11_MODULE(_symbolic_py, m) {
       .def("logical_iff",
            [](const Formula& a, const Formula& b) { return iff(a, b); });
 
+  py::implicitly_convertible<int, Expression>();
   py::implicitly_convertible<double, Expression>();
   py::implicitly_convertible<Variable, Expression>();
 }
