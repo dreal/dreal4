@@ -30,7 +30,7 @@ EOF
 BAZEL_VERSION=0.12.0
 BAZEL_DEBNAME=bazel_${BAZEL_VERSION}-linux-x86_64.deb
 BAZEL_URL=https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/${BAZEL_DEBNAME}
-BAZEL_SHA256=f3df344b16a40d4233a7606cce38869d4df3bb35296ac2f4e18838566ae3cb48
+BAZEL_SHA256=3d94ca21477289fa369c6077564719dbd89052e6199a527cfa0506bb41c82cd5
 apt install -y --no-install-recommends wget
 wget ${BAZEL_URL}
 if echo "${BAZEL_SHA256}  ${BAZEL_DEBNAME}" | sha256sum -c; then
