@@ -43,23 +43,6 @@ dreal_cc_binary(
     ],
 )
 
-cc_binary(
-    name = "libdreal.so",
-    linkopts = select({
-        "@dreal//tools:linux": [],
-        "@//conditions:default": [
-            "-Wl,-install_name,@rpath/libdreal.so",
-        ],
-    }),
-    linkshared = 1,
-    visibility = ["//visibility:public"],
-    deps = [
-        "//dreal/api",
-        "//dreal/solver",
-        "//dreal/util:box",
-    ],
-)
-
 # ----------------------
 # Bindings
 # ----------------------
@@ -68,6 +51,7 @@ dreal_generate_file(
     out = "__init__.py",
     content = """from dreal.symbolic import *
 from dreal.util import *
+from dreal.solver import *
 from dreal.api import *""",
     visibility = ["//visibility:private"],
 )
@@ -121,7 +105,7 @@ pkg_tar(
 pkg_tar(
     name = "package_sharedlib",
     srcs = [
-        ":libdreal.so",
+        "//:libdreal.so",
     ],
     extension = "tar.gz",
     package_dir = "lib",

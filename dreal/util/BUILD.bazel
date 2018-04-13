@@ -365,10 +365,6 @@ dreal_generate_file(
 
 dreal_pybind_library(
     name = "util_py",
-    cc_deps = [
-        ":box",
-        "//dreal/symbolic",
-    ],
     cc_srcs = ["util_py.cc"],
     py_deps = [
         "//dreal/symbolic:symbolic_py",

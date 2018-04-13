@@ -22,7 +22,7 @@ dreal_cc_library(
         "//dreal/util:assert",
         "//dreal/util:exception",
         "//dreal/util:logging",
-        "//third_party/com_github_robotlocomotion_drake:drake_symbolic",        
+        "//third_party/com_github_robotlocomotion_drake:drake_symbolic",
     ],
 )
 
@@ -51,11 +51,7 @@ dreal_cc_googletest(
 # ----------------------
 dreal_pybind_library(
     name = "symbolic_py",
-    cc_deps = [
-        ":symbolic",
-    ],
     cc_srcs = ["symbolic_py.cc"],
-    py_deps = [],
     py_srcs = ["__init__.py"],
 )
 
@@ -95,7 +91,7 @@ filegroup(
     name = "headers",
     srcs = [
         "symbolic.h",
-        "//third_party/com_github_robotlocomotion_drake:headers",        
+        "//third_party/com_github_robotlocomotion_drake:headers",
     ],
     visibility = ["//visibility:public"],
 )

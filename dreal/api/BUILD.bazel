@@ -56,13 +56,11 @@ import dreal.util""",
 
 dreal_pybind_library(
     name = "api_py",
-    cc_deps = [
-        ":api",
-    ],
     cc_srcs = ["api_py.cc"],
     py_deps = [
         "//dreal/symbolic:symbolic_py",
         "//dreal/util:util_py",
+        "//dreal/solver:solver_py",
     ],
     py_srcs = [":init_py"],
 )

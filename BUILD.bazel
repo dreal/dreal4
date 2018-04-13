@@ -6,6 +6,43 @@ exports_files([
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
 load("//tools:dreal.bzl", "dreal_cc_library", "DREAL_VERSION", "DREAL_PREFIX")
 
+cc_binary(
+    name = "libdreal.so",
+    linkopts = select({
+        "@dreal//tools:linux": [],
+        "@//conditions:default": [
+            "-Wl,-install_name,@rpath/libdreal.so",
+        ],
+    }),
+    linkshared = 1,
+    visibility = ["//visibility:public"],
+    deps = [
+        "//dreal/api",
+        "//dreal/solver",
+        "//dreal/util:box",
+    ],
+)
+
+cc_library(
+    name = "dreal_shared_library",
+    hdrs = [
+        "//dreal/api:headers",
+        "//dreal/solver:headers",
+        "//dreal/symbolic:headers",
+        "//dreal/util:headers",
+    ],
+    includes = [
+        "third_party/com_github_robotlocomotion_drake",
+    ],
+    visibility = [
+        "//dreal:__subpackages__",
+    ],
+    deps = [
+        "@fmt",
+        "@ibex",
+    ],
+)
+
 genrule(
     name = "generate_pkg_file",
     outs = [
@@ -56,6 +93,7 @@ pkg_tar(
         "//dreal/api:package_python",
         "//dreal/smt2:package_headers",
         "//dreal/solver:package_headers",
+        "//dreal/solver:package_python",
         "//dreal/symbolic:package_headers",
         "//dreal/symbolic:package_python",
         "//dreal/util:package_headers",

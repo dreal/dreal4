@@ -37,7 +37,6 @@ cc_library(
         "drake/common/symbolic_variables.cc",
     ],
     hdrs = [
-        "drake/common/test/symbolic_test_util.h",
         ":headers",
     ],
     includes = ["."],

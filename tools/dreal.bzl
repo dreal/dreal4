@@ -107,17 +107,19 @@ def dreal_pybind_library(
         name,
         py_srcs = [],
         py_deps = [],
-        cc_srcs = [],
-        cc_deps = []):
+        cc_srcs = []):
     """Creates a rule to declare a pybind library.
     """
     cc_so_name = "_" + name + ".so"
     dreal_cc_binary(
         name = cc_so_name,
-        srcs = cc_srcs,
+        srcs = cc_srcs + [
+            "//:libdreal.so",
+        ],
         linkshared = 1,
         linkstatic = 1,
-        deps = cc_deps + [
+        deps = [
+            "//:dreal_shared_library",
             "@pybind11",
         ],
         copts = [

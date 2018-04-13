@@ -1,7 +1,8 @@
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl", "cpplint")
-load("//tools:dreal.bzl",
-     "dreal_cc_googletest",
-     "dreal_cc_library",
+load(
+    "//tools:dreal.bzl",
+    "dreal_cc_googletest",
+    "dreal_cc_library",
     "dreal_generate_file",
     "dreal_pybind_library",
 )
@@ -179,11 +180,7 @@ dreal_generate_file(
 
 dreal_pybind_library(
     name = "solver_py",
-    cc_deps = [
-        ":solver",
-    ],
     cc_srcs = ["solver_py.cc"],
-    py_deps = [],
     py_srcs = ["__init__.py"],
 )
 
