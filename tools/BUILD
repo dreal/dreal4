@@ -48,7 +48,7 @@ sh_binary(
 cc_toolchain_suite(
     name = "default-toolchain",
     toolchains = {
-        "darwin|compiler": "cc_toolchain_apple",
+        "darwin_x86_64|compiler": "cc_toolchain_apple",
         "k8|clang-3.9": "cc_toolchain_linux",
         "k8|clang-4.0": "cc_toolchain_linux",
         "k8|clang-5.0": "cc_toolchain_linux",
@@ -113,7 +113,7 @@ cc_toolchain(
     name = "cc_toolchain_apple",
     all_files = ":apple_toolchain_deps",
     compiler_files = ":apple_toolchain_deps",
-    cpu = "darwin",
+    cpu = "darwin_x86_64",
     dwp_files = ":apple_toolchain_deps",
     dynamic_runtime_libs = [":empty"],
     linker_files = ":apple_toolchain_deps",
@@ -142,7 +142,7 @@ config_setting(
 
 config_setting(
     name = "apple",
-    values = {"cpu": "darwin"},
+    values = {"cpu": "darwin_x86_64"},
 )
 
 config_setting(
@@ -205,6 +205,6 @@ config_setting(
     name = "apple_debug",
     values = {
         "compilation_mode": "dbg",
-        "cpu": "darwin",
+        "cpu": "darwin_x86_64",
     },
 )

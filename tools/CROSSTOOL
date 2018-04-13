@@ -2,7 +2,7 @@
 # our supported platforms, and then making some project-specific tweaks.
 #
 # To extract the Bazel auto-generated toolchain stanza for a given platform:
-# - Run bazel build --crosstool_top=//external:cc_toolchain ... --cxxopt=--std=c++14
+# - Run bazel build --crosstool_top=//external:cc_toolchain //... --cxxopt=--std=c++14
 # - Inspect ./bazel-dreal4/external/local_config_cc/CROSSTOOL
 # - Find the default_toolchain stanza for the cpu (k8 on Linux, darwin on OS X)
 # - Find the toolchain stanza with a target_cpu and toolchain_identifer that
@@ -14,8 +14,14 @@ default_target_cpu: "same_as_host"
 
 default_toolchain {
   cpu: "darwin"
-  toolchain_identifier: "local_darwin"
+  toolchain_identifier: "darwin_x86_64"
 }
+
+default_toolchain {
+  cpu: "darwin_x86_64"
+  toolchain_identifier: "darwin_x86_64"
+}
+
 
 # We use g++-5 on Ubuntu by default.
 default_toolchain {
@@ -589,9 +595,11 @@ toolchain {
 }
 
 toolchain {
-  toolchain_identifier: "local_darwin"
-  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain"
+  toolchain_identifier: "darwin_x86_64"
+  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"
   cxx_builtin_include_directory: "/usr/local/include"
+  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang"
+  cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
   cxx_builtin_include_directory: "/usr/include"
   cxx_builtin_include_directory: "/System/Library/Frameworks"
   cxx_builtin_include_directory: "/Library/Frameworks"
@@ -599,7 +607,7 @@ toolchain {
   cxx_builtin_include_directory: "/Library/Developer/CommandLineTools"
   host_system_name: "local"
   target_system_name: "local"
-  target_cpu: "darwin"
+  target_cpu: "darwin_x86_64"
   target_libc: "local"
   compiler: "compiler"
   abi_version: "local"
@@ -679,8 +687,6 @@ toolchain {
       action: "c++-module-compile"
       action: "c++-module-codegen"
       action: "lto-backend"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "%{legacy_compile_flags}"
         iterate_over: "legacy_compile_flags"
@@ -695,8 +701,6 @@ toolchain {
       action: "c++-link-dynamic-library"
       action: "c++-link-nodeps-dynamic-library"
       action: "c++-link-interface-dynamic-library"
-      action: "objc-executable"
-      action: "objc++-executable"
       flag_group {
         flag: "-Wl,-S"
         expand_if_all_available: "strip_debug_symbols"
@@ -1002,7 +1006,7 @@ toolchain {
     flag_set {
       action: "c++-link-executable"
       flag_group {
-        flag: "-pie"
+        flag: "-Wl,-pie"
       }
       expand_if_all_available: "force_pic"
     }
@@ -1010,8 +1014,6 @@ toolchain {
   feature {
     name: "pch"
     flag_set {
-      action: "objc-compile"
-      action: "objc++-compile"
       action: "c-compile"
       action: "c++-compile"
       flag_group {
@@ -1030,8 +1032,6 @@ toolchain {
       action: "c++-header-parsing"
       action: "c++-header-preprocessing"
       action: "c++-module-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
       action: "clif-match"
       flag_group {
         flag: "-include"
@@ -1053,8 +1053,6 @@ toolchain {
       action: "c++-module-compile"
       action: "linkstamp-compile"
       action: "clif-match"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "-iquote"
         flag: "%{quote_include_paths}"
@@ -1079,8 +1077,6 @@ toolchain {
       action: "c-compile"
       action: "c++-compile"
       action: "c++-module-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
       action: "c++-header-preprocessing"
       action: "c++-header-parsing"
       action: "c++-link-executable"
@@ -1103,8 +1099,6 @@ toolchain {
       action: "c-compile"
       action: "c++-compile"
       action: "c++-module-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
       action: "c++-header-preprocessing"
       action: "c++-header-parsing"
       flag_group {
@@ -1166,8 +1160,6 @@ toolchain {
       action: "c++-header-preprocessing"
       action: "c++-module-compile"
       action: "linkstamp-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "-D%{preprocessor_defines}"
         iterate_over: "preprocessor_defines"
@@ -1247,8 +1239,6 @@ toolchain {
       action: "c-compile"
       action: "c++-compile"
       action: "c++-module-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "-fprofile-instr-generate"
         flag: "-fcoverage-mapping"
@@ -1260,8 +1250,6 @@ toolchain {
       action: "c++-link-dynamic-library"
       action: "c++-link-nodeps-dynamic-library"
       action: "c++-link-executable"
-      action: "objc-executable"
-      action: "objc++-executable"
       flag_group {
         flag: "-fprofile-instr-generate"
       }
@@ -1277,8 +1265,6 @@ toolchain {
       action: "c-compile"
       action: "c++-compile"
       action: "c++-module-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "-fprofile-arcs"
         flag: "-ftest-coverage"
@@ -1306,53 +1292,8 @@ toolchain {
       action: "c++-module-compile"
       action: "c++-header-parsing"
       action: "c++-header-preprocessing"
-      action: "objc-compile"
-      action: "objc++-compile"
-      action: "objc-executable"
-      action: "objc++-executable"
       action: "assemble"
       action: "preprocess-assemble"
-      # flag_group {
-      #   flag: "-isysroot %{sdk_dir}"
-      # }
-    }
-  }
-  feature {
-    name: "apple_env"
-    env_set {
-      action: "c-compile"
-      action: "c++-compile"
-      action: "c++-module-compile"
-      action: "c++-header-parsing"
-      action: "c++-header-preprocessing"
-      action: "assemble"
-      action: "preprocess-assemble"
-      action: "objc-compile"
-      action: "objc++-compile"
-      action: "objc-archive"
-      action: "c++-link-executable"
-      action: "c++-link-dynamic-library"
-      action: "c++-link-nodeps-dynamic-library"
-      action: "c++-link-static-library"
-      action: "c++-link-alwayslink-static-library"
-      action: "c++-link-pic-static-library"
-      action: "c++-link-alwayslink-pic-static-library"
-      action: "c++-link-interface-dynamic-library"
-      action: "objc-executable"
-      action: "objc++-executable"
-      action: "linkstamp-compile"
-      env_entry {
-        key: "XCODE_VERSION_OVERRIDE"
-        value: "%{xcode_version_override_value}"
-      }
-      env_entry {
-        key: "APPLE_SDK_VERSION_OVERRIDE"
-        value: "%{apple_sdk_version_override_value}"
-      }
-      env_entry {
-        key: "APPLE_SDK_PLATFORM"
-        value: "%{apple_sdk_platform_value}"
-      }
     }
   }
   feature {
@@ -1361,8 +1302,6 @@ toolchain {
       action: "c++-link-executable"
       action: "c++-link-dynamic-library"
       action: "c++-link-nodeps-dynamic-library"
-      action: "objc-executable"
-      action: "objc++-executable"
       flag_group {
         flag: "%{legacy_link_flags}"
         iterate_over: "legacy_link_flags"
@@ -1371,33 +1310,11 @@ toolchain {
     }
   }
   feature {
-    name: "version_min"
-    flag_set {
-      action: "objc-executable"
-      action: "objc++-executable"
-      action: "c++-link-executable"
-      action: "c++-link-dynamic-library"
-      action: "c++-link-nodeps-dynamic-library"
-      action: "preprocess-assemble"
-      action: "c-compile"
-      action: "c++-compile"
-      action: "c++-header-parsing"
-      action: "c++-header-preprocessing"
-      action: "c++-module-compile"
-      action: "objc-compile"
-      action: "objc++-compile"
-      flag_group {
-      }
-    }
-  }
-  feature {
     name: "dead_strip"
     flag_set {
       action: "c++-link-executable"
       action: "c++-link-dynamic-library"
       action: "c++-link-nodeps-dynamic-library"
-      action: "objc-executable"
-      action: "objc++-executable"
       flag_group {
         flag: "--dead_strip"
         flag: "--no_dead_strip_inits_and_terms"
@@ -1422,8 +1339,6 @@ toolchain {
       action: "c++-module-codegen"
       action: "linkstamp-compile"
       action: "lto-backend"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "%{user_compile_flags}"
         iterate_over: "user_compile_flags"
@@ -1444,8 +1359,6 @@ toolchain {
       action: "c++-module-codegen"
       action: "linkstamp-compile"
       action: "lto-backend"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "%{unfiltered_compile_flags}"
         iterate_over: "unfiltered_compile_flags"
@@ -1487,8 +1400,6 @@ toolchain {
       action: "c++-header-preprocessing"
       action: "c++-module-compile"
       action: "c++-module-codegen"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "-c"
         flag: "%{source_file}"
@@ -1508,8 +1419,6 @@ toolchain {
       action: "c++-header-preprocessing"
       action: "c++-module-compile"
       action: "c++-module-codegen"
-      action: "objc-compile"
-      action: "objc++-compile"
       flag_group {
         flag: "-o"
         flag: "%{output_object_file}"
@@ -1553,10 +1462,9 @@ toolchain {
   action_config {
     config_name: "c-compile"
     action_name: "c-compile"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1567,10 +1475,9 @@ toolchain {
   action_config {
     config_name: "c++-compile"
     action_name: "c++-compile"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1581,10 +1488,9 @@ toolchain {
   action_config {
     config_name: "linkstamp-compile"
     action_name: "linkstamp-compile"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1595,10 +1501,9 @@ toolchain {
   action_config {
     config_name: "c++-module-compile"
     action_name: "c++-module-compile"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1609,10 +1514,9 @@ toolchain {
   action_config {
     config_name: "c++-header-parsing"
     action_name: "c++-header-parsing"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1623,10 +1527,9 @@ toolchain {
   action_config {
     config_name: "c++-header-preprocessing"
     action_name: "c++-header-preprocessing"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1637,7 +1540,7 @@ toolchain {
   action_config {
     config_name: "assemble"
     action_name: "assemble"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "include_system_dirs"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
@@ -1649,10 +1552,9 @@ toolchain {
   action_config {
     config_name: "preprocess-assemble"
     action_name: "preprocess-assemble"
-    tool { tool_path: "osx_cc_wrapper.sh" }
+    tool { tool_path: "/usr/bin/clang" }
     implies: "preprocessor_defines"
     implies: "include_system_dirs"
-    implies: "version_min"
     implies: "legacy_compile_flags"
     implies: "user_compile_flags"
     implies: "sysroot"
@@ -1674,7 +1576,6 @@ toolchain {
     implies: "legacy_link_flags"
     implies: "strip_debug_symbols"
     implies: "linker_param_file"
-    implies: "version_min"
     implies: "sysroot"
   }
   action_config {
@@ -1692,7 +1593,6 @@ toolchain {
     implies: "legacy_link_flags"
     implies: "strip_debug_symbols"
     implies: "linker_param_file"
-    implies: "version_min"
     implies: "sysroot"
   }
   action_config {
@@ -1712,7 +1612,6 @@ toolchain {
     implies: "legacy_link_flags"
     implies: "strip_debug_symbols"
     implies: "linker_param_file"
-    implies: "version_min"
     implies: "sysroot"
   }
   action_config {
