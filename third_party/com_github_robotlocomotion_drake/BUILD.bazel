@@ -1,0 +1,45 @@
+# -*- python -*-
+# This file contains rules for Bazel; see https://bazel.io/ .
+
+licenses(["notice"])
+
+# Headers to expose.
+filegroup(
+    name = "headers",
+    srcs = [
+        "drake/common/hash.h",
+        "drake/common/symbolic_environment.h",
+        "drake/common/symbolic_expression.h",
+        "drake/common/symbolic_expression_visitor.h",
+        "drake/common/symbolic_formula.h",
+        "drake/common/symbolic_formula_visitor.h",
+        "drake/common/symbolic_variable.h",
+        "drake/common/symbolic_variables.h",
+        "drake/common/test/symbolic_test_util.h",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "drake_symbolic",
+    srcs = [
+        "drake/common/never_destroyed.h",
+        "drake/common/symbolic_environment.cc",
+        "drake/common/symbolic_expression.cc",
+        "drake/common/symbolic_expression_cell.cc",
+        "drake/common/symbolic_expression_cell.h",
+        "drake/common/symbolic_expression_visitor.cc",
+        "drake/common/symbolic_formula.cc",
+        "drake/common/symbolic_formula_cell.cc",
+        "drake/common/symbolic_formula_cell.h",
+        "drake/common/symbolic_formula_visitor.cc",
+        "drake/common/symbolic_variable.cc",
+        "drake/common/symbolic_variables.cc",
+    ],
+    hdrs = [
+        "drake/common/test/symbolic_test_util.h",
+        ":headers",
+    ],
+    includes = ["."],
+    visibility = ["//visibility:public"],
+)

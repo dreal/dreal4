@@ -57,7 +57,6 @@ cc_binary(
         "//dreal/api",
         "//dreal/solver",
         "//dreal/util:box",
-        "@drake_symbolic",
     ],
 )
 

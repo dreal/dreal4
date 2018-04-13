@@ -22,7 +22,7 @@ dreal_cc_library(
         "//dreal/util:assert",
         "//dreal/util:exception",
         "//dreal/util:logging",
-        "@drake_symbolic",
+        "//third_party/com_github_robotlocomotion_drake:drake_symbolic",        
     ],
 )
 
@@ -95,7 +95,7 @@ filegroup(
     name = "headers",
     srcs = [
         "symbolic.h",
-        "@drake_symbolic//:headers",
+        "//third_party/com_github_robotlocomotion_drake:headers",        
     ],
     visibility = ["//visibility:public"],
 )
