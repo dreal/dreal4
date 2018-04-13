@@ -1,5 +1,7 @@
 # Rosenbrock function constrained to a disk
 # From https://en.wikipedia.org/wiki/Test_functions_for_optimization#Test_functions_for_constrained_optimization
+# f(1.0, 1.0) = 0
+
 var:
 	[-1.5, 1.5] x;
 	[-1.5, 1.5] y;
