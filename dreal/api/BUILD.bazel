@@ -83,11 +83,11 @@ py_test(
 )
 
 py_test(
-    name = "cav18_optimization_benchmark",
+    name = "cav18_benchmark",
     srcs = [
-        "test/cav18_optimization_benchmark.py",
+        "test/cav18_benchmark.py",
     ],
-    main = "test/cav18_optimization_benchmark.py",
+    main = "test/cav18_benchmark.py",
     tags = [
         "no_asan",
         "no_lsan",
