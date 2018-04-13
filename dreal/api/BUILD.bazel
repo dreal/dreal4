@@ -82,6 +82,23 @@ py_test(
     ],
 )
 
+py_test(
+    name = "cav18_optimization_benchmark",
+    srcs = [
+        "test/cav18_optimization_benchmark.py",
+    ],
+    main = "test/cav18_optimization_benchmark.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        ":api_py",
+    ],
+)
+
 pkg_tar(
     name = "package_python",
     srcs = [
