@@ -34,6 +34,22 @@ PYBIND11_MODULE(_solver_py, m) {
                     [](Config& self, const bool use_local_optimization) {
                       self.mutable_use_local_optimization() =
                           use_local_optimization;
+                    })
+      .def_property("nlopt_ftol_rel", &Config::nlopt_ftol_rel,
+                    [](Config& self, const bool nlopt_ftol_rel) {
+                      self.mutable_nlopt_ftol_rel() = nlopt_ftol_rel;
+                    })
+      .def_property("nlopt_ftol_abs", &Config::nlopt_ftol_abs,
+                    [](Config& self, const bool nlopt_ftol_abs) {
+                      self.mutable_nlopt_ftol_abs() = nlopt_ftol_abs;
+                    })
+      .def_property("nlopt_maxeval", &Config::nlopt_maxeval,
+                    [](Config& self, const bool nlopt_maxeval) {
+                      self.mutable_nlopt_maxeval() = nlopt_maxeval;
+                    })
+      .def_property("nlopt_maxtime", &Config::nlopt_maxtime,
+                    [](Config& self, const bool nlopt_maxtime) {
+                      self.mutable_nlopt_maxtime() = nlopt_maxtime;
                     });
 }
 }  // namespace dreal
