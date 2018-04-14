@@ -10,14 +10,10 @@ x = Variable("x")
 y = Variable("y")
 z = Variable("z")
 
-f_sat = logical_and(0 <= x, x <= 10,
-                    0 <= y, y <= 10,
-                    0 <= z, z <= 10,
+f_sat = logical_and(0 <= x, x <= 10, 0 <= y, y <= 10, 0 <= z, z <= 10,
                     sin(x) + cos(y) == z)
 
-f_unsat = logical_and(3 <= x, x <= 4,
-                      4 <= y, y <= 5,
-                      5 <= z, z <= 6,
+f_unsat = logical_and(3 <= x, x <= 4, 4 <= y, y <= 5, 5 <= z, z <= 6,
                       sin(x) + cos(y) == z)
 
 objective = 2 * x * x + 6 * x + 5
@@ -71,10 +67,10 @@ class ApiTest(unittest.TestCase):
         def phi(x):
             return logical_and(0 <= x, x <= math.pi)
 
-        problem = logical_and(phi(x),
-                              forall([y],
-                                     logical_and(logical_imply(phi(y),
-                                                               f(x) <= f(y)))))
+        problem = logical_and(
+            phi(x),
+            forall([y], logical_and(logical_imply(phi(y),
+                                                  f(x) <= f(y)))))
         result = CheckSatisfiability(problem, 0.01)
         self.assertTrue(result)
         self.assertAlmostEqual(result[x].mid(), math.pi * 3 / 4, places=3)

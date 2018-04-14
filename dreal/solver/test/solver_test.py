@@ -37,7 +37,7 @@ class ConfigTest(unittest.TestCase):
         self.assertFalse(c.use_local_optimization)
         c.use_local_optimization = True
         self.assertTrue(c.use_local_optimization)
-        
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -103,25 +103,27 @@ class SymbolicVariableTest(unittest.TestCase):
         f1 = (x == 0)
         f2 = (y == 0)
         self.assertEqual(str(logical_not(f1)), "!((x = 0))")
-        self.assertEqual(str(logical_imply(f1, f2)),
-                         str(logical_or(logical_not(f1), f2)))
-        self.assertEqual(str(logical_iff(f1, f2)),
-                         str(logical_and(logical_imply(f1, f2),
-                                         logical_imply(f2, f1))))
+        self.assertEqual(
+            str(logical_imply(f1, f2)), str(logical_or(logical_not(f1), f2)))
+        self.assertEqual(
+            str(logical_iff(f1, f2)),
+            str(logical_and(logical_imply(f1, f2), logical_imply(f2, f1))))
 
         # Test single-operand logical statements
         self.assertEqual(str(logical_and(x >= 1)), "(x >= 1)")
         self.assertEqual(str(logical_or(x >= 1)), "(x >= 1)")
         # Test binary operand logical statements
-        self.assertEqual(str(logical_and(x >= 1, x <= 2)),
-                         "((x >= 1) and (x <= 2))")
-        self.assertEqual(str(logical_or(x <= 1, x >= 2)),
-                         "((x >= 2) or (x <= 1))")
+        self.assertEqual(
+            str(logical_and(x >= 1, x <= 2)), "((x >= 1) and (x <= 2))")
+        self.assertEqual(
+            str(logical_or(x <= 1, x >= 2)), "((x >= 2) or (x <= 1))")
         # Test multiple operand logical statements
-        self.assertEqual(str(logical_and(x >= 1, x <= 2, y == 2)),
-                         "((y = 2) and (x >= 1) and (x <= 2))")
-        self.assertEqual(str(logical_or(x >= 1, x <= 2, y == 2)),
-                         "((y = 2) or (x >= 1) or (x <= 2))")
+        self.assertEqual(
+            str(logical_and(x >= 1, x <= 2, y == 2)),
+            "((y = 2) and (x >= 1) and (x <= 2))")
+        self.assertEqual(
+            str(logical_or(x >= 1, x <= 2, y == 2)),
+            "((y = 2) or (x >= 1) or (x <= 2))")
 
     def test_functions_with_variable(self):
         self.assertEqual(str(log(x)), "log(x)")
@@ -141,8 +143,8 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(str(tanh(x)), "tanh(x)")
         self.assertEqual(str(min(x, y)), "min(x, y)")
         self.assertEqual(str(max(x, y)), "max(x, y)")
-        self.assertEqual(str(if_then_else(x > y, x, y)),
-                         "(if (x > y) then x else y)")
+        self.assertEqual(
+            str(if_then_else(x > y, x, y)), "(if (x > y) then x else y)")
 
 
 class TestSymbolicVariables(unittest.TestCase):
@@ -374,7 +376,7 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(abs(v_x), math.fabs(v_x))
         self.assertEqual(exp(v_x), math.exp(v_x))
         self.assertEqual(sqrt(v_x), math.sqrt(v_x))
-        self.assertEqual(pow(v_x, v_y), v_x ** v_y)
+        self.assertEqual(pow(v_x, v_y), v_x**v_y)
         self.assertEqual(sin(v_x), math.sin(v_x))
         self.assertEqual(cos(v_x), math.cos(v_x))
         self.assertEqual(tan(v_x), math.tan(v_x))
@@ -388,10 +390,8 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(min(v_x, v_y), min(v_x, v_y))
         self.assertEqual(max(v_x, v_y), max(v_x, v_y))
         self.assertEqual(
-            if_then_else(
-                Expression(v_x) > Expression(v_y),
-                v_x, v_y),
-            v_x if v_x > v_y else v_y)
+            if_then_else(Expression(v_x) > Expression(v_y), v_x, v_y), v_x
+            if v_x > v_y else v_y)
 
     def test_functions_with_variable(self):
         self.assertEqual(str(abs(x)), "abs(x)")
@@ -410,8 +410,8 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(tanh(x)), "tanh(x)")
         self.assertEqual(str(min(x, y)), "min(x, y)")
         self.assertEqual(str(max(x, y)), "max(x, y)")
-        self.assertEqual(str(if_then_else(x > y, x, y)),
-                         "(if (x > y) then x else y)")
+        self.assertEqual(
+            str(if_then_else(x > y, x, y)), "(if (x > y) then x else y)")
 
     def test_functions_with_expression(self):
         self.assertEqual(str(abs(e_x)), "abs(x)")
@@ -430,8 +430,9 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(tanh(e_x)), "tanh(x)")
         self.assertEqual(str(min(e_x, e_y)), "min(x, y)")
         self.assertEqual(str(max(e_x, e_y)), "max(x, y)")
-        self.assertEqual(str(if_then_else(e_x > e_y, e_x, e_y)),
-                         "(if (x > y) then x else y)")
+        self.assertEqual(
+            str(if_then_else(e_x > e_y, e_x, e_y)),
+            "(if (x > y) then x else y)")
 
     def test_differentiate(self):
         e = x * x
@@ -468,8 +469,7 @@ class TestSymbolicFormula(unittest.TestCase):
 
     def test_substitute_with_dict(self):
         f = x + y > z
-        self.assertEqual(f.Substitute({x: x + 2, y:  y + 3}),
-                         x + y + 5 > z)
+        self.assertEqual(f.Substitute({x: x + 2, y: y + 3}), x + y + 5 > z)
 
     def test_to_string(self):
         f = x > y
@@ -497,10 +497,11 @@ class TestSymbolicFormula(unittest.TestCase):
         self.assertEqual(repr(x > y), '<Formula "(x > y)">')
 
     def test_forall(self):
-        self.assertEqual(str(forall(Variables([x, y, z]), x == 0)),
-                         "forall({x, y, z}. (x = 0))")
-        self.assertEqual(str(forall([x, y, z], x == 0)),
-                         "forall({x, y, z}. (x = 0))")
+        self.assertEqual(
+            str(forall(Variables([x, y, z]), x == 0)),
+            "forall({x, y, z}. (x = 0))")
+        self.assertEqual(
+            str(forall([x, y, z], x == 0)), "forall({x, y, z}. (x = 0))")
 
 
 if __name__ == '__main__':

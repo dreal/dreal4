@@ -1,13 +1,11 @@
 from dreal.util import Box
 from dreal.util import Interval
-from dreal.util import (exp, log, sqr, sqrt, pow,
-                        sin, cos, tan, asin, acos, atan, atan2,
-                        sinh, cosh, tanh,
-                        root, abs, max, min, sign, integer)
+from dreal.util import (exp, log, sqr, sqrt, pow, sin, cos, tan, asin, acos,
+                        atan, atan2, sinh, cosh, tanh, root, abs, max, min,
+                        sign, integer)
 from dreal.symbolic import Variable
 import unittest
 import math
-
 
 x = Variable("x")
 y = Variable("y")
