@@ -9,7 +9,16 @@ using std::cout;
 using std::endl;
 
 void synthesize_lyapunov_normalized_pendulum() {
-  // Section 5.1. Example 1: Normalized Pendulum
+  // From Section 5.1 of the following paper:
+  //
+  // James Kapinski, Jyotirmoy V. Deshmukh, Sriram Sankaranarayanan,
+  // and Nikos Arechiga. 2014. Simulation-guided lyapunov analysis for
+  // hybrid dynamical systems. In Proceedings of the 17th
+  // international conference on Hybrid systems: computation and
+  // control (HSCC '14). ACM, New York, NY, USA,
+  // 133-142. DOI=http://dx.doi.org/10.1145/2562059.2562139
+  //
+  // Normalized Pendulum
   //           ẋ₁ = x₂
   //           ẋ₂ = -sin(x₁) - x₂
   // Candidate V  = c₁x₁² + c₂x₂² + c₃x₁x₂.
@@ -24,20 +33,6 @@ void synthesize_lyapunov_normalized_pendulum() {
   config.mutable_precision() = 0.05;
   config.mutable_use_polytope_in_forall() = true;
   config.mutable_use_local_optimization() = true;
-
-  config.mutable_nlopt_ftol_rel() = 1e-6;
-  config.mutable_nlopt_ftol_abs() = 1e-6;
-  config.mutable_nlopt_maxeval() = 30;
-  config.mutable_nlopt_maxtime() = 0.01;
-
-  // Check that the solution in the paper is indeed a solution.
-  // clang-format off
-  CheckLyapunov({x1, x2},
-                {x2, -sin(x1) - x2},
-                100.0 * x1 * x1 + 92.0 * x2 * x2 + 48 * x1 * x2,
-                0.001, 1.0, /* lb&ub of ball */
-                config);
-  // clang-format on
 
   // Synthesize one.
   double scaling_factor = 50.0;

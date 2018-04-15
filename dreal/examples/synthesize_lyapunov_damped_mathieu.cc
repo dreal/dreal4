@@ -13,7 +13,16 @@ using std::endl;
 using std::vector;
 
 void synthesize_lyapunov_damped_mathieu() {
-  // Section 5.3. Example 3: Damped Mathieu System.
+  // From Section 5.3 of the following paper:
+  //
+  // James Kapinski, Jyotirmoy V. Deshmukh, Sriram Sankaranarayanan,
+  // and Nikos Arechiga. 2014. Simulation-guided lyapunov analysis for
+  // hybrid dynamical systems. In Proceedings of the 17th
+  // international conference on Hybrid systems: computation and
+  // control (HSCC '14). ACM, New York, NY, USA,
+  // 133-142. DOI=http://dx.doi.org/10.1145/2562059.2562139
+  //
+  // Damped Mathieu System.
   //           ẋ₁ = x₂
   //           ẋ₂ = -x₂ - (2 + sin(t))x₁
   //           t' = 1
@@ -23,34 +32,10 @@ void synthesize_lyapunov_damped_mathieu() {
   const Variable t{"t"};
 
   Config config;
-  config.mutable_precision() = 0.001;
+  config.mutable_precision() = 0.05;
   config.mutable_use_polytope_in_forall() = true;
   config.mutable_use_local_optimization() = true;
 
-  config.mutable_nlopt_ftol_rel() = 1e-6;
-  config.mutable_nlopt_ftol_abs() = 1e-6;
-  config.mutable_nlopt_maxeval() = 30;
-  config.mutable_nlopt_maxtime() = 0.01;
-
-  // Check if the solution in the paper is indeed a solution.
-  const Expression V_candidate{98.0 * x1 * x1 + 55.0 * x2 * x2 +
-                               48.0 * x1 * x2};
-  // clang-format off
-  const auto check_result =
-    CheckLyapunov({x1, x2}, t,
-                  {x2, -x2 - (2 + sin(t)) * x1},
-                  V_candidate,
-                  0.1, 1.0, /* lb&ub of ball */
-                  0.001, 1.0, /* lb&ub of time */
-                  config);
-  // clang-format on
-  cout << "V candidate = " << V_candidate;
-  if (check_result) {
-    cout << " is not a L function." << endl;
-    cout << "Counterexample is " << endl << *check_result << endl;
-  } else {
-    cout << " is L function." << endl;
-  }
   // Synthesize one.
   Expression V = 0.0;
   const vector<Expression> monomials{x1, x2};
@@ -64,7 +49,6 @@ void synthesize_lyapunov_damped_mathieu() {
   }
 
   // clang-format off
-  config.mutable_precision() = 0.05;
   const auto result =
     SynthesizeLyapunov({x1, x2}, t,
                        {x2, -x2 - (2 + sin(t)) * x1, 1},
