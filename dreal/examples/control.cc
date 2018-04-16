@@ -50,7 +50,7 @@ optional<Box> CheckLyapunov(const vector<Variable>& x, const Variable& t,
                             const double ball_lb, const double ball_ub,
                             const double t_lb, const double t_ub,
                             Config config) {
-  DREAL_ASSERT(x.size() == f.size());
+  DREAL_ASSERT(x.size() + 1 == f.size());
   DREAL_ASSERT(ball_lb > 0.0);
   DREAL_ASSERT(ball_ub > 0.0);
   DREAL_ASSERT(ball_ub > ball_lb);
