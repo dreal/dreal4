@@ -97,6 +97,10 @@ py_test(
     deps = [
         ":api_py",
     ],
+    args = [
+        "--precision 0.001",
+        "--local-optimization",
+    ],
 )
 
 pkg_tar(

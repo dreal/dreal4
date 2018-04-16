@@ -7,7 +7,7 @@
 # In CAV (International Conference on Computer Aided Verification) 2018
 # ----------------------------------------------------------------------
 from dreal.symbolic import (Formula, Variable, Expression, logical_and, abs,
-                            atan, atan2, sin, cos, exp, sqrt)
+                            atan, atan2, sin, cos, exp, sqrt, log)
 from dreal.api import Minimize
 from dreal.solver import Config
 from functools import reduce
@@ -18,7 +18,7 @@ import argparse
 import sys
 
 local_optimization = False
-precision = 0.001
+precision = 0.0001
 
 
 def make_config():
@@ -53,9 +53,24 @@ def compute_min(objective, box, vars):
         return v
 
 
-print("%-30s: %10s %10s %10s %10s" % ("Name", "Time", "Found Min", "Local Opt",
-                                      "Delta"))
-print("-" * 75)
+def output_string(suite_name, test_name, test_time, global_min, found_min, opt,
+                  precision):
+    print("| %-28s | %-20s | %10s | %10s | %10s | %10s | %10s |" %
+          (suite_name, test_name, test_time, global_min, found_min, opt,
+           precision))
+
+
+def output(suite_name, test_name, test_time, global_min, found_min, opt,
+           precision):
+    output_string(suite_name, test_name, "%10.4f" % test_time,
+                  "%10.5f" % global_min, "%10.5f" % found_min, opt,
+                  "%10.3E" % precision)
+
+
+output_string("Suite Name", "Test Name", "Time (s)", "Global Min", "Found Min",
+              "Local Opt", "Delta")
+
+print("-" * 120)
 
 
 class CavTest(unittest.TestCase):
@@ -64,18 +79,19 @@ class CavTest(unittest.TestCase):
         self.config = make_config()
 
     def tearDown(self):
-        t = time.time() - self.startTime
+        test_time = time.time() - self.startTime
         if self.config.use_local_optimization:
             opt_string = "YES"
         else:
             opt_string = "NO"
-        print("%-30s: %10.4f %10.4f %10s %10.3E" %
-              (self._testMethodName, t, self.found_min, opt_string,
-               self.config.precision))
+        test_suite_name = self.__class__.__name__[:-4]
+        test_name = "_".join(self._testMethodName.split("_")[1:])
+        output(test_suite_name, test_name, test_time, self.global_min,
+               self.found_min, opt_string, self.config.precision)
 
 
 class UnconstrainedOptimizationTest(CavTest):
-    def test_Ackley_2D(self):
+    def test_01_Ackley_2D(self):
         (vars, domain) = make_domain([("x", -5, 5), ("y", -5, 5)])
 
         def objective(x, y):
@@ -84,13 +100,13 @@ class UnconstrainedOptimizationTest(CavTest):
                 (cos(2 * math.pi * x) + cos(2 * math.pi * y))) + math.e + 20)
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0.0
+        self.global_min = 0.0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Ackley_4D(self):
+    def test_02_Ackley_4D(self):
         (vars, domain) = make_domain([
             ("x1", -5, 5),
             ("x2", -5, 5),
@@ -107,26 +123,26 @@ class UnconstrainedOptimizationTest(CavTest):
                     math.e + 20)
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0.0
+        self.global_min = 0.0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Aluffi_Pentini(self):
+    def test_03_Aluffi_Pentini(self):
         (vars, domain) = make_domain([("x1", -10, 10), ("x2", -10, 10)])
 
         def objective(x1, x2):
             return 0.25 * x1**4 - 0.5 * x1**2 + 0.1 * x1 + 0.5 * x2**2
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -0.3523
+        self.global_min = -0.3523
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Beale(self):
+    def test_04_Beale(self):
         (vars, domain) = make_domain([("x", -4.5, 4.5), ("y", -4.5, 4.5)])
 
         def objective(x, y):
@@ -134,13 +150,13 @@ class UnconstrainedOptimizationTest(CavTest):
                     (2.625 - x + x * (y**3))**2)
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Bohachevsky1(self):
+    def test_05_Bohachevsky1(self):
         (vars, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
 
         def objective(x, y):
@@ -148,67 +164,67 @@ class UnconstrainedOptimizationTest(CavTest):
                 4 * math.pi * y) + 0.7
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Booth(self):
+    def test_06_Booth(self):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x, y):
             return (x + 2 * y - 7)**2 + (2 * x + y - 5)**2
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Brent(self):
+    def test_07_Brent(self):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x, y):
             return (x + 10)**2 + (y + 10)**2 + exp(-1 * x**2 - y**2)
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Bukin6(self):
+    def test_08_Bukin6(self):
         (vars, domain) = make_domain([("x", -15, 15), ("y", -3, 3)])
 
         def objective(x, y):
             return 100 * sqrt(abs(y - 0.01 * x**2)) + 0.01 * abs(x + 10)
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Cross_in_Tray(self):
+    def test_09_Cross_in_Tray(self):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x, y):
             return -0.0001 * (abs(
                 sin(x) * sin(y) * exp(abs(100 - sqrt(x**2 + y**2) / math.pi)))
-                + 1)**0.1
+                              + 1)**0.1
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -2.06261
+        self.global_min = -2.06261
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Easom(self):
+    def test_10_Easom(self):
         (vars, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
 
         def objective(x, y):
@@ -216,13 +232,13 @@ class UnconstrainedOptimizationTest(CavTest):
                 (x - math.pi)**2 + (y - math.pi)**2))
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -1
+        self.global_min = -1
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_EggHolder(self):
+    def test_11_EggHolder(self):
         (vars, domain) = make_domain([("x", -512, 512), ("y", -512, 512)])
 
         def objective(x1, x2):
@@ -230,14 +246,14 @@ class UnconstrainedOptimizationTest(CavTest):
                 sqrt(abs(x1 - (x2 + 47))))
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -959.6407
+        self.global_min = -959.6407
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 5)
+            self.found_min, self.global_min, delta=self.config.precision * 5)
 
     # SLOW
-    def test_Holder_Table2(self):
+    def test_12_Holder_Table2(self):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x, y):
@@ -245,13 +261,13 @@ class UnconstrainedOptimizationTest(CavTest):
                 sin(x) * cos(y) * exp(abs(1 - sqrt(x**2 + y**2) / math.pi)))
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -19.2085
+        self.global_min = -19.2085
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Levi_N13(self):
+    def test_13_Levi_N13(self):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x, y):
@@ -260,13 +276,30 @@ class UnconstrainedOptimizationTest(CavTest):
                     1 + (sin(2 * math.pi * y))**2)
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Schaffer_F6(self):
+    def test_14_Ripple1(self):
+        (vars, domain) = make_domain([("x1", 0, 1.0), ("x2", 0, 1.0)])
+
+        def objective(x1, x2):
+            t1 = -1 * exp(-2 * log(2) * ((x1 - 0.1) / 0.8)**2) * (
+                sin(5 * math.pi * x1)**6 + 0.1 * cos(500 * math.pi * x1)**2)
+            t2 = -1 * exp(-2 * log(2) * ((x2 - 0.1) / 0.8)**2) * (
+                sin(5 * math.pi * x2)**6 + 0.1 * cos(500 * math.pi * x2)**2)
+            return t1 + t2
+
+        sol = Minimize(objective(*vars), domain, self.config)
+        self.global_min = -2.2
+        self.assertIsNotNone(sol)
+        self.found_min = compute_min(objective, sol, vars)
+        self.assertAlmostEqual(
+            self.found_min, self.global_min, delta=self.config.precision * 2)
+
+    def test_15_Schaffer_F6(self):
         (vars, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
 
         def objective(x, y):
@@ -274,13 +307,13 @@ class UnconstrainedOptimizationTest(CavTest):
                                                           (x**2 + y**2))**2
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0
+        self.global_min = 0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Testtube_Holder(self):
+    def test_16_Testtube_Holder(self):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x1, x2):
@@ -288,13 +321,28 @@ class UnconstrainedOptimizationTest(CavTest):
                 sin(x1) * cos(x2) * exp(abs(cos((x1**2 + x2**2) / 200))))
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -10.872300
+        self.global_min = -10.872300
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_W_Wavy(self):
+    def test_17_Trefethen(self):
+        (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
+
+        def objective(x1, x2):
+            return exp(sin(50 * x1)) + sin(
+                60 * exp(x2)) + sin(70 * sin(x1)) + sin(sin(80 * x2)) - sin(
+                    10 * (x1 + x2)) + 0.25 * (x1**2 + x2**2)
+
+        sol = Minimize(objective(*vars), domain, self.config)
+        self.global_min = -3.30686865
+        self.assertIsNotNone(sol)
+        self.found_min = compute_min(objective, sol, vars)
+        self.assertAlmostEqual(
+            self.found_min, self.global_min, delta=self.config.precision * 2)
+
+    def test_18_W_Wavy(self):
         (vars, domain) = make_domain([("x", -3, 3), ("y", -3, 3)])
 
         def objective(x1, x2):
@@ -302,28 +350,28 @@ class UnconstrainedOptimizationTest(CavTest):
                               (cos(10 * x2) * exp(-x2**2 / 2)))
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = 0.0
+        self.global_min = 0.0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Zettl(self):
+    def test_19_Zettl(self):
         (vars, domain) = make_domain([("x", -5, 10), ("y", -5, 10)])
 
         def objective(x1, x2):
             return (x1**2 + x2**2 - 2 * x1)**2 + 0.25 * x1
 
         sol = Minimize(objective(*vars), domain, self.config)
-        known_minimum = -0.003791
+        self.global_min = -0.003791
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
 
 class ConstrainedOptimizationTest(CavTest):
-    def test_Rosenbrock_Cubic(self):
+    def test_01_Rosenbrock_Cubic(self):
         (vars, domain) = make_domain([("x", -1.5, 1.5), ("y", -0.5, 2.5)])
         [x, y] = vars
 
@@ -334,13 +382,13 @@ class ConstrainedOptimizationTest(CavTest):
                                   x + y - 2 < 0)
 
         sol = Minimize(objective(*vars), constraints, self.config)
-        known_minimum = 0.0
+        self.global_min = 0.0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Rosenbrock_Disk(self):
+    def test_02_Rosenbrock_Disk(self):
         (vars, domain) = make_domain([("x", -1.5, 1.5), ("y", -1.5, 1.5)])
         [x, y] = vars
 
@@ -350,13 +398,13 @@ class ConstrainedOptimizationTest(CavTest):
         constraints = logical_and(domain, x**2 + y**2 < 2)
 
         sol = Minimize(objective(*vars), constraints, self.config)
-        known_minimum = 0.0
+        self.global_min = 0.0
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Mishra_Bird(self):
+    def test_03_Mishra_Bird(self):
         (vars, domain) = make_domain([("x", -10, 0.0), ("y", -6.5, 0.0)])
         [x, y] = vars
 
@@ -367,13 +415,13 @@ class ConstrainedOptimizationTest(CavTest):
         constraints = logical_and(domain, (x + 5)**2 + (y + 5)**2 < 25)
 
         sol = Minimize(objective(*vars), constraints, self.config)
-        known_minimum = -106.7645367
+        self.global_min = -106.7645367
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Townsend(self):
+    def test_04_Townsend(self):
         (vars, domain) = make_domain([("x", -2.25, 2.5), ("y", -2.5, 1.75)])
         [x, y] = vars
 
@@ -387,13 +435,13 @@ class ConstrainedOptimizationTest(CavTest):
             (2 * sin(atan2(x, y)))**2)
 
         sol = Minimize(objective(*vars), constraints, self.config)
-        known_minimum = -2.0239884
+        self.global_min = -2.0239884
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 2)
+            self.found_min, self.global_min, delta=self.config.precision * 2)
 
-    def test_Simionescu(self):
+    def test_05_Simionescu(self):
         (vars, domain) = make_domain([("x", -1.25, 1.25), ("y", -1.25, 1.25)])
         [x, y] = vars
 
@@ -404,11 +452,11 @@ class ConstrainedOptimizationTest(CavTest):
                                   (1 + 0.2 * cos(8 * atan(x / y)))**2)
 
         sol = Minimize(objective(*vars), constraints, self.config)
-        known_minimum = -0.072625
+        self.global_min = -0.072625
         self.assertIsNotNone(sol)
         self.found_min = compute_min(objective, sol, vars)
         self.assertAlmostEqual(
-            self.found_min, known_minimum, delta=self.config.precision * 10)
+            self.found_min, self.global_min, delta=self.config.precision * 10)
 
 
 def main():
@@ -427,7 +475,7 @@ def main():
         '--precision',
         dest='precision',
         action='store',
-        default=0.001,
+        default=0.0001,
         type=float,
         help='Precision')
     parser.add_argument('unittest_args', nargs='*')
