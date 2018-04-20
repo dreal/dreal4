@@ -110,8 +110,7 @@ Database](https://clang.llvm.org/docs/JSONCompilationDatabase.html),
 run:
 
 ```bash
-curl -L https://github.com/grailbio/bazel-compilation-database/archive/0.2.tar.gz | tar -xz
-bazel-compilation-database-0.2/generate.sh
+./third_party/com_github_grailbio_bazel-compilation-database/generate.sh
 ```
 
 How to Use dReal as a Library
