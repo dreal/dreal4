@@ -4,40 +4,8 @@ dReal: An SMT Solver for Nonlinear Theories of Reals
 [![Build Status](https://travis-ci.org/dreal/dreal4.svg?branch=master)](https://travis-ci.org/dreal/dreal4)
 [![codecov](https://codecov.io/gh/dreal/dreal4/branch/master/graph/badge.svg)](https://codecov.io/gh/dreal/dreal4)
 
-Required Packages
-=================
-
-The following packages are required to build dReal:
-
- - C++14-compatible compiler
-   - Ubuntu:
-   [g++-7](https://gcc.gnu.org/gcc-7),
-   [g++-6](https://gcc.gnu.org/gcc-6),
-   [g++-5](https://gcc.gnu.org/gcc-5),
-   [clang++-6.0](http://releases.llvm.org/6.0.0/tools/clang/docs),
-   [clang++-5.0](http://releases.llvm.org/5.0.0/tools/clang/docs),
-   [clang++-4.0](http://releases.llvm.org/4.0.0/tools/clang/docs),
-   [clang++-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs)
-   - macOS: [Apple clang++](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
- - [Bazel](https://bazel.build)
- - [Flex](https://www.gnu.org/software/flex) and [Bison](https://www.gnu.org/software/bison)
- - [Clp](https://projects.coin-or.org/Clp)
- - [IBEX](https://github.com/ibex-team/ibex-lib)
- - [nlopt](http://nlopt.readthedocs.io)
- - [python2.7](https://www.python.org/downloads/release/python-2714/)
-
-dReal is using the following external packages. It checks out the sources of them and builds internally. No installation required for them:
-
- - [Drake](http://drake.mit.edu)'s symbolic library - [BSD 3-Clause](https://raw.githubusercontent.com/RobotLocomotion/drake/master/LICENSE.TXT)
- - [Google Test](https://github.com/google/googletest) - [BSD 3-Clause](https://raw.githubusercontent.com/google/googletest/master/googletest/LICENSE)
- - [PicoSat SAT solver](http://fmv.jku.at/picosat) - [MIT](http://fmv.jku.at/picosat/LICENSE)
- - [ezOptionParser](http://ezoptionparser.sourceforge.net) - [MIT](https://raw.githubusercontent.com/dreal-deps/ezoptionparser/master/MIT-LICENSE)
- - [fmtlib](http://fmtlib.net/latest/index.html) - [BSD 2-Clause](https://raw.githubusercontent.com/fmtlib/fmt/master/LICENSE.rst)
- - [spdlog](https://github.com/gabime/spdlog) - [MIT](https://raw.githubusercontent.com/gabime/spdlog/master/LICENSE)
- - [pybind11](http://pybind11.readthedocs.io/en/master) - [BSD 3-Clause](https://raw.githubusercontent.com/pybind/pybind11/master/LICENSE)
-
-How to Install dReal
-====================
+How to Install
+==============
 
 macOS 10.13 / 10.12 / 10.11:
 
@@ -54,8 +22,8 @@ sudo ./setup/ubuntu/`lsb_release -r -s`/install.sh
 ```
 
 
-How to Build dReal
-==================
+How to Build
+============
 
 Install Prerequsites
 --------------------
@@ -71,6 +39,8 @@ Ubuntu 18.04 / 16.04 / 14.04
 ```bash
 sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh
 ```
+
+The `install_prereqs.sh` installs the following packages: [bazel](https://bazel.build), [bison](https://www.gnu.org/software/bison), [coinor-clp](https://projects.coin-or.org/Clp), [flex](https://www.gnu.org/software/flex), [ibex](https://github.com/ibex-team/ibex-lib), [nlopt](http://nlopt.readthedocs.io), [python2.7](https://www.python.org/downloads/release/python-2714/).
 
 Build and Test
 --------------
@@ -89,7 +59,16 @@ In Ubuntu, we use `g++-5` as a default compiler. To use other
 compilers, pass `--compiler` option to bazel (for example `--compiler
 clang-4.0`). See
 [tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L50-L68)
-file for more information.
+file for more information. We support the following compilers:
+ - Ubuntu:
+   [g++-7](https://gcc.gnu.org/gcc-7),
+   [g++-6](https://gcc.gnu.org/gcc-6),
+   [g++-5](https://gcc.gnu.org/gcc-5),
+   [clang++-6.0](http://releases.llvm.org/6.0.0/tools/clang/docs),
+   [clang++-5.0](http://releases.llvm.org/5.0.0/tools/clang/docs),
+   [clang++-4.0](http://releases.llvm.org/4.0.0/tools/clang/docs),
+   [clang++-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs)
+ - macOS: [Apple clang++](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
 
 C++ Documentation
 -----------------
@@ -132,7 +111,7 @@ macOS 10.13 / 10.12 / 10.11:
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
-Ubuntu 16.04 / 14.04:
+Ubuntu 18.04 / 16.04 / 14.04:
 
 ```bash
 export PKG_CONFIG_PATH=/opt/dreal/4.18.03.3/lib/pkgconfig:/opt/libibex/2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
