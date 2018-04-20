@@ -2,7 +2,7 @@
 
 #include <utility>
 
-#include "drake/common/symbolic_formula.h"
+#include "dreal/symbolic/symbolic_formula.h"
 
 namespace dreal {
 namespace drake {

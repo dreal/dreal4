@@ -7,7 +7,7 @@
 #include <set>
 #include <string>
 
-#include "drake/common/symbolic_variable.h"
+#include "dreal/symbolic/symbolic_variable.h"
 
 namespace dreal {
 namespace drake {

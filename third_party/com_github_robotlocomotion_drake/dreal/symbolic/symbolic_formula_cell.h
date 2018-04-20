@@ -7,12 +7,12 @@
 #include <string>
 #include <utility>
 
-#include "drake/common/hash.h"
-#include "drake/common/symbolic_environment.h"
-#include "drake/common/symbolic_expression.h"
-#include "drake/common/symbolic_formula.h"
-#include "drake/common/symbolic_variable.h"
-#include "drake/common/symbolic_variables.h"
+#include "dreal/symbolic/hash.h"
+#include "dreal/symbolic/symbolic_environment.h"
+#include "dreal/symbolic/symbolic_expression.h"
+#include "dreal/symbolic/symbolic_formula.h"
+#include "dreal/symbolic/symbolic_variable.h"
+#include "dreal/symbolic/symbolic_variables.h"
 
 namespace dreal {
 namespace drake {

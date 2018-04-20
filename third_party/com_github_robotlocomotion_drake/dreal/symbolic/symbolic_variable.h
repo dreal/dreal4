@@ -6,7 +6,7 @@
 #include <ostream>
 #include <string>
 
-#include "drake/common/hash.h"
+#include "dreal/symbolic/hash.h"
 
 namespace dreal {
 namespace drake {

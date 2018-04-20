@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <utility>
 
-#include "drake/common/symbolic_expression.h"
+#include "dreal/symbolic/symbolic_expression.h"
 
 namespace dreal {
 namespace drake {

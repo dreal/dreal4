@@ -5,8 +5,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "drake/common/symbolic_variable.h"
-#include "drake/common/symbolic_variables.h"
+#include "dreal/symbolic/symbolic_variable.h"
+#include "dreal/symbolic/symbolic_variables.h"
 
 namespace dreal {
 namespace drake {

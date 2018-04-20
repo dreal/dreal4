@@ -12,10 +12,10 @@
 #include <utility>
 #include <vector>
 
-#include "drake/common/hash.h"
-#include "drake/common/symbolic_environment.h"
-#include "drake/common/symbolic_variable.h"
-#include "drake/common/symbolic_variables.h"
+#include "dreal/symbolic/hash.h"
+#include "dreal/symbolic/symbolic_environment.h"
+#include "dreal/symbolic/symbolic_variable.h"
+#include "dreal/symbolic/symbolic_variables.h"
 
 namespace dreal {
 namespace drake {
