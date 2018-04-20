@@ -46,7 +46,7 @@ macOS 10.13 / 10.12 / 10.11:
 dreal
 ```
 
-Ubuntu 16.04 / Ubuntu 14.04:
+Ubuntu 18.04 / 16.04 / 14.04:
 
 ```bash
 sudo ./setup/ubuntu/`lsb_release -r -s`/install.sh
@@ -66,7 +66,7 @@ macOS 10.13 / 10.12 / 10.11:
 ./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 16.04 / 14.04
+Ubuntu 18.04 / 16.04 / 14.04
 
 ```bash
 sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh
@@ -148,11 +148,11 @@ Python Binding
 ==============
 
 Some of the functionality of dReal is accessible through Python2. On
-Ubuntu 16.04 / 14.04, you need to set up the `PYTHONPATH` environment
+Ubuntu 18.04 / 16.04 / 14.04, you need to set up the `PYTHONPATH` environment
 variable. On macOS, you do not need this step.
 
 ```bash
-# Only on Ubuntu 16.04 / 14.04:
+# Only on Ubuntu 18.04 / 16.04 / 14.04:
 export PYTHONPATH=/opt/dreal/4.18.03.3/lib/python2.7/site-packages:${PYTHONPATH}
 ```
 

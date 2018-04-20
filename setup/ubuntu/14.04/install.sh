@@ -6,6 +6,8 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 
+apt update
+apt install -y software-properties-common
 apt-cache search --names-only '^g\+\+-5$' | grep "g++-5" || add-apt-repository ppa:ubuntu-toolchain-r/test -y 
 add-apt-repository ppa:dreal/dreal -y  # For libibex-dev
 apt update
