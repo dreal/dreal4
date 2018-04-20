@@ -112,8 +112,8 @@ matrix:
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
-      sudo apt-key list | grep "expired: " | sed -ne 's|pub .*/\([^ ]*\) .*|\1|gp' | xargs -n1 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys;
-      sudo ./setup/ubuntu/14.04/install_prereqs.sh;
+      sudo ./setup/ubuntu/update_expired_keys.sh;
+      sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh;
       BAZEL_LOCAL_RESOURCES=2048,1,1.0;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
