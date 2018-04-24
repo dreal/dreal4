@@ -10,15 +10,28 @@ How to Install
 macOS 10.13 / 10.12 / 10.11:
 
 ```bash
-./setup/mac/install.sh
+/usr/bin/curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/mac/install.sh | bash
 dreal
 ```
 
 Ubuntu 18.04 / 16.04 / 14.04:
 
 ```bash
-sudo ./setup/ubuntu/`lsb_release -r -s`/install.sh
-/opt/dreal/4.18.03.3/bin/dreal
+# 18.04
+sudo apt install curl
+curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/18.04/install.sh | sudo bash
+
+# 16.04
+sudo apt install curl
+curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
+
+# 14.04
+sudo apt install curl
+curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/14.04/install.sh | sudo bash
+
+# Test the installation.
+DREAL_VERSION=4.18.03.3
+/opt/dreal/${DREAL_VERSION}/bin/dreal
 ```
 
 
@@ -31,12 +44,14 @@ Install Prerequsites
 macOS 10.13 / 10.12 / 10.11:
 
 ```bash
+git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
 ```
 
 Ubuntu 18.04 / 16.04 / 14.04
 
 ```bash
+git clone https://github.com/dreal/dreal4 && cd dreal4
 sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh
 ```
 
