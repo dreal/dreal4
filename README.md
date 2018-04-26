@@ -107,6 +107,20 @@ run:
 ./third_party/com_github_grailbio_bazel-compilation-database/generate.sh
 ```
 
+
+Docker
+======
+
+We provide a [Docker image of
+dReal4](https://hub.docker.com/r/dreal/dreal4/tags/) which is based on
+Ubuntu 16.04. Try the following to test it:
+
+```bash
+docker pull dreal/dreal4
+docker run --rm dreal/dreal4 dreal --version  # Run "dreal --version"
+```
+
+
 How to Use dReal as a Library
 =============================
 
