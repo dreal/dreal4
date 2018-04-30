@@ -21,7 +21,7 @@ namespace dreal {
 // NOLINTNEXTLINE(build/namespaces)
 namespace py = pybind11;
 
-PYBIND11_MODULE(_api_py, m) {
+PYBIND11_MODULE(_dreal_api_py, m) {
   m.doc() = "dReal Python APIs";
 
   m.def("CheckSatisfiability",

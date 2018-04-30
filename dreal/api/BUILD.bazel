@@ -49,18 +49,18 @@ dreal_cc_googletest(
 dreal_generate_file(
     name = "init_py",
     out = "__init__.py",
-    content = """from dreal.api._api_py import *
+    content = """from dreal.api._dreal_api_py import *
 import dreal.util""",
     visibility = ["//visibility:private"],
 )
 
 dreal_pybind_library(
-    name = "api_py",
+    name = "dreal_api_py",
     cc_srcs = ["api_py.cc"],
     py_deps = [
-        "//dreal/symbolic:symbolic_py",
-        "//dreal/util:util_py",
-        "//dreal/solver:solver_py",
+        "//dreal/symbolic:dreal_symbolic_py",
+        "//dreal/util:dreal_util_py",
+        "//dreal/solver:dreal_solver_py",
     ],
     py_srcs = [":init_py"],
 )
@@ -78,7 +78,7 @@ py_test(
         "no_ubsan",
     ],
     deps = [
-        ":api_py",
+        ":dreal_api_py",
     ],
 )
 
@@ -95,7 +95,7 @@ py_test(
         "no_ubsan",
     ],
     deps = [
-        ":api_py",
+        ":dreal_api_py",
     ],
     args = [
         "--precision 0.001",
@@ -106,8 +106,8 @@ py_test(
 pkg_tar(
     name = "package_python",
     srcs = [
-        ":_api_py.so",
-        ":api_py",
+        ":_dreal_api_py.so",
+        ":dreal_api_py",
     ],
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/api",

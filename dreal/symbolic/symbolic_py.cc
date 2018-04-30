@@ -16,7 +16,7 @@ using std::string;
 // NOLINTNEXTLINE(build/namespaces)
 namespace py = pybind11;
 
-PYBIND11_MODULE(_symbolic_py, m) {
+PYBIND11_MODULE(_dreal_symbolic_py, m) {
   m.doc() = "Symbolic variable, variables, expression, and formula";
 
   py::class_<Variable> variable(m, "Variable");

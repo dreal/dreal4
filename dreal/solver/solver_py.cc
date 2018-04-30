@@ -8,7 +8,7 @@ namespace dreal {
 // NOLINTNEXTLINE(build/namespaces)
 namespace py = pybind11;
 
-PYBIND11_MODULE(_solver_py, m) {
+PYBIND11_MODULE(_dreal_solver_py, m) {
   m.doc() = "Config and Context.";
   py::class_<Config>(m, "Config")
       .def(py::init<>())

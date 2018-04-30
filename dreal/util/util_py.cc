@@ -16,7 +16,7 @@ using std::string;
 // NOLINTNEXTLINE(build/namespaces)
 namespace py = pybind11;
 
-PYBIND11_MODULE(_util_py, m) {
+PYBIND11_MODULE(_dreal_util_py, m) {
   m.doc() = "Interval and Box";
 
   py::class_<Box::Interval>(m, "Interval")

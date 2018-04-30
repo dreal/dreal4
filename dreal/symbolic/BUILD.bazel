@@ -50,7 +50,7 @@ dreal_cc_googletest(
 # Bindings
 # ----------------------
 dreal_pybind_library(
-    name = "symbolic_py",
+    name = "dreal_symbolic_py",
     cc_srcs = ["symbolic_py.cc"],
     py_srcs = ["__init__.py"],
 )
@@ -68,15 +68,15 @@ py_test(
         "no_ubsan",
     ],
     deps = [
-        ":symbolic_py",
+        ":dreal_symbolic_py",
     ],
 )
 
 pkg_tar(
     name = "package_python",
     srcs = [
-        ":_symbolic_py.so",
-        ":symbolic_py",
+        ":_dreal_symbolic_py.so",
+        ":dreal_symbolic_py",
     ],
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/symbolic",

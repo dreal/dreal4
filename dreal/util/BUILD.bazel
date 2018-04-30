@@ -359,15 +359,15 @@ dreal_cc_googletest(
 dreal_generate_file(
     name = "init_py",
     out = "__init__.py",
-    content = "from dreal.util._util_py import *",
+    content = "from dreal.util._dreal_util_py import *",
     visibility = ["//visibility:private"],
 )
 
 dreal_pybind_library(
-    name = "util_py",
+    name = "dreal_util_py",
     cc_srcs = ["util_py.cc"],
     py_deps = [
-        "//dreal/symbolic:symbolic_py",
+        "//dreal/symbolic:dreal_symbolic_py",
     ],
     py_srcs = [":init_py"],
 )
@@ -385,15 +385,15 @@ py_test(
         "no_ubsan",
     ],
     deps = [
-        ":util_py",
+        ":dreal_util_py",
     ],
 )
 
 pkg_tar(
     name = "package_python",
     srcs = [
-        ":_util_py.so",
-        ":util_py",
+        ":_dreal_util_py.so",
+        ":dreal_util_py",
     ],
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/util",

@@ -174,12 +174,12 @@ dreal_cc_googletest(
 dreal_generate_file(
     name = "init_py",
     out = "__init__.py",
-    content = """from dreal.solver._solver_py import *""",
+    content = """from dreal.solver._dreal_solver_py import *""",
     visibility = ["//visibility:private"],
 )
 
 dreal_pybind_library(
-    name = "solver_py",
+    name = "dreal_solver_py",
     cc_srcs = ["solver_py.cc"],
     py_srcs = ["__init__.py"],
 )
@@ -197,15 +197,15 @@ py_test(
         "no_ubsan",
     ],
     deps = [
-        ":solver_py",
+        ":dreal_solver_py",
     ],
 )
 
 pkg_tar(
     name = "package_python",
     srcs = [
-        ":_solver_py.so",
-        ":solver_py",
+        ":_dreal_solver_py.so",
+        ":dreal_solver_py",
     ],
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/solver",

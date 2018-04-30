@@ -1,8 +1,8 @@
-from dreal.symbolic._symbolic_py import *
+from dreal.symbolic._dreal_symbolic_py import *
 from functools import reduce
 
 # Explicitly import private symbols
-from dreal.symbolic._symbolic_py import __logical_and, __logical_or
+from dreal.symbolic._dreal_symbolic_py import __logical_and, __logical_or
 
 
 def logical_and(*formulas):
