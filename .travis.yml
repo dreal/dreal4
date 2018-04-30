@@ -120,6 +120,7 @@ install:
       if [ ! -e /Applications/Xcode.app ]; then
         sudo ln -s $(dirname $(dirname $(xcode-select -p))) /Application/Xcode.app;
       fi;
+      brew cask uninstall oclint;
       /usr/bin/yes | pip2 uninstall numpy;
       brew upgrade python;
       ./setup/mac/install_prereqs.sh;
