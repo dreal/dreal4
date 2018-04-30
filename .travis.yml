@@ -120,7 +120,7 @@ install:
       if [ ! -e /Applications/Xcode.app ]; then
         sudo ln -s $(dirname $(dirname $(xcode-select -p))) /Application/Xcode.app;
       fi;
-      brew upgrade python
+      brew upgrade python;
       ./setup/mac/install_prereqs.sh;
       BAZEL_LOCAL_RESOURCES=2048,2,1.0;
     fi
