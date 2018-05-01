@@ -117,10 +117,6 @@ install:
       BAZEL_LOCAL_RESOURCES=2048,1,1.0;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-      if [ ! -e /Applications/Xcode.app ]; then
-        sudo ln -s $(dirname $(dirname $(xcode-select -p))) /Application/Xcode.app;
-        sudo xcode-select -s /Application/Xcode.app;
-      fi;
       brew cask uninstall oclint;
       /usr/bin/yes | pip2 uninstall numpy;
       brew upgrade python;
