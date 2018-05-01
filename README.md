@@ -35,6 +35,63 @@ DREAL_VERSION=4.18.04.1
 ```
 
 
+Python Binding
+==============
+
+Some of the functionality of dReal is accessible through Python2. On
+Ubuntu 18.04 / 16.04 / 14.04, you need to set up the `PYTHONPATH` environment
+variable. On macOS, you do not need this step.
+
+```bash
+# Only on Ubuntu 18.04 / 16.04 / 14.04:
+export PYTHONPATH=/opt/dreal/4.18.04.1/lib/python2.7/site-packages:${PYTHONPATH}
+```
+
+To test it, run `python2` in a terminal and type the followings:
+
+```python
+from dreal.symbolic import Variable, logical_and, sin, cos
+from dreal.api import CheckSatisfiability, Minimize
+
+x = Variable("x")
+y = Variable("y")
+z = Variable("z")
+
+f_sat = logical_and(0 <= x, x <= 10,
+                    0 <= y, y <= 10,
+                    0 <= z, z <= 10,
+                    sin(x) + cos(y) == z)
+
+result = CheckSatisfiability(f_sat, 0.001)
+print(result)
+```
+
+The last `print` statement should give:
+
+```
+x : [1.247234518484574339, 1.247580203674002686]
+y : [8.929064928123818135, 8.929756298502674383]
+z : [0.06815055407334302817, 0.06858905276351445757]
+```
+
+Python3 support is experimental for now. Please read [this
+comment](https://github.com/dreal/dreal4/issues/69#issuecomment-377085510)
+for instructions.
+
+
+Docker
+======
+
+We provide a [Docker image of
+dReal4](https://hub.docker.com/r/dreal/dreal4/tags/) which is based on
+Ubuntu 16.04. Try the following to test it:
+
+```bash
+docker pull dreal/dreal4
+docker run --rm dreal/dreal4 dreal --version  # Run "dreal --version"
+```
+
+
 How to Build
 ============
 
@@ -56,6 +113,7 @@ sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh
 ```
 
 The `install_prereqs.sh` installs the following packages: [bazel](https://bazel.build), [bison](https://www.gnu.org/software/bison), [coinor-clp](https://projects.coin-or.org/Clp), [flex](https://www.gnu.org/software/flex), [ibex](https://github.com/ibex-team/ibex-lib), [nlopt](http://nlopt.readthedocs.io), [python2.7](https://www.python.org/downloads/release/python-2714/).
+
 
 Build and Test
 --------------
@@ -85,10 +143,12 @@ file for more information. We support the following compilers:
    [clang++-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs)
  - macOS: [Apple clang++](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
 
+
 C++ Documentation
 -----------------
 
 Please check https://dreal.github.io/dreal4.
+
 
 Build Debian Package
 --------------------
@@ -105,19 +165,6 @@ run:
 
 ```bash
 ./third_party/com_github_grailbio_bazel-compilation-database/generate.sh
-```
-
-
-Docker
-======
-
-We provide a [Docker image of
-dReal4](https://hub.docker.com/r/dreal/dreal4/tags/) which is based on
-Ubuntu 16.04. Try the following to test it:
-
-```bash
-docker pull dreal/dreal4
-docker run --rm dreal/dreal4 dreal --version  # Run "dreal --version"
 ```
 
 
@@ -152,45 +199,3 @@ provide necessary information to use dReal. Note that setting up
 `ibex` formula in Mac).
 
 
-Python Binding
-==============
-
-Some of the functionality of dReal is accessible through Python2. On
-Ubuntu 18.04 / 16.04 / 14.04, you need to set up the `PYTHONPATH` environment
-variable. On macOS, you do not need this step.
-
-```bash
-# Only on Ubuntu 18.04 / 16.04 / 14.04:
-export PYTHONPATH=/opt/dreal/4.18.04.1/lib/python2.7/site-packages:${PYTHONPATH}
-```
-
-To test it, run `python2` in a terminal and type the followings:
-
-```python
-from dreal.symbolic import Variable, logical_and, sin, cos
-from dreal.api import CheckSatisfiability, Minimize
-
-x = Variable("x")
-y = Variable("y")
-z = Variable("z")
-
-f_sat = logical_and(0 <= x, x <= 10,
-					0 <= y, y <= 10,
-					0 <= z, z <= 10,
-					sin(x) + cos(y) == z)
-
-result = CheckSatisfiability(f_sat, 0.001)
-print(result)
-```
-
-The last `print` statement should give:
-
-```
-x : [1.247234518484574339, 1.247580203674002686]
-y : [8.929064928123818135, 8.929756298502674383]
-z : [0.06815055407334302817, 0.06858905276351445757]
-```
-
-Python3 support is experimental for now. Please read [this
-comment](https://github.com/dreal/dreal4/issues/69#issuecomment-377085510)
-for instructions.
