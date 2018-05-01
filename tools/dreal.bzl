@@ -103,6 +103,12 @@ def dreal_cc_library(
         copts = _platform_copts(copts),
         **kwargs)
 
+
+def _make_search_paths(prefix, levels_to_root):
+      return ",".join(
+                ["-rpath,%s/%s" % (prefix, "/".join([".."] * search_level))
+                        for search_level in range(levels_to_root + 1)])
+
 def dreal_pybind_library(
         name,
         py_srcs = [],
@@ -111,6 +117,8 @@ def dreal_pybind_library(
     """Creates a rule to declare a pybind library.
     """
     cc_so_name = "_" + name + ".so"
+    # The last +3 is for "lib/python2.7/site-packages".
+    levels_to_root = native.package_name().count("/") + name.count("/") + 3
     dreal_cc_binary(
         name = cc_so_name,
         srcs = cc_srcs + [
@@ -125,6 +133,12 @@ def dreal_pybind_library(
         copts = [
             # "-fvisibility=hidden",
         ],
+        linkopts = select({
+            "@dreal//tools:linux": [
+                 "-Wl,%s" % (_make_search_paths("$$ORIGIN", levels_to_root),),
+            ],
+            "@//conditions:default": []
+        }),
     )
     native.py_library(
         name = name,
