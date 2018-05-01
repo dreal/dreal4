@@ -605,6 +605,10 @@ toolchain {
   cxx_builtin_include_directory: "/Library/Frameworks"
   cxx_builtin_include_directory: "/Applications/Xcode.app/Contents/Developer"
   cxx_builtin_include_directory: "/Library/Developer/CommandLineTools"
+  # TODO(soonho): Remove this hack (introduced because Travis provide Xcode in a non-standard location).
+  cxx_builtin_include_directory: "/Applications/Xcode-9.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"
+  cxx_builtin_include_directory: "/Applications/Xcode-9.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang"
+  cxx_builtin_include_directory: "/Applications/Xcode-9.3.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"
   host_system_name: "local"
   target_system_name: "local"
   target_cpu: "darwin_x86_64"
