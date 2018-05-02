@@ -134,6 +134,7 @@ clang-4.0`). See
 [tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L50-L68)
 file for more information. We support the following compilers:
  - Ubuntu:
+   [g++-8](https://gcc.gnu.org/gcc-8),
    [g++-7](https://gcc.gnu.org/gcc-7),
    [g++-6](https://gcc.gnu.org/gcc-6),
    [g++-5](https://gcc.gnu.org/gcc-5),

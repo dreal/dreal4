@@ -21,6 +21,13 @@ matrix:
       addons:
         apt:
           sources: ['ubuntu-toolchain-r-test']
+          packages: ['g++-8']
+      env:
+        - COMPILER="--compiler=gcc-8" BUILD_TYPE="-c dbg"
+    - compiler: gcc
+      addons:
+        apt:
+          sources: ['ubuntu-toolchain-r-test']
           packages: ['g++-7']
       env:
         - COMPILER="--compiler=gcc-7" BUILD_TYPE="-c dbg"

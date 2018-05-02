@@ -40,11 +40,9 @@ sh_binary(
 # wrapper script invokes the former.
 #
 # On Linux, we support --compiler strings "clang-3.9", "clang-4.0",
-# "clang-5.0", "clang-6.0", "gcc-5", "gcc-6", and "gcc-7" each of
-# which does exactly what you would expect. "clang-4.0" is the default
-# for convenience, because the install instructions provide it on both
-# Trusty and Xenial. No wrapper script is needed for any of these
-# compilers, so the cc_toolchain rule does not provide one.
+# "clang-5.0", "clang-6.0", "gcc-5", "gcc-6", "gcc-7", and "gcc-8"
+# each of which does exactly what you would expect. "gcc-5" is the
+# default for convenience, because it is shipped with Xenial.
 cc_toolchain_suite(
     name = "default-toolchain",
     toolchains = {
@@ -56,6 +54,7 @@ cc_toolchain_suite(
         "k8|gcc-5": "cc_toolchain_linux",
         "k8|gcc-6": "cc_toolchain_linux",
         "k8|gcc-7": "cc_toolchain_linux",
+        "k8|gcc-8": "cc_toolchain_linux",
     },
 )
 
@@ -143,6 +142,14 @@ config_setting(
 config_setting(
     name = "apple",
     values = {"cpu": "darwin_x86_64"},
+)
+
+config_setting(
+    name = "gcc8-linux",
+    values = {
+        "compiler": "gcc-8",
+        "cpu": "k8",
+    },
 )
 
 config_setting(
