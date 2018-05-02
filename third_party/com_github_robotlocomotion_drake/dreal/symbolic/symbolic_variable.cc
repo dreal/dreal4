@@ -33,6 +33,10 @@ Variable::Variable(string name, const Type type)
     : id_{get_next_id()}, type_{type}, name_{make_shared<string>(move(name))} {
   assert(id_ > 0);
 }
+
+Variable::Variable(string name, const Type type, bool)
+    : Variable{move(name), type} {}
+
 Variable::Id Variable::get_id() const { return id_; }
 Variable::Type Variable::get_type() const { return type_; }
 string Variable::get_name() const { return *name_; }

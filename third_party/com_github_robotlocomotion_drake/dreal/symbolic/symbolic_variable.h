@@ -49,6 +49,10 @@ class Variable {
    * type by default.*/
   explicit Variable(std::string name, Type type = Type::CONTINUOUS);
 
+  /** Constructs a variable with @p name and @p type. @p model_variable is ignored. */
+  [[deprecated("This is only for backward-compatibility.")]]
+  Variable(std::string name, Type type, bool model_variable);
+
   /** Checks if this is a dummy variable (ID = 0) which is created by
    *  the default constructor. */
   bool is_dummy() const { return get_id() == 0; }
