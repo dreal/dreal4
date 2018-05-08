@@ -113,8 +113,10 @@ def dreal_pybind_library(
         name,
         py_srcs = [],
         py_deps = [],
-        cc_srcs = []):
+        cc_srcs = [],
+        cc_deps = []):
     """Creates a rule to declare a pybind library.
+    Note that `cc_deps` should includes header-only dependencies.
     """
     cc_so_name = "_" + name + ".so"
     # The last +3 is for "lib/python2.7/site-packages".
@@ -126,7 +128,7 @@ def dreal_pybind_library(
         ],
         linkshared = 1,
         linkstatic = 1,
-        deps = [
+        deps = cc_deps + [
             "//:dreal_shared_library",
             "@pybind11",
         ],
