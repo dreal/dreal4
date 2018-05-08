@@ -61,6 +61,7 @@ dreal_cc_library(
         "if_then_else_eliminator.h",
     ],
     deps = [
+        ":nnfizer",
         "//dreal/symbolic",
         "//dreal/util:logging",
     ],

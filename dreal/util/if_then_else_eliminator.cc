@@ -6,6 +6,7 @@
 #include <string>
 
 #include "dreal/util/logging.h"
+#include "dreal/util/nnfizer.h"
 
 using std::runtime_error;
 using std::set;
@@ -15,10 +16,10 @@ using std::unordered_set;
 namespace dreal {
 Formula IfThenElseEliminator::Process(const Formula& f) {
   Formula new_f{Visit(f)};
-  if (!added_formulas_.empty()) {
-    return new_f && make_conjunction(added_formulas_);
-  } else {
+  if (f.EqualTo(new_f) && added_formulas_.empty()) {
     return f;
+  } else {
+    return new_f && make_conjunction(added_formulas_);
   }
 }
 
@@ -213,147 +214,33 @@ Formula IfThenElseEliminator::VisitNegation(const Formula& f) {
   return !Visit(get_operand(f));
 }
 
-namespace {
-
-// We do not support if-then-else expressions inside of forall. This
-// class is to check if this is the case.
-class CheckIfThenElseInForall {
- public:
-  // Checks if @p f includes if-then-else expressions or forall
-  // expressions.
-  bool Check(const Formula& f) { return Visit(f); }
-
- private:
-  // Handle expressions.
-  bool Visit(const Expression& e) { return VisitExpression<bool>(this, e); }
-  bool VisitVariable(const Expression&) { return false; }
-  bool VisitConstant(const Expression&) { return false; }
-  bool VisitRealConstant(const Expression&) { return false; }
-  bool VisitAddition(const Expression& e) {
-    for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
-      const Expression& e_i{p.first};
-      if (Visit(e_i)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  bool VisitMultiplication(const Expression& e) {
-    for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
-      const Expression& e_i1{p.first};
-      const Expression& e_i2{p.second};
-      if (Visit(e_i1) || Visit(e_i2)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  bool VisitDivision(const Expression& e) {
-    return Visit(get_first_argument(e)) || Visit(get_second_argument(e));
-  }
-  bool VisitLog(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitAbs(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitExp(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitSqrt(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitPow(const Expression& e) {
-    return Visit(get_first_argument(e)) || Visit(get_second_argument(e));
-  }
-  bool VisitSin(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitCos(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitTan(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitAsin(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitAcos(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitAtan(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitAtan2(const Expression& e) {
-    return Visit(get_first_argument(e)) || Visit(get_second_argument(e));
-  }
-  bool VisitSinh(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitCosh(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitTanh(const Expression& e) { return Visit(get_argument(e)); }
-  bool VisitMin(const Expression& e) {
-    return Visit(get_first_argument(e)) || Visit(get_second_argument(e));
-  }
-  bool VisitMax(const Expression& e) {
-    return Visit(get_first_argument(e)) || Visit(get_second_argument(e));
-  }
-  bool VisitIfThenElse(const Expression&) { return true; }
-  bool VisitUninterpretedFunction(const Expression&) { return false; }
-
-  // Handle formula
-  bool Visit(const Formula& f) { return VisitFormula<bool>(this, f); }
-  bool VisitFalse(const Formula&) { return false; }
-  bool VisitTrue(const Formula&) { return false; }
-  bool VisitVariable(const Formula&) { return false; }
-  bool VisitEqualTo(const Formula& f) {
-    return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
-  }
-  bool VisitNotEqualTo(const Formula& f) {
-    return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
-  }
-  bool VisitGreaterThan(const Formula& f) {
-    return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
-  }
-  bool VisitGreaterThanOrEqualTo(const Formula& f) {
-    return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
-  }
-  bool VisitLessThan(const Formula& f) {
-    return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
-  }
-  bool VisitLessThanOrEqualTo(const Formula& f) {
-    return Visit(get_lhs_expression(f)) || Visit(get_rhs_expression(f));
-  }
-  bool VisitConjunction(const Formula& f) {
-    for (const Formula& f_i : get_operands(f)) {
-      if (Visit(f_i)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  bool VisitDisjunction(const Formula& f) {
-    for (const Formula& f_i : get_operands(f)) {
-      if (Visit(f_i)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  bool VisitNegation(const Formula& f) { return Visit(get_operand(f)); }
-  bool VisitForall(const Formula&) { return true; }
-
-  // Makes VisitFormula a friend of this class so that it can use private
-  // operator()s.
-  friend bool drake::symbolic::VisitFormula<bool>(CheckIfThenElseInForall*,
-                                                  const Formula&);
-  // Makes VisitExpression a friend of this class so that it can use private
-  // operator()s.
-  friend bool drake::symbolic::VisitExpression<bool>(CheckIfThenElseInForall*,
-                                                     const Expression&);
-};
-
-}  // namespace
-
 Formula IfThenElseEliminator::VisitForall(const Formula& f) {
+  //    ∃x. ∀y. ITE(f, e₁, e₂) > 0
+  // => ∃x. ¬∃y. ¬(ITE(f, e₁, e₂) > 0)
+  // => ∃x. ¬∃y. ∃v. ¬(v > 0) ∧ (f → (v = e₁)) ∧ (¬f → (v = e₂))
+  // => ∃x. ∀y. ∀v. ¬(¬(v > 0) ∧ (f → (v = e₁)) ∧ (¬f → (v = e₂)))
+  // => ∃x. ∀y. ∀v. (v > 0) ∨ ¬((f → (v = e₁)) ∧ (¬f → (v = e₂)))
+  // => ∃x. ∀y. ∀v. ¬((f → (v = e₁)) ∧ (¬f → (v = e₂))) ∨ (v > 0)
+  // => ∃x. ∀y. ∀v. ((f → (v = e₁)) ∧ (¬f → (v = e₂))) → (v > 0)
+  // => ∃x. ∀y. ∀v. (v > 0) ∨ (f ∧ (v ≠ e₁)) ∨ (¬f ∧ (v ≠ e₂)).
+
+  // Note that we have the following:
+  // => ∃x. ∀y. ∀v. ¬(¬(v > 0) ∧ ¬(f ∧ (v ≠ e₁)) ∧ ¬(¬f ∧ (v ≠ e₂)).
+  // => ∃x. ∀y. ∀v. ¬(¬(v > 0) ∧ (¬f ∨ (v = e₁)) ∧ (f ∨ (v = e₂)).
+  // => ∃x. ∀y. ∀v. ¬(¬(v > 0) ∧ (f → (v = e₁)) ∧ (¬f → (v = e₂)).
   //
-  // f := forall(v₁, ... vₙ, f')
-  //
-  // ∃x.∀y. ITE(ψ(x, y), f₁(x, y), f₂(x, y)) > 0 can be translated into
-  //
-  //     ∃x.∀y.∃v. (v > 0) ∧ [ψ(x, y) ⇒ (v = f₁(x, y))]
-  //                       ∧ [¬ψ(x, y) ⇒ (v = f₂(x, y))]
-  //
-  //     ∃x.∀y.∀v. [(ψ(x, y) ∧ (v = f₁(x, y))) ⇒ (v > 0)] ∧
-  //               [(¬ψ(x, y) ∧ (v = f₂(x, y))) ⇒ (v > 0)]
-  //                       ∧ [¬ψ(x, y) ⇒ (v = f₂(x, y))]
-  //
-  if (CheckIfThenElseInForall{}.Check(get_quantified_formula(f))) {
-    DREAL_LOG_ERROR(
-        "{} includes either nested forall quantifiers or if-then-else inside "
-        "of quantifiers. We do not support these formula yet.",
-        f);
-    throw runtime_error("Not yet supported.");
-  }
-  return f;
+  // That is, we can first process the negation of the original
+  // formula `ITE(f, e₁, e₂) > 0`, then negate the result again while
+  // collecting the newly introduced variables (`v`s) to treat them as
+  // universally quantified variables (instead of existential
+  // variables). In this way, we can use the exising ITE-elim routine.
+  Variables quantified_variables{get_quantified_variables(f)};
+  const Formula& quantified_formula{get_quantified_formula(f)};
+  IfThenElseEliminator ite_eliminator_forall;
+  const Formula eliminated{ite_eliminator_forall.Process(!quantified_formula)};
+  quantified_variables.insert(ite_eliminator_forall.variables().begin(),
+                              ite_eliminator_forall.variables().end());
+  return forall(quantified_variables, Nnfizer{}.Convert(!eliminated));
 }
 
 }  // namespace dreal

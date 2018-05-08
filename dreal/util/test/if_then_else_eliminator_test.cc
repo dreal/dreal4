@@ -83,5 +83,14 @@ TEST_F(IfThenElseEliminatorTest, ITEs) {
   EXPECT_PRED2(FormulaEqual, converted, expected);
 }
 
+TEST_F(IfThenElseEliminatorTest, ITEsInForall) {
+  const Formula f{forall({y_}, if_then_else(x_ > y_, x_, y_) > 0)};
+  IfThenElseEliminator ite_elim;
+  const Formula processed{ite_elim.Process(f)};
+  EXPECT_EQ(processed.to_string(),
+            "forall({y, ITE1}. ((ITE1 > 0) or ((x > y) and !((ITE1 = x))) or "
+            "(!((ITE1 = y)) and !((x > y)))))");
+}
+
 }  // namespace
 }  // namespace dreal
