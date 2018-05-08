@@ -8,6 +8,7 @@
 #include "pybind11/stl.h"
 
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/exception.h"
 
 namespace dreal {
 
@@ -268,7 +269,18 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
       .def("min", &min)
       .def("max", &max);
 
-  m.def("if_then_else", &if_then_else);
+  m.def("if_then_else", &if_then_else)
+      .def("if_then_else", [](const Variable& v, const Expression& e_then,
+                              const Expression& e_else) {
+        if (v.get_type() != Variable::Type::BOOLEAN) {
+          throw DREAL_RUNTIME_ERROR(
+              "{} is not a Boolean variable but used as a "
+              "conditional in if-then-else({}, {}, {})",
+              v, v, e_then, e_else);
+        }
+        return if_then_else(Formula(v), e_then, e_else);
+      });
+
   m.def("forall",
         [](const std::vector<Variable>& vec, const Formula& f) {
           Variables vars;

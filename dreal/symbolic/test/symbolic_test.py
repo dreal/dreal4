@@ -455,6 +455,17 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(e.Substitute(x, y), 2 * y)
         self.assertEqual(e.Substitute(x, x + 5), x + y + 5)
 
+    def test_if_then_else(self):
+        b = Variable("b", Variable.Bool)
+        e = if_then_else(b, 5.0, 3.0)
+        self.assertEqual(str(e), "(if b then 5 else 3)")
+
+        with self.assertRaises(Exception) as context:
+            if_then_else(x, 5.0, 3.0)
+        print(context.exception)
+        self.assertTrue("not a Boolean variable but used as a conditional"
+                        in str(context.exception))
+
 
 class TestSymbolicFormula(unittest.TestCase):
     def test_get_free_variables(self):

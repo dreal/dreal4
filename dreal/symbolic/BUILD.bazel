@@ -52,6 +52,9 @@ dreal_cc_googletest(
 dreal_pybind_library(
     name = "dreal_symbolic_py",
     cc_srcs = ["symbolic_py.cc"],
+    cc_deps = [
+        "//dreal/util:exception",
+    ],
     py_srcs = ["__init__.py"],
 )
 
