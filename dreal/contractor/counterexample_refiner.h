@@ -16,7 +16,8 @@ namespace dreal {
 class CounterexampleRefiner {
  public:
   /// Constructs CounterexampleRefiner.
-  /// @param query Counterexample query.
+  /// @param query Counterexample query. It should be either a relational
+  ///              formula or a conjunction of relational formulas.
   /// @param forall_variables universally quantified variables. They are
   ///                         decision variables that we consider in the
   ///                         local optimization.

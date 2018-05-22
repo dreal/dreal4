@@ -17,8 +17,6 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
                                              const Config& config)
     : init_(forall_variables.size(), 0.0),
       forall_variables_{move(forall_variables)} {
-  DREAL_ASSERT(is_conjunction(query));
-
   // Build forall_vec_ (of vector<Variable>).
   for (const Variable& var : forall_variables_) {
     forall_vec_.push_back(var);
@@ -27,12 +25,26 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
   // 1. Filter bound constraints.
   Box box{forall_vec_};
   vector<Formula> formulas;
-  formulas.reserve(get_operands(query).size());
-  for (const Formula& f : get_operands(query)) {
-    const FilterAssertionResult result{FilterAssertion(f, &box)};
-    if (result == FilterAssertionResult::NotFiltered) {
-      formulas.push_back(f);
+  if (is_conjunction(query)) {
+    formulas.reserve(get_operands(query).size());
+    for (const Formula& f : get_operands(query)) {
+      DREAL_ASSERT(is_relational(f));
+      const FilterAssertionResult result{FilterAssertion(f, &box)};
+      if (result == FilterAssertionResult::NotFiltered) {
+        formulas.push_back(f);
+      }
     }
+  } else {
+    DREAL_ASSERT(is_relational(query));
+    const FilterAssertionResult result{FilterAssertion(query, &box)};
+    if (result == FilterAssertionResult::NotFiltered) {
+      formulas.push_back(query);
+    }
+  }
+  if (formulas.empty()) {
+    // This will leave opt_ as nullptr. `Refine(box)` will return box then.
+    DREAL_ASSERT(!opt_);
+    return;
   }
 
   // 2. Build an Nlopt problem by adding constraints and setting up an
@@ -48,8 +60,6 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
   }
   Expression objective{};
   for (const Formula& f : formulas) {
-    DREAL_ASSERT(is_relational(f));
-
     if (!f.GetFreeVariables().IsSubsetOf(forall_variables_)) {
       // F has both of exist and forall variables. We turn this into an
       // objective function.
@@ -79,6 +89,10 @@ CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
 }
 
 Box CounterexampleRefiner::Refine(Box box) {
+  if (!opt_) {
+    return box;
+  }
+
   // 1. Set up init and env.
   Environment env;
   int i = 0;

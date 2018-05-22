@@ -212,6 +212,14 @@ TEST_F(ApiTest, CheckSatisfiabilityIfThenElse2) {
   EXPECT_EQ(solution.size(), 3);
 }
 
+TEST_F(ApiTest, CheckSatisfiabilityForall) {
+  Config config;
+  config.mutable_use_local_optimization() = true;
+  const Formula f{forall({y_}, x_ == y_)};
+  const auto result = CheckSatisfiability(f, config);
+  EXPECT_FALSE(result);
+}
+
 TEST_F(ApiTest, SatCheckDeterministicOutput) {
   const Formula f1{0 <= x_ && x_ <= 5};
   const Formula f2{0 <= y_ && y_ <= 5};
