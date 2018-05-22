@@ -384,9 +384,9 @@ toolchain {
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
   compiler_flag: "-msse3"
-  cxx_builtin_include_directory: "/usr/include/c++/5.4.0"
-  cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5.4.0"
-  cxx_builtin_include_directory: "/usr/include/c++/5.4.0/backward"
+  cxx_builtin_include_directory: "/usr/include/c++/5"
+  cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5"
+  cxx_builtin_include_directory: "/usr/include/c++/5/backward"
   cxx_builtin_include_directory: "/usr/local/include"
   cxx_builtin_include_directory: "/usr/lib/llvm-6.0/lib/clang/6.0.1/include"
   cxx_builtin_include_directory: "/usr/lib/llvm-6.0/lib/clang/6.0.0/include"
@@ -462,9 +462,9 @@ toolchain {
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
   compiler_flag: "-msse3"
-  cxx_builtin_include_directory: "/usr/include/c++/5.4.0"
-  cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5.4.0"
-  cxx_builtin_include_directory: "/usr/include/c++/5.4.0/backward"
+  cxx_builtin_include_directory: "/usr/include/c++/5"
+  cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5"
+  cxx_builtin_include_directory: "/usr/include/c++/5/backward"
   cxx_builtin_include_directory: "/usr/local/include"
   cxx_builtin_include_directory: "/usr/lib/llvm-5.0/lib/clang/5.0.2/include"
   cxx_builtin_include_directory: "/usr/lib/llvm-5.0/lib/clang/5.0.1/include"
@@ -541,9 +541,9 @@ toolchain {
   # compiler_flag: "-frounding-math"  # No Support
   # compiler_flag: "-ffloat-store"    # No Support
   compiler_flag: "-msse3"
-  cxx_builtin_include_directory: "/usr/include/c++/5.4.0"
-  cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5.4.0"
-  cxx_builtin_include_directory: "/usr/include/c++/5.4.0/backward"
+  cxx_builtin_include_directory: "/usr/include/c++/5"
+  cxx_builtin_include_directory: "/usr/include/x86_64-linux-gnu/c++/5"
+  cxx_builtin_include_directory: "/usr/include/c++/5/backward"
   cxx_builtin_include_directory: "/usr/local/include"
   cxx_builtin_include_directory: "/usr/lib/llvm-4.0/lib/clang/4.0.1/include"  # For Trusty clang-4.0 via PPA
   cxx_builtin_include_directory: "/usr/lib/llvm-4.0/lib/clang/4.0.0/include"  # For Xenial clang-4.0
