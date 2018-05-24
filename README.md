@@ -14,7 +14,7 @@ macOS 10.13 / 10.12 / 10.11:
 dreal
 ```
 
-Ubuntu 18.04 / 16.04 / 14.04:
+Ubuntu 18.04 / 16.04:
 
 ```bash
 # 18.04
@@ -24,10 +24,6 @@ curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/18
 # 16.04
 sudo apt install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
-
-# 14.04
-sudo apt install curl
-curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/14.04/install.sh | sudo bash
 
 # Test the installation.
 DREAL_VERSION=4.18.05.2
@@ -39,11 +35,11 @@ Python Binding
 ==============
 
 Some of the functionality of dReal is accessible through Python2. On
-Ubuntu 18.04 / 16.04 / 14.04, you need to set up the `PYTHONPATH` environment
+Ubuntu 18.04 / 16.04, you need to set up the `PYTHONPATH` environment
 variable. On macOS, you do not need this step.
 
 ```bash
-# Only on Ubuntu 18.04 / 16.04 / 14.04:
+# Only on Ubuntu 18.04 / 16.04:
 export PYTHONPATH=/opt/dreal/4.18.05.2/lib/python2.7/site-packages:${PYTHONPATH}
 ```
 
@@ -105,7 +101,7 @@ git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 18.04 / 16.04 / 14.04
+Ubuntu 18.04 / 16.04
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
@@ -188,7 +184,7 @@ macOS 10.13 / 10.12 / 10.11:
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
-Ubuntu 18.04 / 16.04 / 14.04:
+Ubuntu 18.04 / 16.04:
 
 ```bash
 export PKG_CONFIG_PATH=/opt/dreal/4.18.05.2/lib/pkgconfig:/opt/libibex/2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
