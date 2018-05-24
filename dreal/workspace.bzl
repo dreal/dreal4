@@ -30,8 +30,16 @@ def dreal_workspace():
     )
     # We do not use this one, yet.
     pkg_config_repository(
-        name = "python3",
-        modname = "python3",
+        name = "python-3.5",
+        modname = "python-3.5",
+        pkg_config_paths = [
+            "/usr/local/opt/python@3/lib/pkgconfig",
+        ]
+    )
+    # We do not use this one, yet.
+    pkg_config_repository(
+        name = "python-3.6",
+        modname = "python-3.6",
         pkg_config_paths = [
             "/usr/local/opt/python@3/lib/pkgconfig",
         ]
