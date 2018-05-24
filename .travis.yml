@@ -48,20 +48,6 @@ matrix:
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-6.0']
-      env:
-        - COMPILER="--compiler=clang-6.0" BUILD_TYPE="-c dbg"
-    - compiler: clang
-      addons:
-        apt:
-          sources: ['llvm-toolchain-trusty-5.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-5.0']
-      env:
-        - COMPILER="--compiler=clang-5.0" BUILD_TYPE="-c dbg"
-    - compiler: clang
-      addons:
-        apt:
           sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
           packages: ['g++-5', 'clang-4.0']
       env:
@@ -76,26 +62,26 @@ matrix:
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-6.0']
+          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'clang-4.0']
       env:
-        - COMPILER="--compiler=clang-6.0" CONFIG="--config asan"
+        - COMPILER="--compiler=clang-4.0" CONFIG="--config asan"
         - TEST_TAG_FILTERS="-no_asan"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-6.0']
+          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'clang-4.0']
       env:
-        - COMPILER="--compiler=clang-6.0" CONFIG="--config ubsan"
+        - COMPILER="--compiler=clang-4.0" CONFIG="--config ubsan"
         - TEST_TAG_FILTERS="-no_ubsan"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-6.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-6.0']
+          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
+          packages: ['g++-5', 'clang-4.0']
       env:
-        - COMPILER="--compiler=clang-6.0" BUILD_TYPE="-c dbg"
+        - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov"
         - TEST_TAG_FILTERS="unit"
     - os: osx
