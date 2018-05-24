@@ -20,6 +20,7 @@ matrix:
     - compiler: gcc
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
@@ -29,6 +30,7 @@ matrix:
     - compiler: gcc
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
@@ -38,6 +40,7 @@ matrix:
     - compiler: gcc
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
@@ -47,6 +50,7 @@ matrix:
     - compiler: gcc
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
@@ -56,6 +60,7 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
@@ -68,6 +73,7 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
@@ -78,6 +84,7 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
@@ -91,6 +98,7 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
@@ -104,6 +112,7 @@ matrix:
     - compiler: clang
       addons:
         apt:
+          update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
