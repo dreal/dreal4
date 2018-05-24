@@ -20,66 +20,97 @@ matrix:
     - compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-8']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          packages:
+	  - g++-8
       env:
         - COMPILER="--compiler=gcc-8" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-7']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          packages:
+	  - g++-7
       env:
         - COMPILER="--compiler=gcc-7" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-6']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          packages:
+	  - g++-6
       env:
         - COMPILER="--compiler=gcc-6" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          packages:
+	  - g++-5
       env:
         - COMPILER="--compiler=gcc-5" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-4.0']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+	  - g++-5
+	  - clang-4.0
       env:
         - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-3.9']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          packages:
+	  - g++-5
+	  - clang-3.9
       env:
         - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-4.0']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+	  - g++-5
+	  - clang-4.0
       env:
         - COMPILER="--compiler=clang-4.0" CONFIG="--config asan"
         - TEST_TAG_FILTERS="-no_asan"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-4.0']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+	  - g++-5
+	  - clang-4.0
       env:
         - COMPILER="--compiler=clang-4.0" CONFIG="--config ubsan"
         - TEST_TAG_FILTERS="-no_ubsan"
     - compiler: clang
       addons:
         apt:
-          sources: ['llvm-toolchain-trusty-4.0', 'ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'clang-4.0']
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+	  - g++-5
+	  - clang-4.0
       env:
         - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov"
