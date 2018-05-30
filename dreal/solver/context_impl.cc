@@ -243,6 +243,22 @@ void Context::Impl::Minimize(const vector<Expression>& functions) {
   for (const Expression& f : functions) {
     x_vars += f.GetVariables();
   }
+
+  // Collects side-constraints related to the cost functions.
+  unordered_set<Formula> constraints;
+  bool keep_going = true;
+  while (keep_going) {
+    keep_going = false;
+    for (const Formula& constraint : stack_) {
+      if (constraints.find(constraint) == constraints.end() &&
+          HaveIntersection(x_vars, constraint.GetFreeVariables())) {
+        x_vars += constraint.GetFreeVariables();
+        constraints.insert(constraint);
+        keep_going = true;
+      }
+    }
+  }
+
   for (const Variable& x_i : x_vars) {
     // We add postfix '_' to name y_i
     const Variable y_i{x_i.get_name() + "_", x_i.get_type()};
@@ -260,13 +276,11 @@ void Context::Impl::Minimize(const vector<Expression>& functions) {
       set_of_negated_phi.insert(!(y_i <= ub_x_i));
     }
   }
-  for (const Formula& constraint : stack_) {
-    if (HaveIntersection(x_vars, constraint.GetFreeVariables())) {
-      // Case : xᵢ ∈ vars(constraint)
-      // We need to collect constraint[xᵢ ↦ yᵢ].
-      set_of_negated_phi.insert(!constraint.Substitute(subst));
-    }
+
+  for (const Formula& constraint : constraints) {
+    set_of_negated_phi.insert(!constraint.Substitute(subst));
   }
+
   Formula quantified{make_disjunction(set_of_negated_phi)};  // ∨ᵢ ¬ϕᵢ(y)
   Formula new_z_block;  // This will have (z₁ = f₁(x) ∧ ... ∧ zₙ = fₙ(x)).
   static int counter{0};
