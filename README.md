@@ -80,7 +80,7 @@ Docker
 
 We provide a [Docker image of
 dReal4](https://hub.docker.com/r/dreal/dreal4/tags/) which is based on
-Ubuntu 16.04. Try the following to test it:
+Ubuntu 18.04. Try the following to test it:
 
 ```bash
 docker pull dreal/dreal4
