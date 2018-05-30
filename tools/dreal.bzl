@@ -327,7 +327,7 @@ def dr_test(
 
 # Generate a file with specified content
 def _generate_file_impl(ctx):
-    ctx.file_action(output = ctx.outputs.out, content = ctx.attr.content)
+    ctx.actions.write(output = ctx.outputs.out, content = ctx.attr.content)
 
 dreal_generate_file = rule(
     attrs = {
