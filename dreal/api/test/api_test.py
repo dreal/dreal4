@@ -3,12 +3,17 @@ from dreal.symbolic import Variable, logical_and, sin, cos
 from dreal.symbolic import logical_imply, forall
 from dreal.api import CheckSatisfiability, Minimize
 from dreal.util import Box
+from dreal.solver import Config
 import math
 import unittest
 
 x = Variable("x")
 y = Variable("y")
 z = Variable("z")
+p = Variable("p")
+x0 = Variable("x0")
+x1 = Variable("x1")
+x2 = Variable("x2")
 
 f_sat = logical_and(0 <= x, x <= 10, 0 <= y, y <= 10, 0 <= z, z <= 10,
                     sin(x) + cos(y) == z)
@@ -52,6 +57,30 @@ class ApiTest(unittest.TestCase):
         result = Minimize(objective, constraint, 0.00001, b)
         self.assertTrue(result)
         self.assertAlmostEqual(b[x].mid(), -1.5, places=2)
+
+    def test_minimize3(self):
+        result = Minimize(x,
+                          logical_and(0 <= x, x <= 1,
+                                      0 <= p, p <= 1,
+                                      p <= x),
+                          0.00001)
+        self.assertTrue(result)
+        self.assertAlmostEqual(result[x].mid(), 0, places=2)
+        self.assertAlmostEqual(result[p].mid(), 0, places=2)
+
+    def test_lorentz_cone(self):
+        config = Config()
+        config.use_local_optimization = True
+        config.precision = 0.0001
+        result = Minimize(x2,
+                          logical_and(-5 <= x0, x0 <= 5,
+                                      -5 <= x1, x1 <= 5,
+                                      0 <= x2, x2 <= 5,
+                                      1 >= (x0 - 1) ** 2 + (x1 - 1) ** 2,
+                                      x2 ** 2 >= x0 ** 2 + x1 ** 2),
+                          config)
+        self.assertTrue(result)
+        self.assertAlmostEqual(result[x2].mid(), 0.414212, places=3)
 
     def test_minimize_via_forall(self):
         # To minimize f(X) s.t. φ(x), this test encodes
