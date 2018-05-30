@@ -1,5 +1,6 @@
 #include "dreal/optimization/nlopt_optimizer.h"
 
+#include <cmath>
 #include <utility>
 
 #include "dreal/util/assert.h"
@@ -32,7 +33,7 @@ double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
   Environment& env{expression.mutable_environment()};
   for (size_t i = 0; i < n; ++i) {
     const Variable& var{box.variable(i)};
-    if (isnan(x[i])) {
+    if (std::isnan(x[i])) {
       throw DREAL_RUNTIME_ERROR(
           "NloptOptimizer: x[{}] = nan is detected during evaluation", i);
     }
