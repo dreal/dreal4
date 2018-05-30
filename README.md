@@ -26,7 +26,7 @@ sudo apt install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
 
 # Test the installation.
-DREAL_VERSION=4.18.05.2
+DREAL_VERSION=4.18.05.3
 /opt/dreal/${DREAL_VERSION}/bin/dreal
 ```
 
