@@ -40,7 +40,7 @@ variable. On macOS, you do not need this step.
 
 ```bash
 # Only on Ubuntu 18.04 / 16.04:
-export PYTHONPATH=/opt/dreal/4.18.05.2/lib/python2.7/site-packages:${PYTHONPATH}
+export PYTHONPATH=/opt/dreal/4.18.05.3/lib/python2.7/site-packages:${PYTHONPATH}
 ```
 
 To test it, run `python2` in a terminal and type the followings:
@@ -187,7 +187,7 @@ export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig:${PKG_CONFIG_PA
 Ubuntu 18.04 / 16.04:
 
 ```bash
-export PKG_CONFIG_PATH=/opt/dreal/4.18.05.2/lib/pkgconfig:/opt/libibex/2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/opt/dreal/4.18.05.3/lib/pkgconfig:/opt/libibex/2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
 Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
