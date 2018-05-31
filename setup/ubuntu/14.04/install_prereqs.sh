@@ -24,6 +24,7 @@ libnlopt-dev
 libpython2.7-dev
 openjdk-8-jdk
 pkg-config
+python-apt
 python-dev
 zlib1g-dev
 EOF
