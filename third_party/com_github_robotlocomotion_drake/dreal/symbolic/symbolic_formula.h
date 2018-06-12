@@ -1,7 +1,6 @@
 #pragma once
 
 #include <functional>
-#include <memory>
 #include <ostream>
 #include <set>
 #include <string>
@@ -63,11 +62,9 @@ It has the following grammar:
        | E ∧ ... ∧ E | E ∨ ... ∨ E | ¬F | ∀ x₁, ..., xn. F
 \endverbatim
 
-In the implementation, Formula is a simple wrapper including a shared
+In the implementation, Formula is a simple wrapper including a raw
 pointer to FormulaCell class which is a super-class of different kinds
-of symbolic formulas (i.e. FormulaAnd, FormulaOr, FormulaEq). Note
-that it includes a shared pointer, not a unique pointer, to allow
-sharing sub-expressions.
+of symbolic formulas (i.e. FormulaAnd, FormulaOr, FormulaEq).
 
 \note The sharing of sub-expressions is not yet implemented.
 
@@ -102,15 +99,15 @@ Drake for readability.
 */
 class Formula {
  public:
-  Formula(const Formula&) = default;
-  Formula& operator=(const Formula&) = default;
-  Formula(Formula&&) = default;
-  Formula& operator=(Formula&&) = default;
-
   /** Default constructor. */
-  Formula() { *this = True(); }
+  Formula();
+  Formula(const Formula&);
+  Formula& operator=(const Formula&);
+  Formula(Formula&&) noexcept;
+  Formula& operator=(Formula&&) noexcept;
+  ~Formula();
 
-  explicit Formula(std::shared_ptr<const FormulaCell> ptr);
+  explicit Formula(const FormulaCell* ptr);
 
   /** Constructs a formula from @p var.
    * @pre @p var is of BOOLEAN type and not a dummy variable.
@@ -231,29 +228,26 @@ class Formula {
   // Note that the following cast functions are only for low-level operations
   // and not exposed to the user of symbolic_formula.h. These functions are
   // declared in symbolic_formula_cell.h header.
-  friend std::shared_ptr<const FormulaFalse> to_false(const Formula& f);
-  friend std::shared_ptr<const FormulaTrue> to_true(const Formula& f);
-  friend std::shared_ptr<const FormulaVar> to_variable(const Formula& f);
-  friend std::shared_ptr<const RelationalFormulaCell> to_relational(
-      const Formula& f);
-  friend std::shared_ptr<const FormulaEq> to_equal_to(const Formula& f);
-  friend std::shared_ptr<const FormulaNeq> to_not_equal_to(const Formula& f);
-  friend std::shared_ptr<const FormulaGt> to_greater_than(const Formula& f);
-  friend std::shared_ptr<const FormulaGeq> to_greater_than_or_equal_to(
-      const Formula& f);
-  friend std::shared_ptr<const FormulaLt> to_less_than(const Formula& f);
-  friend std::shared_ptr<const FormulaLeq> to_less_than_or_equal_to(
-      const Formula& f);
-  friend std::shared_ptr<const NaryFormulaCell> to_nary(const Formula& f);
-  friend std::shared_ptr<const FormulaAnd> to_conjunction(const Formula& f);
-  friend std::shared_ptr<const FormulaOr> to_disjunction(const Formula& f);
-  friend std::shared_ptr<const FormulaNot> to_negation(const Formula& f);
-  friend std::shared_ptr<const FormulaForall> to_forall(const Formula& f);
+  friend const FormulaFalse* to_false(const Formula& f);
+  friend const FormulaTrue* to_true(const Formula& f);
+  friend const FormulaVar* to_variable(const Formula& f);
+  friend const RelationalFormulaCell* to_relational(const Formula& f);
+  friend const FormulaEq* to_equal_to(const Formula& f);
+  friend const FormulaNeq* to_not_equal_to(const Formula& f);
+  friend const FormulaGt* to_greater_than(const Formula& f);
+  friend const FormulaGeq* to_greater_than_or_equal_to(const Formula& f);
+  friend const FormulaLt* to_less_than(const Formula& f);
+  friend const FormulaLeq* to_less_than_or_equal_to(const Formula& f);
+  friend const NaryFormulaCell* to_nary(const Formula& f);
+  friend const FormulaAnd* to_conjunction(const Formula& f);
+  friend const FormulaOr* to_disjunction(const Formula& f);
+  friend const FormulaNot* to_negation(const Formula& f);
+  friend const FormulaForall* to_forall(const Formula& f);
 
   friend FormulaCell;
 
  private:
-  std::shared_ptr<const FormulaCell> ptr_;
+  const FormulaCell* ptr_;
 };
 
 /** Returns a formula @p f, universally quantified by variables @p vars. */

@@ -3,7 +3,6 @@
 #include <cassert>
 #include <cstddef>
 #include <iostream>
-#include <memory>
 #include <set>
 #include <sstream>
 
@@ -17,21 +16,60 @@ namespace dreal {
 namespace drake {
 namespace symbolic {
 
-using std::make_shared;
 using std::ostream;
 using std::ostringstream;
 using std::set;
-using std::shared_ptr;
 using std::string;
 
 bool operator<(FormulaKind k1, FormulaKind k2) {
   return static_cast<int>(k1) < static_cast<int>(k2);
 }
 
-Formula::Formula(std::shared_ptr<const FormulaCell> ptr)
-    : ptr_{std::move(ptr)} {}
+Formula::Formula() : Formula{Formula::True().ptr_} {}
 
-Formula::Formula(const Variable& var) : ptr_{make_shared<FormulaVar>(var)} {}
+Formula::Formula(const Formula& f) {
+  assert(f.ptr_ != nullptr);
+  f.ptr_->increase_rc();
+  ptr_ = f.ptr_;
+}
+
+Formula& Formula::operator=(const Formula& f) {
+  assert(f.ptr_ != nullptr);
+  f.ptr_->increase_rc();
+  assert(ptr_ != nullptr);
+  if (ptr_->decrease_rc() == 0) {
+    delete ptr_;
+  }
+  ptr_ = f.ptr_;
+  return *this;
+}
+
+Formula::Formula(Formula&& f) noexcept {
+  assert(f.ptr_ != nullptr);
+  ptr_ = f.ptr_;
+  f.ptr_ = nullptr;
+}
+
+Formula& Formula::operator=(Formula&& f) noexcept {
+  assert(ptr_ != nullptr);
+  if (ptr_->decrease_rc() == 0) {
+    delete ptr_;
+  }
+  assert(f.ptr_ != nullptr);
+  ptr_ = f.ptr_;
+  f.ptr_ = nullptr;
+  return *this;
+}
+
+Formula::~Formula() {
+  if (ptr_ && ptr_->decrease_rc() == 0) {
+    delete ptr_;
+  }
+}
+
+Formula::Formula(const FormulaCell* ptr) : ptr_{ptr} { ptr_->increase_rc(); }
+
+Formula::Formula(const Variable& var) : Formula{new FormulaVar(var)} {}
 
 FormulaKind Formula::get_kind() const {
   assert(ptr_ != nullptr);
@@ -125,16 +163,17 @@ string Formula::to_string() const {
 }
 
 Formula Formula::True() {
-  static Formula tt{make_shared<FormulaTrue>()};
+  static const Formula tt{new FormulaTrue()};
   return tt;
 }
+
 Formula Formula::False() {
-  static Formula ff{make_shared<FormulaFalse>()};
+  static const Formula ff{new FormulaFalse()};
   return ff;
 }
 
 Formula forall(const Variables& vars, const Formula& f) {
-  return Formula{make_shared<FormulaForall>(vars, f)};
+  return Formula{new FormulaForall(vars, f)};
 }
 
 Formula make_conjunction(const set<Formula>& formulas) {
@@ -168,7 +207,7 @@ Formula make_conjunction(const set<Formula>& formulas) {
     return *(operands.begin());
   }
   // TODO(soonho-tri): Returns False if both f and ¬f appear in operands.
-  return Formula{make_shared<FormulaAnd>(operands)};
+  return Formula{new FormulaAnd(operands)};
 }
 
 Formula operator&&(const Formula& f1, const Formula& f2) {
@@ -216,7 +255,7 @@ Formula make_disjunction(const set<Formula>& formulas) {
     return *(operands.begin());
   }
   // TODO(soonho-tri): Returns True if both f and ¬f appear in operands.
-  return Formula{make_shared<FormulaOr>(operands)};
+  return Formula{new FormulaOr(operands)};
 }
 
 Formula operator||(const Formula& f1, const Formula& f2) {
@@ -243,7 +282,7 @@ Formula operator!(const Formula& f) {
   if (is_negation(f)) {
     return get_operand(f);
   }
-  return Formula{make_shared<FormulaNot>(f)};
+  return Formula{new FormulaNot(f)};
 }
 
 Formula operator!(const Variable& v) { return !Formula(v); }
@@ -259,7 +298,7 @@ Formula operator==(const Expression& e1, const Expression& e2) {
   if (diff.get_kind() == ExpressionKind::Constant) {
     return diff.Evaluate() == 0.0 ? Formula::True() : Formula::False();
   }
-  return Formula{make_shared<FormulaEq>(e1, e2)};
+  return Formula{new FormulaEq(e1, e2)};
 }
 
 Formula operator!=(const Expression& e1, const Expression& e2) {
@@ -268,7 +307,7 @@ Formula operator!=(const Expression& e1, const Expression& e2) {
   if (diff.get_kind() == ExpressionKind::Constant) {
     return diff.Evaluate() != 0.0 ? Formula::True() : Formula::False();
   }
-  return Formula{make_shared<FormulaNeq>(e1, e2)};
+  return Formula{new FormulaNeq(e1, e2)};
 }
 
 Formula operator<(const Expression& e1, const Expression& e2) {
@@ -277,7 +316,7 @@ Formula operator<(const Expression& e1, const Expression& e2) {
   if (diff.get_kind() == ExpressionKind::Constant) {
     return diff.Evaluate() < 0 ? Formula::True() : Formula::False();
   }
-  return Formula{make_shared<FormulaLt>(e1, e2)};
+  return Formula{new FormulaLt(e1, e2)};
 }
 
 Formula operator<=(const Expression& e1, const Expression& e2) {
@@ -286,7 +325,7 @@ Formula operator<=(const Expression& e1, const Expression& e2) {
   if (diff.get_kind() == ExpressionKind::Constant) {
     return diff.Evaluate() <= 0 ? Formula::True() : Formula::False();
   }
-  return Formula{make_shared<FormulaLeq>(e1, e2)};
+  return Formula{new FormulaLeq(e1, e2)};
 }
 
 Formula operator>(const Expression& e1, const Expression& e2) {
@@ -295,7 +334,7 @@ Formula operator>(const Expression& e1, const Expression& e2) {
   if (diff.get_kind() == ExpressionKind::Constant) {
     return diff.Evaluate() > 0 ? Formula::True() : Formula::False();
   }
-  return Formula{make_shared<FormulaGt>(e1, e2)};
+  return Formula{new FormulaGt(e1, e2)};
 }
 
 Formula operator>=(const Expression& e1, const Expression& e2) {
@@ -304,7 +343,7 @@ Formula operator>=(const Expression& e1, const Expression& e2) {
   if (diff.get_kind() == ExpressionKind::Constant) {
     return diff.Evaluate() >= 0 ? Formula::True() : Formula::False();
   }
-  return Formula{make_shared<FormulaGeq>(e1, e2)};
+  return Formula{new FormulaGeq(e1, e2)};
 }
 
 bool is_false(const Formula& f) { return is_false(*f.ptr_); }

@@ -1,7 +1,7 @@
 #pragma once
 
+#include <atomic>
 #include <functional>
-#include <memory>
 #include <ostream>
 #include <set>
 #include <string>
@@ -24,7 +24,7 @@ namespace symbolic {
  * \note It provides virtual function, FormulaCell::Display,
  * because operator<< is not allowed to be a virtual function.
  */
-class FormulaCell : public std::enable_shared_from_this<FormulaCell> {
+class FormulaCell {
  public:
   /** Returns kind of formula. */
   FormulaKind get_kind() const { return kind_; }
@@ -69,6 +69,14 @@ class FormulaCell : public std::enable_shared_from_this<FormulaCell> {
  private:
   const FormulaKind kind_{};
   const size_t hash_{};
+
+  // Reference counter.
+  mutable std::atomic<unsigned> rc_{0};
+  void increase_rc() const { ++rc_; }
+  size_t decrease_rc() const { return --rc_; }
+
+  // So that Expression can call {increase,decrease}_rc.
+  friend Formula;
 };
 
 /** Represents the base class for relational operators (==, !=, <, <=, >, >=).
@@ -347,167 +355,152 @@ bool is_negation(const FormulaCell& f);
 /** Checks if @p f is a Forall formula (∀). */
 bool is_forall(const FormulaCell& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaFalse>.
+/** Casts @p f_ptr to @c const FormulaFalse*.
  * @pre @c is_false(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaFalse> to_false(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
-/** Casts @p f to @c shared_ptr<const FormulaFalse>.
+const FormulaFalse* to_false(const FormulaCell* f_ptr);
+/** Casts @p f to @c const FormulaFalse*.
  * @pre @c is_false(f) is true.
  */
-std::shared_ptr<const FormulaFalse> to_false(const Formula& f);
+const FormulaFalse* to_false(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaTrue>.
+/** Casts @p f_ptr to @c const FormulaTrue*.
  * @pre @c is_true(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaTrue> to_true(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
-/** Casts @p f to @c shared_ptr<const FormulaTrue>.
+const FormulaTrue* to_true(const FormulaCell* f_ptr);
+/** Casts @p f to @c const FormulaTrue*.
  * @pre @c is_true(f) is true.
  */
-std::shared_ptr<const FormulaTrue> to_true(const Formula& f);
+const FormulaTrue* to_true(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaVar>.
+/** Casts @p f_ptr to @c const FormulaVar*.
  * @pre @c is_variable(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaVar> to_variable(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
-/** Casts @p f to @c shared_ptr<const FormulaVar>.
+const FormulaVar* to_variable(const FormulaCell* f_ptr);
+/** Casts @p f to @c const FormulaVar*.
  * @pre @c is_variable(f) is true.
  */
-std::shared_ptr<const FormulaVar> to_variable(const Formula& f);
+const FormulaVar* to_variable(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const RelationalFormulaCell>.
+/** Casts @p f_ptr to @c const RelationalFormulaCell*.
  * @pre @c is_relational(*f_ptr) is true.
  */
-std::shared_ptr<const RelationalFormulaCell> to_relational(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const RelationalFormulaCell* to_relational(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const RelationalFormulaCell>.
+/** Casts @p f to @c const RelationalFormulaCell*.
  * @pre @c is_relational(f) is true.
  */
-std::shared_ptr<const RelationalFormulaCell> to_relational(const Formula& f);
+const RelationalFormulaCell* to_relational(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaEq>.
+/** Casts @p f_ptr to @c const FormulaEq*.
  * @pre @c is_equal_to(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaEq> to_equal_to(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaEq* to_equal_to(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaEq>.
+/** Casts @p f to @c const FormulaEq*.
  * @pre @c is_equal_to(f) is true.
  */
-std::shared_ptr<const FormulaEq> to_equal_to(const Formula& f);
+const FormulaEq* to_equal_to(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaNeq>.
+/** Casts @p f_ptr to @c const FormulaNeq*.
  * @pre @c is_not_equal_to(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaNeq> to_not_equal_to(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaNeq* to_not_equal_to(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaNeq>.
+/** Casts @p f to @c const FormulaNeq*.
  * @pre @c is_not_equal_to(f) is true.
  */
-std::shared_ptr<const FormulaNeq> to_not_equal_to(const Formula& f);
+const FormulaNeq* to_not_equal_to(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaGt>.
+/** Casts @p f_ptr to @c const FormulaGt*.
  * @pre @c is_greater_than(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaGt> to_greater_than(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaGt* to_greater_than(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaGt>.
+/** Casts @p f to @c const FormulaGt*.
  * @pre @c is_greater_than(f) is true.
  */
-std::shared_ptr<const FormulaGt> to_greater_than(const Formula& f);
+const FormulaGt* to_greater_than(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaGeq>.
+/** Casts @p f_ptr to @c const FormulaGeq*.
  * @pre @c is_greater_than_or_equal_to(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaGeq> to_greater_than_or_equal_to(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaGeq* to_greater_than_or_equal_to(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaGeq>.
+/** Casts @p f to @c const FormulaGeq*.
  * @pre @c is_greater_than_or_equal_to(f) is true.
  */
-std::shared_ptr<const FormulaGeq> to_greater_than_or_equal_to(const Formula& f);
+const FormulaGeq* to_greater_than_or_equal_to(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaLt>.
+/** Casts @p f_ptr to @c const FormulaLt*.
  * @pre @c is_less_than(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaLt> to_less_than(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaLt* to_less_than(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaLt>.
+/** Casts @p f to @c const FormulaLt*.
  * @pre @c is_less_than(f) is true.
  */
-std::shared_ptr<const FormulaLt> to_less_than(const Formula& f);
+const FormulaLt* to_less_than(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaLeq>.
+/** Casts @p f_ptr to @c const FormulaLeq*.
  * @pre @c is_less_than_or_equal_to(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaLeq> to_less_than_or_equal_to(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaLeq* to_less_than_or_equal_to(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaLeq>.
+/** Casts @p f to @c const FormulaLeq*.
  * @pre @c is_less_than_or_equal_to(f) is true.
  */
-std::shared_ptr<const FormulaLeq> to_less_than_or_equal_to(const Formula& f);
+const FormulaLeq* to_less_than_or_equal_to(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaAnd>.
+/** Casts @p f_ptr to @c const FormulaAnd*.
  * @pre @c is_conjunction(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaAnd> to_conjunction(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaAnd* to_conjunction(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaAnd>.
+/** Casts @p f to @c const FormulaAnd*.
  * @pre @c is_conjunction(f) is true.
  */
-std::shared_ptr<const FormulaAnd> to_conjunction(const Formula& f);
+const FormulaAnd* to_conjunction(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaOr>.
+/** Casts @p f_ptr to @c const FormulaOr*.
  * @pre @c is_disjunction(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaOr> to_disjunction(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaOr* to_disjunction(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaOr>.
+/** Casts @p f to @c const FormulaOr*.
  * @pre @c is_disjunction(f) is true.
  */
-std::shared_ptr<const FormulaOr> to_disjunction(const Formula& f);
+const FormulaOr* to_disjunction(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const NaryFormulaCell>.
+/** Casts @p f_ptr to @c const NaryFormulaCell*.
  * @pre @c is_nary(*f_ptr) is true.
  */
-std::shared_ptr<const NaryFormulaCell> to_nary(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const NaryFormulaCell* to_nary(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const NaryFormulaCell>.
+/** Casts @p f to @c const NaryFormulaCell*.
  * @pre @c is_nary(f) is true.
  */
-std::shared_ptr<const NaryFormulaCell> to_nary(const Formula& f);
+const NaryFormulaCell* to_nary(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaNot>.
+/** Casts @p f_ptr to @c const FormulaNot*.
  *  @pre @c is_negation(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaNot> to_negation(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaNot* to_negation(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaNot>.
+/** Casts @p f to @c const FormulaNot*.
  *  @pre @c is_negation(f) is true.
  */
-std::shared_ptr<const FormulaNot> to_negation(const Formula& f);
+const FormulaNot* to_negation(const Formula& f);
 
-/** Casts @p f_ptr to @c shared_ptr<const FormulaForall>.
+/** Casts @p f_ptr to @c const FormulaForall*.
  *  @pre @c is_forall(*f_ptr) is true.
  */
-std::shared_ptr<const FormulaForall> to_forall(
-    const std::shared_ptr<const FormulaCell>& f_ptr);
+const FormulaForall* to_forall(const FormulaCell* f_ptr);
 
-/** Casts @p f to @c shared_ptr<const FormulaForall>.
+/** Casts @p f to @c const FormulaForall*.
  *  @pre @c is_forall(f) is true.
  */
-std::shared_ptr<const FormulaForall> to_forall(const Formula& f);
+const FormulaForall* to_forall(const Formula& f);
 
 }  // namespace symbolic
 }  // namespace drake
