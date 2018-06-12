@@ -7,7 +7,6 @@
 #include <iomanip>
 #include <limits>
 #include <map>
-#include <memory>
 #include <numeric>
 #include <ostream>
 #include <sstream>
@@ -33,7 +32,6 @@ using std::endl;
 using std::equal;
 using std::hash;
 using std::lexicographical_compare;
-using std::make_shared;
 using std::map;
 using std::numeric_limits;
 using std::ostream;
@@ -41,8 +39,6 @@ using std::ostringstream;
 using std::pair;
 using std::runtime_error;
 using std::setprecision;
-using std::shared_ptr;
-using std::static_pointer_cast;
 using std::string;
 
 namespace {
@@ -190,9 +186,7 @@ ExpressionCell::ExpressionCell(const ExpressionKind k, const size_t hash,
       hash_{hash_combine(static_cast<size_t>(kind_), hash)},
       is_polynomial_{is_poly} {}
 
-Expression ExpressionCell::GetExpression() const {
-  return Expression{shared_from_this()};
-}
+Expression ExpressionCell::GetExpression() const { return Expression{this}; }
 
 UnaryExpressionCell::UnaryExpressionCell(const ExpressionKind k,
                                          const Expression& e,
@@ -610,8 +604,7 @@ ExpressionAddFactory::ExpressionAddFactory(
     const double constant, map<Expression, double> expr_to_coeff_map)
     : constant_{constant}, expr_to_coeff_map_{std::move(expr_to_coeff_map)} {}
 
-ExpressionAddFactory::ExpressionAddFactory(
-    const std::shared_ptr<const ExpressionAdd>& ptr)
+ExpressionAddFactory::ExpressionAddFactory(const ExpressionAdd* const ptr)
     : ExpressionAddFactory{ptr->get_constant(), ptr->get_expr_to_coeff_map()} {}
 
 void ExpressionAddFactory::AddExpression(const Expression& e) {
@@ -637,13 +630,13 @@ void ExpressionAddFactory::AddExpression(const Expression& e) {
   return AddTerm(1.0, e);
 }
 
-void ExpressionAddFactory::Add(const shared_ptr<const ExpressionAdd>& ptr) {
+void ExpressionAddFactory::Add(const ExpressionAdd* const ptr) {
   AddConstant(ptr->get_constant());
   AddMap(ptr->get_expr_to_coeff_map());
 }
 
 ExpressionAddFactory& ExpressionAddFactory::operator=(
-    const std::shared_ptr<const ExpressionAdd>& ptr) {
+    const ExpressionAdd* const ptr) {
   constant_ = ptr->get_constant();
   expr_to_coeff_map_ = ptr->get_expr_to_coeff_map();
   return *this;
@@ -666,7 +659,7 @@ Expression ExpressionAddFactory::GetExpression() const {
     const auto it(expr_to_coeff_map_.cbegin());
     return it->first * it->second;
   }
-  return Expression{make_shared<ExpressionAdd>(constant_, expr_to_coeff_map_)};
+  return Expression{new ExpressionAdd(constant_, expr_to_coeff_map_)};
 }
 
 void ExpressionAddFactory::AddConstant(const double constant) {
@@ -886,8 +879,7 @@ ExpressionMulFactory::ExpressionMulFactory(
     : constant_{constant},
       base_to_exponent_map_{std::move(base_to_exponent_map)} {}
 
-ExpressionMulFactory::ExpressionMulFactory(
-    const std::shared_ptr<const ExpressionMul>& ptr)
+ExpressionMulFactory::ExpressionMulFactory(const ExpressionMul* const ptr)
     : ExpressionMulFactory{ptr->get_constant(),
                            ptr->get_base_to_exponent_map()} {}
 
@@ -903,13 +895,13 @@ void ExpressionMulFactory::AddExpression(const Expression& e) {
   return AddTerm(e, Expression{1.0});
 }
 
-void ExpressionMulFactory::Add(const shared_ptr<const ExpressionMul>& ptr) {
+void ExpressionMulFactory::Add(const ExpressionMul* const ptr) {
   AddConstant(ptr->get_constant());
   AddMap(ptr->get_base_to_exponent_map());
 }
 
 ExpressionMulFactory& ExpressionMulFactory::operator=(
-    const std::shared_ptr<const ExpressionMul>& ptr) {
+    const ExpressionMul* const ptr) {
   constant_ = ptr->get_constant();
   base_to_exponent_map_ = ptr->get_base_to_exponent_map();
   return *this;
@@ -929,8 +921,7 @@ Expression ExpressionMulFactory::GetExpression() const {
     const auto it(base_to_exponent_map_.cbegin());
     return pow(it->first, it->second);
   }
-  return Expression{
-      make_shared<ExpressionMul>(constant_, base_to_exponent_map_)};
+  return Expression{new ExpressionMul(constant_, base_to_exponent_map_)};
 }
 
 void ExpressionMulFactory::AddConstant(const double constant) {
@@ -2155,250 +2146,194 @@ bool is_uninterpreted_function(const ExpressionCell& c) {
   return c.get_kind() == ExpressionKind::UninterpretedFunction;
 }
 
-shared_ptr<const ExpressionConstant> to_constant(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionConstant* to_constant(const ExpressionCell* const expr_ptr) {
   assert(is_constant(*expr_ptr));
-  return static_pointer_cast<const ExpressionConstant>(expr_ptr);
+  return static_cast<const ExpressionConstant*>(expr_ptr);
 }
-shared_ptr<const ExpressionConstant> to_constant(const Expression& e) {
+const ExpressionConstant* to_constant(const Expression& e) {
   return to_constant(e.ptr_);
 }
 
-shared_ptr<const ExpressionRealConstant> to_real_constant(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionRealConstant* to_real_constant(
+    const ExpressionCell* const expr_ptr) {
   assert(is_real_constant(*expr_ptr));
-  return static_pointer_cast<const ExpressionRealConstant>(expr_ptr);
+  return static_cast<const ExpressionRealConstant*>(expr_ptr);
 }
-shared_ptr<const ExpressionRealConstant> to_real_constant(const Expression& e) {
+const ExpressionRealConstant* to_real_constant(const Expression& e) {
   return to_real_constant(e.ptr_);
 }
 
-shared_ptr<const ExpressionVar> to_variable(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionVar* to_variable(const ExpressionCell* const expr_ptr) {
   assert(is_variable(*expr_ptr));
-  return static_pointer_cast<const ExpressionVar>(expr_ptr);
+  return static_cast<const ExpressionVar*>(expr_ptr);
 }
-shared_ptr<const ExpressionVar> to_variable(const Expression& e) {
+const ExpressionVar* to_variable(const Expression& e) {
   return to_variable(e.ptr_);
 }
 
-shared_ptr<const UnaryExpressionCell> to_unary(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const UnaryExpressionCell* to_unary(const ExpressionCell* const expr_ptr) {
   assert(is_log(*expr_ptr) || is_abs(*expr_ptr) || is_exp(*expr_ptr) ||
          is_sqrt(*expr_ptr) || is_sin(*expr_ptr) || is_cos(*expr_ptr) ||
          is_tan(*expr_ptr) || is_asin(*expr_ptr) || is_acos(*expr_ptr) ||
          is_atan(*expr_ptr) || is_sinh(*expr_ptr) || is_cosh(*expr_ptr) ||
          is_tanh(*expr_ptr));
-  return static_pointer_cast<const UnaryExpressionCell>(expr_ptr);
+  return static_cast<const UnaryExpressionCell*>(expr_ptr);
 }
-shared_ptr<const UnaryExpressionCell> to_unary(const Expression& e) {
+const UnaryExpressionCell* to_unary(const Expression& e) {
   return to_unary(e.ptr_);
 }
 
-shared_ptr<const BinaryExpressionCell> to_binary(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const BinaryExpressionCell* to_binary(const ExpressionCell* const expr_ptr) {
   assert(is_division(*expr_ptr) || is_pow(*expr_ptr) || is_atan2(*expr_ptr) ||
          is_min(*expr_ptr) || is_max(*expr_ptr));
-  return static_pointer_cast<const BinaryExpressionCell>(expr_ptr);
+  return static_cast<const BinaryExpressionCell*>(expr_ptr);
 }
-shared_ptr<const BinaryExpressionCell> to_binary(const Expression& e) {
+const BinaryExpressionCell* to_binary(const Expression& e) {
   return to_binary(e.ptr_);
 }
 
-shared_ptr<const ExpressionAdd> to_addition(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionAdd* to_addition(const ExpressionCell* const expr_ptr) {
   assert(is_addition(*expr_ptr));
-  return static_pointer_cast<const ExpressionAdd>(expr_ptr);
+  return static_cast<const ExpressionAdd*>(expr_ptr);
 }
-shared_ptr<const ExpressionAdd> to_addition(const Expression& e) {
+const ExpressionAdd* to_addition(const Expression& e) {
   return to_addition(e.ptr_);
 }
 
-shared_ptr<const ExpressionMul> to_multiplication(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionMul* to_multiplication(const ExpressionCell* const expr_ptr) {
   assert(is_multiplication(*expr_ptr));
-  return static_pointer_cast<const ExpressionMul>(expr_ptr);
+  return static_cast<const ExpressionMul*>(expr_ptr);
 }
-shared_ptr<const ExpressionMul> to_multiplication(const Expression& e) {
+const ExpressionMul* to_multiplication(const Expression& e) {
   return to_multiplication(e.ptr_);
 }
 
-shared_ptr<const ExpressionDiv> to_division(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionDiv* to_division(const ExpressionCell* const expr_ptr) {
   assert(is_division(*expr_ptr));
-  return static_pointer_cast<const ExpressionDiv>(expr_ptr);
+  return static_cast<const ExpressionDiv*>(expr_ptr);
 }
-shared_ptr<const ExpressionDiv> to_division(const Expression& e) {
+const ExpressionDiv* to_division(const Expression& e) {
   return to_division(e.ptr_);
 }
 
-shared_ptr<const ExpressionLog> to_log(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionLog* to_log(const ExpressionCell* const expr_ptr) {
   assert(is_log(*expr_ptr));
-  return static_pointer_cast<const ExpressionLog>(expr_ptr);
+  return static_cast<const ExpressionLog*>(expr_ptr);
 }
-shared_ptr<const ExpressionLog> to_log(const Expression& e) {
-  return to_log(e.ptr_);
-}
+const ExpressionLog* to_log(const Expression& e) { return to_log(e.ptr_); }
 
-shared_ptr<const ExpressionAbs> to_abs(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionAbs* to_abs(const ExpressionCell* const expr_ptr) {
   assert(is_abs(*expr_ptr));
-  return static_pointer_cast<const ExpressionAbs>(expr_ptr);
+  return static_cast<const ExpressionAbs*>(expr_ptr);
 }
-shared_ptr<const ExpressionAbs> to_abs(const Expression& e) {
-  return to_abs(e.ptr_);
-}
+const ExpressionAbs* to_abs(const Expression& e) { return to_abs(e.ptr_); }
 
-shared_ptr<const ExpressionExp> to_exp(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionExp* to_exp(const ExpressionCell* const expr_ptr) {
   assert(is_exp(*expr_ptr));
-  return static_pointer_cast<const ExpressionExp>(expr_ptr);
+  return static_cast<const ExpressionExp*>(expr_ptr);
 }
-shared_ptr<const ExpressionExp> to_exp(const Expression& e) {
-  return to_exp(e.ptr_);
-}
+const ExpressionExp* to_exp(const Expression& e) { return to_exp(e.ptr_); }
 
-shared_ptr<const ExpressionSqrt> to_sqrt(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionSqrt* to_sqrt(const ExpressionCell* const expr_ptr) {
   assert(is_sqrt(*expr_ptr));
-  return static_pointer_cast<const ExpressionSqrt>(expr_ptr);
+  return static_cast<const ExpressionSqrt*>(expr_ptr);
 }
-shared_ptr<const ExpressionSqrt> to_sqrt(const Expression& e) {
-  return to_sqrt(e.ptr_);
-}
-shared_ptr<const ExpressionPow> to_pow(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionSqrt* to_sqrt(const Expression& e) { return to_sqrt(e.ptr_); }
+const ExpressionPow* to_pow(const ExpressionCell* const expr_ptr) {
   assert(is_pow(*expr_ptr));
-  return static_pointer_cast<const ExpressionPow>(expr_ptr);
+  return static_cast<const ExpressionPow*>(expr_ptr);
 }
-shared_ptr<const ExpressionPow> to_pow(const Expression& e) {
-  return to_pow(e.ptr_);
-}
+const ExpressionPow* to_pow(const Expression& e) { return to_pow(e.ptr_); }
 
-shared_ptr<const ExpressionSin> to_sin(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionSin* to_sin(const ExpressionCell* const expr_ptr) {
   assert(is_sin(*expr_ptr));
-  return static_pointer_cast<const ExpressionSin>(expr_ptr);
+  return static_cast<const ExpressionSin*>(expr_ptr);
 }
-shared_ptr<const ExpressionSin> to_sin(const Expression& e) {
-  return to_sin(e.ptr_);
-}
+const ExpressionSin* to_sin(const Expression& e) { return to_sin(e.ptr_); }
 
-shared_ptr<const ExpressionCos> to_cos(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionCos* to_cos(const ExpressionCell* const expr_ptr) {
   assert(is_cos(*expr_ptr));
-  return static_pointer_cast<const ExpressionCos>(expr_ptr);
+  return static_cast<const ExpressionCos*>(expr_ptr);
 }
-shared_ptr<const ExpressionCos> to_cos(const Expression& e) {
-  return to_cos(e.ptr_);
-}
+const ExpressionCos* to_cos(const Expression& e) { return to_cos(e.ptr_); }
 
-shared_ptr<const ExpressionTan> to_tan(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionTan* to_tan(const ExpressionCell* const expr_ptr) {
   assert(is_tan(*expr_ptr));
-  return static_pointer_cast<const ExpressionTan>(expr_ptr);
+  return static_cast<const ExpressionTan*>(expr_ptr);
 }
-shared_ptr<const ExpressionTan> to_tan(const Expression& e) {
-  return to_tan(e.ptr_);
-}
+const ExpressionTan* to_tan(const Expression& e) { return to_tan(e.ptr_); }
 
-shared_ptr<const ExpressionAsin> to_asin(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionAsin* to_asin(const ExpressionCell* const expr_ptr) {
   assert(is_asin(*expr_ptr));
-  return static_pointer_cast<const ExpressionAsin>(expr_ptr);
+  return static_cast<const ExpressionAsin*>(expr_ptr);
 }
-shared_ptr<const ExpressionAsin> to_asin(const Expression& e) {
-  return to_asin(e.ptr_);
-}
+const ExpressionAsin* to_asin(const Expression& e) { return to_asin(e.ptr_); }
 
-shared_ptr<const ExpressionAcos> to_acos(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionAcos* to_acos(const ExpressionCell* const expr_ptr) {
   assert(is_acos(*expr_ptr));
-  return static_pointer_cast<const ExpressionAcos>(expr_ptr);
+  return static_cast<const ExpressionAcos*>(expr_ptr);
 }
-shared_ptr<const ExpressionAcos> to_acos(const Expression& e) {
-  return to_acos(e.ptr_);
-}
+const ExpressionAcos* to_acos(const Expression& e) { return to_acos(e.ptr_); }
 
-shared_ptr<const ExpressionAtan> to_atan(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionAtan* to_atan(const ExpressionCell* const expr_ptr) {
   assert(is_atan(*expr_ptr));
-  return static_pointer_cast<const ExpressionAtan>(expr_ptr);
+  return static_cast<const ExpressionAtan*>(expr_ptr);
 }
-shared_ptr<const ExpressionAtan> to_atan(const Expression& e) {
-  return to_atan(e.ptr_);
-}
+const ExpressionAtan* to_atan(const Expression& e) { return to_atan(e.ptr_); }
 
-shared_ptr<const ExpressionAtan2> to_atan2(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionAtan2* to_atan2(const ExpressionCell* const expr_ptr) {
   assert(is_atan2(*expr_ptr));
-  return static_pointer_cast<const ExpressionAtan2>(expr_ptr);
+  return static_cast<const ExpressionAtan2*>(expr_ptr);
 }
-shared_ptr<const ExpressionAtan2> to_atan2(const Expression& e) {
+const ExpressionAtan2* to_atan2(const Expression& e) {
   return to_atan2(e.ptr_);
 }
 
-shared_ptr<const ExpressionSinh> to_sinh(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionSinh* to_sinh(const ExpressionCell* const expr_ptr) {
   assert(is_sinh(*expr_ptr));
-  return static_pointer_cast<const ExpressionSinh>(expr_ptr);
+  return static_cast<const ExpressionSinh*>(expr_ptr);
 }
-shared_ptr<const ExpressionSinh> to_sinh(const Expression& e) {
-  return to_sinh(e.ptr_);
-}
+const ExpressionSinh* to_sinh(const Expression& e) { return to_sinh(e.ptr_); }
 
-shared_ptr<const ExpressionCosh> to_cosh(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionCosh* to_cosh(const ExpressionCell* const expr_ptr) {
   assert(is_cosh(*expr_ptr));
-  return static_pointer_cast<const ExpressionCosh>(expr_ptr);
+  return static_cast<const ExpressionCosh*>(expr_ptr);
 }
-shared_ptr<const ExpressionCosh> to_cosh(const Expression& e) {
-  return to_cosh(e.ptr_);
-}
+const ExpressionCosh* to_cosh(const Expression& e) { return to_cosh(e.ptr_); }
 
-shared_ptr<const ExpressionTanh> to_tanh(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionTanh* to_tanh(const ExpressionCell* const expr_ptr) {
   assert(is_tanh(*expr_ptr));
-  return static_pointer_cast<const ExpressionTanh>(expr_ptr);
+  return static_cast<const ExpressionTanh*>(expr_ptr);
 }
-shared_ptr<const ExpressionTanh> to_tanh(const Expression& e) {
-  return to_tanh(e.ptr_);
-}
+const ExpressionTanh* to_tanh(const Expression& e) { return to_tanh(e.ptr_); }
 
-shared_ptr<const ExpressionMin> to_min(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionMin* to_min(const ExpressionCell* const expr_ptr) {
   assert(is_min(*expr_ptr));
-  return static_pointer_cast<const ExpressionMin>(expr_ptr);
+  return static_cast<const ExpressionMin*>(expr_ptr);
 }
-shared_ptr<const ExpressionMin> to_min(const Expression& e) {
-  return to_min(e.ptr_);
-}
+const ExpressionMin* to_min(const Expression& e) { return to_min(e.ptr_); }
 
-shared_ptr<const ExpressionMax> to_max(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionMax* to_max(const ExpressionCell* const expr_ptr) {
   assert(is_max(*expr_ptr));
-  return static_pointer_cast<const ExpressionMax>(expr_ptr);
+  return static_cast<const ExpressionMax*>(expr_ptr);
 }
-shared_ptr<const ExpressionMax> to_max(const Expression& e) {
-  return to_max(e.ptr_);
-}
+const ExpressionMax* to_max(const Expression& e) { return to_max(e.ptr_); }
 
-shared_ptr<const ExpressionIfThenElse> to_if_then_else(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionIfThenElse* to_if_then_else(
+    const ExpressionCell* const expr_ptr) {
   assert(is_if_then_else(*expr_ptr));
-  return static_pointer_cast<const ExpressionIfThenElse>(expr_ptr);
+  return static_cast<const ExpressionIfThenElse*>(expr_ptr);
 }
-shared_ptr<const ExpressionIfThenElse> to_if_then_else(const Expression& e) {
+const ExpressionIfThenElse* to_if_then_else(const Expression& e) {
   return to_if_then_else(e.ptr_);
 }
 
-shared_ptr<const ExpressionUninterpretedFunction> to_uninterpreted_function(
-    const shared_ptr<const ExpressionCell>& expr_ptr) {
+const ExpressionUninterpretedFunction* to_uninterpreted_function(
+    const ExpressionCell* const expr_ptr) {
   assert(is_uninterpreted_function(*expr_ptr));
-  return static_pointer_cast<const ExpressionUninterpretedFunction>(expr_ptr);
+  return static_cast<const ExpressionUninterpretedFunction*>(expr_ptr);
 }
-shared_ptr<const ExpressionUninterpretedFunction> to_uninterpreted_function(
+const ExpressionUninterpretedFunction* to_uninterpreted_function(
     const Expression& e) {
   return to_uninterpreted_function(e.ptr_);
 }
