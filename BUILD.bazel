@@ -4,7 +4,7 @@ exports_files([
 ])
 
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_deb", "pkg_tar")
-load("//tools:dreal.bzl", "dreal_cc_library", "DREAL_VERSION", "DREAL_PREFIX")
+load("//tools:dreal.bzl", "DREAL_PREFIX", "DREAL_VERSION", "dreal_cc_library")
 
 cc_binary(
     name = "libdreal.so",

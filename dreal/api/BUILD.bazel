@@ -87,6 +87,10 @@ py_test(
     srcs = [
         "test/cav18_benchmark.py",
     ],
+    args = [
+        "--precision 0.001",
+        "--local-optimization",
+    ],
     main = "test/cav18_benchmark.py",
     tags = [
         "no_asan",
@@ -96,10 +100,6 @@ py_test(
     ],
     deps = [
         ":dreal_api_py",
-    ],
-    args = [
-        "--precision 0.001",
-        "--local-optimization",
     ],
 )
 

@@ -1,10 +1,10 @@
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl", "cpplint")
 load(
     "//tools:dreal.bzl",
+    "DREAL_VERSION",
     "dreal_cc_binary",
     "dreal_cc_library",
     "dreal_generate_file",
-    "DREAL_VERSION",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 

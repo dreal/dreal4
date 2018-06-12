@@ -67,8 +67,7 @@ def _platform_copts(rule_copts, cc_test = 0):
 def _dsym_command(name):
     """Returns the command to produce .dSYM on OS X, or a no-op on Linux."""
     return select({
-        "//tools:apple_debug":
-            "dsymutil -f $(location :" + name + ") -o $@ 2> /dev/null",
+        "//tools:apple_debug": "dsymutil -f $(location :" + name + ") -o $@ 2> /dev/null",
         "//conditions:default": "touch $@",
     })
 
@@ -76,7 +75,7 @@ def _check_library_deps_blacklist(name, deps):
     """Report an error if a library should not use something from deps."""
     if not deps:
         return
-    if type(deps) != 'list':
+    if type(deps) != "list":
         # We can't handle select() yet.
         return
     for dep in deps:
@@ -101,13 +100,16 @@ def dreal_cc_library(
         srcs = srcs,
         deps = deps,
         copts = _platform_copts(copts),
-        **kwargs)
-
+        **kwargs
+    )
 
 def _make_search_paths(prefix, levels_to_root):
-      return ",".join(
-                ["-rpath,%s/%s" % (prefix, "/".join([".."] * search_level))
-                        for search_level in range(levels_to_root + 1)])
+    return ",".join(
+        [
+            "-rpath,%s/%s" % (prefix, "/".join([".."] * search_level))
+            for search_level in range(levels_to_root + 1)
+        ],
+    )
 
 def dreal_pybind_library(
         name,
@@ -119,6 +121,7 @@ def dreal_pybind_library(
     Note that `cc_deps` should includes header-only dependencies.
     """
     cc_so_name = "_" + name + ".so"
+
     # The last +3 is for "lib/python2.7/site-packages".
     levels_to_root = native.package_name().count("/") + name.count("/") + 3
     dreal_cc_binary(
@@ -137,9 +140,9 @@ def dreal_pybind_library(
         ],
         linkopts = select({
             "@dreal//tools:linux": [
-                 "-Wl,%s" % (_make_search_paths("$$ORIGIN", levels_to_root),),
+                "-Wl,%s" % (_make_search_paths("$$ORIGIN", levels_to_root),),
             ],
-            "@//conditions:default": []
+            "@//conditions:default": [],
         }),
     )
     native.py_library(
@@ -177,7 +180,8 @@ def dreal_cc_binary(
         deps = deps,
         copts = _platform_copts(copts),
         testonly = testonly,
-        **kwargs)
+        **kwargs
+    )
 
     # Also generate the OS X debug symbol file for this binary.
     native.genrule(
@@ -201,7 +205,8 @@ def dreal_cc_binary(
             size = test_rule_size,
             testonly = testonly,
             args = test_rule_args,
-            **kwargs)
+            **kwargs
+        )
 
 def dreal_cc_test(
         name,
@@ -233,7 +238,8 @@ def dreal_cc_test(
         size = size,
         srcs = srcs,
         copts = _platform_copts(copts, cc_test = 1),
-        **kwargs)
+        **kwargs
+    )
 
     # Also generate the OS X debug symbol file for this test.
     native.genrule(
@@ -273,7 +279,8 @@ def dreal_cc_googletest(
     dreal_cc_test(
         name = name,
         deps = deps,
-        **kwargs)
+        **kwargs
+    )
 
 def smt2_test(
         name,
@@ -298,7 +305,8 @@ def smt2_test(
             "//dreal:dreal",
         ] + data_files,
         main = "test.py",
-        **kwargs)
+        **kwargs
+    )
 
 def dr_test(
         name,
@@ -323,7 +331,8 @@ def dr_test(
             "//dreal:dreal",
         ] + data_files,
         main = "test.py",
-        **kwargs)
+        **kwargs
+    )
 
 # Generate a file with specified content
 def _generate_file_impl(ctx):
