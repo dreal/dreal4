@@ -173,7 +173,7 @@ Formula Formula::False() {
 }
 
 Formula forall(const Variables& vars, const Formula& f) {
-  return Formula{new FormulaForall(vars, f)};
+  return Formula{new FormulaForall(intersect(vars, f.GetFreeVariables()), f)};
 }
 
 Formula make_conjunction(const set<Formula>& formulas) {

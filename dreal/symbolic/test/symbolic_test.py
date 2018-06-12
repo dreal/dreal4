@@ -510,9 +510,9 @@ class TestSymbolicFormula(unittest.TestCase):
     def test_forall(self):
         self.assertEqual(
             str(forall(Variables([x, y, z]), x == 0)),
-            "forall({x, y, z}. (x = 0))")
+            "forall({x}. (x = 0))")
         self.assertEqual(
-            str(forall([x, y, z], x == 0)), "forall({x, y, z}. (x = 0))")
+            str(forall([x, y, z], x == 0)), "forall({x}. (x = 0))")
 
 
 if __name__ == '__main__':
