@@ -26,7 +26,7 @@ matrix:
           packages:
           - g++-8
       env:
-        - COMPILER="--compiler=gcc-8" BUILD_TYPE="-c dbg"
+        - CC="gcc-8" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
@@ -36,7 +36,7 @@ matrix:
           packages:
           - g++-7
       env:
-        - COMPILER="--compiler=gcc-7" BUILD_TYPE="-c dbg"
+        - CC="gcc-7" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
@@ -46,7 +46,7 @@ matrix:
           packages:
           - g++-6
       env:
-        - COMPILER="--compiler=gcc-6" BUILD_TYPE="-c dbg"
+        - CC="gcc-6" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
@@ -56,7 +56,31 @@ matrix:
           packages:
           - g++-5
       env:
-        - COMPILER="--compiler=gcc-5" BUILD_TYPE="-c dbg"
+        - CC="gcc-5" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-6.0 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+          - clang-6.0
+      env:
+        - CC="clang-6.0" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-5.0 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+          - clang-5.0
+      env:
+        - CC="clang-5.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
@@ -66,10 +90,9 @@ matrix:
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
-          - g++-5
           - clang-4.0
       env:
-        - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
+        - CC="clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
@@ -77,10 +100,9 @@ matrix:
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
-          - g++-5
           - clang-3.9
       env:
-        - COMPILER="--compiler=clang-3.9" BUILD_TYPE="-c dbg"
+        - CC="clang-3.9" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
@@ -90,10 +112,9 @@ matrix:
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
-          - g++-5
           - clang-4.0
       env:
-        - COMPILER="--compiler=clang-4.0" CONFIG="--config asan"
+        - CC="clang-4.0" CONFIG="--config asan"
         - TEST_TAG_FILTERS="-no_asan"
     - compiler: clang
       addons:
@@ -104,10 +125,9 @@ matrix:
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
-          - g++-5
           - clang-4.0
       env:
-        - COMPILER="--compiler=clang-4.0" CONFIG="--config ubsan"
+        - CC="clang-4.0" CONFIG="--config ubsan"
         - TEST_TAG_FILTERS="-no_ubsan"
     - compiler: clang
       addons:
@@ -118,29 +138,28 @@ matrix:
           - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
-          - g++-5
           - clang-4.0
       env:
-        - COMPILER="--compiler=clang-4.0" BUILD_TYPE="-c dbg"
+        - CC="clang-4.0" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov"
         - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode8.3  # macOS-10.12
       compiler: clang
       env:
-        - COMPILER="" BUILD_TYPE="-c opt"
+        - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode9.3  # macOS-10.13
       compiler: clang
       env:
-        - COMPILER="" BUILD_TYPE="-c opt"
+        - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode9.3  # macOS-10.13
       compiler: clang
       env:
-        - COMPILER="" BUILD_TYPE="-c opt" CONFIG="--config asan"
+        - BUILD_TYPE="-c opt" CONFIG="--config asan"
         - TEST_TAG_FILTERS="unit,-no_asan"
 
 install:
@@ -177,7 +196,7 @@ script:
       --host_jvm_args=-Xms500m \
       test \
       --local_resources=${BAZEL_LOCAL_RESOURCES} \
-      //...  ${COMPILER} ${BUILD_TYPE} ${CONFIG} \
+      //... ${BUILD_TYPE} ${CONFIG} \
       ${COV_OPTION} \
       --test_tag_filters=${TEST_TAG_FILTERS}
 
