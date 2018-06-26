@@ -1,13 +1,17 @@
+# Add C++14 compiler flags.
+build --cxxopt=-std=c++14
+build --host_cxxopt=-std=c++14
+
 # Default to an optimized build.
 build -c opt
 
 # Default build options.
 build --force_pic
 build --strip=never
+build --strict_system_includes
 
 # Default test options.
 test --test_output=errors
-build --crosstool_top=//tools:default-toolchain
 
 ### Cpplint. ###
 # By default, cpplint tests are run as part of `bazel test` alongside all of
@@ -15,17 +19,6 @@ build --crosstool_top=//tools:default-toolchain
 # only do the cpplint testing and nothing else.
 test:cpplint --build_tests_only
 test:cpplint --test_tag_filters=cpplint
-
-### Debug symbols on OS X. ###
-# See https://github.com/bazelbuild/bazel/issues/2537
-build:apple_debug --spawn_strategy=standalone
-build:apple_debug --genrule_strategy=standalone
-build:apple_debug --compilation_mode=dbg
-
-# We don't actually use APPLE_DEBUG in code. It's just here to invalidate any
-# sandboxed .o files that might be in cache if a developer tried to build
-# with --compilation_mode=dbg instead of --config=apple_debug.
-build:apple_debug --copt="-DAPPLE_DEBUG"
 
 ### ASan build. ###
 build:asan --action_env=ASAN_OPTIONS

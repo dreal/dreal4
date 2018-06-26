@@ -53,13 +53,8 @@ def _platform_copts(rule_copts, cc_test = 0):
     if cc_test:
         extra_gcc_flags = GCC_CC_TEST_FLAGS
     return select({
-        "//tools:gcc5-linux": GCC_FLAGS + extra_gcc_flags + rule_copts,
-        "//tools:gcc6-linux": GCC_FLAGS + extra_gcc_flags + rule_copts,
-        "//tools:gcc7-linux": GCC_FLAGS + extra_gcc_flags + rule_copts,
-        "//tools:clang3.9-linux": CLANG_FLAGS + rule_copts,
-        "//tools:clang4.0-linux": CLANG_FLAGS + rule_copts,
-        "//tools:clang5.0-linux": CLANG_FLAGS + rule_copts,
-        "//tools:clang6.0-linux": CLANG_FLAGS + rule_copts,
+        "//tools:gcc": GCC_FLAGS + extra_gcc_flags + rule_copts,
+        "//tools:clang": CLANG_FLAGS + rule_copts,
         "//tools:apple": CLANG_FLAGS + rule_copts,
         "//conditions:default": rule_copts,
     })
