@@ -121,24 +121,24 @@ bazel test //...                     # Run all tests
 ```
 
 By default, it builds a release build. To build a debug-build, run
-`bazel build //... -c dbg`. In macOS, pass `--config=apple_debug` to
+`bazel build //... -c dbg`. In macOS, pass `--apple_generate_dsym` to
 allow lldb/gdb to show symbols.
 
-In Ubuntu, we use `g++-5` as a default compiler. To use other
-compilers, pass `--compiler` option to bazel (for example `--compiler
-clang-4.0`). See
-[tools/BUILD](https://github.com/dreal/dreal4/blob/master/tools/BUILD#L50-L68)
-file for more information. We support the following compilers:
+Bazel uses the system default compiler. To use a specific compiler,
+set up `CC` environment variable. For example, `CC=gcc-8.0 bazel build
+//...`.
+
+In CI, we test that dReal can be built using the following compilers:
  - Ubuntu:
-   [g++-8](https://gcc.gnu.org/gcc-8),
-   [g++-7](https://gcc.gnu.org/gcc-7),
-   [g++-6](https://gcc.gnu.org/gcc-6),
-   [g++-5](https://gcc.gnu.org/gcc-5),
-   [clang++-6.0](http://releases.llvm.org/6.0.0/tools/clang/docs),
-   [clang++-5.0](http://releases.llvm.org/5.0.0/tools/clang/docs),
-   [clang++-4.0](http://releases.llvm.org/4.0.0/tools/clang/docs),
-   [clang++-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs)
- - macOS: [Apple clang++](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
+   [gcc-8](https://gcc.gnu.org/gcc-8),
+   [gcc-7](https://gcc.gnu.org/gcc-7),
+   [gcc-6](https://gcc.gnu.org/gcc-6),
+   [gcc-5](https://gcc.gnu.org/gcc-5),
+   [clang-6.0](http://releases.llvm.org/6.0.0/tools/clang/docs),
+   [clang-5.0](http://releases.llvm.org/5.0.0/tools/clang/docs),
+   [clang-4.0](http://releases.llvm.org/4.0.0/tools/clang/docs),
+   [clang-3.9](http://releases.llvm.org/3.9.0/tools/clang/docs)
+ - macOS: [Apple clang](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
 
 
 C++ Documentation
