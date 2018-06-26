@@ -3,7 +3,7 @@
 set -euf -o pipefail
 
 # BUILD
-bazel build //:package_debian --compiler=gcc-5
+CC=gcc-5 bazel build //:package_debian
 
 ID=$1
 PASSWORD=$2
