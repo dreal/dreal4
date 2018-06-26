@@ -26,7 +26,7 @@ matrix:
           packages:
           - g++-8
       env:
-        - CC="gcc-8" BUILD_TYPE="-c dbg"
+        - COMPILER="gcc-8" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
@@ -36,7 +36,7 @@ matrix:
           packages:
           - g++-7
       env:
-        - CC="gcc-7" BUILD_TYPE="-c dbg"
+        - COMPILER="gcc-7" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
@@ -46,7 +46,7 @@ matrix:
           packages:
           - g++-6
       env:
-        - CC="gcc-6" BUILD_TYPE="-c dbg"
+        - COMPILER="gcc-6" BUILD_TYPE="-c dbg"
     - compiler: gcc
       addons:
         apt:
@@ -56,43 +56,43 @@ matrix:
           packages:
           - g++-5
       env:
-        - CC="gcc-5" BUILD_TYPE="-c dbg"
+        - COMPILER="gcc-5" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-6.0 main"
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
           - clang-6.0
       env:
-        - CC="clang-6.0" BUILD_TYPE="-c dbg"
+        - COMPILER="clang-6.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-5.0 main"
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-5.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
           - clang-5.0
       env:
-        - CC="clang-5.0" BUILD_TYPE="-c dbg"
+        - COMPILER="clang-5.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
           - clang-4.0
       env:
-        - CC="clang-4.0" BUILD_TYPE="-c dbg"
+        - COMPILER="clang-4.0" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
@@ -102,19 +102,19 @@ matrix:
           packages:
           - clang-3.9
       env:
-        - CC="clang-3.9" BUILD_TYPE="-c dbg"
+        - COMPILER="clang-3.9" BUILD_TYPE="-c dbg"
     - compiler: clang
       addons:
         apt:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
           - clang-4.0
       env:
-        - CC="clang-4.0" CONFIG="--config asan"
+        - COMPILER="clang-4.0" CONFIG="--config asan"
         - TEST_TAG_FILTERS="-no_asan"
     - compiler: clang
       addons:
@@ -122,12 +122,12 @@ matrix:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
           - clang-4.0
       env:
-        - CC="clang-4.0" CONFIG="--config ubsan"
+        - COMPILER="clang-4.0" CONFIG="--config ubsan"
         - TEST_TAG_FILTERS="-no_ubsan"
     - compiler: clang
       addons:
@@ -135,30 +135,33 @@ matrix:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/precise/ llvm-toolchain-precise-4.0 main"
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-4.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
           - clang-4.0
       env:
-        - CC="clang-4.0" BUILD_TYPE="-c dbg"
+        - COMPILER="clang-4.0" BUILD_TYPE="-c dbg"
         - COV="ON" COV_OPTION="--config=kcov"
         - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode8.3  # macOS-10.12
       compiler: clang
       env:
+        - COMPILER=clang
         - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode9.3  # macOS-10.13
       compiler: clang
       env:
+        - COMPILER=clang
         - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
       osx_image: xcode9.3  # macOS-10.13
       compiler: clang
       env:
+        - COMPILER=clang
         - BUILD_TYPE="-c opt" CONFIG="--config asan"
         - TEST_TAG_FILTERS="unit,-no_asan"
 
@@ -188,6 +191,7 @@ install:
     fi
 
 script:
+  - export CC=${COMPILER}
   - |
     bazel \
       --batch \
