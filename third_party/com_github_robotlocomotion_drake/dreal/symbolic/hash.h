@@ -33,13 +33,13 @@ size_t hash_range(It first, It last) {
 /** Computes the hash value of @p v using std::hash. */
 template <class T>
 struct hash_value {
-  size_t operator()(const T& v) { return std::hash<T>{}(v); }
+  size_t operator()(const T& v) const { return std::hash<T>{}(v); }
 };
 
 /** Computes the hash value of a pair @p p. */
 template <class T1, class T2>
 struct hash_value<std::pair<T1, T2>> {
-  size_t operator()(const std::pair<T1, T2>& p) {
+  size_t operator()(const std::pair<T1, T2>& p) const {
     return hash_combine(0, p.first, p.second);
   }
 };
@@ -47,7 +47,7 @@ struct hash_value<std::pair<T1, T2>> {
 /** Computes the hash value of a vector @p vec. */
 template <class T>
 struct hash_value<std::vector<T>> {
-  size_t operator()(const std::vector<T>& vec) {
+  size_t operator()(const std::vector<T>& vec) const {
     return hash_range(vec.begin(), vec.end());
   }
 };
@@ -55,7 +55,7 @@ struct hash_value<std::vector<T>> {
 /** Computes the hash value of a set @p s. */
 template <class T>
 struct hash_value<std::set<T>> {
-  size_t operator()(const std::set<T>& s) {
+  size_t operator()(const std::set<T>& s) const {
     return hash_range(s.begin(), s.end());
   }
 };
@@ -63,7 +63,7 @@ struct hash_value<std::set<T>> {
 /** Computes the hash value of a map @p map. */
 template <class T1, class T2>
 struct hash_value<std::map<T1, T2>> {
-  size_t operator()(const std::map<T1, T2>& map) {
+  size_t operator()(const std::map<T1, T2>& map) const {
     return hash_range(map.begin(), map.end());
   }
 };
