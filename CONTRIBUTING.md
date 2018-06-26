@@ -57,8 +57,8 @@ open a PR.
    build your code with *both* of gcc and clang:
    
    ```bash
-   bazel build //... --compiler=g++-5
-   bazel build //... --compiler=clang-4.0
+   CC=gcc-5 bazel build //...
+   CC=clang-4.0 bazel build //...
    ...
    ```
 
