@@ -29,16 +29,9 @@ sh_binary(
     visibility = ["//visibility:public"],
 )
 
-
 config_setting(
     name = "apple",
     constraint_values = ["@bazel_tools//platforms:osx"],
-)
-
-config_setting(
-    name = "apple_debug",
-    constraint_values = ["@bazel_tools//platforms:osx"],
-    values = {"compilation_mode": "dbg"},
 )
 
 config_setting(

@@ -59,13 +59,6 @@ def _platform_copts(rule_copts, cc_test = 0):
         "//conditions:default": rule_copts,
     })
 
-def _dsym_command(name):
-    """Returns the command to produce .dSYM on OS X, or a no-op on Linux."""
-    return select({
-        "//tools:apple_debug": "dsymutil -f $(location :" + name + ") -o $@ 2> /dev/null",
-        "//conditions:default": "touch $@",
-    })
-
 def _check_library_deps_blacklist(name, deps):
     """Report an error if a library should not use something from deps."""
     if not deps:
@@ -178,18 +171,6 @@ def dreal_cc_binary(
         **kwargs
     )
 
-    # Also generate the OS X debug symbol file for this binary.
-    native.genrule(
-        name = name + "_dsym",
-        srcs = [":" + name],
-        outs = [name + ".dSYM"],
-        output_to_bindir = 1,
-        testonly = testonly,
-        tags = ["dsym"],
-        visibility = ["//visibility:private"],
-        cmd = _dsym_command(name),
-    )
-
     if add_test_rule:
         dreal_cc_test(
             name = name + "_test",
@@ -224,28 +205,12 @@ def dreal_cc_test(
         size = "small"
     if srcs == None:
         srcs = ["test/%s.cc" % name]
-    if disable_in_compilation_mode_dbg:
-        # Remove the test declarations from the test in debug mode.
-        # TODO(david-german-tri): Actually suppress the test rule.
-        srcs = select({"//tools:debug": [], "//conditions:default": srcs})
     native.cc_test(
         name = name,
         size = size,
         srcs = srcs,
         copts = _platform_copts(copts, cc_test = 1),
         **kwargs
-    )
-
-    # Also generate the OS X debug symbol file for this test.
-    native.genrule(
-        name = name + "_dsym",
-        srcs = [":" + name],
-        outs = [name + ".dSYM"],
-        output_to_bindir = 1,
-        testonly = 1,
-        tags = ["dsym"],
-        visibility = ["//visibility:private"],
-        cmd = _dsym_command(name),
     )
 
 def dreal_cc_googletest(
