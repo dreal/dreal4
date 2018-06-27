@@ -563,6 +563,28 @@ ostream& operator<<(ostream& os, const Expression& e) {
   return e.ptr_->Display(os);
 }
 
+Expression Sum(const std::vector<Expression>& expressions) {
+  if (expressions.empty()) {
+    return Expression::Zero();
+  }
+  ExpressionAddFactory f;
+  for (const Expression& e : expressions) {
+    f.AddExpression(e);
+  }
+  return f.GetExpression();
+}
+
+Expression Prod(const std::vector<Expression>& expressions) {
+  if (expressions.empty()) {
+    return Expression::One();
+  }
+  ExpressionMulFactory f;
+  for (const Expression& e : expressions) {
+    f.AddExpression(e);
+  }
+  return f.GetExpression();
+}
+
 Expression real_constant(const double lb, const double ub,
                          const bool use_lb_as_representative) {
   return Expression{

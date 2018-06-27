@@ -486,6 +486,14 @@ Expression operator/(Expression lhs, const Expression& rhs);
 // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
 Expression& operator/=(Expression& lhs, const Expression& rhs);
 
+/// Creates an expression for (∑ᵢ expressionsᵢ).
+/// @note When `expressions` is an empty vector, it returns Expression::Zero().
+Expression Sum(const std::vector<Expression>& expressions);
+
+/// Creates an expression for (∏ᵢ expressionsᵢ).
+/// @note When `expressions` is an empty vector, it returns Expression::One().
+Expression Prod(const std::vector<Expression>& expressions);
+
 Expression real_constant(double lb, double ub, bool use_lb_as_representative);
 Expression log(const Expression& e);
 Expression abs(const Expression& e);
