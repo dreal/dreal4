@@ -18,11 +18,11 @@ Ubuntu 18.04 / 16.04:
 
 ```bash
 # 18.04
-sudo apt install curl
+sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/18.04/install.sh | sudo bash
 
 # 16.04
-sudo apt install curl
+sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
 
 # Test the installation.
