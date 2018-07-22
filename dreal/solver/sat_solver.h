@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <set>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -55,7 +56,7 @@ class SatSolver {
 
   /// Given a @p formulas = {f₁, ..., fₙ}, adds a clause (¬f₁ ∨ ... ∨ ¬ fₙ) to
   /// the solver.
-  void AddLearnedClause(const std::unordered_set<Formula>& formulas);
+  void AddLearnedClause(const std::set<Formula>& formulas);
 
   /// Checks the satisfiability of the current configuration.
   ///

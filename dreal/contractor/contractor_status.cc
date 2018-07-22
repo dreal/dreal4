@@ -6,7 +6,7 @@
 #include "dreal/util/logging.h"
 
 using std::move;
-using std::unordered_set;
+using std::set;
 using std::vector;
 
 namespace dreal {
@@ -53,14 +53,13 @@ void ContractorStatus::AddUnsatWitness(const Variable& var) {
   unsat_witness_.insert(var);
 }
 
-unordered_set<Formula> GenerateExplanation(
-    const Variables& unsat_witness,
-    const unordered_set<Formula>& used_constraints) {
+set<Formula> GenerateExplanation(const Variables& unsat_witness,
+                                 const set<Formula>& used_constraints) {
   if (unsat_witness.empty()) {
-    return unordered_set<Formula>();
+    return set<Formula>();
   }
   // Set up the initial explanation based on variables.
-  unordered_set<Formula> explanation;
+  set<Formula> explanation;
   for (const Formula& f_i : used_constraints) {
     if (HaveIntersection(unsat_witness, f_i.GetFreeVariables())) {
       explanation.insert(f_i);
@@ -86,7 +85,7 @@ unordered_set<Formula> GenerateExplanation(
   return explanation;
 }
 
-unordered_set<Formula> ContractorStatus::Explanation() const {
+set<Formula> ContractorStatus::Explanation() const {
   return GenerateExplanation(unsat_witness_, used_constraints_);
 }
 

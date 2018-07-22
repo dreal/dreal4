@@ -2,7 +2,6 @@
 
 #include <set>
 #include <unordered_map>
-#include <unordered_set>
 #include <vector>
 
 #include <experimental/optional>
@@ -30,7 +29,7 @@ class TheorySolver {
   const Box& GetModel() const;
 
   /// Gets a list of used constraints.
-  const std::unordered_set<Formula>& GetExplanation() const;
+  const std::set<Formula>& GetExplanation() const;
 
  private:
   // Builds a contractor using @p box and @p assertions. It returns
@@ -47,7 +46,7 @@ class TheorySolver {
   const Config& config_;
   Icp icp_;
   Box model_;
-  std::unordered_set<Formula> explanation_;
+  std::set<Formula> explanation_;
   std::unordered_map<Formula, Contractor> contractor_cache_;
   std::unordered_map<Formula, FormulaEvaluator> formula_evaluator_cache_;
 };
