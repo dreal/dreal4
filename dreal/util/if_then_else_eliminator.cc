@@ -8,7 +8,6 @@
 #include "dreal/util/logging.h"
 #include "dreal/util/nnfizer.h"
 
-using std::runtime_error;
 using std::set;
 using std::to_string;
 using std::unordered_set;
