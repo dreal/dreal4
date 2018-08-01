@@ -147,6 +147,21 @@ void MainProgram::AddOptions() {
       "trace, debug, info, warning, error, critical, off",  // Help description.
       "--verbose",                                          // Flag token.
       verbose_option_validator);
+
+  opt_.add("2" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "Set default initial phase for SAT solver.\n"
+           "  0 = false\n"
+           "  1 = true\n"
+           "  2 = Jeroslow-Wang (default)\n"
+           "  3 = random initial phase\n",
+           "--sat-default-phase");
+
+  opt_.add("0" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "Set a seed for the random number generator.", "--random-seed");
 }
 
 bool MainProgram::ValidateOptions() {
@@ -207,14 +222,16 @@ void MainProgram::ExtractOptions() {
   } else {
     log()->set_level(spdlog::level::off);
   }
+
   // --precision
-  double precision{0.0};
   if (opt_.isSet("--precision")) {
+    double precision{0.0};
     opt_.get("--precision")->getDouble(precision);
     config_.mutable_precision().set_from_command_line(precision);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --precision = {}",
                     config_.precision());
   }
+
   // --produce-model
   if (opt_.isSet("--produce-models")) {
     config_.mutable_produce_models().set_from_command_line(true);
@@ -260,8 +277,8 @@ void MainProgram::ExtractOptions() {
   }
 
   // --nlopt-ftol-abs
-  double nlopt_ftol_abs{0.0};
   if (opt_.isSet("--nlopt-ftol-abs")) {
+    double nlopt_ftol_abs{0.0};
     opt_.get("--nlopt-ftol-abs")->getDouble(nlopt_ftol_abs);
     config_.mutable_nlopt_ftol_abs().set_from_command_line(nlopt_ftol_abs);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-ftol-abs = {}",
@@ -269,8 +286,8 @@ void MainProgram::ExtractOptions() {
   }
 
   // --nlopt-maxeval
-  int nlopt_maxeval{0};
   if (opt_.isSet("--nlopt-maxeval")) {
+    int nlopt_maxeval{0};
     opt_.get("--nlopt-maxeval")->getInt(nlopt_maxeval);
     config_.mutable_nlopt_maxeval().set_from_command_line(nlopt_maxeval);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-maxeval = {}",
@@ -278,12 +295,32 @@ void MainProgram::ExtractOptions() {
   }
 
   // --nlopt-maxtime
-  double nlopt_maxtime{0.0};
   if (opt_.isSet("--nlopt-maxtime")) {
+    double nlopt_maxtime{0.0};
     opt_.get("--nlopt-maxtime")->getDouble(nlopt_maxtime);
     config_.mutable_nlopt_maxtime().set_from_command_line(nlopt_maxtime);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-maxtime = {}",
                     config_.nlopt_maxtime());
+  }
+
+  // --sat-default-phase
+  if (opt_.isSet("--sat-default-phase")) {
+    int sat_default_phase{2};
+    opt_.get("--sat-default-phase")->getInt(sat_default_phase);
+    config_.mutable_sat_default_phase().set_from_command_line(
+        static_cast<Config::SatDefaultPhase>(sat_default_phase));
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --sat-default-phase = {}",
+                    config_.sat_default_phase());
+  }
+
+  // --random-seed
+  if (opt_.isSet("--random-seed")) {
+    // NOLINTNEXTLINE(runtime/int) per C++ standard signature.
+    unsigned long random_seed{0};
+    opt_.get("--random-seed")->getULong(random_seed);
+    config_.mutable_random_seed().set_from_command_line(random_seed);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --random-seed = {}",
+                    config_.random_seed());
   }
 }
 
