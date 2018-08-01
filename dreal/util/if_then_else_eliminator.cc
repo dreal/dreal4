@@ -233,7 +233,7 @@ Formula IfThenElseEliminator::VisitForall(const Formula& f) {
   // formula `ITE(f, e₁, e₂) > 0`, then negate the result again while
   // collecting the newly introduced variables (`v`s) to treat them as
   // universally quantified variables (instead of existential
-  // variables). In this way, we can use the exising ITE-elim routine.
+  // variables). In this way, we can use the existing ITE-elim routine.
   Variables quantified_variables{get_quantified_variables(f)};
   const Formula& quantified_formula{get_quantified_formula(f)};
   IfThenElseEliminator ite_eliminator_forall;
