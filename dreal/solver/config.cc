@@ -1,6 +1,9 @@
 #include "dreal/solver/config.h"
 
 #include <fmt/format.h>
+#include <fmt/ostream.h>
+
+#include "dreal/util/exception.h"
 
 namespace dreal {
 
@@ -63,6 +66,33 @@ double Config::nlopt_maxtime() const { return nlopt_maxtime_.get(); }
 
 OptionValue<double>& Config::mutable_nlopt_maxtime() { return nlopt_maxtime_; }
 
+Config::SatDefaultPhase Config::sat_default_phase() const {
+  return sat_default_phase_.get();
+}
+
+OptionValue<Config::SatDefaultPhase>& Config::mutable_sat_default_phase() {
+  return sat_default_phase_;
+}
+
+uint32_t Config::random_seed() const { return random_seed_.get(); }
+
+OptionValue<uint32_t>& Config::mutable_random_seed() { return random_seed_; }
+
+std::ostream& operator<<(std::ostream& os,
+                         const Config::SatDefaultPhase& sat_default_phase) {
+  switch (sat_default_phase) {
+    case Config::SatDefaultPhase::False:
+      return os << "False";
+    case Config::SatDefaultPhase::True:
+      return os << "False";
+    case Config::SatDefaultPhase::JeroslowWang:
+      return os << "Jeroslow-Wang";
+    case Config::SatDefaultPhase::RandomInitialPhase:
+      return os << "Random Initial Phase";
+  }
+  DREAL_UNREACHABLE();
+}
+
 ostream& operator<<(ostream& os, const Config& config) {
   return os << fmt::format(
              "Config("
@@ -75,13 +105,16 @@ ostream& operator<<(ostream& os, const Config& config) {
              "nlopt_ftol_rel = {}, "
              "nlopt_ftol_abs = {}, "
              "nlopt_maxeval = {}, "
-             "nlopt_maxtime = {}"
+             "nlopt_maxtime = {}, "
+             "sat_default_phase = {}, "
+             "random_seed = {}"
              ")",
              config.precision(), config.produce_models(), config.use_polytope(),
              config.use_polytope_in_forall(), config.use_worklist_fixpoint(),
              config.use_local_optimization(), config.nlopt_ftol_rel(),
              config.nlopt_ftol_abs(), config.nlopt_maxeval(),
-             config.nlopt_maxtime());
+             config.nlopt_maxtime(), config.sat_default_phase(),
+             config.random_seed());
 }
 
 }  // namespace dreal

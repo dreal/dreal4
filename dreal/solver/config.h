@@ -90,6 +90,25 @@ class Config {
   /// Returns a mutable OptionValue for `nlopt_maxtime`.
   OptionValue<double>& mutable_nlopt_maxtime();
 
+  enum class SatDefaultPhase {
+    False = 0,
+    True = 1,
+    JeroslowWang = 2,  // Default option
+    RandomInitialPhase = 3
+  };
+
+  /// Returns the default phase for SAT solver.
+  SatDefaultPhase sat_default_phase() const;
+
+  /// Returns a mutable OptionValue for `sat_default_phase`.
+  OptionValue<SatDefaultPhase>& mutable_sat_default_phase();
+
+  /// Returns the random seed.
+  uint32_t random_seed() const;
+
+  /// Returns a mutable OptionValue for `random_seed`.
+  OptionValue<uint32_t>& mutable_random_seed();
+
   /// @}
 
  private:
@@ -138,7 +157,22 @@ class Config {
   // your function evaluation is.) Criterion is disabled if maxtime is
   // non-positive.
   OptionValue<double> nlopt_maxtime_{0.01};
+
+  // Default initial phase (for PICOSAT):
+  //   0 = false
+  //   1 = true
+  //   2 = Jeroslow-Wang (default)
+  //   3 = random initial phase
+  OptionValue<SatDefaultPhase> sat_default_phase_{
+      SatDefaultPhase::JeroslowWang};
+
+  // Seed for Random Number Generator.
+  OptionValue<uint32_t> random_seed_{0};
 };
 
+std::ostream& operator<<(std::ostream& os,
+                         const Config::SatDefaultPhase& sat_default_phase);
+
 std::ostream& operator<<(std::ostream& os, const Config& config);
+
 }  // namespace dreal
