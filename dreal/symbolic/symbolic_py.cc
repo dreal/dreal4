@@ -285,7 +285,7 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
         [](const std::vector<Variable>& vec, const Formula& f) {
           Variables vars;
           vars.insert(vec.begin(), vec.end());
-          return forall(std::move(vars), f);
+          return forall(vars, f);
         })
       .def("forall", &forall);
 
