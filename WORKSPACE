@@ -5,17 +5,17 @@ load("//third_party:com_github_robotlocomotion_drake/tools/workspace/github.bzl"
 github_archive(
     name = "google_styleguide",  # GOOGLE
     build_file = "//tools:google_styleguide.BUILD.bazel",
-    commit = "2723e6b6aad8adb9f85d8b37292a2d421bc6d315",
-    repository = "dreal-deps/styleguide",
-    sha256 = "71905cbb6a969357ec534d0cd730d8525f4063fdb998e20b1d08b021d31d9095",
+    commit = "ab48617e00be9d111804bd3715dd7b5f5732c9a3",
+    repository = "google/styleguide",
+    sha256 = "fed315ad645c17cac86af58b157b1237c386515a181de8caad0d6f1fb9d1e563",
 )
 
 github_archive(
     name = "pycodestyle",  # Expat
     build_file = "//tools:pycodestyle.BUILD.bazel",
-    commit = "368e62cb6c57ff386b5a08659a5a9d2866b80a2f",
+    commit = "566cdc0cb22e5530902e456d0b315403ebab980c",
     repository = "PyCQA/pycodestyle",
-    sha256 = "29cb8bdd6119dc56a6b555896010cb8976bfd2124c6f0ab63ebd84ef2845ca09",
+    sha256 = "32fdb7320ed8ee47f522245371c30b783dddd80da0a801db4232209554eb0472",
 )
 
 github_archive(
