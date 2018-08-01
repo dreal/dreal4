@@ -80,14 +80,14 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */,
            "Read from standard input. Uses smt2 by default.\n", "--in");
 
-  auto* const format_option_validator = new ez::ezOptionValidator(
-      "t", "in", "auto,dr,smt2", false);
+  auto* const format_option_validator =
+      new ez::ezOptionValidator("t", "in", "auto,dr,smt2", false);
   opt_.add("auto" /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
            "File format. Any one of these (default = auto):\n"
-           "smt2, dr, auto (use file extension)\n", "--format",
-           format_option_validator);
+           "smt2, dr, auto (use file extension)\n",
+           "--format", format_option_validator);
 
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
@@ -180,8 +180,7 @@ bool MainProgram::ValidateOptions() {
   args_.insert(args_.end(), opt_.firstArgs.begin() + 1, opt_.firstArgs.end());
   args_.insert(args_.end(), opt_.unknownArgs.begin(), opt_.unknownArgs.end());
   args_.insert(args_.end(), opt_.lastArgs.begin(), opt_.lastArgs.end());
-  if (opt_.isSet("-h") ||
-      (args_.size() == 0 && !opt_.isSet("--in")) ||
+  if (opt_.isSet("-h") || (args_.empty() && !opt_.isSet("--in")) ||
       args_.size() > 1) {
     PrintUsage();
     return false;
@@ -294,9 +293,9 @@ int MainProgram::Run() {
   }
   ExtractOptions();
   string filename;
-  if (args_.size() > 0) {
+  if (!args_.empty()) {
     filename = *args_[0];
-    if (filename == "") {
+    if (filename.empty()) {
       PrintUsage();
       return 1;
     }
@@ -307,14 +306,14 @@ int MainProgram::Run() {
     return 1;
   }
   const string extension{get_extension(filename)};
-  string formatOpt;
-  opt_.get("--format")->getString(formatOpt);
-  if (formatOpt == "smt2" ||
-      (formatOpt == "auto" && (extension == "smt2" || opt_.isSet("--in")))) {
+  string format_opt;
+  opt_.get("--format")->getString(format_opt);
+  if (format_opt == "smt2" ||
+      (format_opt == "auto" && (extension == "smt2" || opt_.isSet("--in")))) {
     RunSmt2(filename, config_, opt_.isSet("--debug-scanning"),
             opt_.isSet("--debug-parsing"));
-  } else if (formatOpt == "dr" ||
-             (formatOpt == "auto" && extension == "dr")) {
+  } else if (format_opt == "dr" ||
+             (format_opt == "auto" && extension == "dr")) {
     RunDr(filename, config_, opt_.isSet("--debug-scanning"),
           opt_.isSet("--debug-parsing"));
   } else {
