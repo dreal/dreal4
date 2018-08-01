@@ -81,7 +81,8 @@ bool ParseBooleanOption(const string& key, const string& val) {
 
 Context::Impl::Impl() : Impl{Config{}} {}
 
-Context::Impl::Impl(Config config) : config_{config}, theory_solver_{config_} {
+Context::Impl::Impl(Config config)
+    : config_{config}, sat_solver_{config_}, theory_solver_{config_} {
   boxes_.push_back(Box{});
 }
 

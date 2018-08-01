@@ -81,6 +81,7 @@ dreal_cc_library(
         "sat_solver.h",
     ],
     deps = [
+        ":config",
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:exception",

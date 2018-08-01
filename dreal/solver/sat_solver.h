@@ -11,6 +11,7 @@
 
 #include "./picosat.h"
 
+#include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/predicate_abstractor.h"
 #include "dreal/util/tseitin_cnfizer.h"
@@ -25,10 +26,10 @@ class SatSolver {
   using Model = std::pair<std::vector<Literal>, std::vector<Literal>>;
 
   /// Constructs a SatSolver.
-  SatSolver();
+  explicit SatSolver(const Config& config);
 
   /// Constructs a SatSolver while asserting @p clauses.
-  explicit SatSolver(const std::vector<Formula>& clauses);
+  SatSolver(const Config& config, const std::vector<Formula>& clauses);
 
   /// Deleted copy constructor.
   SatSolver(const SatSolver&) = delete;

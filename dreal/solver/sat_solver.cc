@@ -14,13 +14,22 @@ using std::set;
 using std::vector;
 using std::experimental::optional;
 
-SatSolver::SatSolver() : sat_{picosat_init()} {
+SatSolver::SatSolver(const Config& config) : sat_{picosat_init()} {
   // Enable partial checks via picosat_deref_partial. See the call-site in
   // SatSolver::CheckSat().
   picosat_save_original_clauses(sat_);
+  if (config.random_seed() != 0) {
+    picosat_set_seed(sat_, config.random_seed());
+    DREAL_LOG_DEBUG("SatSolver::Set Random Seed {}", config.random_seed());
+  }
+  picosat_set_global_default_phase(
+      sat_, static_cast<int>(config.sat_default_phase()));
+  DREAL_LOG_DEBUG("SatSolver::Set Default Phase {}",
+                  config.sat_default_phase());
 }
 
-SatSolver::SatSolver(const vector<Formula>& clauses) : SatSolver{} {
+SatSolver::SatSolver(const Config& config, const vector<Formula>& clauses)
+    : SatSolver{config} {
   AddClauses(clauses);
 }
 

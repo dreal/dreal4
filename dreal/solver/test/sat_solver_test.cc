@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
@@ -12,7 +13,7 @@ class SatSolverTest : public ::testing::Test {
   const Variable b1_{"b1", Variable::Type::BOOLEAN};
   const Variable b2_{"b2", Variable::Type::BOOLEAN};
 
-  SatSolver sat_{};
+  SatSolver sat_{Config()};
 };
 
 TEST_F(SatSolverTest, Sat1) {
