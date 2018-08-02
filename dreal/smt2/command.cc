@@ -7,8 +7,8 @@
 #include "dreal/smt2/logic.h"
 
 namespace dreal {
-using std::ostream;
 using std::make_shared;
+using std::ostream;
 using std::string;
 
 ostream& operator<<(ostream& os, const Command& c) {

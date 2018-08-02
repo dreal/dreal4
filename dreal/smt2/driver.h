@@ -69,8 +69,8 @@ class Smt2Driver {
 
   /// Declare a variable with name @p name and sort @p sort which is bounded by
   /// an interval `[lb, ub]`.
-  void DeclareVariable(const std::string& name, const Sort sort,
-                       const Term& lb, const Term& ub);
+  void DeclareVariable(const std::string& name, const Sort sort, const Term& lb,
+                       const Term& ub);
 
   /// Declare a new variable with label @p name that is globally unique and
   /// cannot occur in an SMT-LIBv2 file.

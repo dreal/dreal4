@@ -14,15 +14,15 @@
 namespace dreal {
 
 using std::cerr;
-using std::cout;
 using std::cin;
+using std::cout;
 using std::endl;
-using std::experimental::optional;
 using std::ifstream;
 using std::istream;
 using std::istringstream;
 using std::move;
 using std::string;
+using std::experimental::optional;
 
 DrDriver::DrDriver(Context context) : context_{move(context)} {}
 

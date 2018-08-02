@@ -37,6 +37,5 @@ GTEST_TEST(StringToIntervalTest, ExactNegative) {
   EXPECT_EQ(i.ub(), -0.5);
 }
 
-
 }  // namespace
 }  // namespace dreal

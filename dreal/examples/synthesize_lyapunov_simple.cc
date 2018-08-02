@@ -46,6 +46,4 @@ void synthesize_lyapunov_simple() {
 }  // namespace
 }  // namespace dreal
 
-int main() {
-  dreal::synthesize_lyapunov_simple();
-}
+int main() { dreal::synthesize_lyapunov_simple(); }

@@ -62,6 +62,4 @@ void synthesize_lyapunov_normalized_pendulum() {
 }  // namespace
 }  // namespace dreal
 
-int main() {
-  dreal::synthesize_lyapunov_normalized_pendulum();
-}
+int main() { dreal::synthesize_lyapunov_normalized_pendulum(); }

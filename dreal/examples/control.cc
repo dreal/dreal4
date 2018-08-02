@@ -10,9 +10,9 @@
 namespace dreal {
 
 using std::accumulate;
-using std::experimental::optional;
 using std::move;
 using std::vector;
+using std::experimental::optional;
 
 optional<Box> CheckLyapunov(const vector<Variable>& x,
                             const vector<Expression>& f, const Expression& V,

@@ -9,12 +9,12 @@
 #include "dreal/util/stat.h"
 
 using std::cout;
-using std::experimental::nullopt;
-using std::experimental::optional;
 using std::make_pair;
 using std::pair;
 using std::tie;
 using std::vector;
+using std::experimental::nullopt;
+using std::experimental::optional;
 
 namespace dreal {
 

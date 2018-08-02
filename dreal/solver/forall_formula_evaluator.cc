@@ -13,11 +13,11 @@
 
 namespace dreal {
 
-using std::experimental::optional;
 using std::move;
 using std::ostream;
 using std::set;
 using std::vector;
+using std::experimental::optional;
 
 namespace {
 
