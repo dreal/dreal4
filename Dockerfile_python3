@@ -3,14 +3,33 @@ MAINTAINER soonho.kong@gmail.com
 
 RUN mkdir /dreal4
 COPY . /dreal4
+
+# Extract version and save it at /DREAL_VERSION.
 RUN cd /dreal4 \
-      && sed -i "s/zlib1g-dev/zlib1g-dev\npython3.5\npython3.5-dev/" setup/ubuntu/16.04/install_prereqs.sh
+    && echo `grep "DREAL_VERSION = " tools/dreal.bzl | cut -d '"' -f 2` > /DREAL_VERSION
+
+# Install prerequsites.
 RUN apt-get update && yes "Y" \
       | /dreal4/setup/ubuntu/16.04/install_prereqs.sh \
       && rm -rf /var/lib/apt/lists/* \
-      && apt-get clean all	  
+      && apt-get clean all
+
+# Build dReal4 and install under /usr. Note that this installs
+# bindings for python2.7 under /usr/lib/python2.7/dist-packages/.
 RUN cd /dreal4 \
-      && sed -i "s/python-2/python-3.5/" tools/pybind11.BUILD.bazel \
+      && sed -i "s/lib\/python2.7\/site-packages/lib\/python2.7\/dist-packages/" `find dreal -name "BUILD.bazel"` \
       && bazel build //:archive \
-      && tar xfz bazel-bin/archive.tar.gz
-CMD ["python3"]
+      && tar xfz bazel-bin/archive.tar.gz \
+      && cp -r opt/dreal/`cat /DREAL_VERSION`/* /usr
+
+# Install python3.5, build bindings for python3.5 and install it under
+# /usr/local/lib/python3.5/dist-packages.
+RUN apt-get update && apt-get install -y libpython3.5-dev
+RUN cd /dreal4 \
+      && sed -i "s/python2/python-3.5/" tools/pybind11.BUILD.bazel \
+      && sed -i "s/lib\/python2.7/lib\/python3.5/" `find dreal -name "BUILD.bazel"` \
+      && bazel build //:archive \
+      && tar xfz bazel-bin/archive.tar.gz \
+      && cp -r opt/dreal/`cat /DREAL_VERSION`/lib/python3.5/dist-packages/dreal /usr/lib/python3.5/dist-packages/ \
+      && rm -rf opt/ \
+      && bazel clean --expunge
