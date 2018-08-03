@@ -1,6 +1,7 @@
 #include "dreal/solver/filter_assertion.h"
 
 #include <cmath>
+#include <limits>
 
 #include "dreal/util/box.h"
 #include "dreal/util/exception.h"
@@ -9,6 +10,7 @@ namespace dreal {
 namespace {
 
 using std::nextafter;
+using std::numeric_limits;
 
 // Constrains the @p box with ` box[var].lb() == v`.
 FilterAssertionResult UpdateBoundsViaEquality(const Variable& var,
@@ -68,7 +70,8 @@ FilterAssertionResult UpdateLowerBound(const Variable& var, const double new_lb,
 // `v`.
 FilterAssertionResult UpdateStrictLowerBound(const Variable& var,
                                              const double lb, Box* const box) {
-  return UpdateLowerBound(var, nextafter(lb, DBL_MAX), box);
+  return UpdateLowerBound(var, nextafter(lb, numeric_limits<double>::max()),
+                          box);
 }
 
 // Constrains the @p box with ` box[var].ub() <= v`.
@@ -94,7 +97,8 @@ FilterAssertionResult UpdateUpperBound(const Variable& var, const double new_ub,
 // than `v`.
 FilterAssertionResult UpdateStrictUpperBound(const Variable& var,
                                              const double ub, Box* const box) {
-  return UpdateUpperBound(var, nextafter(ub, DBL_MIN), box);
+  return UpdateUpperBound(var, nextafter(ub, numeric_limits<double>::min()),
+                          box);
 }
 
 class AssertionFilter {
