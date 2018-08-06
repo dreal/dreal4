@@ -49,15 +49,15 @@ def dreal_workspace():
     github_archive(
         name = "spdlog",  # MIT
         repository = "gabime/spdlog",
-        commit = "v0.17.0",
-        sha256 = "94f74fd1b3344733d1db3de2ec22e6cbeb769f93a8baa0d4a22b1f62dc7369f8",
+        commit = "v1.0.0",
+        sha256 = "90d5365121bcd2c41ce94dfe6a460e89507a2dfef6133fe5fad5bb35ac4ef0a1",
         build_file = str(Label("//tools:spdlog.BUILD.bazel")),
     )
     github_archive(
         name = "fmt",  # BSD2
         repository = "fmtlib/fmt",
-        commit = "4.1.0",
-        sha256 = "46628a2f068d0e33c716be0ed9dcae4370242df135aed663a180b9fd8e36733d",
+        commit = "5.1.0",
+        sha256 = "73d4cab4fa8a3482643d8703de4d9522d7a56981c938eca42d929106ff474b44",
         build_file = str(Label("//tools:fmt.BUILD.bazel")),
     )
     github_archive(

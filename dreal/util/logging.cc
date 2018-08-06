@@ -3,6 +3,8 @@
 #include <memory>
 #include <string>
 
+#include "spdlog/sinks/stdout_color_sinks.h"
+
 namespace dreal {
 
 using std::shared_ptr;
