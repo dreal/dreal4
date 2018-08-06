@@ -97,7 +97,14 @@ class ExpressionCell {
   // Reference counter.
   mutable std::atomic<unsigned> rc_{0};
   void increase_rc() const { ++rc_; }
-  size_t decrease_rc() const { return --rc_; }
+  size_t decrease_rc() const {
+    if (--rc_ == 0) {
+      delete this;
+      return 0;
+    } else {
+      return rc_;
+    }
+  }
 
   // So that Expression can call {increase,decrease}_rc.
   friend Expression;

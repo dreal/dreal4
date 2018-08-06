@@ -49,43 +49,39 @@ Expression NegateMultiplication(const Expression& e) {
 }
 }  // namespace
 
-Expression::Expression(const Expression& e) {
-  assert(e.ptr_ != nullptr);
-  e.ptr_->increase_rc();
-  ptr_ = e.ptr_;
+Expression::Expression(const Expression& e) : ptr_{e.ptr_} {
+  assert(ptr_ != nullptr);
+  ptr_->increase_rc();
 }
 
 Expression& Expression::operator=(const Expression& e) {
   assert(e.ptr_ != nullptr);
   e.ptr_->increase_rc();
-  assert(ptr_ != nullptr);
-  if (ptr_->decrease_rc() == 0) {
-    delete ptr_;
+  if (ptr_) {
+    ptr_->decrease_rc();
   }
   ptr_ = e.ptr_;
   return *this;
 }
 
-Expression::Expression(Expression&& e) noexcept {
-  assert(e.ptr_ != nullptr);
-  ptr_ = e.ptr_;
+Expression::Expression(Expression&& e) noexcept : ptr_{e.ptr_} {
+  assert(ptr_ != nullptr);
   e.ptr_ = nullptr;
 }
 
 Expression& Expression::operator=(Expression&& e) noexcept {
-  assert(ptr_ != nullptr);
-  if (ptr_->decrease_rc() == 0) {
-    delete ptr_;
-  }
   assert(e.ptr_ != nullptr);
+  if (ptr_) {
+    ptr_->decrease_rc();
+  }
   ptr_ = e.ptr_;
   e.ptr_ = nullptr;
   return *this;
 }
 
 Expression::~Expression() {
-  if (ptr_ && ptr_->decrease_rc() == 0) {
-    delete ptr_;
+  if (ptr_) {
+    ptr_->decrease_rc();
   }
 }
 
