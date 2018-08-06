@@ -14,7 +14,8 @@ int main() {
   try {
     // The following causes a heap-use-after-free in ASAN build. Disable it now.
     // Create basic file logger (not rotated)
-    // auto my_logger = spdlog::basic_logger_mt("basic_logger", "logs/basic.txt");
+    // auto my_logger = spdlog::basic_logger_mt("basic_logger",
+    // "logs/basic.txt");
 
     // create a file rotating logger with 5mb size max and 3 rotated files
     auto file_logger = spdlog::rotating_logger_mt("file_logger", "myfilename",
