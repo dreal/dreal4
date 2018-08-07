@@ -75,6 +75,16 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "timer",
+    srcs = [
+        "timer.cc",
+    ],
+    hdrs = [
+        "timer.h",
+    ],
+)
+
+dreal_cc_library(
     name = "tseitin_cnfizer",
     srcs = [
         "tseitin_cnfizer.cc",
@@ -351,6 +361,14 @@ dreal_cc_googletest(
     deps = [
         ":tseitin_cnfizer",
         "//dreal/symbolic:symbolic_test_util",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "timer_test",
+    tags = ["unit"],
+    deps = [
+        ":timer",
     ],
 )
 
