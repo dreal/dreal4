@@ -46,4 +46,32 @@ ostream& operator<<(ostream& os, const Timer& timer) {
   return os << timer.seconds() << "s";
 }
 
+TimerGuard::TimerGuard(Timer* const timer, const bool enabled,
+                       const bool start_timer)
+    : timer_{timer}, enabled_{enabled} {
+  if (enabled_) {
+    if (start_timer) {
+      timer_->resume();
+    }
+  }
+}
+
+TimerGuard::~TimerGuard() {
+  if (enabled_) {
+    timer_->pause();
+  }
+}
+
+void TimerGuard::pause() {
+  if (enabled_) {
+    timer_->pause();
+  }
+}
+
+void TimerGuard::resume() {
+  if (enabled_) {
+    timer_->resume();
+  }
+}
+
 }  // namespace dreal
