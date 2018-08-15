@@ -27,8 +27,11 @@ class Timer {
   /// Checks if the timer is running.
   bool is_running() const;
 
-  /// Returns the elapsed time.
+  /// Returns the elapsed time as duration.
   clock::duration elapsed() const;
+
+  /// Returns the elapsed time in secionds.
+  std::chrono::duration<double>::rep seconds() const;
 
  private:
   // Whether the timer is running or not.

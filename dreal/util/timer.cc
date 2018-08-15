@@ -36,12 +36,14 @@ Timer::clock::duration Timer::elapsed() const {
   }
 }
 
-ostream& operator<<(ostream& os, const Timer& timer) {
+std::chrono::duration<double>::rep Timer::seconds() const {
   // double representation of seconds.
   using seconds_in_double = std::chrono::duration<double>;
-  return os << std::chrono::duration_cast<seconds_in_double>(timer.elapsed())
-                   .count()
-            << "s";
+  return std::chrono::duration_cast<seconds_in_double>(elapsed()).count();
+}
+
+ostream& operator<<(ostream& os, const Timer& timer) {
+  return os << timer.seconds() << "s";
 }
 
 }  // namespace dreal
