@@ -9,15 +9,43 @@
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 namespace dreal {
 
+using std::cout;
 using std::set;
 using std::string;
 using std::to_string;
 using std::vector;
 
 namespace {
+// A class to show statistics information at destruction.
+class TseitinCnfizerStat : public Stat {
+ public:
+  explicit TseitinCnfizerStat(const bool enabled) : Stat{enabled} {}
+  TseitinCnfizerStat(const TseitinCnfizerStat&) = default;
+  TseitinCnfizerStat(TseitinCnfizerStat&&) = default;
+  TseitinCnfizerStat& operator=(const TseitinCnfizerStat&) = default;
+  TseitinCnfizerStat& operator=(TseitinCnfizerStat&&) = default;
+  ~TseitinCnfizerStat() override {
+    if (enabled()) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Convert",
+            "Tseitin Cnfizer", num_convert_);
+      if (num_convert_ > 0) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Converting", "Tseitin Cnfizer",
+              timer_convert_.seconds());
+      }
+    }
+  }
+
+  int num_convert_{0};
+  Timer timer_convert_;
+};
+
 // Forward declarations for the helper functions.
 void Cnfize(const Variable& b, const Formula& f, vector<Formula>* clauses);
 void CnfizeNegation(const Variable& b, const Formula& f,
@@ -33,6 +61,9 @@ void CnfizeDisjunction(const Variable& b, const Formula& f,
 //    each subterm `f`, and keep the relation `b ⇔ f`.
 //  - Then it cnfizes each `b ⇔ f` and make a conjunction of them.
 vector<Formula> TseitinCnfizer::Convert(const Formula& f) {
+  static TseitinCnfizerStat stat{DREAL_LOG_INFO_ENABLED};
+  TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
+  ++stat.num_convert_;
   map_.clear();
   vector<Formula> ret;
   const Formula head{Visit(f)};

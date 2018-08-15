@@ -99,6 +99,8 @@ dreal_cc_library(
         ":exception",
         ":logging",
         ":naive_cnfizer",
+        ":stat",
+        ":timer",
         "//dreal/symbolic",
     ],
 )
