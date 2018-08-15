@@ -62,6 +62,8 @@ dreal_cc_library(
     ],
     deps = [
         ":nnfizer",
+        ":stat",
+        ":timer",
         "//dreal/symbolic",
         "//dreal/util:logging",
     ],

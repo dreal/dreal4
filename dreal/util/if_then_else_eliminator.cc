@@ -7,13 +7,46 @@
 
 #include "dreal/util/logging.h"
 #include "dreal/util/nnfizer.h"
+#include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
+using std::cout;
 using std::set;
 using std::to_string;
 using std::unordered_set;
 
 namespace dreal {
+
+// A class to show statistics information at destruction.
+class IfThenElseElimStat : public Stat {
+ public:
+  explicit IfThenElseElimStat(const bool enabled) : Stat{enabled} {}
+  IfThenElseElimStat(const IfThenElseElimStat&) = default;
+  IfThenElseElimStat(IfThenElseElimStat&&) = default;
+  IfThenElseElimStat& operator=(const IfThenElseElimStat&) = default;
+  IfThenElseElimStat& operator=(IfThenElseElimStat&&) = default;
+  ~IfThenElseElimStat() override {
+    if (enabled()) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Process",
+            "ITE Elim", num_process_);
+      if (num_process_ > 0) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Processing", "ITE Elim",
+              timer_process_.seconds());
+      }
+    }
+  }
+
+  int num_process_{0};
+  Timer timer_process_;
+};
+
 Formula IfThenElseEliminator::Process(const Formula& f) {
+  static IfThenElseElimStat stat{DREAL_LOG_INFO_ENABLED};
+  TimerGuard timer_guard(&stat.timer_process_, stat.enabled());
+  ++stat.num_process_;
+
   Formula new_f{Visit(f)};
   if (f.EqualTo(new_f) && added_formulas_.empty()) {
     return f;
