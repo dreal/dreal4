@@ -89,6 +89,7 @@ dreal_cc_library(
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
         "//dreal/util:stat",
+        "//dreal/util:timer",
         "//dreal/util:tseitin_cnfizer",
         "@picosat",
     ],

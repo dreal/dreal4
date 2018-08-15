@@ -6,6 +6,7 @@
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 namespace dreal {
 
@@ -90,10 +91,14 @@ class SatSolverStat : public Stat {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of CheckSat",
             "SAT level", num_check_sat_);
+      print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+            "Total time spent in SAT checks", "SAT level",
+            timer_check_sat_.seconds());
     }
   }
 
   int num_check_sat_{0};
+  Timer timer_check_sat_;
 };
 }  // namespace
 
@@ -104,7 +109,11 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
                   picosat_added_original_clauses(sat_));
   stat.num_check_sat_++;
   // Call SAT solver.
+  TimerGuard check_sat_timer_guard(&stat.timer_check_sat_,
+                                   DREAL_LOG_INFO_ENABLED);
   const int ret{picosat_sat(sat_, -1)};
+  check_sat_timer_guard.pause();
+
   Model model;
   auto& boolean_model = model.first;
   auto& theory_model = model.second;
