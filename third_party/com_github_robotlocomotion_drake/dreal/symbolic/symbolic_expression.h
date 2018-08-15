@@ -11,6 +11,8 @@
 #include <utility>
 #include <vector>
 
+#include <experimental/optional>
+
 #include "dreal/symbolic/hash.h"
 #include "dreal/symbolic/symbolic_environment.h"
 #include "dreal/symbolic/symbolic_variable.h"
@@ -183,8 +185,13 @@ class Expression {
   ExpressionKind get_kind() const;
   /** Returns hash value. */
   size_t get_hash() const;
-  /** Collects variables in expression. */
-  Variables GetVariables() const;
+  /** Collects variables in expression.
+   *
+   * @note For the first call, it traverses every node in the
+   * expression tree and caches the result. The following calls are
+   * done in O(1) time.
+   */
+  const Variables& GetVariables() const;
 
   /** Checks structural equality.
    *
@@ -470,6 +477,9 @@ class Expression {
   explicit Expression(const ExpressionCell* ptr);
 
   const ExpressionCell* ptr_{nullptr};
+
+  // Storage to cache the result of GetVariables().
+  mutable std::experimental::optional<Variables> variables_;
 };
 
 Expression operator+(Expression lhs, const Expression& rhs);

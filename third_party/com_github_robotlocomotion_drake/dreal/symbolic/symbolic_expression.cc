@@ -147,9 +147,12 @@ Expression Expression::NaN() {
   return nan;
 }
 
-Variables Expression::GetVariables() const {
+const Variables& Expression::GetVariables() const {
   assert(ptr_ != nullptr);
-  return ptr_->GetVariables();
+  if (!variables_) {
+    variables_ = ptr_->GetVariables();
+  }
+  return *variables_;
 }
 
 bool Expression::EqualTo(const Expression& e) const {

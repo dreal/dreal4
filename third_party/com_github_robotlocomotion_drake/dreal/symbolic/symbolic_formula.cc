@@ -77,9 +77,12 @@ size_t Formula::get_hash() const {
   return ptr_->get_hash();
 }
 
-Variables Formula::GetFreeVariables() const {
+const Variables& Formula::GetFreeVariables() const {
   assert(ptr_ != nullptr);
-  return ptr_->GetFreeVariables();
+  if (!free_variables_) {
+    free_variables_ = ptr_->GetFreeVariables();
+  }
+  return *free_variables_;
 }
 
 bool Formula::EqualTo(const Formula& f) const {

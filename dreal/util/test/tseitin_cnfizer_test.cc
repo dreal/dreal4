@@ -25,7 +25,7 @@ bool IsSatisfiable(const Formula& f) {
   if (is_false(f)) {
     return false;
   }
-  const Variables vars{f.GetFreeVariables()};
+  const Variables& vars{f.GetFreeVariables()};
   DREAL_ASSERT(!vars.empty());
   const Variable& first_var{*vars.begin()};
   return IsSatisfiable(f.Substitute(first_var, Formula::True())) ||

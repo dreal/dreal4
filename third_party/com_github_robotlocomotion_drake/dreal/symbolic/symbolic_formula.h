@@ -6,6 +6,8 @@
 #include <string>
 #include <utility>
 
+#include <experimental/optional>
+
 #include "dreal/symbolic/hash.h"
 #include "dreal/symbolic/symbolic_environment.h"
 #include "dreal/symbolic/symbolic_expression.h"
@@ -116,10 +118,17 @@ class Formula {
 
   FormulaKind get_kind() const;
   size_t get_hash() const;
-  /** Gets free variables (unquantified variables). */
-  Variables GetFreeVariables() const;
+
+  /** Gets free variables (unquantified variables).
+   *
+   * @note For the first call, it traverses every node in the formula tree and
+   * caches the result. The following calls are done in O(1) time.
+   */
+  const Variables& GetFreeVariables() const;
+
   /** Checks structural equality*/
   bool EqualTo(const Formula& f) const;
+
   /** Checks lexicographical ordering between this and @p e.
    *
    * If the two formulas f1 and f2 have different kinds k1 and k2 respectively,
@@ -248,6 +257,9 @@ class Formula {
 
  private:
   const FormulaCell* ptr_;
+
+  // Storage to cache the result of GetFreevariables().
+  mutable std::experimental::optional<Variables> free_variables_;
 };
 
 /** Returns a formula @p f, universally quantified by variables @p vars. */
