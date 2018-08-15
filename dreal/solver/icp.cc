@@ -7,6 +7,7 @@
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 using std::cout;
 using std::make_pair;
@@ -89,7 +90,7 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
 // branching and pruning operations.
 class IcpStat : public Stat {
  public:
-  explicit IcpStat(bool enabled) : Stat{enabled} {}
+  explicit IcpStat(const bool enabled) : Stat{enabled} {}
   IcpStat(const IcpStat&) = default;
   IcpStat(IcpStat&&) = default;
   IcpStat& operator=(const IcpStat&) = default;
@@ -101,10 +102,27 @@ class IcpStat : public Stat {
             "ICP level", num_branch_);
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Pruning",
             "ICP level", num_prune_);
+      if (num_branch_) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Branching", "ICP level",
+              timer_branch_.seconds());
+      }
+      if (num_prune_) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Pruning", "ICP level",
+              timer_prune_.seconds());
+      }
+      print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+            "Total time spent in Evaluation", "ICP level",
+            timer_eval_.seconds());
     }
   }
+
   int num_branch_{0};
   int num_prune_{0};
+  Timer timer_branch_;
+  Timer timer_prune_;
+  Timer timer_eval_;
 };
 }  // namespace
 
@@ -173,6 +191,10 @@ bool Icp::CheckSat(const Contractor& contractor,
   // the contractor status as a mutable reference.
   int& current_branching_point{cs->mutable_branching_point()};
 
+  TimerGuard prune_timer_guard(&stat.timer_prune_, stat.enabled(), false);
+  TimerGuard eval_timer_guard(&stat.timer_eval_, stat.enabled(), false);
+  TimerGuard branch_timer_guard(&stat.timer_branch_, stat.enabled(), false);
+
   while (!stack.empty()) {
     DREAL_LOG_DEBUG("Icp::CheckSat() Loop Head");
     // 1. Pop the current box from the stack
@@ -181,7 +203,9 @@ bool Icp::CheckSat(const Contractor& contractor,
 
     // 2. Prune the current box.
     DREAL_LOG_TRACE("Icp::CheckSat() Current Box:\n{}", current_box);
+    prune_timer_guard.resume();
     contractor.Prune(cs);
+    prune_timer_guard.pause();
     stat.num_prune_++;
     DREAL_LOG_TRACE("Icp::CheckSat() After pruning, the current box =\n{}",
                     current_box);
@@ -193,6 +217,7 @@ bool Icp::CheckSat(const Contractor& contractor,
     }
     // 3.2. The box is non-empty. Check if the box is still feasible
     // under evaluation and it's small enough.
+    eval_timer_guard.resume();
     const optional<ibex::BitSet> evaluation_result{
         EvaluateBox(formula_evaluators, current_box, cs)};
     if (!evaluation_result) {
@@ -208,15 +233,21 @@ bool Icp::CheckSat(const Contractor& contractor,
       DREAL_LOG_DEBUG("Icp::CheckSat() Found a delta-box:\n{}", current_box);
       return true;
     }
+    eval_timer_guard.pause();
+
     // 3.2.3. This box is bigger than delta. Need branching.
+    branch_timer_guard.resume();
     if (!Branch(current_box, *evaluation_result, stack_left_box_first_,
                 &stack)) {
       DREAL_LOG_DEBUG(
           "Icp::CheckSat() Found that the current box is not satisfying "
           "delta-condition but it's not bisectable.:\n{}",
           current_box);
+      stat.timer_branch_.pause();
       return true;
     }
+    branch_timer_guard.pause();
+
     // We alternate between adding-the-left-box-first policy and
     // adding-the-right-box-first policy.
     stack_left_box_first_ = !stack_left_box_first_;
