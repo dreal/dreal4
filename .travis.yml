@@ -151,14 +151,14 @@ matrix:
         - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
-      osx_image: xcode9.3  # macOS-10.13
+      osx_image: xcode9.4  # macOS-10.13
       compiler: clang
       env:
         - COMPILER=clang
         - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
-      osx_image: xcode9.3  # macOS-10.13
+      osx_image: xcode9.4  # macOS-10.13
       compiler: clang
       env:
         - COMPILER=clang
