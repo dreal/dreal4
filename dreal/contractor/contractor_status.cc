@@ -4,12 +4,47 @@
 
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 using std::move;
 using std::set;
 using std::vector;
 
 namespace dreal {
+
+namespace {
+
+using std::cout;
+
+// A class to show statistics information at destruction.
+class ContractorStatusStat : public Stat {
+ public:
+  explicit ContractorStatusStat(const bool enabled) : Stat{enabled} {}
+  ContractorStatusStat(const ContractorStatusStat&) = default;
+  ContractorStatusStat(ContractorStatusStat&&) = default;
+  ContractorStatusStat& operator=(const ContractorStatusStat&) = default;
+  ContractorStatusStat& operator=(ContractorStatusStat&&) = default;
+  ~ContractorStatusStat() override {
+    if (enabled()) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n",
+            "Total # of Explanation Generations", "ContractorStatus level",
+            num_explanation_generation_);
+      if (num_explanation_generation_) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Explanation Generations",
+              "ContractorStatus level",
+              timer_explanation_generation_.seconds());
+      }
+    }
+  }
+
+  int num_explanation_generation_{0};
+  Timer timer_explanation_generation_;
+};
+
+}  // namespace
 
 ContractorStatus::ContractorStatus(Box box, const int branching_point)
     : box_{move(box)},
@@ -55,9 +90,19 @@ void ContractorStatus::AddUnsatWitness(const Variable& var) {
 
 set<Formula> GenerateExplanation(const Variables& unsat_witness,
                                  const set<Formula>& used_constraints) {
+  static ContractorStatusStat stat(DREAL_LOG_INFO_ENABLED);
+  stat.num_explanation_generation_++;
+  TimerGuard timer_guard(&stat.timer_explanation_generation_, stat.enabled());
   if (unsat_witness.empty()) {
     return set<Formula>();
   }
+
+  // Explanation:
+  // = lfp. λE. E ∪ {fᵢ | fᵢ ∈ Used Constraints ∧ vars(fᵢ) ∩ unsat_witness ≠ ∅}
+  //              ∪ {fᵢ | fᵢ ∈ E ∧
+  //                      fⱼ ∈ Used Constraints ∧
+  //                      fᵢ and fⱼ share a common variable}.
+
   // Set up the initial explanation based on variables.
   set<Formula> explanation;
   for (const Formula& f_i : used_constraints) {
@@ -65,12 +110,11 @@ set<Formula> GenerateExplanation(const Variables& unsat_witness,
       explanation.insert(f_i);
     }
   }
-
   bool keep_going = true;
   while (keep_going) {
     keep_going = false;
     for (const Formula& f_i : explanation) {
-      const Variables variables_in_f_i{f_i.GetFreeVariables()};
+      const Variables& variables_in_f_i{f_i.GetFreeVariables()};
       for (const Formula& f_j : used_constraints) {
         if (explanation.count(f_j) > 0) {
           continue;

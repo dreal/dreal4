@@ -86,6 +86,8 @@ dreal_cc_library(
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:box",
+        "//dreal/util:stat",
+        "//dreal/util:timer",
         "@ibex",
     ],
 )
