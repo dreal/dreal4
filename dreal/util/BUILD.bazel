@@ -217,6 +217,8 @@ dreal_cc_library(
         "predicate_abstractor.h",
     ],
     deps = [
+        ":stat",
+        ":timer",
         "//dreal/symbolic",
     ],
 )
