@@ -151,6 +151,8 @@ dreal_cc_library(
         ":interval",
         ":logging",
         ":math",
+        ":stat",
+        ":timer",
         "//dreal/symbolic",
         "@ibex",
     ],

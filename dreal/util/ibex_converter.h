@@ -46,17 +46,17 @@ class IbexConverter {
   /// with the return value of this method.
   const ibex::ExprCtr* Convert(const Formula& f);
 
-  /// Convert @p e into the corresponding IBEX data structure,
-  /// ibex::ExprNode*.
-  ///
-  /// @note See the above note in `Convert(const Formula& f)`.
-  const ibex::ExprNode* Convert(const Expression& e);
-
   const ibex::Array<const ibex::ExprSymbol>& variables() const;
 
   void set_need_to_delete_variables(bool value);
 
  private:
+  // Convert @p e into the corresponding IBEX data structure,
+  // ibex::ExprNode*.
+  //
+  // @note See the above note in `Convert(const Formula& f)`.
+  const ibex::ExprNode* Convert(const Expression& e);
+
   // Visits @p e and converts it into ibex::ExprNode.
   const ibex::ExprNode* Visit(const Expression& e);
   const ibex::ExprNode* VisitVariable(const Expression& e);

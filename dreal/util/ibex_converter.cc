@@ -8,15 +8,45 @@
 #include "dreal/util/interval.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
+#include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 namespace dreal {
 
+using std::cout;
 using std::ostringstream;
 using std::pair;
 using std::vector;
 
 using ibex::ExprCtr;
 using ibex::ExprNode;
+
+namespace {
+// A class to show statistics information at destruction.
+class IbexConverterStat : public Stat {
+ public:
+  explicit IbexConverterStat(const bool enabled) : Stat{enabled} {}
+  IbexConverterStat(const IbexConverterStat&) = default;
+  IbexConverterStat(IbexConverterStat&&) = default;
+  IbexConverterStat& operator=(const IbexConverterStat&) = default;
+  IbexConverterStat& operator=(IbexConverterStat&&) = default;
+  ~IbexConverterStat() override {
+    if (enabled()) {
+      using fmt::print;
+      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Convert",
+            "Ibex Converter", num_convert_);
+      if (num_convert_ > 0) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Converting", "Ibex Converter",
+              timer_convert_.seconds());
+      }
+    }
+  }
+
+  int num_convert_{0};
+  Timer timer_convert_;
+};
+}  // namespace
 
 IbexConverter::IbexConverter(const vector<Variable>& variables)
     : vars_{variables} {
@@ -49,6 +79,10 @@ IbexConverter::~IbexConverter() {
 
 const ExprCtr* IbexConverter::Convert(const Formula& f) {
   DREAL_LOG_DEBUG("IbexConverter::Convert({})", f);
+  static IbexConverterStat stat{DREAL_LOG_INFO_ENABLED};
+  TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
+  ++stat.num_convert_;
+
   const ExprCtr* expr_ctr{Visit(f, true)};
   if (expr_ctr) {
     need_to_delete_variables_ = false;
