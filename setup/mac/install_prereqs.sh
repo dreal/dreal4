@@ -6,6 +6,8 @@ if [[ "${EUID}" -eq 0 ]]; then
   exit 1
 fi
 
+brew tap bazelbuild/tap
+brew tap-pin bazelbuild/tap
 brew tap dreal/dreal
 brew update
 brew install dreal --only-dependencies --build-from-source
