@@ -17,18 +17,17 @@ g++
 libibex-dev
 libnlopt-dev
 libpython2.7-dev
-openjdk-8-jdk
 pkg-config
 python-dev
 zlib1g-dev
 EOF
 )
-      
+
 # Install bazel
-BAZEL_VERSION=0.15.2
+BAZEL_VERSION=0.16.1
 BAZEL_DEBNAME=bazel_${BAZEL_VERSION}-linux-x86_64.deb
 BAZEL_URL=https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/${BAZEL_DEBNAME}
-BAZEL_SHA256=2d6bae0e2e62a976230cf6b2de8a9a6f3589f30cac6c845fbdc6533565a11590
+BAZEL_SHA256=c29f9709910ee23879dffe59ad31f5babba7dcbb81244ff319a5ce81da3c9abe
 apt-get install -y --no-install-recommends wget
 wget ${BAZEL_URL}
 if echo "${BAZEL_SHA256}  ${BAZEL_DEBNAME}" | sha256sum -c; then
