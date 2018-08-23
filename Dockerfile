@@ -32,5 +32,5 @@ RUN apt-get update \
       && rm -rf opt/ \
 # Clean up
       && rm -rf /root/.cache/bazel \
-      && apt remove -y bazel bison flex g++ openjdk-8-jdk wget \
+      && apt remove -y bazel bison flex g++ wget \
       && apt autoremove -y
