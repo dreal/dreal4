@@ -156,7 +156,16 @@ PYBIND11_MODULE(_dreal_util_py, m) {
       .def("empty", &Box::empty)
       .def("set_empty", &Box::set_empty)
       .def("size", &Box::size)
-      .def("__getitem__", [](const Box& self, const int i) { return self[i]; })
+      .def("__len__", &Box::size)
+      .def("__getitem__",
+           [](const Box& self, const int i) {
+             if (i < 0 || self.size() <= i) {
+               throw py::index_error(
+                   fmt::format("__getitem({}) is called for a box of size {}",
+                               self.size(), i));
+             }
+             return self[i];
+           })
       .def("__getitem__",
            [](const Box& self, const Variable& var) { return self[var]; })
       .def("__setitem__", [](Box& self, const int idx,
