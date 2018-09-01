@@ -451,42 +451,6 @@ Expression& operator*=(Expression& lhs, const Expression& rhs) {
     lhs = Expression::Zero();
     return lhs;
   }
-  // Pow-related simplifications.
-  if (is_pow(lhs)) {
-    const Expression& e1{get_first_argument(lhs)};
-    if (is_pow(rhs)) {
-      const Expression& e3{get_first_argument(rhs)};
-      if (e1.EqualTo(e3)) {
-        // Simplification: pow(e1, e2) * pow(e1, e4) => pow(e1, e2 + e4)
-        // TODO(soonho-tri): This simplification is not sound. For example,
-        // x^4 * x^(-3) => x. The original expression `x^4 * x^(-3)` is
-        // evaluated to `nan` when x = 0 while the simplified expression `x`
-        // is evaluated to 0.
-        const Expression& e2{get_second_argument(lhs)};
-        const Expression& e4{get_second_argument(rhs)};
-        lhs = pow(e1, e2 + e4);
-        return lhs;
-      }
-    }
-    if (e1.EqualTo(rhs)) {
-      // Simplification: pow(e1, e2) * e1 => pow(e1, e2 + 1)
-      // TODO(soonho-tri): This simplification is not sound.
-      const Expression& e2{get_second_argument(lhs)};
-      lhs = pow(e1, e2 + 1);
-      return lhs;
-    }
-  } else {
-    if (is_pow(rhs)) {
-      const Expression& e1{get_first_argument(rhs)};
-      if (e1.EqualTo(lhs)) {
-        // Simplification: (lhs * rhs == e1 * pow(e1, e2)) => pow(e1, 1 + e2)
-        // TODO(soonho-tri): This simplification is not sound.
-        const Expression& e2{get_second_argument(rhs)};
-        lhs = pow(e1, 1 + e2);
-        return lhs;
-      }
-    }
-  }
   if (is_constant(lhs) && is_constant(rhs)) {
     // Simplification: Expression(c1) * Expression(c2) => Expression(c1 * c2)
     lhs = Expression{get_constant_value(lhs) * get_constant_value(rhs)};
@@ -652,12 +616,6 @@ Expression pow(const Expression& e1, const Expression& e2) {
     if (v2 == 1.0) {
       return e1;
     }
-  }
-  if (is_pow(e1)) {
-    // pow(base, exponent) ^ e2 => pow(base, exponent * e2)
-    const Expression& base{get_first_argument(e1)};
-    const Expression& exponent{get_second_argument(e1)};
-    return Expression{new ExpressionPow(base, exponent * e2)};
   }
   return Expression{new ExpressionPow(e1, e2)};
 }
