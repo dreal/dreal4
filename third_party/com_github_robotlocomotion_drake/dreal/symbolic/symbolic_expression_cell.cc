@@ -933,12 +933,19 @@ void ExpressionMulFactory::AddTerm(const Expression& base,
   // The following assertion holds because of
   // ExpressionMulFactory::AddExpression.
   assert(!(is_constant(base) && is_constant(exponent)));
-  if (is_pow(base)) {
-    // If (base, exponent) = (pow(e1, e2), exponent)), then add (e1, e2 *
-    // exponent)
-    // Example: (x^2)^3 => x^(2 * 3)
-    return AddTerm(get_first_argument(base),
-                   get_second_argument(base) * exponent);
+  if (is_pow(base) && is_constant(exponent)) {
+    const Expression& e2{get_second_argument(base)};
+    if (is_constant(e2)) {
+      const double e2_value{get_constant_value(e2)};
+      if (is_integer(e2_value)) {
+        // If base = pow(e1, e2) and both of e2 and exponent are
+        // integers, then add (e1, e2 * exponent).
+        //
+        // Example: (x^2)^3 => x^(2 * 3)
+        const Expression& e1{get_first_argument(base)};
+        return AddTerm(e1, e2 * exponent);
+      }
+    }
   }
 
   const auto it(base_to_exponent_map_.find(base));
