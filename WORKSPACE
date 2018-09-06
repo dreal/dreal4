@@ -29,9 +29,9 @@ github_archive(
 github_archive(
     name = "gtest",  # GOOGLE
     build_file = "//tools:gtest.BUILD.bazel",
-    commit = "release-1.8.0",
+    commit = "release-1.8.1",
     repository = "google/googletest",
-    sha256 = "58a6f4277ca2bc8565222b3bbd58a177609e9c488e8a72649359ba51450db7d8",
+    sha256 = "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")
