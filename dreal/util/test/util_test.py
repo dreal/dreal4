@@ -311,6 +311,28 @@ class BoxTest(unittest.TestCase):
         self.assertEqual(b[y], Interval())
         self.assertEqual(b[z], Interval(2, 5))
 
+    def test_keys_values_items(self):
+        b = Box([x])
+        b.Add(y)
+        b.Add(z, 2, 5)
+        self.assertEqual(b.keys(), [x, y, z])
+        self.assertEqual(
+            b.values(),
+            [Interval(-inf, inf),
+             Interval(-inf, inf),
+             Interval(2, 5)])
+        self.assertEqual(b.items(), [(x, Interval(-inf, inf)),
+                                     (y, Interval(-inf, inf)),
+                                     (z, Interval(2, 5))])
+
+    def to_dictionary(self):
+        b = Box([x])
+        b.Add(y)
+        b.Add(z, 2, 5)
+        d = dict(b)
+        self.assertEqual(d[y], Interval())
+        self.assertEqual(d[z], Interval(2, 5))
+
 
 if __name__ == '__main__':
     unittest.main()

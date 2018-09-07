@@ -73,6 +73,9 @@ class Box {
   /// Returns i-th variable in the box.
   const Variable& variable(int i) const;
 
+  /// Checks if this box has @p var.
+  bool has_variable(const Variable& var) const;
+
   /// Returns the interval vector of the box.
   const IntervalVector& interval_vector() const;
 

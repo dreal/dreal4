@@ -1,5 +1,7 @@
 #include <functional>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "fmt/format.h"
 #include "fmt/ostream.h"
@@ -11,7 +13,9 @@
 
 namespace dreal {
 
+using std::pair;
 using std::string;
+using std::vector;
 
 // NOLINTNEXTLINE(build/namespaces)
 namespace py = pybind11;
@@ -150,28 +154,59 @@ PYBIND11_MODULE(_dreal_util_py, m) {
       .def("integer", [](const Box::Interval& x) { return integer(x); });
 
   py::class_<Box>(m, "Box")
-      .def(py::init<const std::vector<Variable>&>())
+      .def(py::init<const vector<Variable>&>())
       .def("Add", py::overload_cast<const Variable&>(&Box::Add))
       .def("Add", py::overload_cast<const Variable&, double, double>(&Box::Add))
       .def("empty", &Box::empty)
       .def("set_empty", &Box::set_empty)
       .def("size", &Box::size)
-      .def("__len__", &Box::size)
-      .def("__getitem__",
-           [](const Box& self, const int i) {
-             if (i < 0 || self.size() <= i) {
-               throw py::index_error(
-                   fmt::format("__getitem({}) is called for a box of size {}",
-                               self.size(), i));
-             }
-             return self[i];
-           })
-      .def("__getitem__",
-           [](const Box& self, const Variable& var) { return self[var]; })
-      .def("__setitem__", [](Box& self, const int idx,
-                             const Box::Interval& i) { self[idx] = i; })
       .def("__setitem__", [](Box& self, const Variable& var,
                              const Box::Interval& i) { self[var] = i; })
+      .def("__setitem__", [](Box& self, const int idx,
+                             const Box::Interval& i) { self[idx] = i; })
+      .def("__getitem__",
+           [](const Box& self, const Variable& var) { return self[var]; })
+      .def("__getitem__",
+           [](const Box& self, const int idx) { return self[idx]; })
+      .def("__repr__",
+           [](const Box& self) { return fmt::format("<Box \"{}\">", self); })
+      .def("__len__", &Box::size)
+      .def("__delitem__",
+           [](const Box& self, const Variable& var) {
+             throw std::runtime_error{
+                 "Box class does not allow deleting an item"};
+           })
+      .def("clear",
+           [](const Box& self) {
+             throw std::runtime_error{
+                 "Box class does not support the 'clear' operation"};
+           })
+      .def("has_key",
+           [](const Box& self, const Variable& var) {
+             return self.has_variable(var);
+           })
+      .def("keys", [](const Box& self) { return self.variables(); })
+      .def("values",
+           [](const Box& self) {
+             const ibex::IntervalVector& iv{self.interval_vector()};
+             vector<ibex::Interval> ret;
+             ret.reserve(iv.size());
+             for (int i = 0; i < iv.size(); ++i) {
+               ret.push_back(iv[i]);
+             }
+             return ret;
+           })
+      .def("items",
+           [](const Box& self) {
+             const vector<Variable>& vars{self.variables()};
+             const ibex::IntervalVector& iv{self.interval_vector()};
+             vector<pair<Variable, ibex::Interval>> ret;
+             ret.reserve(iv.size());
+             for (int i = 0; i < iv.size(); ++i) {
+               ret.emplace_back(vars[i], iv[i]);
+             }
+             return ret;
+           })
       .def("variable", &Box::variable)
       .def("index", &Box::index)
       .def("MaxDiam", &Box::MaxDiam)
@@ -182,9 +217,7 @@ PYBIND11_MODULE(_dreal_util_py, m) {
       .def("InplaceUnion", &Box::InplaceUnion)
       .def(py::self == py::self)
       .def(py::self != py::self)
-      .def("__str__", [](const Box& self) { return fmt::format("{}", self); })
-      .def("__repr__",
-           [](const Box& self) { return fmt::format("<Box \"{}\">", self); });
+      .def("__str__", [](const Box& self) { return fmt::format("{}", self); });
 }
 
 }  // namespace dreal

@@ -39,18 +39,28 @@ class BoxTest : public ::testing::Test {
   const double inf_{numeric_limits<double>::infinity()};
 };
 
-TEST_F(BoxTest, Add) {
+TEST_F(BoxTest, AddHasVariable) {
   Box b1{{x_}};
   EXPECT_EQ(b1[x_].lb(), -inf_);
   EXPECT_EQ(b1[x_].ub(), inf_);
 
+  EXPECT_TRUE(b1.has_variable(x_));
+  EXPECT_FALSE(b1.has_variable(y_));
+  EXPECT_FALSE(b1.has_variable(z_));
+
   b1.Add(y_);
   EXPECT_EQ(b1[y_].lb(), -inf_);
   EXPECT_EQ(b1[y_].ub(), inf_);
+  EXPECT_TRUE(b1.has_variable(x_));
+  EXPECT_TRUE(b1.has_variable(y_));
+  EXPECT_FALSE(b1.has_variable(z_));
 
   b1.Add(z_, -5, 10);
   EXPECT_EQ(b1[z_].lb(), -5);
   EXPECT_EQ(b1[z_].ub(), 10);
+  EXPECT_TRUE(b1.has_variable(x_));
+  EXPECT_TRUE(b1.has_variable(y_));
+  EXPECT_TRUE(b1.has_variable(z_));
 }
 
 TEST_F(BoxTest, Empty) {
