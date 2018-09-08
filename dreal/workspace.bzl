@@ -31,6 +31,15 @@ def dreal_workspace():
 
     # We do not use this one, yet.
     pkg_config_repository(
+        name = "python3",
+        modname = "python3",
+        pkg_config_paths = [
+            "/usr/local/opt/python@3/lib/pkgconfig",
+        ],
+    )
+
+    # We do not use this one, yet.
+    pkg_config_repository(
         name = "python-3.5",
         modname = "python-3.5",
         pkg_config_paths = [
@@ -46,6 +55,16 @@ def dreal_workspace():
             "/usr/local/opt/python@3/lib/pkgconfig",
         ],
     )
+
+    # We do not use this one, yet.
+    pkg_config_repository(
+        name = "python-3.7",
+        modname = "python-3.7",
+        pkg_config_paths = [
+            "/usr/local/opt/python@3/lib/pkgconfig",
+        ],
+    )
+
     github_archive(
         name = "spdlog",  # MIT
         repository = "gabime/spdlog",
