@@ -17,16 +17,14 @@ RUN apt-get update \
 # Build dReal4 and install under /usr. Note that this installs
 # bindings for python2.7 under /usr/lib/python2.7/dist-packages/.
       && cd /dreal4 \
-      && sed -i "s/lib\/python2.7\/site-packages/lib\/python2.7\/dist-packages/" `find dreal -name "BUILD.bazel"` \
+      && sed -i "s/site-packages/dist-packages/" tools/dreal.bzl \
       && bazel build //:archive \
       && tar xfz bazel-bin/archive.tar.gz \
       && cp -r opt/dreal/`cat /DREAL_VERSION`/* /usr \
       && rm -rf opt/ \
 # Install python3.5, build bindings for python3.5 and install it under
 # /usr/lib/python3/dist-packages.
-      && sed -i "s/python2/python-3.5/" tools/pybind11.BUILD.bazel \
-      && sed -i "s/lib\/python2.7/lib\/python3/" `find dreal -name "BUILD.bazel"` \
-      && bazel build //:archive \
+      && bazel build //:archive --force_python=py3 --python_path=python3 \
       && tar xfz bazel-bin/archive.tar.gz \
       && cp -r opt/dreal/`cat /DREAL_VERSION`/lib/python3/dist-packages/dreal /usr/lib/python3/dist-packages/ \
       && rm -rf opt/ \
