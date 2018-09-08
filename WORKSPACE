@@ -5,9 +5,9 @@ load("//third_party:com_github_robotlocomotion_drake/tools/workspace/github.bzl"
 github_archive(
     name = "google_styleguide",  # GOOGLE
     build_file = "//tools:google_styleguide.BUILD.bazel",
-    commit = "ab48617e00be9d111804bd3715dd7b5f5732c9a3",
-    repository = "google/styleguide",
-    sha256 = "fed315ad645c17cac86af58b157b1237c386515a181de8caad0d6f1fb9d1e563",
+    commit = "313b6b359086984c8a0bb1d77c195ce3ea3bd78b",
+    repository = "dreal-deps/styleguide",  # Use custom version for python3
+    sha256 = "", #fed315ad645c17cac86af58b157b1237c386515a181de8caad0d6f1fb9d1e563",
 )
 
 github_archive(
