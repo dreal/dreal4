@@ -8,7 +8,7 @@ load(
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//visibility:private"])
 
 dreal_cc_library(
     name = "symbolic",
@@ -17,6 +17,9 @@ dreal_cc_library(
     ],
     hdrs = [
         "symbolic.h",
+    ],
+    visibility = [
+        "//dreal:__subpackages__",
     ],
     deps = [
         "//dreal/util:assert",
@@ -31,6 +34,9 @@ dreal_cc_library(
     testonly = 1,
     hdrs = [
         "symbolic_test_util.h",
+    ],
+    visibility = [
+        "//dreal/util:__pkg__",
     ],
     deps = [
         ":symbolic",
@@ -84,7 +90,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/symbolic",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 # ----------------------
@@ -96,7 +102,7 @@ filegroup(
         "symbolic.h",
         "//third_party/com_github_robotlocomotion_drake:headers",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 pkg_tar(
@@ -107,6 +113,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "include/dreal/symbolic",
     tags = ["manual"],
+    visibility = ["//:__pkg__"],
 )
 
 cpplint()

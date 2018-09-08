@@ -140,6 +140,7 @@ def dreal_pybind_library(
             cc_so_name,
         ],
         deps = py_deps,
+        visibility = ["//dreal:__subpackages__"],
     )
 
 def dreal_cc_binary(

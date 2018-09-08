@@ -1,3 +1,7 @@
+package(
+    default_visibility = ["//visibility:private"],
+)
+
 exports_files([
     "CPPLINT.cfg",
     ".clang-format",
@@ -15,7 +19,9 @@ cc_binary(
         ],
     }),
     linkshared = 1,
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//dreal:__subpackages__",
+    ],
     deps = [
         "//dreal/api",
         "//dreal/solver",
@@ -65,7 +71,6 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "lib/pkgconfig",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
 )
 
 pkg_tar(
@@ -74,7 +79,6 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "share/doc/dreal",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
 )
 
 pkg_tar(
@@ -131,7 +135,9 @@ dreal_cc_library(
     hdrs = [
         "//dreal:headers",
     ],
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//visibility:public",
+    ],
     deps = [
         "//dreal/api",
         "//dreal/solver",

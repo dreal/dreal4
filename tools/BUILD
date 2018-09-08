@@ -1,4 +1,4 @@
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//visibility:private"])
 
 sh_binary(
     name = "kcov",
@@ -32,11 +32,13 @@ sh_binary(
 config_setting(
     name = "apple",
     constraint_values = ["@bazel_tools//platforms:osx"],
+    visibility = ["//visibility:public"],
 )
 
 config_setting(
     name = "clang",
     constraint_values = ["@bazel_tools//tools/cpp:clang"],
+    visibility = ["//visibility:public"],
 )
 
 config_setting(
@@ -47,9 +49,11 @@ config_setting(
 config_setting(
     name = "gcc",
     constraint_values = ["@bazel_tools//tools/cpp:gcc"],
+    visibility = ["//visibility:public"],
 )
 
 config_setting(
     name = "linux",
     constraint_values = ["@bazel_tools//platforms:linux"],
+    visibility = ["//visibility:public"],
 )

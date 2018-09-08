@@ -5,6 +5,8 @@ load(
     "dreal_cc_library",
 )
 
+package(default_visibility = ["//visibility:private"])
+
 dreal_cc_library(
     name = "control",
     srcs = [
@@ -25,7 +27,6 @@ dreal_cc_binary(
     srcs = [
         "check_lyapunov.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         ":control",
     ],
@@ -36,7 +37,6 @@ dreal_cc_binary(
     srcs = [
         "synthesize_lyapunov_simple.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         ":control",
     ],
@@ -47,7 +47,6 @@ dreal_cc_binary(
     srcs = [
         "synthesize_lyapunov_normalized_pendulum.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         ":control",
     ],
@@ -58,7 +57,6 @@ dreal_cc_binary(
     srcs = [
         "synthesize_lyapunov_damped_mathieu.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         ":control",
     ],
@@ -69,7 +67,6 @@ dreal_cc_binary(
     srcs = [
         "synthesize_lyapunov_moore_greitzer.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         ":control",
     ],
@@ -80,7 +77,6 @@ dreal_cc_binary(
     srcs = [
         "synthesize_lyapunov_power_train.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         ":control",
     ],
@@ -91,7 +87,6 @@ dreal_cc_binary(
     srcs = [
         "program_synthesis_abs.cc",
     ],
-    visibility = ["//visibility:public"],
     deps = [
         "//dreal/api",
     ],

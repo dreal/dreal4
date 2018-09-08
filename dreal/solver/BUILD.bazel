@@ -8,7 +8,7 @@ load(
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//visibility:private"])
 
 # ---------
 # Libraries
@@ -20,6 +20,10 @@ dreal_cc_library(
     ],
     hdrs = [
         "config.h",
+    ],
+    visibility = [
+        "//dreal/contractor:__pkg__",
+        "//dreal/optimization:__pkg__",
     ],
     deps = ["//dreal/util:option_value"],
 )
@@ -49,6 +53,13 @@ dreal_cc_library(
         "formula_evaluator.h",
         "icp.h",
         "theory_solver.h",
+    ],
+    visibility = [
+        "//:__pkg__",
+        "//dreal/api:__pkg__",
+        "//dreal/dr:__pkg__",
+        "//dreal/examples:__pkg__",
+        "//dreal/smt2:__pkg__",
     ],
     deps = [
         ":config",
@@ -103,6 +114,7 @@ dreal_cc_library(
     hdrs = [
         "filter_assertion.h",
     ],
+    visibility = ["//dreal/contractor:__pkg__"],
     deps = [
         "//dreal/symbolic",
         "//dreal/util:box",
@@ -178,7 +190,6 @@ dreal_generate_file(
     name = "init_py",
     out = "__init__.py",
     content = """from dreal.solver._dreal_solver_py import *""",
-    visibility = ["//visibility:private"],
 )
 
 dreal_pybind_library(
@@ -213,7 +224,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/solver",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 # ----------------------
@@ -225,7 +236,7 @@ filegroup(
         "config.h",
         "context.h",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 pkg_tar(
@@ -236,6 +247,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "include/dreal/solver",
     tags = ["manual"],
+    visibility = ["//:__pkg__"],
 )
 
 cpplint()

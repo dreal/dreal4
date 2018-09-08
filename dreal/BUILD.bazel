@@ -8,6 +8,8 @@ load(
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
+package(default_visibility = ["//visibility:private"])
+
 genrule(
     name = "generate_version_header",
     outs = [
@@ -33,7 +35,10 @@ dreal_cc_binary(
         "dreal_main.cc",
         "dreal_main.h",
     ],
-    visibility = ["//visibility:public"],
+    visibility = [
+        "//dreal/test/dr:__pkg__",
+        "//dreal/test/smt2:__pkg__",
+    ],
     deps = [
         "//dreal/dr",
         "//dreal/smt2",
@@ -53,7 +58,6 @@ dreal_generate_file(
 from dreal.util import *
 from dreal.solver import *
 from dreal.api import *""",
-    visibility = ["//visibility:private"],
 )
 
 pkg_tar(
@@ -64,7 +68,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 # ----------------------
@@ -76,7 +80,7 @@ filegroup(
         "dreal.h",
         "version.h",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 pkg_tar(
@@ -87,7 +91,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "include/dreal",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 pkg_tar(
@@ -99,7 +103,7 @@ pkg_tar(
     mode = "0755",
     package_dir = "bin",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 pkg_tar(
@@ -110,7 +114,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "lib",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 cpplint()

@@ -9,7 +9,7 @@ load(
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
-package(default_visibility = ["//visibility:public"])
+package(default_visibility = ["//visibility:private"])
 
 # ---------
 # Libraries
@@ -19,6 +19,7 @@ dreal_cc_library(
     hdrs = [
         "assert.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
 )
 
 dreal_cc_library(
@@ -28,6 +29,10 @@ dreal_cc_library(
     ],
     hdrs = [
         "box.h",
+    ],
+    visibility = [
+        "//:__pkg__",
+        "//dreal:__subpackages__",
     ],
     deps = [
         ":assert",
@@ -47,6 +52,7 @@ dreal_cc_library(
     hdrs = [
         "interval.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         ":box",
     ],
@@ -60,6 +66,7 @@ dreal_cc_library(
     hdrs = [
         "if_then_else_eliminator.h",
     ],
+    visibility = ["//dreal/solver:__pkg__"],
     deps = [
         ":nnfizer",
         ":stat",
@@ -74,6 +81,7 @@ dreal_cc_library(
     hdrs = [
         "stat.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
 )
 
 dreal_cc_library(
@@ -84,6 +92,7 @@ dreal_cc_library(
     hdrs = [
         "timer.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
 )
 
 dreal_cc_library(
@@ -94,6 +103,7 @@ dreal_cc_library(
     hdrs = [
         "tseitin_cnfizer.h",
     ],
+    visibility = ["//dreal/solver:__pkg__"],
     deps = [
         ":assert",
         ":exception",
@@ -113,6 +123,7 @@ dreal_cc_library(
     hdrs = [
         "naive_cnfizer.h",
     ],
+    visibility = ["//dreal/solver:__pkg__"],
     deps = [
         ":assert",
         ":exception",
@@ -126,6 +137,7 @@ dreal_cc_library(
     hdrs = [
         "exception.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         "@fmt",
     ],
@@ -139,6 +151,7 @@ dreal_cc_library(
     hdrs = [
         "filesystem.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
 )
 
 dreal_cc_library(
@@ -148,6 +161,10 @@ dreal_cc_library(
     ],
     hdrs = [
         "ibex_converter.h",
+    ],
+    visibility = [
+        "//dreal/contractor:__pkg__",
+        "//dreal/solver:__pkg__",
     ],
     deps = [
         ":box",
@@ -170,6 +187,7 @@ dreal_cc_library(
     hdrs = [
         "logging.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         "@spdlog",
     ],
@@ -183,6 +201,7 @@ dreal_cc_library(
     hdrs = [
         "math.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
 )
 
 dreal_cc_library(
@@ -192,6 +211,11 @@ dreal_cc_library(
     ],
     hdrs = [
         "nnfizer.h",
+    ],
+    visibility = [
+        "//dreal/contractor:__pkg__",
+        "//dreal/optimization:__pkg__",
+        "//dreal/solver:__pkg__",
     ],
     deps = [
         "//dreal/symbolic",
@@ -203,6 +227,7 @@ dreal_cc_library(
     hdrs = [
         "option_value.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         "//dreal/symbolic",
     ],
@@ -216,6 +241,7 @@ dreal_cc_library(
     hdrs = [
         "predicate_abstractor.h",
     ],
+    visibility = ["//dreal/solver:__pkg__"],
     deps = [
         ":stat",
         ":timer",
@@ -231,6 +257,7 @@ dreal_cc_library(
     hdrs = [
         "profiler.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
 )
 
 dreal_cc_library(
@@ -238,6 +265,7 @@ dreal_cc_library(
     hdrs = [
         "scoped_unordered_map.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         ":assert",
         ":exception",
@@ -249,6 +277,7 @@ dreal_cc_library(
     hdrs = [
         "scoped_vector.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         ":assert",
         ":exception",
@@ -263,6 +292,7 @@ dreal_cc_library(
     hdrs = [
         "string_to_interval.h",
     ],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
         "//dreal/util:box",
     ],
@@ -387,7 +417,6 @@ dreal_generate_file(
     name = "init_py",
     out = "__init__.py",
     content = "from dreal.util._dreal_util_py import *",
-    visibility = ["//visibility:private"],
 )
 
 dreal_pybind_library(
@@ -425,7 +454,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "lib/python2.7/site-packages/dreal/util",
     tags = ["manual"],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 # ----------------------
@@ -437,7 +466,7 @@ filegroup(
         "box.h",
         "option_value.h",
     ],
-    visibility = ["//visibility:public"],
+    visibility = ["//:__pkg__"],
 )
 
 pkg_tar(
@@ -448,6 +477,7 @@ pkg_tar(
     extension = "tar.gz",
     package_dir = "include/dreal/util",
     tags = ["manual"],
+    visibility = ["//:__pkg__"],
 )
 
 cpplint()
