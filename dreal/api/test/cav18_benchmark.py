@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------
 # Optimization Benchmark in the following paper
@@ -42,7 +43,7 @@ def make_domain(tuples):
         return (vars + [var], logical_and(bounds, bound))
 
     return reduce((lambda vars_bounds, item: reducer(vars_bounds, item)),
-                  tuples, ([], Formula.True()))
+                  tuples, ([], Formula.TRUE()))
 
 
 def compute_min(objective, box, vars):

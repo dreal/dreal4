@@ -23,4 +23,5 @@ py_test(
     deps = [
         ":cpplint_py",
     ],
+    srcs_version = "PY2AND3",
 )

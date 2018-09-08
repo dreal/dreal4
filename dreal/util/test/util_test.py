@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from dreal.util import Box
 from dreal.util import Interval
 from dreal.util import (exp, log, sqr, sqrt, pow, sin, cos, tan, asin, acos,

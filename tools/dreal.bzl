@@ -140,6 +140,7 @@ def dreal_pybind_library(
             cc_so_name,
         ],
         deps = py_deps,
+        srcs_version = "PY2AND3",
         visibility = ["//dreal:__subpackages__"],
     )
 
@@ -266,6 +267,7 @@ def smt2_test(
             "//dreal:dreal",
         ] + data_files,
         main = "test.py",
+        srcs_version = "PY2AND3",
         **kwargs
     )
 
@@ -292,6 +294,7 @@ def dr_test(
             "//dreal:dreal",
         ] + data_files,
         main = "test.py",
+        srcs_version = "PY2AND3",
         **kwargs
     )
 

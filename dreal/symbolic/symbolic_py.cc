@@ -313,8 +313,8 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
       .def("__hash__",
            [](const Formula& self) { return std::hash<Formula>{}(self); })
       .def("__nonzero__", [](const Formula& f) { return f.Evaluate(); })
-      .def_static("True", &Formula::True)
-      .def_static("False", &Formula::False);
+      .def_static("TRUE", &Formula::True)
+      .def_static("FALSE", &Formula::False);
 
   // __logical_and and __logical_or will be extended as `And` and `Or`
   // in `__init__.py` to accept an arbitrary number of arguments.

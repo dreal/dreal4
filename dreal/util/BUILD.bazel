@@ -434,6 +434,7 @@ py_test(
         "test/util_test.py",
     ],
     main = "test/util_test.py",
+    srcs_version = "PY2AND3",
     tags = [
         "no_asan",
         "no_lsan",

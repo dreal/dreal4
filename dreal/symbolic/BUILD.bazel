@@ -70,6 +70,7 @@ py_test(
         "test/symbolic_test.py",
     ],
     main = "test/symbolic_test.py",
+    srcs_version = "PY2AND3",
     tags = [
         "no_asan",
         "no_lsan",

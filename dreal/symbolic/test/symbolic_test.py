@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from dreal.symbolic import Variable, Variables, Expression, Formula
 from dreal.symbolic import logical_not, logical_and, logical_or
 from dreal.symbolic import logical_imply, logical_iff, forall
@@ -499,8 +501,8 @@ class TestSymbolicFormula(unittest.TestCase):
         self.assertTrue(f1 != f3)
 
     def test_static_true_false(self):
-        tt = Formula.True()
-        ff = Formula.False()
+        tt = Formula.TRUE()
+        ff = Formula.FALSE()
         self.assertEqual(x == x, tt)
         self.assertEqual(x != x, ff)
 

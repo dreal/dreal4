@@ -71,6 +71,7 @@ py_test(
         "test/api_test.py",
     ],
     main = "test/api_test.py",
+    srcs_version = "PY2AND3",
     tags = [
         "no_asan",
         "no_lsan",
@@ -92,6 +93,7 @@ py_test(
         "--local-optimization",
     ],
     main = "test/cav18_benchmark.py",
+    srcs_version = "PY2AND3",
     tags = [
         "no_asan",
         "no_lsan",
