@@ -57,3 +57,7 @@ config_setting(
     constraint_values = ["@bazel_tools//platforms:linux"],
     visibility = ["//visibility:public"],
 )
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])

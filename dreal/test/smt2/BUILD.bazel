@@ -742,3 +742,7 @@ smt2_test(
     name = "let_06",
     size = "small",
 )
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])

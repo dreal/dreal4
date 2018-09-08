@@ -8,3 +8,6 @@ exports_files(
         "//tools:__pkg__",
     ],
 )
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])

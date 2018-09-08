@@ -144,3 +144,7 @@ dreal_cc_library(
         "//dreal/util:box",
     ],
 )
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])

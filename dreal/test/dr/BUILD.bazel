@@ -121,3 +121,7 @@ dr_test(
     name = "constrained_opt_simionescu",
     size = "small",
 )
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])

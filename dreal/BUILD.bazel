@@ -118,3 +118,7 @@ pkg_tar(
 )
 
 cpplint()
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])

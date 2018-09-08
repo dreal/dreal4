@@ -48,3 +48,7 @@ dreal_cc_library(
 )
 
 cpplint()
+
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE"])
