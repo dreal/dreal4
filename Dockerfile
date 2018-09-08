@@ -11,7 +11,7 @@ RUN cd /dreal4 \
 # Install prerequsites.
 RUN apt-get update \
       && yes "Y" | /dreal4/setup/ubuntu/16.04/install_prereqs.sh \
-      && apt-get install -y --no-install-recommends libpython3.5-dev \
+      && apt-get install -y --no-install-recommends python3-dev \
       && rm -rf /var/lib/apt/lists/* \
       && apt-get clean all \
 # Build dReal4 and install under /usr. Note that this installs
