@@ -58,6 +58,12 @@ config_setting(
     visibility = ["//visibility:public"],
 )
 
+config_setting(
+    name = "py3config",
+    values = {"force_python": "PY3"},
+    visibility = ["//visibility:public"],
+)
+
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE"])

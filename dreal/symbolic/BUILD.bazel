@@ -5,6 +5,7 @@ load(
     "dreal_cc_googletest",
     "dreal_cc_library",
     "dreal_pybind_library",
+    "PYTHON_PACKAGE_DIR",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -89,7 +90,7 @@ pkg_tar(
         ":dreal_symbolic_py",
     ],
     extension = "tar.gz",
-    package_dir = "lib/python2.7/site-packages/dreal/symbolic",
+    package_dir = PYTHON_PACKAGE_DIR + "/dreal/symbolic",
     tags = ["manual"],
     visibility = ["//:__pkg__"],
 )

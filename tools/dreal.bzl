@@ -5,6 +5,13 @@ DREAL_VERSION = "4.18.08.1"
 
 DREAL_PREFIX = "opt/dreal/%s" % DREAL_VERSION
 
+PYTHON_VERSION_STRING = select({
+        "@dreal//tools:py3config": "3",
+        "//conditions:default": "2.7",
+    })
+
+PYTHON_PACKAGE_DIR = "lib/python" + PYTHON_VERSION_STRING + "/site-packages"
+
 # The CXX_FLAGS will be enabled for all C++ rules in the project
 # building with any compiler.
 CXX_FLAGS = [
@@ -111,7 +118,7 @@ def dreal_pybind_library(
     """
     cc_so_name = "_" + name + ".so"
 
-    # The last +3 is for "lib/python2.7/site-packages".
+    # The last +3 is for "lib/python*/site-packages".
     levels_to_root = native.package_name().count("/") + name.count("/") + 3
     dreal_cc_binary(
         name = cc_so_name,

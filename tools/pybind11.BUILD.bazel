@@ -28,7 +28,8 @@ cc_library(
         "include/pybind11/stl_bind.h",
     ],
     includes = ["include"],
-    deps = [
-        "@python2",
-    ],
+    deps = select({
+        "@dreal//tools:py3config": ["@python3"],
+        "//conditions:default": ["@python2"],
+    }),
 )

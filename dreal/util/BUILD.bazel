@@ -6,6 +6,7 @@ load(
     "dreal_cc_library",
     "dreal_generate_file",
     "dreal_pybind_library",
+    "PYTHON_PACKAGE_DIR",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -453,7 +454,7 @@ pkg_tar(
         ":dreal_util_py",
     ],
     extension = "tar.gz",
-    package_dir = "lib/python2.7/site-packages/dreal/util",
+    package_dir = PYTHON_PACKAGE_DIR + "/dreal/util",
     tags = ["manual"],
     visibility = ["//:__pkg__"],
 )
