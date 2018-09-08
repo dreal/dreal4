@@ -106,6 +106,7 @@ def dreal_pybind_library(
         cc_srcs = [],
         cc_deps = []):
     """Creates a rule to declare a pybind library.
+
     Note that `cc_deps` should includes header-only dependencies.
     """
     cc_so_name = "_" + name + ".so"
@@ -191,17 +192,16 @@ def dreal_cc_test(
         size = None,
         srcs = None,
         copts = [],
-        disable_in_compilation_mode_dbg = False,
         **kwargs):
-    """Creates a rule to declare a C++ unit test.  Note that for almost all
-    cases, dreal_cc_googletest should be used, instead of this rule.
+    """Creates a rule to declare a C++ unit test.
+
+    Note that for almost all cases, dreal_cc_googletest should be
+    used, instead of this rule.
 
     By default, sets size="small" because that indicates a unit test.
-    By default, sets name="test/${name}.cc" per Dreal's filename convention.
+    By default, sets name="test/${name}.cc" per Dreal's filename
+    convention.
 
-    If disable_in_compilation_mode_dbg is True, the srcs will be suppressed
-    in debug-mode builds, so the test will trivially pass. This option should
-    be used only rarely, and the reason should always be documented.
     """
     if size == None:
         size = "small"
@@ -220,17 +220,14 @@ def dreal_cc_googletest(
         deps = None,
         use_default_main = True,
         **kwargs):
-    """Creates a rule to declare a C++ unit test using googletest.  Always adds
-    a deps= entry for googletest main (@gtest//:main).
+    """Creates a rule to declare a C++ unit test using googletest.
+
+    Always adds a deps= entry for googletest main (@gtest//:main).
 
     By default, sets size="small" because that indicates a unit test.
     By default, sets name="test/${name}.cc" per Dreal's filename convention.
     By default, sets use_default_main=True to use GTest's main, via
     @gtest//:main. Otherwise, it will depend on @gtest//:without_main.
-
-    If disable_in_compilation_mode_dbg is True, the srcs will be suppressed
-    in debug-mode builds, so the test will trivially pass. This option should
-    be used only rarely, and the reason should always be documented.
     """
     if deps == None:
         deps = []
