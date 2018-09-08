@@ -70,10 +70,13 @@ y : [8.929064928123818135, 8.929756298502674383]
 z : [0.06815055407334302817, 0.06858905276351445757]
 ```
 
-Python3 support is experimental for now. Please read [this
-comment](https://github.com/dreal/dreal4/issues/69#issuecomment-377085510)
-for instructions.
-
+To build Python3 bindings, run the following:
+```bash
+bazel build //:archive --force_python=py3 --python_path=python3
+tar xvfz bazel-bin/archive.tar.gz
+# Make sure that the above command create opt/dreal/VERSION/lib/python3/...
+export PYTHONPATH=`pwd`/opt/dreal/<VERSION>/lib/python3/site-packages:${PYTHONPATH}
+```
 
 Docker
 ======
