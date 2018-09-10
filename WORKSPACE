@@ -7,7 +7,7 @@ github_archive(
     build_file = "//tools:google_styleguide.BUILD.bazel",
     commit = "313b6b359086984c8a0bb1d77c195ce3ea3bd78b",
     repository = "dreal-deps/styleguide",  # Use custom version for python3
-    sha256 = "", #fed315ad645c17cac86af58b157b1237c386515a181de8caad0d6f1fb9d1e563",
+    sha256 = "ac8214c0c086c186c8d04fb7271792a8bbb3b42c5fee165ff917d908a495109b",
 )
 
 github_archive(
