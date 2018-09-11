@@ -121,6 +121,7 @@ def setup_pkg_config_repository(repository_ctx):
     # will be absolute paths; we'll make them relative in a moment.
     absolute_includes = []
     defines = []
+    copts = []
     unknown_cflags = []
     # We process in reserve order to keep our loop index unchanged by a pop.
     for cflag in cflags:
@@ -128,21 +129,8 @@ def setup_pkg_config_repository(repository_ctx):
             absolute_includes += [cflag[2:]]
         elif cflag.startswith("-D"):
             defines += [cflag[2:]]
-        elif cflag in [
-                "-frounding-math",
-                "-ffloat-store",
-                "-msse",
-                "-msse2",
-                "-msse3",
-                "-msse4",
-                "-mfpmath"]:
-            # We know these are okay to ignore.
-            pass
         else:
-            unknown_cflags += [cflag]
-    if unknown_cflags:
-        print("pkg-config of {} returned flags that we will ignore: {}".format(
-            repository_ctx.attr.modname, unknown_cflags))
+            copts += [cflag]
 
     # Symlink the absolute include paths into our repository, to obtain
     # relative paths for them as required by cc_library's attributes.
@@ -166,7 +154,7 @@ def setup_pkg_config_repository(repository_ctx):
             hdrs_prologue + repr(
                 getattr(repository_ctx.attr, "extra_hdrs", []))),
         "%{copts}": repr(
-            getattr(repository_ctx.attr, "extra_copts", [])),
+            copts + getattr(repository_ctx.attr, "extra_copts", [])),
         "%{defines}": repr(
             defines + getattr(repository_ctx.attr, "extra_defines", [])),
         "%{includes}": repr(
