@@ -76,6 +76,7 @@ bazel build //:archive --force_python=py3 --python_path=python3
 tar xvfz bazel-bin/archive.tar.gz
 # Make sure that the above command create opt/dreal/VERSION/lib/python3/...
 export PYTHONPATH=`pwd`/opt/dreal/<VERSION>/lib/python3/site-packages:${PYTHONPATH}
+export LD_LIBRARY_PATH=`pwd`/opt/dreal/<VERSION>/lib:${LD_LIBRARY_PATH}
 ```
 
 Docker
