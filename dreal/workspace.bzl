@@ -75,8 +75,8 @@ def dreal_workspace():
     github_archive(
         name = "fmt",  # BSD2
         repository = "fmtlib/fmt",
-        commit = "5.1.0",
-        sha256 = "73d4cab4fa8a3482643d8703de4d9522d7a56981c938eca42d929106ff474b44",
+        commit = "5.2.0",
+        sha256 = "b0e8c71a8fb906123966686f788e83cd95ae499afe9c25ff6284f624488435ac",
         build_file = str(Label("//tools:fmt.BUILD.bazel")),
     )
     github_archive(
@@ -89,7 +89,7 @@ def dreal_workspace():
     github_archive(
         name = "pybind11",  # BSD
         repository = "pybind/pybind11",
-        commit = "v2.2.3",
-        sha256 = "3a3b7b651afab1c5ba557f4c37d785a522b8030dfc765da26adc2ecd1de940ea",
+        commit = "v2.2.4",
+        sha256 = "b69e83658513215b8d1443544d0549b7d231b9f201f6fc787a2b2218b408181e",
         build_file = str(Label("//tools:pybind11.BUILD.bazel")),
     )
