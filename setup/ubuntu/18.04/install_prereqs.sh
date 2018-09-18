@@ -25,7 +25,7 @@ EOF
 )
       
 # Install bazel
-BAZEL_VERSION=0.16.1
+BAZEL_VERSION=0.17.1
 BAZEL_DEBNAME=bazel_${BAZEL_VERSION}-linux-x86_64.deb
 BAZEL_URL=https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/${BAZEL_DEBNAME}
 BAZEL_SHA256=c29f9709910ee23879dffe59ad31f5babba7dcbb81244ff319a5ce81da3c9abe
