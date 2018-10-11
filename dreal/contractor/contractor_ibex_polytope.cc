@@ -1,9 +1,7 @@
 #include "dreal/contractor/contractor_ibex_polytope.h"
 
-#include <memory>
 #include <sstream>
 #include <utility>
-#include <vector>
 
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
@@ -16,22 +14,6 @@ using std::unique_ptr;
 using std::vector;
 
 namespace dreal {
-
-namespace {
-
-// Custom deleter for ibex::ExprCtr. It deletes the internal
-// ibex::ExprNode while keeping the ExprSymbols intact. Note that the
-// ExprSymbols will be deleted separately in
-// ~ContractorIbexPolytope().
-struct ExprCtrDeleter {
-  void operator()(const ibex::ExprCtr* const p) const {
-    if (p) {
-      ibex::cleanup(p->e, false);
-      delete p;
-    }
-  }
-};
-}  // namespace
 
 //---------------------------------------
 // Implementation of ContractorIbexPolytope
@@ -55,6 +37,9 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
           ibex_converter_.Convert(f)};
       if (expr_ctr) {
         system_factory_->add_ctr(*expr_ctr);
+        // We need to postpone the destruction of expr_ctr as it is
+        // still used inside of system_factory_.
+        expr_ctrs_.push_back(std::move(expr_ctr));
       }
     }
   }
