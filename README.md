@@ -185,13 +185,13 @@ you need to set up `PKG_CONFIG_PATH` as follows:
 macOS 10.13 / 10.12 / 10.11:
 
 ```bash
-export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.2/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
 Ubuntu 18.04 / 16.04:
 
 ```bash
-export PKG_CONFIG_PATH=/opt/dreal/4.18.08.1/lib/pkgconfig:/opt/libibex/2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/opt/dreal/4.18.08.1/lib/pkgconfig:/opt/libibex/2.7.2/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
 Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
