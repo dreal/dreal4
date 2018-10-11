@@ -63,6 +63,18 @@ matrix:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-7 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+          - clang-7
+      env:
+        - COMPILER="clang-7" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty-6.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
