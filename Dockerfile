@@ -1,4 +1,4 @@
-FROM       ubuntu:16.04
+FROM       ubuntu:18.04
 MAINTAINER soonho.kong@gmail.com
 
 RUN mkdir /dreal4
@@ -10,7 +10,7 @@ RUN cd /dreal4 \
 
 # Install prerequsites.
 RUN apt-get update \
-      && yes "Y" | /dreal4/setup/ubuntu/16.04/install_prereqs.sh \
+      && yes "Y" | /dreal4/setup/ubuntu/18.04/install_prereqs.sh \
       && apt-get install -y --no-install-recommends python3-dev \
       && rm -rf /var/lib/apt/lists/* \
       && apt-get clean all \
