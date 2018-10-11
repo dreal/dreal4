@@ -7,7 +7,7 @@ dReal: An SMT Solver for Nonlinear Theories of Reals
 How to Install
 ==============
 
-macOS 10.13 / 10.12 / 10.11:
+macOS 10.14 / 10.13 / 10.12:
 
 ```bash
 /usr/bin/curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/mac/install.sh | bash
@@ -98,7 +98,7 @@ How to Build
 Install Prerequsites
 --------------------
 
-macOS 10.13 / 10.12 / 10.11:
+macOS 10.14 / 10.13 / 10.12:
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
@@ -182,7 +182,7 @@ If you want to use
 [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config),
 you need to set up `PKG_CONFIG_PATH` as follows:
 
-macOS 10.13 / 10.12 / 10.11:
+macOS 10.14 / 10.13 / 10.12:
 
 ```bash
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.2/share/pkgconfig:${PKG_CONFIG_PATH}
