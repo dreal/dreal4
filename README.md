@@ -138,6 +138,7 @@ In CI, we test that dReal can be built using the following compilers:
    [gcc-7](https://gcc.gnu.org/gcc-7),
    [gcc-6](https://gcc.gnu.org/gcc-6),
    [gcc-5](https://gcc.gnu.org/gcc-5),
+   [clang-7.0](http://releases.llvm.org/7.0.0/tools/clang/docs),
    [clang-6.0](http://releases.llvm.org/6.0.0/tools/clang/docs),
    [clang-5.0](http://releases.llvm.org/5.0.0/tools/clang/docs),
    [clang-4.0](http://releases.llvm.org/4.0.0/tools/clang/docs),
@@ -198,5 +199,3 @@ Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
 provide necessary information to use dReal. Note that setting up
 `PKG_CONFIG_PATH` is necessary to avoid possible conflicts (i.e. with
 `ibex` formula in Mac).
-
-
