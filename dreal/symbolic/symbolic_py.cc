@@ -270,16 +270,21 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
       .def("max", &max);
 
   m.def("if_then_else", &if_then_else)
-      .def("if_then_else", [](const Variable& v, const Expression& e_then,
-                              const Expression& e_else) {
-        if (v.get_type() != Variable::Type::BOOLEAN) {
-          throw DREAL_RUNTIME_ERROR(
-              "{} is not a Boolean variable but used as a "
-              "conditional in if-then-else({}, {}, {})",
-              v, v, e_then, e_else);
-        }
-        return if_then_else(Formula(v), e_then, e_else);
-      });
+      .def("if_then_else",
+           [](const Variable& v, const Expression& e_then,
+              const Expression& e_else) {
+             if (v.get_type() != Variable::Type::BOOLEAN) {
+               throw DREAL_RUNTIME_ERROR(
+                   "{} is not a Boolean variable but used as a "
+                   "conditional in if-then-else({}, {}, {})",
+                   v, v, e_then, e_else);
+             }
+             return if_then_else(Formula(v), e_then, e_else);
+           })
+      .def("if_then_else",
+           [](const Formula& f, const Formula& f1, const Formula& f2) {
+             return imply(f, f1) && imply(!f, f2);
+           });
 
   m.def("forall",
         [](const std::vector<Variable>& vec, const Formula& f) {
