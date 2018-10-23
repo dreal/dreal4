@@ -516,6 +516,20 @@ class TestSymbolicFormula(unittest.TestCase):
         self.assertEqual(
             str(forall([x, y, z], x == 0)), "forall({x}. (x = 0))")
 
+    def test_if_then_else(self):
+        c = x > y
+        f1 = x == 1.0
+        f2 = y == 2.0
+        f = if_then_else(c, f1, f2)
+        env1 = {x: 2, y: 1}
+        env2 = {x: 1, y: 2}
+        env3 = {x: 1, y: 0}
+        env4 = {x: 0, y: 1}
+        self.assertEqual(f.Evaluate(env1), False)
+        self.assertEqual(f.Evaluate(env2), True)
+        self.assertEqual(f.Evaluate(env3), True)
+        self.assertEqual(f.Evaluate(env4), False)
+
 
 if __name__ == '__main__':
     unittest.main()
