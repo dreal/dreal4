@@ -297,6 +297,12 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
   py::class_<Formula>(m, "Formula")
       .def("GetFreeVariables", &Formula::GetFreeVariables)
       .def("EqualTo", &Formula::EqualTo)
+      .def("Evaluate", [](const Formula& self) { return self.Evaluate(); })
+      .def("Evaluate",
+           [](const Formula& self, const Environment::map& env) {
+             Environment e;
+             return self.Evaluate(Environment{env});
+           })
       .def("Substitute",
            [](const Formula& self, const Variable& var, const Expression& e) {
              return self.Substitute(var, e);

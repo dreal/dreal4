@@ -474,6 +474,11 @@ class TestSymbolicFormula(unittest.TestCase):
         f = x > y
         self.assertEqual(f.GetFreeVariables(), Variables([x, y]))
 
+    def test_evaluate(self):
+        env = {x: 3, y: 4}
+        self.assertEqual((x < y).Evaluate(env), True)
+        self.assertEqual((x > y).Evaluate(env), False)
+
     def test_substitute_with_pair(self):
         f = x > y
         self.assertEqual(f.Substitute(y, y + 5), x > y + 5)
