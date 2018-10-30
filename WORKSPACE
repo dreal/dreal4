@@ -3,6 +3,17 @@ workspace(name = "dreal")
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/github.bzl", "github_archive")
 
 github_archive(
+    name = "bazel_skylib", # Apache-2.0
+    repository = "bazelbuild/bazel-skylib",
+    commit = "0.5.0",
+    sha256 = "b5f6abe419da897b7901f90cbab08af958b97a8f3575b0d3dd062ac7ce78541f",
+)
+
+load("@bazel_skylib//:lib.bzl", "versions")
+
+versions.check(minimum_bazel_version = "0.18.0")
+
+github_archive(
     name = "google_styleguide",  # GOOGLE
     build_file = "//tools:google_styleguide.BUILD.bazel",
     commit = "313b6b359086984c8a0bb1d77c195ce3ea3bd78b",
