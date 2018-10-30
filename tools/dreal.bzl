@@ -17,31 +17,32 @@ PYTHON_PACKAGE_DIR = "lib/python" + PYTHON_VERSION_STRING + "/site-packages"
 CXX_FLAGS = [
     "-Werror=all",
     "-Werror=attributes",
-    "-Werror=ignored-qualifiers",
-    "-Werror=overloaded-virtual",
-    "-Werror=old-style-cast",
     "-Werror=deprecated",
     "-Werror=deprecated-declarations",
+    "-Werror=ignored-qualifiers",
+    "-Werror=old-style-cast",
+    "-Werror=overloaded-virtual",
+    "-Werror=shadow",
 ]
 
 # The CLANG_FLAGS will be enabled for all C++ rules in the project when
 # building with clang.
 CLANG_FLAGS = CXX_FLAGS + [
-    "-Werror=shadow",
+    "-Werror=absolute-value",
     "-Werror=inconsistent-missing-override",
-    "-Werror=sign-compare",
-    "-Werror=return-stack-address",
     "-Werror=non-virtual-dtor",
+    "-Werror=return-stack-address",
+    "-Werror=sign-compare",
 ]
 
 # The GCC_FLAGS will be enabled for all C++ rules in the project when
 # building with gcc.
 GCC_FLAGS = CXX_FLAGS + [
     "-Werror=extra",
-    "-Werror=return-local-addr",
-    "-Werror=non-virtual-dtor",
-    "-Werror=unused-but-set-parameter",
     "-Werror=logical-op",
+    "-Werror=non-virtual-dtor",
+    "-Werror=return-local-addr",
+    "-Werror=unused-but-set-parameter",
 ]
 
 # The GCC_CC_TEST_FLAGS will be enabled for all cc_test rules in the project
