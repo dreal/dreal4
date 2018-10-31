@@ -109,7 +109,7 @@ pkg_tar(
 pkg_deb(
     name = "package_debian",
     architecture = "amd64",
-    built_using = "bazel (0.18.0)",
+    built_using = "bazel (0.19.0)",
     data = ":archive",
     depends = [
         "coinor-libclp-dev",
