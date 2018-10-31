@@ -39,6 +39,8 @@ class Context::Impl {
   void SetOption(const std::string& key, const std::string& val);
   const Config& config() const { return config_; }
   Config& mutable_config() { return config_; }
+  const ScopedVector<Formula>& assertions() const;
+  Box& box() { return boxes_.last(); }
 
  private:
   // Add the variable @p v to the current box. This is used to
@@ -51,8 +53,6 @@ class Context::Impl {
   // Returns the current box in the stack.
   std::experimental::optional<Box> CheckSatCore(
       const ScopedVector<Formula>& stack, Box box, SatSolver* sat_solver);
-
-  Box& box() { return boxes_.last(); }
 
   // Marks variable @p v as a model variable
   void mark_model_variable(const Variable& v);

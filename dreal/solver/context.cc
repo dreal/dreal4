@@ -97,4 +97,10 @@ Config& Context::mutable_config() { return impl_->mutable_config(); }
 
 string Context::version() { return DREAL_VERSION_STRING; }
 
+const Box& Context::box() const { return impl_->box(); }
+
+const ScopedVector<Formula>& Context::assertions() const {
+  return impl_->assertions();
+}
+
 }  // namespace dreal

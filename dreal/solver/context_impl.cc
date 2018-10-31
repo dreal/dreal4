@@ -390,4 +390,8 @@ void Context::Impl::mark_model_variable(const Variable& v) {
   model_variables_.insert(v.get_id());
 }
 
+const ScopedVector<Formula>& Context::Impl::assertions() const {
+  return stack_;
+}
+
 }  // namespace dreal

@@ -12,6 +12,7 @@
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/scoped_vector.h"
 #include "dreal/version.h"
 
 namespace dreal {
@@ -106,6 +107,17 @@ class Context {
 
   /// Returns the version string.
   static std::string version();
+
+  /// Returns the const reference to the asserted formulas.
+  ///
+  /// @note that the returned vector can be a proper subset of the
+  /// asserted formulas. For example, when `x <= 5` is asserted, box()
+  /// is updated to have this information (x <= 5) and this formula is
+  /// thrown away.
+  const ScopedVector<Formula>& assertions() const;
+
+  /// Returns the const reference to the top box.
+  const Box& box() const;
 
  private:
   // This header is exposed to external users as a part of API. We use
