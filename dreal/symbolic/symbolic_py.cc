@@ -7,6 +7,7 @@
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
 
+#include "dreal/symbolic/prefix_printer.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/exception.h"
 
@@ -249,7 +250,8 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
       .def(py::self != py::self)
       .def(py::self != Variable())
       .def(py::self != double())
-      .def("Differentiate", &Expression::Differentiate);
+      .def("Differentiate", &Expression::Differentiate)
+      .def("ToPrefix", [](const Expression& self) { return ToPrefix(self); });
 
   m.def("log", &log)
       .def("abs", &abs)
@@ -325,7 +327,8 @@ PYBIND11_MODULE(_dreal_symbolic_py, m) {
            [](const Formula& self) { return std::hash<Formula>{}(self); })
       .def("__nonzero__", [](const Formula& f) { return f.Evaluate(); })
       .def_static("TRUE", &Formula::True)
-      .def_static("FALSE", &Formula::False);
+      .def_static("FALSE", &Formula::False)
+      .def("ToPrefix", [](const Formula& self) { return ToPrefix(self); });
 
   // __logical_and and __logical_or will be extended as `And` and `Or`
   // in `__init__.py` to accept an arbitrary number of arguments.

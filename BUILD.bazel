@@ -27,6 +27,7 @@ cc_binary(
         "//dreal/solver",
         "//dreal/util:box",
         "//dreal/symbolic:symbolic",
+        "//dreal/symbolic:prefix_printer",
     ],
 )
 
