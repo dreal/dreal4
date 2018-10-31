@@ -20,6 +20,7 @@ dreal_cc_library(
         "symbolic.h",
     ],
     visibility = [
+        "//:__pkg__",
         "//dreal:__subpackages__",
     ],
     deps = [
