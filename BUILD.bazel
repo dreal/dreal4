@@ -26,6 +26,7 @@ cc_binary(
         "//dreal/api",
         "//dreal/solver",
         "//dreal/util:box",
+        "//dreal/symbolic:symbolic",
     ],
 )
 
