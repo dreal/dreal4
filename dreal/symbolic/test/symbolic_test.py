@@ -468,6 +468,9 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertTrue("not a Boolean variable but used as a conditional"
                         in str(context.exception))
 
+    def test_to_prefix(self):
+        self.assertEqual((x + y).ToPrefix(), "(+ x y)")
+
 
 class TestSymbolicFormula(unittest.TestCase):
     def test_get_free_variables(self):
@@ -534,6 +537,9 @@ class TestSymbolicFormula(unittest.TestCase):
         self.assertEqual(f.Evaluate(env2), True)
         self.assertEqual(f.Evaluate(env3), True)
         self.assertEqual(f.Evaluate(env4), False)
+
+    def test_to_prefix(self):
+        self.assertEqual((x > y).ToPrefix(), "(> x y)")
 
 
 if __name__ == '__main__':

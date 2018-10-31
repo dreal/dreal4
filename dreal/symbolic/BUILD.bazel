@@ -12,6 +12,23 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 package(default_visibility = ["//visibility:private"])
 
 dreal_cc_library(
+    name = "prefix_printer",
+    srcs = [
+        "prefix_printer.cc",
+    ],
+    hdrs = [
+        "prefix_printer.h",
+    ],
+    visibility = [
+        "//:__pkg__",
+        "//dreal:__subpackages__",
+    ],
+    deps = [
+        ":symbolic",
+    ],
+)
+
+dreal_cc_library(
     name = "symbolic",
     srcs = [
         "symbolic.cc",
@@ -42,6 +59,14 @@ dreal_cc_library(
     ],
     deps = [
         ":symbolic",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "prefix_printer_test",
+    tags = ["unit"],
+    deps = [
+        ":prefix_printer",
     ],
 )
 
@@ -102,6 +127,7 @@ pkg_tar(
 filegroup(
     name = "headers",
     srcs = [
+        "prefix_printer.h",
         "symbolic.h",
         "//third_party/com_github_robotlocomotion_drake:headers",
     ],
