@@ -183,7 +183,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 }
 
 [-+]?(0|[1-9][0-9]*) {
-    yylval->intVal = std::stoi(yytext);
+    yylval->intVal = std::stol(yytext);
     return token::INT;
 }
 
