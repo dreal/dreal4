@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "dreal/util/assert.h"
-#include "dreal/util/exception.h"
 
 namespace dreal {
 
@@ -51,7 +50,7 @@ class ScopedVector {
   void push() { scopes_.push_back(vector_.size()); }
   size_t pop() {
     if (scopes_.empty()) {
-      throw DREAL_RUNTIME_ERROR("Nothing to pop.");
+      throw std::runtime_error("Nothing to pop.");
     }
     size_t count = 0;
     size_t const prev_size = scopes_.back();
