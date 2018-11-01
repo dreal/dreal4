@@ -465,8 +465,10 @@ pkg_tar(
 filegroup(
     name = "headers",
     srcs = [
+        "assert.h",
         "box.h",
         "option_value.h",
+        "scoped_vector.h",
     ],
     visibility = ["//:__pkg__"],
 )
