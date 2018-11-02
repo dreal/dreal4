@@ -1,6 +1,7 @@
 #include "dreal/solver/sat_solver.h"
 
 #include <ostream>
+#include <utility>
 
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
@@ -11,6 +12,7 @@
 namespace dreal {
 
 using std::cout;
+using std::pair;
 using std::set;
 using std::vector;
 using std::experimental::optional;
@@ -125,13 +127,20 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
       if (model_i == 0) {
         continue;
       }
-      const Variable& var{to_sym_var_[i]};
+      const auto it_var = to_sym_var_.find(i);
+      if (it_var == to_sym_var_.end()) {
+        // There is no symbolic::Variable corresponding to this
+        // picosat variable (int). This could be because of
+        // picosat_push/pop.
+        continue;
+      }
+      const Variable& var{it_var->second};
       const auto it = var_to_formula_map.find(var);
       if (it != var_to_formula_map.end()) {
         DREAL_LOG_TRACE("SatSolver::CheckSat: Add theory literal {}{} to Model",
                         model_i ? "" : "¬", var);
         theory_model.emplace_back(var, model_i == 1);
-      } else if (tseitin_variables_.find(var) == tseitin_variables_.end()) {
+      } else if (tseitin_variables_.count(var) == 0) {
         DREAL_LOG_TRACE(
             "SatSolver::CheckSat: Add Boolean literal {}{} to Model ",
             model_i ? "" : "¬", var);
@@ -157,12 +166,18 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
 
 void SatSolver::Pop() {
   DREAL_LOG_DEBUG("SatSolver::Pop()");
+  tseitin_variables_.pop();
+  to_sym_var_.pop();
+  to_sat_var_.pop();
   picosat_pop(sat_);
 }
 
 void SatSolver::Push() {
   DREAL_LOG_DEBUG("SatSolver::Push()");
   picosat_push(sat_);
+  to_sat_var_.push();
+  to_sym_var_.push();
+  tseitin_variables_.push();
 }
 
 void SatSolver::AddLiteral(const Formula& f) {
@@ -205,8 +220,8 @@ void SatSolver::MakeSatVar(const Variable& var) {
   }
   // It's not in the maps, let's make one and add it.
   const int sat_var{picosat_inc_max_var(sat_)};
-  to_sat_var_.emplace_hint(it, var, sat_var);
-  to_sym_var_.emplace(sat_var, var);
+  to_sat_var_.insert(var, sat_var);
+  to_sym_var_.insert(sat_var, var);
   DREAL_LOG_DEBUG("SatSolver::MakeSatVar({} ↦ {})", var, sat_var);
 }
 }  // namespace dreal

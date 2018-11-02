@@ -100,6 +100,8 @@ dreal_cc_library(
         "//dreal/util:exception",
         "//dreal/util:logging",
         "//dreal/util:predicate_abstractor",
+        "//dreal/util:scoped_unordered_map",
+        "//dreal/util:scoped_unordered_set",
         "//dreal/util:stat",
         "//dreal/util:timer",
         "//dreal/util:tseitin_cnfizer",

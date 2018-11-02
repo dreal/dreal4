@@ -2,8 +2,6 @@
 
 #include <memory>
 #include <set>
-#include <unordered_map>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -14,6 +12,8 @@
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/predicate_abstractor.h"
+#include "dreal/util/scoped_unordered_map.h"
+#include "dreal/util/scoped_unordered_set.h"
 #include "dreal/util/tseitin_cnfizer.h"
 
 namespace dreal {
@@ -108,14 +108,14 @@ class SatSolver {
   PredicateAbstractor predicate_abstractor_;
 
   // Map symbolic::Variable → int (Variable type in PicoSat).
-  std::unordered_map<Variable, int, hash_value<Variable>> to_sat_var_;
+  ScopedUnorderedMap<Variable, int, hash_value<Variable>> to_sat_var_;
 
   // Map int (Variable type in PicoSat) → symbolic::Variable.
-  std::unordered_map<int, Variable> to_sym_var_;
+  ScopedUnorderedMap<int, Variable> to_sym_var_;
 
   /// Set of temporary Boolean variables introduced by Tseitin
   /// transformations.
-  std::unordered_set<Variable, hash_value<Variable>> tseitin_variables_;
+  ScopedUnorderedSet<Variable, hash_value<Variable>> tseitin_variables_;
 };
 
 }  // namespace dreal
