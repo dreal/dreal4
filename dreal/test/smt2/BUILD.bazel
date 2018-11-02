@@ -163,6 +163,21 @@ smt2_test(
 )
 
 smt2_test(
+    name = "bool_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "cgd8d_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "cgd8d_02",
+    size = "small",
+)
+
+smt2_test(
     name = "constant_region_loss_5_212",
     size = "small",
 )
@@ -189,6 +204,91 @@ smt2_test(
 
 smt2_test(
     name = "dzufferey_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_abs",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_abs_simplified",
+    size = "small",
+)
+
+smt2_test(
+    name = "ea_beale",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_04",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_05",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_06",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_07",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_08",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_09",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_10",
+    size = "small",
+)
+
+smt2_test(
+    name = "exist_forall_zenna_01",
     size = "small",
 )
 
@@ -278,6 +378,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "hansen_hockey",
+    size = "small",
+)
+
+smt2_test(
     name = "hex_01",
     size = "small",
 )
@@ -333,7 +438,42 @@ smt2_test(
 )
 
 smt2_test(
+    name = "let_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_04",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_05",
+    size = "small",
+)
+
+smt2_test(
+    name = "let_06",
+    size = "small",
+)
+
+smt2_test(
     name = "lia_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "mass_spring",
     size = "small",
 )
 
@@ -394,6 +534,106 @@ smt2_test(
 
 smt2_test(
     name = "nt-cond",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-backoff",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML5",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML6",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML7",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-bounce-ML8",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML2-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML2",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML3-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML3",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML4-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML4",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML5",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML5-d10",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-hockey-ML5-d10-A",
+    size = "small",
+)
+
+smt2_test(
+    name = "osmosis-simple",
+    size = "small",
+)
+
+smt2_test(
+    name = "push_pop_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "push_pop_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "push_pop_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "push_pop_04",
+    size = "small",
+)
+
+smt2_test(
+    name = "push_pop_05",
     size = "small",
 )
 
@@ -535,211 +775,6 @@ smt2_test(
 
 smt2_test(
     name = "zenna_08",
-    size = "small",
-)
-
-smt2_test(
-    name = "cgd8d_01",
-    size = "small",
-)
-
-smt2_test(
-    name = "cgd8d_02",
-    size = "small",
-)
-
-smt2_test(
-    name = "ea_01",
-    size = "small",
-)
-
-smt2_test(
-    name = "ea_02",
-    size = "small",
-)
-
-smt2_test(
-    name = "ea_03",
-    size = "small",
-)
-
-smt2_test(
-    name = "ea_abs",
-    size = "small",
-)
-
-smt2_test(
-    name = "ea_abs_simplified",
-    size = "small",
-)
-
-smt2_test(
-    name = "ea_beale",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_01",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_02",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_03",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_04",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_05",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_06",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_07",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_08",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_09",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_10",
-    size = "small",
-)
-
-smt2_test(
-    name = "exist_forall_zenna_01",
-    size = "small",
-)
-
-smt2_test(
-    name = "bool_01",
-    size = "small",
-)
-
-smt2_test(
-    name = "hansen_hockey",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-backoff",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-bounce-ML5",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-bounce-ML6",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-bounce-ML7",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-bounce-ML8",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML2-d10",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML2",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML3-d10",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML3",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML4-d10",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML4",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML5-d10",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-hockey-ML5",
-    size = "small",
-)
-
-smt2_test(
-    name = "osmosis-simple",
-    size = "small",
-)
-
-smt2_test(
-    name = "let_01",
-    size = "small",
-)
-
-smt2_test(
-    name = "let_02",
-    size = "small",
-)
-
-smt2_test(
-    name = "let_03",
-    size = "small",
-)
-
-smt2_test(
-    name = "let_04",
-    size = "small",
-)
-
-smt2_test(
-    name = "let_05",
-    size = "small",
-)
-
-smt2_test(
-    name = "let_06",
     size = "small",
 )
 
