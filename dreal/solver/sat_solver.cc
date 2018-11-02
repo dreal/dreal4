@@ -123,7 +123,8 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
     // SAT Case.
     const auto& var_to_formula_map = predicate_abstractor_.var_to_formula_map();
     for (int i = 1; i <= picosat_variables(sat_); ++i) {
-      const int model_i{picosat_deref_partial(sat_, i)};
+      const int model_i{has_picosat_pop_used_ ? picosat_deref(sat_, i)
+                                              : picosat_deref_partial(sat_, i)};
       if (model_i == 0) {
         continue;
       }
@@ -170,6 +171,7 @@ void SatSolver::Pop() {
   to_sym_var_.pop();
   to_sat_var_.pop();
   picosat_pop(sat_);
+  has_picosat_pop_used_ = true;
 }
 
 void SatSolver::Push() {

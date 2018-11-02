@@ -116,6 +116,13 @@ class SatSolver {
   /// Set of temporary Boolean variables introduced by Tseitin
   /// transformations.
   ScopedUnorderedSet<Variable, hash_value<Variable>> tseitin_variables_;
+
+  /// @note We found an issue when picosat_deref_partial is used with
+  /// picosat_pop. When this variable is true, we use `picosat_deref`
+  /// instead.
+  ///
+  /// TODO(soonho): Remove this hack when it's not needed.
+  bool has_picosat_pop_used_{false};
 };
 
 }  // namespace dreal
