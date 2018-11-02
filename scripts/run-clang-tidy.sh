@@ -3,6 +3,7 @@
 LAST_ARG=${@:$#}
 EXEC_ROOT=`bazel info execution_root`
 BAZEL_EXTERNAL=${EXEC_ROOT}/external
+BAZEL_THIRD_PARTY=${EXEC_ROOT}/third_party
 
 clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
            -- \
@@ -17,11 +18,12 @@ clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
 	   -I/usr/local/opt/coinutils/include/coinutils/coin \
 	   -I/usr/local/opt/python@2/Frameworks/Python.framework/Versions/2.7/include/python2.7 \
            -isystem ${BAZEL_EXTERNAL}/spdlog/include \
-           -isystem ${BAZEL_EXTERNAL}/fmt \
+           -isystem ${BAZEL_EXTERNAL}/fmt/include \
            -isystem ${BAZEL_EXTERNAL}/drake_symbolic \
            -isystem ${BAZEL_EXTERNAL}/ezoptionparser \
            -isystem ${BAZEL_EXTERNAL}/gtest/googletest/include \
            -isystem ${BAZEL_EXTERNAL}/picosat \
+           -isystem ${BAZEL_THIRD_PARTY}/com_github_robotlocomotion_drake \
            -isystem /usr/local/opt/llvm/include/c++/v1 \
            -isystem /usr/local/include \
            -isystem /usr/local/opt/flex/include \
