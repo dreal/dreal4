@@ -274,6 +274,18 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "scoped_unordered_set",
+    hdrs = [
+        "scoped_unordered_set.h",
+    ],
+    visibility = ["//dreal:__subpackages__"],
+    deps = [
+        ":assert",
+        ":exception",
+    ],
+)
+
+dreal_cc_library(
     name = "scoped_vector",
     hdrs = [
         "scoped_vector.h",
@@ -375,6 +387,14 @@ dreal_cc_googletest(
     tags = ["unit"],
     deps = [
         ":scoped_unordered_map",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "scoped_unordered_set_test",
+    tags = ["unit"],
+    deps = [
+        ":scoped_unordered_set",
     ],
 )
 
