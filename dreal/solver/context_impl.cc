@@ -106,6 +106,7 @@ void Context::Impl::Assert(const Formula& f) {
       AddToBox(ite_var);
     }
     stack_.push_back(no_ite);
+    sat_solver_.AddFormula(no_ite);
     return;
   } else {
     DREAL_LOG_DEBUG("ContextImpl::Assert: {} is not added.", f);
@@ -133,7 +134,6 @@ optional<Box> Context::Impl::CheckSatCore(const ScopedVector<Formula>& stack,
     DREAL_LOG_DEBUG("ContextImpl::CheckSatCore() - Found Model\n{}", box);
     return box;
   }
-  sat_solver->AddFormulas(stack.get_vector());
   while (true) {
     const auto optional_model = sat_solver->CheckSat();
     if (optional_model) {
