@@ -43,7 +43,7 @@ void SatSolver::AddFormula(const Formula& f) {
   vector<Formula> clauses{cnfizer_.Convert(f)};
   // Collect Tseitin variables.
   for (const auto& p : cnfizer_.map()) {
-    tseitin_variables_.insert(p.first);
+    tseitin_variables_.insert(p.first.get_id());
   }
   for (Formula& clause : clauses) {
     clause = predicate_abstractor_.Convert(clause);
@@ -141,7 +141,7 @@ std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
         DREAL_LOG_TRACE("SatSolver::CheckSat: Add theory literal {}{} to Model",
                         model_i ? "" : "¬", var);
         theory_model.emplace_back(var, model_i == 1);
-      } else if (tseitin_variables_.count(var) == 0) {
+      } else if (tseitin_variables_.count(var.get_id()) == 0) {
         DREAL_LOG_TRACE(
             "SatSolver::CheckSat: Add Boolean literal {}{} to Model ",
             model_i ? "" : "¬", var);
@@ -190,14 +190,14 @@ void SatSolver::AddLiteral(const Formula& f) {
     const Variable& var{get_variable(f)};
     DREAL_ASSERT(var.get_type() == Variable::Type::BOOLEAN);
     // Add l = b
-    picosat_add(sat_, to_sat_var_[var]);
+    picosat_add(sat_, to_sat_var_[var.get_id()]);
   } else {
     // f = ¬b
     DREAL_ASSERT(is_negation(f) && is_variable(get_operand(f)));
     const Variable& var{get_variable(get_operand(f))};
     DREAL_ASSERT(var.get_type() == Variable::Type::BOOLEAN);
     // Add l = ¬b
-    picosat_add(sat_, -to_sat_var_[var]);
+    picosat_add(sat_, -to_sat_var_[var.get_id()]);
   }
 }
 
@@ -215,14 +215,14 @@ void SatSolver::DoAddClause(const Formula& f) {
 }
 
 void SatSolver::MakeSatVar(const Variable& var) {
-  auto it = to_sat_var_.find(var);
+  auto it = to_sat_var_.find(var.get_id());
   if (it != to_sat_var_.end()) {
     // Found.
     return;
   }
   // It's not in the maps, let's make one and add it.
   const int sat_var{picosat_inc_max_var(sat_)};
-  to_sat_var_.insert(var, sat_var);
+  to_sat_var_.insert(var.get_id(), sat_var);
   to_sym_var_.insert(sat_var, var);
   DREAL_LOG_DEBUG("SatSolver::MakeSatVar({} ↦ {})", var, sat_var);
 }

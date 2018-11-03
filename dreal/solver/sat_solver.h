@@ -108,14 +108,14 @@ class SatSolver {
   PredicateAbstractor predicate_abstractor_;
 
   // Map symbolic::Variable → int (Variable type in PicoSat).
-  ScopedUnorderedMap<Variable, int, hash_value<Variable>> to_sat_var_;
+  ScopedUnorderedMap<Variable::Id, int> to_sat_var_;
 
   // Map int (Variable type in PicoSat) → symbolic::Variable.
   ScopedUnorderedMap<int, Variable> to_sym_var_;
 
   /// Set of temporary Boolean variables introduced by Tseitin
   /// transformations.
-  ScopedUnorderedSet<Variable, hash_value<Variable>> tseitin_variables_;
+  ScopedUnorderedSet<Variable::Id> tseitin_variables_;
 
   /// @note We found an issue when picosat_deref_partial is used with
   /// picosat_pop. When this variable is true, we use `picosat_deref`
