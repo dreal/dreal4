@@ -183,8 +183,15 @@ simple_symbol   {sym_begin}{sym_continue}*
 }
 
 [-+]?(0|[1-9][0-9]*) {
-    yylval->intVal = std::stol(yytext);
-    return token::INT;
+    try {
+        yylval->longVal = std::stol(yytext);
+        return token::LONG;
+    } catch(std::out_of_range& e) {
+        std::cerr << "At line " << yylloc->begin.line
+                  << " the following value would fall out of the range of the result type (long):\n"
+                  << yytext << "\n";
+        throw e;
+    }
 }
 
 [-+]?((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {

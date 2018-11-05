@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <tuple>
 #include <utility>
@@ -10,6 +11,7 @@
 #include "dreal/smt2/sort.h"
 #include "dreal/smt2/term.h"
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/math.h"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
@@ -63,7 +65,7 @@
 %union
 {
     dreal::Sort               sortVal;
-    long                      intVal;
+    long                      longVal;
     std::string*              doubleVal;
     double                    hexfloatVal;
     std::string*              stringVal;
@@ -96,7 +98,7 @@
 %token                 END          0        "end of file"
 %token <doubleVal>     DOUBLE                "double"
 %token <hexfloatVal>   HEXFLOAT              "hexfloat"
-%token <intVal>        INT                   "int"
+%token <longVal>       LONG                  "long int"
 %token <stringVal>     SYMBOL                "symbol"
 %token <stringVal>     KEYWORD               "keyword"
 %token <stringVal>     STRING                "string"
@@ -257,15 +259,16 @@ command_set_option:
                 }
 
                 ;
-command_push:   '(' TK_PUSH INT ')' {
-                    driver.context_.Push($3);
-                    }
-        ;
 
-command_pop:   '(' TK_POP INT ')' {
-                    driver.context_.Pop($3);
-                    }
-        ;
+command_push:   '(' TK_PUSH LONG ')' {
+                    driver.context_.Push(convert_long_to_int($3));
+                }
+                ;
+
+command_pop:    '(' TK_POP LONG ')' {
+                    driver.context_.Pop(convert_long_to_int($3));
+                }
+                ;
 
 term_list:      term { $$ = new std::vector<Term>(1, *$1); delete $1; }
         |       term_list term { $1->push_back(*$2); $$ = $1; delete $2; }
@@ -373,7 +376,7 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             }
         }
         |       HEXFLOAT { $$ = new Term{$1}; }
-        |       INT { $$ = new Term{static_cast<double>($1)}; }
+        |       LONG { $$ = new Term{convert_long_to_double($1)}; }
         |       SYMBOL {
             try {
                 const Variable& var = driver.lookup_variable(*$1);
