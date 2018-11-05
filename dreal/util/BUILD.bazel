@@ -203,6 +203,9 @@ dreal_cc_library(
         "math.h",
     ],
     visibility = ["//dreal:__subpackages__"],
+    deps = [
+        ":exception",
+    ],
 )
 
 dreal_cc_library(
@@ -353,6 +356,14 @@ dreal_cc_googletest(
     tags = ["unit"],
     deps = [
         ":logging",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "math_test",
+    tags = ["unit"],
+    deps = [
+        ":math",
     ],
 )
 
