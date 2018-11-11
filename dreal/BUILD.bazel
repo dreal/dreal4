@@ -81,7 +81,7 @@ filegroup(
         "dreal.h",
         "version.h",
     ],
-    visibility = ["//:__pkg__"],
+    visibility = ["//visibility:public"],
 )
 
 pkg_tar(

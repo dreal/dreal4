@@ -1,6 +1,12 @@
 load("//third_party:com_github_google_kythe/tools/build_rules/lexyacc.bzl", "genlex", "genyacc")
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl", "cpplint")
-load("//tools:dreal.bzl", "dreal_cc_library")
+load(
+    "//tools:dreal.bzl",
+    "PYTHON_PACKAGE_DIR",
+    "dreal_cc_library",
+    "dreal_generate_file",
+    "dreal_pybind_library",
+)
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 package(default_visibility = ["//visibility:private"])
@@ -115,10 +121,62 @@ dreal_cc_library(
     ],
 )
 
+# ----------------------
+# Bindings
+# ----------------------
+dreal_generate_file(
+    name = "init_py",
+    out = "__init__.py",
+    content = """from dreal.smt2._dreal_smt2_py import *""",
+)
+
+dreal_pybind_library(
+    name = "dreal_smt2_py",
+    cc_srcs = ["smt2_py.cc"],
+    py_srcs = ["__init__.py"],
+)
+
+py_test(
+    name = "smt2_test_py",
+    srcs = [
+        "test/smt2_test.py",
+    ],
+    main = "test/smt2_test.py",
+    srcs_version = "PY2AND3",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        ":dreal_smt2_py",
+    ],
+)
+
+pkg_tar(
+    name = "package_python",
+    srcs = [
+        ":_dreal_smt2_py.so",
+        ":dreal_smt2_py",
+    ],
+    extension = "tar.gz",
+    package_dir = PYTHON_PACKAGE_DIR + "/dreal/smt2",
+    tags = ["manual"],
+    visibility = ["//:__pkg__"],
+)
+
+# ----------------------
+# Header files to expose
+# ----------------------
+
 filegroup(
     name = "headers",
     srcs = [
         "logic.h",
+    ],
+    visibility = [
+        "//visibility:public",
     ],
 )
 

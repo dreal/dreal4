@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from dreal.solver import Config
+from dreal.solver import Config, Context
+from dreal.symbolic import Variable
+from dreal.util import Box
+from dreal.smt2 import Logic
+
 import unittest
 
 
@@ -39,6 +43,73 @@ class ConfigTest(unittest.TestCase):
         self.assertFalse(c.use_local_optimization)
         c.use_local_optimization = True
         self.assertTrue(c.use_local_optimization)
+
+
+x = Variable("x")
+y = Variable("y")
+
+
+class ContextTest(unittest.TestCase):
+    def test_sat(self):
+        ctx = Context()
+        ctx.SetLogic(Logic.QF_NRA)
+        ctx.DeclareVariable(x, -10, 10)
+        ctx.DeclareVariable(y, -10, 10)
+        ctx.Assert(x == y + 5)
+        ctx.Assert(y == 2)
+        result = ctx.CheckSat()
+        self.assertTrue(result)
+        self.assertEqual(result[y].mid(), 2)
+        self.assertEqual(result[x].mid(), 2 + 5)
+        ctx.Exit()
+
+    def test_unsat(self):
+        ctx = Context()
+        ctx.SetLogic(Logic.QF_NRA)
+        x = Variable("x")
+        y = Variable("y")
+        ctx.DeclareVariable(x, -10, 10)
+        ctx.DeclareVariable(y, -10, 10)
+        ctx.Assert(x == y + 5)
+        ctx.Assert(y == x - 3)
+        result = ctx.CheckSat()
+        self.assertFalse(result)
+        ctx.Exit()
+
+    def test_push_pop(self):
+        ctx = Context()
+        ctx.SetLogic(Logic.QF_NRA)
+        x = Variable("x")
+        y = Variable("y")
+        ctx.DeclareVariable(x)
+        ctx.SetInterval(x, -10, 10)
+        ctx.DeclareVariable(y, -10, 10)
+        ctx.Assert(x == y + 5)
+        ctx.Push(1)
+        ctx.Assert(y == x - 3)
+        result = ctx.CheckSat()
+        self.assertFalse(result)
+        ctx.Pop(1)
+        result = ctx.CheckSat()
+        self.assertTrue(result)
+        ctx.Exit()
+        self.assertTrue(ctx.box)
+
+    def test_config(self):
+        ctx = Context()
+        config1 = ctx.config
+        self.assertEqual(config1.precision, 0.001)
+        config1.precision = 0.0001
+        self.assertEqual(ctx.config.precision, 0.001)
+        ctx.config = config1
+        self.assertEqual(ctx.config.precision, 0.0001)
+
+    def test_version(self):
+        ctx = Context()
+        # Simply check if we can do this without checking the version
+        # string.
+        self.assertTrue(Context.version)
+
 
 
 if __name__ == '__main__':

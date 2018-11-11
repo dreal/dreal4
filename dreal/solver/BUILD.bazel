@@ -216,6 +216,9 @@ py_test(
     ],
     deps = [
         ":dreal_solver_py",
+        "//dreal/smt2:dreal_smt2_py",
+        "//dreal/symbolic:dreal_symbolic_py",
+        "//dreal/util:dreal_util_py",
     ],
 )
 

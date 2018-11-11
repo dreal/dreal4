@@ -25,16 +25,18 @@ cc_binary(
     deps = [
         "//dreal/api",
         "//dreal/solver",
-        "//dreal/util:box",
-        "//dreal/symbolic:symbolic",
+        "//dreal/symbolic",
         "//dreal/symbolic:prefix_printer",
+        "//dreal/util:box",
     ],
 )
 
 cc_library(
     name = "dreal_shared_library",
     hdrs = [
+        "//dreal:headers",
         "//dreal/api:headers",
+        "//dreal/smt2:headers",
         "//dreal/solver:headers",
         "//dreal/symbolic:headers",
         "//dreal/util:headers",
@@ -98,6 +100,7 @@ pkg_tar(
         "//dreal/api:package_headers",
         "//dreal/api:package_python",
         "//dreal/smt2:package_headers",
+        "//dreal/smt2:package_python",
         "//dreal/solver:package_headers",
         "//dreal/solver:package_python",
         "//dreal/symbolic:package_headers",
