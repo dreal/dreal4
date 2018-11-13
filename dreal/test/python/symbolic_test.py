@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from dreal.symbolic import Variable, Variables, Expression, Formula
-from dreal.symbolic import logical_not, logical_and, logical_or
-from dreal.symbolic import logical_imply, logical_iff, forall
-from dreal.symbolic import abs, sin, cos, tan, exp, log, sqrt
-from dreal.symbolic import asin, acos, atan, sinh, cosh, tanh, atan2
-from dreal.symbolic import min, max, if_then_else
-from dreal.symbolic import intersect
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
+from dreal import *
+
 import unittest
 import math
 
@@ -392,8 +391,8 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(min(v_x, v_y), min(v_x, v_y))
         self.assertEqual(max(v_x, v_y), max(v_x, v_y))
         self.assertEqual(
-            if_then_else(Expression(v_x) > Expression(v_y), v_x, v_y), v_x
-            if v_x > v_y else v_y)
+            if_then_else(Expression(v_x) > Expression(v_y), v_x, v_y),
+            v_x if v_x > v_y else v_y)
 
     def test_functions_with_variable(self):
         self.assertEqual(str(abs(x)), "abs(x)")
@@ -465,8 +464,8 @@ class TestSymbolicExpression(unittest.TestCase):
         with self.assertRaises(Exception) as context:
             if_then_else(x, 5.0, 3.0)
         print(context.exception)
-        self.assertTrue("not a Boolean variable but used as a conditional"
-                        in str(context.exception))
+        self.assertTrue("not a Boolean variable but used as a conditional" in
+                        str(context.exception))
 
     def test_to_prefix(self):
         self.assertEqual((x + y).ToPrefix(), "(+ x y)")
@@ -519,8 +518,7 @@ class TestSymbolicFormula(unittest.TestCase):
 
     def test_forall(self):
         self.assertEqual(
-            str(forall(Variables([x, y, z]), x == 0)),
-            "forall({x}. (x = 0))")
+            str(forall(Variables([x, y, z]), x == 0)), "forall({x}. (x = 0))")
         self.assertEqual(
             str(forall([x, y, z], x == 0)), "forall({x}. (x = 0))")
 

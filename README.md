@@ -46,8 +46,7 @@ export PYTHONPATH=/opt/dreal/4.18.11.1/lib/python2.7/site-packages:${PYTHONPATH}
 To test it, run `python2` in a terminal and type the followings:
 
 ```python
-from dreal.symbolic import Variable, logical_and, sin, cos
-from dreal.api import CheckSatisfiability, Minimize
+from dreal import *
 
 x = Variable("x")
 y = Variable("y")

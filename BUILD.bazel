@@ -98,15 +98,10 @@ pkg_tar(
         "//dreal:package_python",
         "//dreal:package_sharedlib",
         "//dreal/api:package_headers",
-        "//dreal/api:package_python",
         "//dreal/smt2:package_headers",
-        "//dreal/smt2:package_python",
         "//dreal/solver:package_headers",
-        "//dreal/solver:package_python",
         "//dreal/symbolic:package_headers",
-        "//dreal/symbolic:package_python",
         "//dreal/util:package_headers",
-        "//dreal/util:package_python",
     ],
 )
 

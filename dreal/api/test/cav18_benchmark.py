@@ -7,10 +7,7 @@
 # Soonho Kong, Armando Solar-Lezama, and Sicun Gao
 # In CAV (International Conference on Computer Aided Verification) 2018
 # ----------------------------------------------------------------------
-from dreal.symbolic import (Formula, Variable, Expression, logical_and, abs,
-                            atan, atan2, sin, cos, exp, sqrt, log)
-from dreal.api import Minimize
-from dreal.solver import Config
+from dreal import *
 from functools import reduce
 import math
 import time

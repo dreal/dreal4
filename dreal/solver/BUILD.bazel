@@ -1,11 +1,8 @@
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl", "cpplint")
 load(
     "//tools:dreal.bzl",
-    "PYTHON_PACKAGE_DIR",
     "dreal_cc_googletest",
     "dreal_cc_library",
-    "dreal_generate_file",
-    "dreal_pybind_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -184,54 +181,6 @@ dreal_cc_googletest(
         ":solver",
         "//dreal/util:logging",
     ],
-)
-
-# ----------------------
-# Bindings
-# ----------------------
-dreal_generate_file(
-    name = "init_py",
-    out = "__init__.py",
-    content = """from dreal.solver._dreal_solver_py import *""",
-)
-
-dreal_pybind_library(
-    name = "dreal_solver_py",
-    cc_srcs = ["solver_py.cc"],
-    py_srcs = ["__init__.py"],
-)
-
-py_test(
-    name = "solver_test_py",
-    srcs = [
-        "test/solver_test.py",
-    ],
-    main = "test/solver_test.py",
-    srcs_version = "PY2AND3",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_solver_py",
-        "//dreal/smt2:dreal_smt2_py",
-        "//dreal/symbolic:dreal_symbolic_py",
-        "//dreal/util:dreal_util_py",
-    ],
-)
-
-pkg_tar(
-    name = "package_python",
-    srcs = [
-        ":_dreal_solver_py.so",
-        ":dreal_solver_py",
-    ],
-    extension = "tar.gz",
-    package_dir = PYTHON_PACKAGE_DIR + "/dreal/solver",
-    tags = ["manual"],
-    visibility = ["//:__pkg__"],
 )
 
 # ----------------------

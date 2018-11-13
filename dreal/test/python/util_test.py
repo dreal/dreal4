@@ -4,12 +4,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from dreal.util import Box
-from dreal.util import Interval
-from dreal.util import (exp, log, sqr, sqrt, pow, sin, cos, tan, asin, acos,
-                        atan, atan2, sinh, cosh, tanh, root, abs, max, min,
-                        sign, integer)
-from dreal.symbolic import Variable
+from dreal import *
 import unittest
 import math
 
