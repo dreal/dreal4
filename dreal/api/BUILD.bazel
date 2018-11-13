@@ -2,11 +2,8 @@ load("//third_party:com_github_robotlocomotion_drake/tools/workspace/cpplint.bzl
 load("//third_party:com_github_robotlocomotion_drake/tools/workspace/python_lint.bzl", "python_lint")
 load(
     "//tools:dreal.bzl",
-    "PYTHON_PACKAGE_DIR",
     "dreal_cc_googletest",
     "dreal_cc_library",
-    "dreal_generate_file",
-    "dreal_pybind_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -45,45 +42,6 @@ dreal_cc_googletest(
     ],
 )
 
-# ----------------------
-# Bindings
-# ----------------------
-dreal_generate_file(
-    name = "init_py",
-    out = "__init__.py",
-    content = """from dreal.api._dreal_api_py import *
-import dreal.util""",
-)
-
-dreal_pybind_library(
-    name = "dreal_api_py",
-    cc_srcs = ["api_py.cc"],
-    py_deps = [
-        "//dreal/symbolic:dreal_symbolic_py",
-        "//dreal/util:dreal_util_py",
-        "//dreal/solver:dreal_solver_py",
-    ],
-    py_srcs = [":init_py"],
-)
-
-py_test(
-    name = "api_test_py",
-    srcs = [
-        "test/api_test.py",
-    ],
-    main = "test/api_test.py",
-    srcs_version = "PY2AND3",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_api_py",
-    ],
-)
-
 py_test(
     name = "cav18_benchmark",
     srcs = [
@@ -102,20 +60,8 @@ py_test(
         "no_ubsan",
     ],
     deps = [
-        ":dreal_api_py",
+        "//dreal:dreal_py",
     ],
-)
-
-pkg_tar(
-    name = "package_python",
-    srcs = [
-        ":_dreal_api_py.so",
-        ":dreal_api_py",
-    ],
-    extension = "tar.gz",
-    package_dir = PYTHON_PACKAGE_DIR + "/dreal/api",
-    tags = ["manual"],
-    visibility = ["//visibility:public"],
 )
 
 # ----------------------

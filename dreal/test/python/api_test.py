@@ -4,11 +4,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from dreal.symbolic import Variable, logical_and, sin, cos
-from dreal.symbolic import logical_imply, forall
-from dreal.api import CheckSatisfiability, Minimize
-from dreal.util import Box
-from dreal.solver import Config
+from dreal import *
+
 import math
 import unittest
 
@@ -64,11 +61,8 @@ class ApiTest(unittest.TestCase):
         self.assertAlmostEqual(b[x].mid(), -1.5, places=2)
 
     def test_minimize3(self):
-        result = Minimize(x,
-                          logical_and(0 <= x, x <= 1,
-                                      0 <= p, p <= 1,
-                                      p <= x),
-                          0.00001)
+        result = Minimize(x, logical_and(0 <= x, x <= 1, 0 <= p, p <= 1,
+                                         p <= x), 0.00001)
         self.assertTrue(result)
         self.assertAlmostEqual(result[x].mid(), 0, places=2)
         self.assertAlmostEqual(result[p].mid(), 0, places=2)
@@ -77,13 +71,11 @@ class ApiTest(unittest.TestCase):
         config = Config()
         config.use_local_optimization = True
         config.precision = 0.0001
-        result = Minimize(x2,
-                          logical_and(-5 <= x0, x0 <= 5,
-                                      -5 <= x1, x1 <= 5,
-                                      0 <= x2, x2 <= 5,
-                                      1 >= (x0 - 1) ** 2 + (x1 - 1) ** 2,
-                                      x2 ** 2 >= x0 ** 2 + x1 ** 2),
-                          config)
+        result = Minimize(
+            x2,
+            logical_and(-5 <= x0, x0 <= 5, -5 <= x1, x1 <= 5, 0 <= x2, x2 <= 5,
+                        1 >= (x0 - 1)**2 + (x1 - 1)**2,
+                        x2**2 >= x0**2 + x1**2), config)
         self.assertTrue(result)
         self.assertAlmostEqual(result[x2].mid(), 0.414212, places=3)
 
