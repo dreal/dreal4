@@ -19,7 +19,7 @@ mv ${TMP_DIR}/* .
 rm -rf ${TMP_DIR}
 
 # Add/Commit/Push
-git add *
+git add *.css *.html *.js *.png search
 git commit -m "Update doxygen `date`"
 git push blessed HEAD:gh-pages -f
 
