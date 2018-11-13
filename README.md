@@ -26,7 +26,7 @@ sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
 
 # Test the installation.
-DREAL_VERSION=4.18.11.1
+DREAL_VERSION=4.18.11.2
 /opt/dreal/${DREAL_VERSION}/bin/dreal
 ```
 
@@ -40,7 +40,7 @@ variable. On macOS, you do not need this step.
 
 ```bash
 # Only on Ubuntu 18.04 / 16.04:
-export PYTHONPATH=/opt/dreal/4.18.11.1/lib/python2.7/site-packages:${PYTHONPATH}
+export PYTHONPATH=/opt/dreal/4.18.11.2/lib/python2.7/site-packages:${PYTHONPATH}
 ```
 
 To test it, run `python2` in a terminal and type the followings:
@@ -191,7 +191,7 @@ export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.2/share/pkgconfig:${PKG_CONFIG_PA
 Ubuntu 18.04 / 16.04:
 
 ```bash
-export PKG_CONFIG_PATH=/opt/dreal/4.18.11.1/lib/pkgconfig:/opt/libibex/2.7.2/share/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/opt/dreal/4.18.11.2/lib/pkgconfig:/opt/libibex/2.7.2/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
 Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
