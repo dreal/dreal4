@@ -69,6 +69,8 @@ y : [8.929064928123818135, 8.929756298502674383]
 z : [0.06815055407334302817, 0.06858905276351445757]
 ```
 
+More examples are available at [dreal4/dreal/test/python](https://github.com/dreal/dreal4/tree/master/dreal/test/python).
+
 To build Python3 bindings, run the following:
 ```bash
 bazel build //:archive --force_python=py3 --python_path=python3
