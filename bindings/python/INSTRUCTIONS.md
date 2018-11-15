@@ -15,7 +15,7 @@ python3 setup.py sdist bdist_wheel
 ```bash
 twine upload --repository testpypi dist/*  # To testpypi
 twine upload dist/*                        # To pypi
-```bash
+```
 
 # To install
 ```bash
