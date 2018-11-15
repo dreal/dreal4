@@ -95,7 +95,6 @@ pkg_tar(
         ":package_pkg_file",
         "//dreal:package_bin",
         "//dreal:package_headers",
-        "//dreal:package_python",
         "//dreal:package_sharedlib",
         "//dreal/api:package_headers",
         "//dreal/smt2:package_headers",
