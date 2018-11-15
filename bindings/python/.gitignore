@@ -1,0 +1,5 @@
+dreal/*.so
+MANIFEST
+build/
+dist/
+dreal.egg-info

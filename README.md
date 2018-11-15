@@ -34,16 +34,15 @@ DREAL_VERSION=4.18.11.2
 Python Binding
 ==============
 
-Some of the functionality of dReal is accessible through Python2. On
-Ubuntu 18.04 / 16.04, you need to set up the `PYTHONPATH` environment
-variable. On macOS, you do not need this step.
+Some of the functionality of dReal is accessible via Python2/3. To
+install the binding, run the following:
 
 ```bash
-# Only on Ubuntu 18.04 / 16.04:
-export PYTHONPATH=/opt/dreal/4.18.11.2/lib/python2.7/site-packages:${PYTHONPATH}
+pip install dreal
 ```
 
-To test it, run `python2` in a terminal and type the followings:
+To test it, run `python2` or `python3` in a terminal and type the
+followings:
 
 ```python
 from dreal import *
@@ -69,16 +68,9 @@ y : [8.929064928123818135, 8.929756298502674383]
 z : [0.06815055407334302817, 0.06858905276351445757]
 ```
 
-More examples are available at [dreal4/dreal/test/python](https://github.com/dreal/dreal4/tree/master/dreal/test/python).
+More examples are available at
+[dreal4/dreal/test/python](https://github.com/dreal/dreal4/tree/master/dreal/test/python).
 
-To build Python3 bindings, run the following:
-```bash
-bazel build //:archive --force_python=py3 --python_path=python3
-tar xvfz bazel-bin/archive.tar.gz
-# Make sure that the above command create opt/dreal/VERSION/lib/python3/...
-export PYTHONPATH=`pwd`/opt/dreal/<VERSION>/lib/python3/site-packages:${PYTHONPATH}
-export LD_LIBRARY_PATH=`pwd`/opt/dreal/<VERSION>/lib:${LD_LIBRARY_PATH}
-```
 
 Docker
 ======
