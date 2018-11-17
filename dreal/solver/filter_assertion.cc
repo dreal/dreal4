@@ -64,14 +64,26 @@ FilterAssertionResult UpdateLowerBound(const Variable& var, const double new_lb,
   return FilterAssertionResult::FilteredWithChange;
 }
 
-// Constrains the @p box with `box[var].lb() > v`. It turns the strict
-// inequality into a non-strict one, `box[var].lb() >= v + ε` where `v
-// + ε` is the smallest representable floating-point number bigger than
-// `v`.
+// Constrains the @p box with `box[var].lb() > v`. It changes the
+// strict inequality into a non-strict one:
+//
+//   If var is of CONTINUOUS type: `box[var].lb() >= v + ε`
+//                                 where `v + ε` is the smallest representable
+//                                 floating-point number bigger than `v`.
+//   Otherwise (INTEGER/BINARY)  : `box[var].lb() >= v + 1`
 FilterAssertionResult UpdateStrictLowerBound(const Variable& var,
-                                             const double lb, Box* const box) {
-  return UpdateLowerBound(var, nextafter(lb, numeric_limits<double>::max()),
-                          box);
+                                             const double v, Box* const box) {
+  switch (var.get_type()) {
+    case Variable::Type::CONTINUOUS:
+      return UpdateLowerBound(var, nextafter(v, numeric_limits<double>::max()),
+                              box);
+    case Variable::Type::INTEGER:
+    case Variable::Type::BINARY:
+      return UpdateLowerBound(var, v + 1, box);
+    case Variable::Type::BOOLEAN:
+      DREAL_UNREACHABLE();
+  }
+  DREAL_UNREACHABLE();
 }
 
 // Constrains the @p box with ` box[var].ub() <= v`.
@@ -91,14 +103,26 @@ FilterAssertionResult UpdateUpperBound(const Variable& var, const double new_ub,
   return FilterAssertionResult::FilteredWithChange;
 }
 
-// Constrains the @p box with `box[var].lb() < v`. It turns the strict
-// inequality into a non-strict one, `box[var].lb() <= v - ε` where `v
-// - ε` is the largest representable floating-point number smaller
-// than `v`.
+// Constrains the @p box with `box[var].ub() < v`. It changes the
+// strict inequality into a non-strict one:
+//
+//   If var is of CONTINUOUS type: `box[var].ub() <= v - ε`
+//                                 where `v - ε` is the largest representable
+//                                 floating-point number smaller than `v`.
+//   Otherwise (INTEGER/BINARY)  : `box[var].ub() <= v - 1`
 FilterAssertionResult UpdateStrictUpperBound(const Variable& var,
-                                             const double ub, Box* const box) {
-  return UpdateUpperBound(var, nextafter(ub, numeric_limits<double>::min()),
-                          box);
+                                             const double v, Box* const box) {
+  switch (var.get_type()) {
+    case Variable::Type::CONTINUOUS:
+      return UpdateUpperBound(var, nextafter(v, numeric_limits<double>::min()),
+                              box);
+    case Variable::Type::INTEGER:
+    case Variable::Type::BINARY:
+      return UpdateUpperBound(var, v - 1, box);
+    case Variable::Type::BOOLEAN:
+      DREAL_UNREACHABLE();
+  }
+  DREAL_UNREACHABLE();
 }
 
 class AssertionFilter {
