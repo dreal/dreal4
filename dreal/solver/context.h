@@ -119,6 +119,10 @@ class Context {
   /// Returns the const reference to the top box.
   const Box& box() const;
 
+  /// Returns a representation of a model computed by the solver in
+  /// response to an invocation of the check-sat.
+  const Box& get_model() const;
+
  private:
   // This header is exposed to external users as a part of API. We use
   // PIMPL idiom to hide internals and to reduce number of '#includes' in this

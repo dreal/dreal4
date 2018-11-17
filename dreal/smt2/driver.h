@@ -76,6 +76,10 @@ class Smt2Driver {
   /// cannot occur in an SMT-LIBv2 file.
   Variable DeclareLocalVariable(const std::string& name, const Sort sort);
 
+  /// Returns a representation of a model computed by the solver in
+  /// response to an invocation of the check-sat.
+  void GetModel();
+
   /// Returns a variable associated with a name @p name.
   ///
   /// @throws if no variable is associated with @p name.

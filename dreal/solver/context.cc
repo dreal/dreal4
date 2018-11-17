@@ -99,6 +99,8 @@ string Context::version() { return DREAL_VERSION_STRING; }
 
 const Box& Context::box() const { return impl_->box(); }
 
+const Box& Context::get_model() const { return impl_->get_model(); }
+
 const ScopedVector<Formula>& Context::assertions() const {
   return impl_->assertions();
 }

@@ -1,0 +1,2 @@
+unsat
+(error "model is not available")

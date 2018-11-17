@@ -139,6 +139,7 @@ command:
         |       command_check_sat
         |       command_declare_fun
         |       command_exit
+        |       command_get_model
         |       command_maximize
         |       command_minimize
         |       command_pop
@@ -186,6 +187,12 @@ command_declare_fun:
 
 command_exit:   '('TK_EXIT ')' {
                     driver.context_.Exit();
+                }
+                ;
+
+command_get_model:
+                '('TK_GET_MODEL ')' {
+                    driver.GetModel();
                 }
                 ;
 

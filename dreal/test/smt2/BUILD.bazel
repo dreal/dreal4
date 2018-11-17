@@ -373,6 +373,16 @@ smt2_test(
 )
 
 smt2_test(
+    name = "get_model_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "get_model_02",
+    size = "small",
+)
+
+smt2_test(
     name = "hansen_simple",
     size = "small",
 )

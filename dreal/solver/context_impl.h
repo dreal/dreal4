@@ -41,6 +41,7 @@ class Context::Impl {
   Config& mutable_config() { return config_; }
   const ScopedVector<Formula>& assertions() const;
   Box& box() { return boxes_.last(); }
+  const Box& get_model() { return model_; }
 
  private:
   // Add the variable @p v to the current box. This is used to
@@ -78,6 +79,10 @@ class Context::Impl {
   SatSolver sat_solver_;
   std::unordered_set<Variable::Id> model_variables_;
   TheorySolver theory_solver_;
+
+  // Stores the result of the latest checksat.
+  // Note that if the checksat result was UNSAT, this box holds an empty box.
+  Box model_;
 };
 
 }  // namespace dreal

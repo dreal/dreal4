@@ -20,6 +20,7 @@ using std::ifstream;
 using std::istream;
 using std::istringstream;
 using std::move;
+using std::ostream;
 using std::ostringstream;
 using std::string;
 using std::experimental::optional;
@@ -70,6 +71,46 @@ void Smt2Driver::CheckSat() {
     }
   } else {
     cout << "unsat" << endl;
+  }
+}
+
+namespace {
+ostream& PrintModel(ostream& os, const Box& box) {
+  os << "(model\n";
+  for (int i = 0; i < box.size(); ++i) {
+    const Variable& var{box.variable(i)};
+    os << "  (define-fun " << var << " () ";
+    switch (var.get_type()) {
+      case Variable::Type::CONTINUOUS:
+        os << Sort::Real;
+        break;
+      case Variable::Type::BINARY:
+      case Variable::Type::INTEGER:
+        os << Sort::Int;
+        break;
+      case Variable::Type::BOOLEAN:
+        os << Sort::Bool;
+        break;
+    }
+    os << " ";
+    const Box::Interval& iv{box[i]};
+    if (iv.is_degenerated()) {
+      os << iv.lb();
+    } else {
+      os << iv;
+    }
+    os << ")\n";
+  }
+  return os << ")";
+}
+}  // namespace
+
+void Smt2Driver::GetModel() {
+  const Box& box{context_.get_model()};
+  if (box.empty()) {
+    cout << "(error \"model is not available\")" << endl;
+  } else {
+    PrintModel(cout, box) << endl;
   }
 }
 

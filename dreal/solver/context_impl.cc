@@ -185,8 +185,10 @@ optional<Box> Context::Impl::CheckSat() {
     // In case of delta-sat, do post-processing.
     Tighten(&(*result), config_.precision());
     DREAL_LOG_DEBUG("ContextImpl::CheckSat() - Found Model\n{}", *result);
-    return ExtractModel(*result);
+    model_ = ExtractModel(*result);
+    return model_;
   } else {
+    model_.set_empty();
     return result;
   }
 }
