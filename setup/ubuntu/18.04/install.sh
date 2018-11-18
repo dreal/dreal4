@@ -12,10 +12,10 @@ add-apt-repository ppa:dreal/dreal -y  # For libibex-dev
 apt-get update
 
 # Install dReal
-DREAL_VERSION=4.18.11.2
+DREAL_VERSION=4.18.11.3
 DREAL_DEBNAME=dreal_${DREAL_VERSION}_amd64.deb
 DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
-DREAL_SHA256=381da7375106180acc32ba5a9f590b9cc64d06a380efd745950e9f55ff12875e
+DREAL_SHA256=7c9f98042707e5eb813d08d59b03baf878067b0e0230a6f1266c343cc540f83a
 apt-get install --no-install-recommends wget -y
 wget ${DREAL_URL}
 if echo "${DREAL_SHA256}  ${DREAL_DEBNAME}" | sha256sum -c; then
