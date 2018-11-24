@@ -11,6 +11,9 @@ clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
            -I./ \
            -x c++ \
            -I bazel-genfiles \
+	   -I/opt/libibex/2.7.2/include \
+	   -I/opt/libibex/2.7.2/include/ibex \
+	   -I/opt/libibex/2.7.2/include/ibex/3rd \
 	   -I/usr/local/opt/ibex@2.7.2/include \
 	   -I/usr/local/opt/ibex@2.7.2/include/ibex \
 	   -I/usr/local/opt/ibex@2.7.2/include/ibex/3rd \
@@ -23,6 +26,7 @@ clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
            -isystem ${BAZEL_EXTERNAL}/ezoptionparser \
            -isystem ${BAZEL_EXTERNAL}/gtest/googletest/include \
            -isystem ${BAZEL_EXTERNAL}/picosat \
+           -isystem ${BAZEL_EXTERNAL}/pybind11/include \
            -isystem ${BAZEL_THIRD_PARTY}/com_github_robotlocomotion_drake \
            -isystem /usr/local/opt/llvm/include/c++/v1 \
            -isystem /usr/local/include \
