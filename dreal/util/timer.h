@@ -47,14 +47,16 @@ class Timer {
 
 std::ostream& operator<<(std::ostream& os, const Timer& timer);
 
-/// Start the passed timer object at the construction and pauses it
-/// when the guard object is destructed (e.g. going out of scope).
+/// Pauses the passed timer object when the guard object is destructed
+/// (e.g. going out of scope).
 class TimerGuard {
  public:
-  /// Constructs the timer guard object with @p timer. It starts the
-  /// @p timer object. If @p enabled is false, this class does not do
-  /// anything. If @p start_timer is true, starts the @p timer in the
-  /// constructor. Otherwise, it does not start it.
+  /// Constructs the timer guard object with @p timer.
+  ///
+  /// If @p enabled is false, this class does not do anything.
+  /// If @p start_timer is true, starts the @p timer in the
+  /// constructor. Otherwise, it does not start it and a user has to
+  /// call `resume()` to start it.
   TimerGuard(Timer* timer, bool enabled, bool start_timer = true);
 
   /// Destructs the timer guard object. It pauses the embedded timer object.
