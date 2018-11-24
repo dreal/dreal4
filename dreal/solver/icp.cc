@@ -191,9 +191,12 @@ bool Icp::CheckSat(const Contractor& contractor,
   // the contractor status as a mutable reference.
   int& current_branching_point{cs->mutable_branching_point()};
 
-  TimerGuard prune_timer_guard(&stat.timer_prune_, stat.enabled(), false);
-  TimerGuard eval_timer_guard(&stat.timer_eval_, stat.enabled(), false);
-  TimerGuard branch_timer_guard(&stat.timer_branch_, stat.enabled(), false);
+  TimerGuard prune_timer_guard(&stat.timer_prune_, stat.enabled(),
+                               false /* start_timer */);
+  TimerGuard eval_timer_guard(&stat.timer_eval_, stat.enabled(),
+                              false /* start_timer */);
+  TimerGuard branch_timer_guard(&stat.timer_branch_, stat.enabled(),
+                                false /* start_timer */);
 
   while (!stack.empty()) {
     DREAL_LOG_DEBUG("Icp::CheckSat() Loop Head");
@@ -243,7 +246,6 @@ bool Icp::CheckSat(const Contractor& contractor,
           "Icp::CheckSat() Found that the current box is not satisfying "
           "delta-condition but it's not bisectable.:\n{}",
           current_box);
-      stat.timer_branch_.pause();
       return true;
     }
     branch_timer_guard.pause();
