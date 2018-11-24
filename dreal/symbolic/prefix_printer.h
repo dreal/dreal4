@@ -15,6 +15,11 @@ class PrefixPrinter {
   /// precision of @p os to the maximum precision.
   explicit PrefixPrinter(std::ostream& os);
 
+  PrefixPrinter(const PrefixPrinter&) = delete;
+  PrefixPrinter(PrefixPrinter&&) = delete;
+  PrefixPrinter& operator=(const PrefixPrinter&) = delete;
+  PrefixPrinter& operator=(PrefixPrinter&&) = delete;
+
   /// Destroys this. It restores the original precision of the ostream.
   ~PrefixPrinter();
 

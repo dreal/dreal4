@@ -59,6 +59,12 @@ class TimerGuard {
   /// call `resume()` to start it.
   TimerGuard(Timer* timer, bool enabled, bool start_timer = true);
 
+  TimerGuard(const TimerGuard&) = delete;
+  TimerGuard(TimerGuard&&) = delete;
+  TimerGuard& operator=(const TimerGuard&) = delete;
+  TimerGuard& operator=(TimerGuard&&) = delete;
+
+
   /// Destructs the timer guard object. It pauses the embedded timer object.
   ~TimerGuard();
 

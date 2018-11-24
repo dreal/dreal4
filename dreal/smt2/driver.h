@@ -62,19 +62,19 @@ class Smt2Driver {
 
   /// Register a variable with name @p name and sort @p s in the scope. Note
   /// that it does not declare the variable in the context.
-  Variable RegisterVariable(const std::string& name, const Sort sort);
+  Variable RegisterVariable(const std::string& name, Sort sort);
 
   /// Declare a variable with name @p name and sort @p sort.
-  void DeclareVariable(const std::string& name, const Sort sort);
+  void DeclareVariable(const std::string& name, Sort sort);
 
   /// Declare a variable with name @p name and sort @p sort which is bounded by
   /// an interval `[lb, ub]`.
-  void DeclareVariable(const std::string& name, const Sort sort, const Term& lb,
+  void DeclareVariable(const std::string& name, Sort sort, const Term& lb,
                        const Term& ub);
 
   /// Declare a new variable with label @p name that is globally unique and
   /// cannot occur in an SMT-LIBv2 file.
-  Variable DeclareLocalVariable(const std::string& name, const Sort sort);
+  Variable DeclareLocalVariable(const std::string& name, Sort sort);
 
   /// Returns a representation of a model computed by the solver in
   /// response to an invocation of the check-sat.
@@ -89,7 +89,7 @@ class Smt2Driver {
 
   void PopScope() { scope_.pop(); }
 
-  Variable ParseVariableSort(const std::string& name, const Sort s);
+  Variable ParseVariableSort(const std::string& name, Sort s);
 
   std::string MakeUniqueName(const std::string& name);
 

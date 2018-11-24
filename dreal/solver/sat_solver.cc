@@ -12,7 +12,6 @@
 namespace dreal {
 
 using std::cout;
-using std::pair;
 using std::set;
 using std::vector;
 using std::experimental::optional;

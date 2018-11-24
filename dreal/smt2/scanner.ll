@@ -184,8 +184,10 @@ simple_symbol   {sym_begin}{sym_continue}*
 
 [-+]?(0|[1-9][0-9]*) {
     try {
-        yylval->longVal = std::stol(yytext);
-        return token::LONG;
+        static_assert(sizeof(std::int64_t) == sizeof(long),
+	              "sizeof(std::int64_t) != sizeof(long).");
+        yylval->int64Val = std::stol(yytext);
+        return token::INT;
     } catch(std::out_of_range& e) {
         std::cerr << "At line " << yylloc->begin.line
                   << " the following value would fall out of the range of the result type (long):\n"

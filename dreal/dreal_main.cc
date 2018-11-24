@@ -315,8 +315,10 @@ void MainProgram::ExtractOptions() {
 
   // --random-seed
   if (opt_.isSet("--random-seed")) {
-    // NOLINTNEXTLINE(runtime/int) per C++ standard signature.
-    unsigned long random_seed{0};
+    // NOLINTNEXTLINE(runtime/int)
+    static_assert(sizeof(unsigned long) == sizeof(std::uint64_t),
+                  "sizeof(unsigned long) != sizeof(std::uint64_t).");
+    std::uint64_t random_seed{0};
     opt_.get("--random-seed")->getULong(random_seed);
     config_.mutable_random_seed().set_from_command_line(random_seed);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --random-seed = {}",
