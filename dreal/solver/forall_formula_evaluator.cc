@@ -105,7 +105,7 @@ ostream& ForallFormulaEvaluator::Display(ostream& os) const {
   return os << "ForallFormulaEvaluator(" << formula() << ")";
 }
 
-Variables ForallFormulaEvaluator::variables() const {
+const Variables& ForallFormulaEvaluator::variables() const {
   return formula().GetFreeVariables();
 }
 

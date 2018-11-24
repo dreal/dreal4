@@ -58,7 +58,7 @@ class ForallFormulaEvaluator : public FormulaEvaluatorCell {
 
   std::ostream& Display(std::ostream& os) const override;
 
-  Variables variables() const override;
+  const Variables& variables() const override;
 
  private:
   mutable Context context_;

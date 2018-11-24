@@ -34,7 +34,7 @@ class FormulaEvaluatorCell {
   /// Evaluates the constraint/formula with @p box.
   virtual FormulaEvaluationResult operator()(const Box& box) const = 0;
 
-  virtual Variables variables() const = 0;
+  virtual const Variables& variables() const = 0;
 
   virtual std::ostream& Display(std::ostream& os) const = 0;
 

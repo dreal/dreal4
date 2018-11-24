@@ -36,7 +36,7 @@ class RelationalFormulaEvaluator : public FormulaEvaluatorCell {
 
   std::ostream& Display(std::ostream& os) const override;
 
-  Variables variables() const override {
+  const Variables& variables() const override {
     return expression_evaluator_.variables();
   }
 

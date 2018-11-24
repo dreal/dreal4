@@ -16,7 +16,7 @@ class ExpressionEvaluator {
   /// Evaluates the expression with @p box.
   Box::Interval operator()(const Box& box) const;
 
-  Variables variables() const { return e_.GetVariables(); }
+  const Variables& variables() const { return e_.GetVariables(); }
 
  private:
   Box::Interval Visit(const Expression& e, const Box& box) const;

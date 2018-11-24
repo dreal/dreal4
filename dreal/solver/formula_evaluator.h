@@ -69,7 +69,7 @@ class FormulaEvaluator {
   FormulaEvaluationResult operator()(const Box& box) const;
 
   /// Returns the occurred variables in the formula.
-  Variables variables() const;
+  const Variables& variables() const;
 
   const Formula& formula() const;
 

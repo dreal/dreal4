@@ -54,7 +54,9 @@ FormulaEvaluationResult FormulaEvaluator::operator()(const Box& box) const {
   return (*ptr_)(box);
 }
 
-Variables FormulaEvaluator::variables() const { return ptr_->variables(); }
+const Variables& FormulaEvaluator::variables() const {
+  return ptr_->variables();
+}
 
 const Formula& FormulaEvaluator::formula() const { return ptr_->formula(); }
 
