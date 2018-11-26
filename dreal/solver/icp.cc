@@ -127,7 +127,24 @@ class IcpStat : public Stat {
 }  // namespace
 
 Icp::Icp(const Config& config) : config_{config} {}
+// Evaluates @p box using @p formula_evaluators.
+//
+// It evaluates each formula with @p box using interval
+// arithmetic. There are three possible outcomes:
+//
+//  - UNSAT: It shows that there is no solution in the box. The
+//           function immediately returns `nullopt`.
 
+//  - VALID: It shows that all the points in the box satisfy the
+//           constraint.
+//
+//  - UNKNOWN: It cannot conclude if the constraint is satisfied or
+//             not completely. It checks the width/diameter of the
+//             interval evaluation and adds the free variables in the
+//             constraint into the set that it will return.
+//
+// If it returns an ibex::BitSet, it represents the dimensions on
+// which the ICP algorithm needs to consider branching.
 optional<ibex::BitSet> Icp::EvaluateBox(
     const vector<FormulaEvaluator>& formula_evaluators, const Box& box,
     ContractorStatus* const cs) {
