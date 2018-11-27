@@ -298,8 +298,45 @@ Formula operator||(const Formula& f, const Variable& v);
 Formula operator||(const Variable& v1, const Variable& v2);
 Formula operator!(const Formula& f);
 Formula operator!(const Variable& v);
+
+/** Returns a formula representing v1 and v2 are equivalent.
+ * - When v1 and v2 are scalar variables (of type
+ *   CONTINUOUS/BINARY/INTEGER), it forms `v1 == v2`.
+ * - When v1 and v2 are boolean variables, it returns `v1 ↔ v2`.
+ */
+Formula operator==(const Variable& v1, const Variable& v2);
+
+/** Returns a formula representing (e1 = e2). */
 Formula operator==(const Expression& e1, const Expression& e2);
+
+/** Returns a formula representing f1 ↔ f2. */
+Formula operator==(const Formula& f1, const Formula& f2);
+
+/** Returns a formula representing v ↔ f. */
+Formula operator==(const Variable& v, const Formula& f);
+
+/** Returns a formula representing f ↔ v. */
+Formula operator==(const Formula& f, const Variable& v);
+
+/** Returns a formula representing v1 and v2 are *not* equivalent.
+ * - When v1 and v2 are scalar variables (of type
+ *   CONTINUOUS/BINARY/INTEGER), it forms `v1 ≠ v2`.
+ * - When v1 and v2 are boolean variables, it returns `¬(v1 ↔ v2)`.
+ */
+Formula operator!=(const Variable& v1, const Variable& v2);
+
+/** Returns a formula representing e1 ≠ e2. */
 Formula operator!=(const Expression& e1, const Expression& e2);
+
+/** Returns a formula representing ¬(f1 ↔ f2). */
+Formula operator!=(const Formula& f1, const Formula& f2);
+
+/** Returns a formula representing ¬(v ↔ f). */
+Formula operator!=(const Variable& v, const Formula& f);
+
+/** Returns a formula representing ¬(f ↔ v). */
+Formula operator!=(const Formula& f, const Variable& v);
+
 Formula operator<(const Expression& e1, const Expression& e2);
 Formula operator<=(const Expression& e1, const Expression& e2);
 Formula operator>(const Expression& e1, const Expression& e2);

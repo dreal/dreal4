@@ -541,6 +541,10 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("__hash__",
            [](const Formula& self) { return std::hash<Formula>{}(self); })
       .def("__nonzero__", [](const Formula& f) { return f.Evaluate(); })
+      // EQ(==).
+      .def(py::self == Variable())
+      // NEQ(!=).
+      .def(py::self != Variable())
       .def_static("TRUE", &Formula::True)
       .def_static("FALSE", &Formula::False)
       .def("ToPrefix", [](const Formula& self) { return ToPrefix(self); });
@@ -555,6 +559,12 @@ PYBIND11_MODULE(_dreal_py, m) {
   m.def("logical_not", [](const Formula& a) { return !a; })
       .def("logical_imply",
            [](const Formula& a, const Formula& b) { return imply(a, b); })
+      .def("logical_iff",
+           [](const Variable& a, const Variable& b) { return iff(a, b); })
+      .def("logical_iff",
+           [](const Formula& a, const Variable& b) { return iff(a, b); })
+      .def("logical_iff",
+           [](const Variable& a, const Formula& b) { return iff(a, b); })
       .def("logical_iff",
            [](const Formula& a, const Formula& b) { return iff(a, b); });
 

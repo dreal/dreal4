@@ -78,6 +78,160 @@ TEST_F(SymbolicTest, Iff) {
       Formula::True());
 }
 
+TEST_F(SymbolicTest, Equality) {
+  {
+    // Boolean Variable == Boolean Variable.
+    const Formula f{b1_ == b2_};
+    EXPECT_PRED2(FormulaEqual, f, iff(b1_, b2_));
+  }
+
+  {
+    // Scalar Variable == Scalar Variable.
+    const Formula f{x_ == y_};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  {
+    // Expression == Scalar Variable.
+    const Formula f{(x_ + 1) == y_};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  // Scalar Variable == Expression.
+  {
+    const Formula f{y_ == (x_ + 1)};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  // Expression == Expression.
+  {
+    const Formula f{y_ == x_};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  {
+    // Boolean Variable == Formula.
+    const Formula f{b1_ == (x_ > y_)};
+    EXPECT_PRED2(FormulaEqual, f, iff(b1_, x_ > y_));
+  }
+
+  {
+    // Formula == Boolean Variable.
+    const Formula f{(x_ > y_) == b1_};
+    EXPECT_PRED2(FormulaEqual, f, iff(b1_, x_ > y_));
+  }
+
+  {
+    // Formula == Formula.
+    const Formula f{(y_ > z_) == (x_ > y_)};
+    EXPECT_PRED2(FormulaEqual, f, iff(y_ > z_, x_ > y_));
+  }
+
+  {
+    Formula f;
+    // Boolean Variable == Scalar Variable: => EXCEPTION.
+    EXPECT_THROW(f = (b1_ == y_), std::runtime_error);
+
+    // Scalar Variable == Boolean Variable: => EXCEPTION.
+    EXPECT_THROW(f = (y_ == b1_), std::runtime_error);
+
+    // Boolean Variable == Expression: => EXCEPTION.
+    EXPECT_THROW(f = (b1_ == (y_ + 3)), std::runtime_error);
+
+    // Expression == Boolean Variable: => EXCEPTION.
+    EXPECT_THROW(f = ((x_ + 3) == b1_), std::runtime_error);
+
+    // Scalar Variable == Formula: => EXCEPTION.
+    EXPECT_THROW(f = (x_ == (x_ > 3)), std::runtime_error);
+
+    // Formula == Scalar Variable: => EXCEPTION.
+    EXPECT_THROW(f = ((x_ > 3) == x_), std::runtime_error);
+
+    // Expression == Formula: => Compile Error.
+    // EXPECT_THROW(f = ((x_ + 3) == (x_ > 3)), std::runtime_error);
+
+    // Formula == Expression: => Compile Error.
+    // EXPECT_THROW(f = ((x_ > 3) == (x_ + 3)), std::runtime_error);
+  }
+}
+
+TEST_F(SymbolicTest, Inequality) {
+  {
+    // Boolean Variable != Boolean Variable.
+    const Formula f{b1_ != b2_};
+    EXPECT_PRED2(FormulaEqual, f, !iff(b1_, b2_));
+  }
+
+  {
+    // Scalar Variable != Scalar Variable.
+    const Formula f{x_ != y_};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  {
+    // Expression != Scalar Variable.
+    const Formula f{(x_ + 1) != y_};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  // Scalar Variable != Expression.
+  {
+    const Formula f{y_ != (x_ + 1)};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  // Expression != Expression.
+  {
+    const Formula f{y_ != x_};
+    EXPECT_TRUE(is_relational(f));
+  }
+
+  {
+    // Boolean Variable != Formula.
+    const Formula f{b1_ != (x_ > y_)};
+    EXPECT_PRED2(FormulaEqual, f, !iff(b1_, x_ > y_));
+  }
+
+  {
+    // Formula != Boolean Variable.
+    const Formula f{(x_ > y_) != b1_};
+    EXPECT_PRED2(FormulaEqual, f, !iff(b1_, x_ > y_));
+  }
+
+  {
+    // Formula != Formula.
+    const Formula f{(y_ > z_) != (x_ > y_)};
+    EXPECT_PRED2(FormulaEqual, f, !iff(y_ > z_, x_ > y_));
+  }
+
+  {
+    Formula f;
+    // Boolean Variable != Scalar Variable: => EXCEPTION.
+    EXPECT_THROW(f = (b1_ != y_), std::runtime_error);
+
+    // Scalar Variable != Boolean Variable: => EXCEPTION.
+    EXPECT_THROW(f = (y_ != b1_), std::runtime_error);
+
+    // Boolean Variable != Expression: => EXCEPTION.
+    EXPECT_THROW(f = (b1_ != (y_ + 3)), std::runtime_error);
+
+    // Expression != Boolean Variable: => EXCEPTION.
+    EXPECT_THROW(f = ((x_ + 3) != b1_), std::runtime_error);
+
+    // Scalar Variable != Formula: => EXCEPTION.
+    EXPECT_THROW(f = (x_ != (x_ > 3)), std::runtime_error);
+
+    // Formula != Scalar Variable: => EXCEPTION.
+    EXPECT_THROW(f = ((x_ > 3) != x_), std::runtime_error);
+
+    // Expression != Formula: => Compile Error.
+    // EXPECT_THROW(f = ((x_ + 3) != (x_ > 3)), std::runtime_error);
+
+    // Formula != Expression: => Compile Error.
+    // EXPECT_THROW(f = ((x_ > 3) != (x_ + 3)), std::runtime_error);
+  }
+}
+
 TEST_F(SymbolicTest, CreateVectorContinuous) {
   const vector<Variable> v{CreateVector("x", 5)};
   for (int i = 0; i < 5; ++i) {

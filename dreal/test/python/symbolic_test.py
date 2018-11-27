@@ -16,6 +16,9 @@ w = Variable("w")
 a = Variable("a")
 b = Variable("b")
 c = Variable("c")
+b1 = Variable("b1", Variable.Bool)
+b2 = Variable("b2", Variable.Bool)
+
 e_x = Expression(x)
 e_y = Expression(y)
 
@@ -469,6 +472,38 @@ class TestSymbolicExpression(unittest.TestCase):
 
     def test_to_prefix(self):
         self.assertEqual((x + y).ToPrefix(), "(+ x y)")
+
+    def test_equality(self):
+        # Boolean Variable == Boolean Variable
+        self.assertEqual(b1 == b2, Iff(b1, b2))
+        # Boolean Variable == Formula
+        self.assertEqual(b1 == (x > 3), Iff(b1, x > 3))
+        # Formula == Boolean Variable
+        self.assertEqual((x > 3) == b1, Iff(x > 3, b1))
+        # Scalar Variable == Scalar Variable
+        self.assertEqual(str(x == y), '(x = y)')
+        # Scalar Variable == Expression
+        self.assertEqual(str(x == (y + 3)), '(x = (3 + y))')
+        # Expression == Scalar Variable
+        self.assertEqual(str((3 + y) == x), '((3 + y) = x)')
+        # Expression == Expression
+        self.assertEqual(str((1 + x) == (2 + y)), '((1 + x) = (2 + y))')
+
+    def test_inequality(self):
+        # Boolean Variable != Boolean Variable
+        self.assertEqual(b1 != b2, Not(Iff(b1, b2)))
+        # Boolean Variable != Formula
+        self.assertEqual(b1 != (x > 3), Not(Iff(b1, x > 3)))
+        # Formula != Boolean Variable
+        self.assertEqual((x > 3) != b1, Not(Iff(x > 3, b1)))
+        # Scalar Variable != Scalar Variable
+        self.assertEqual(str(x != y), '(x != y)')
+        # Scalar Variable != Expression
+        self.assertEqual(str(x != (y + 3)), '(x != (3 + y))')
+        # Expression != Scalar Variable
+        self.assertEqual(str((3 + y) != x), '((3 + y) != x)')
+        # Expression != Expression
+        self.assertEqual(str((1 + x) != (2 + y)), '((1 + x) != (2 + y))')
 
 
 class TestSymbolicFormula(unittest.TestCase):

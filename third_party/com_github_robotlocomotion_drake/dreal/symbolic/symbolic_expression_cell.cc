@@ -262,10 +262,18 @@ ExpressionVar::ExpressionVar(const Variable& v)
       var_{v} {
   // Dummy symbolic variable (ID = 0) should not be used in constructing
   // symbolic expressions.
-  assert(!var_.is_dummy());
+  if (var_.is_dummy()) {
+    throw runtime_error("Dummy variable is used to construct an expression.");
+  }
   // Boolean symbolic variable should not be used in constructing symbolic
   // expressions.
-  assert(var_.get_type() != Variable::Type::BOOLEAN);
+  if (var_.get_type() == Variable::Type::BOOLEAN) {
+    ostringstream oss;
+    oss << "Variable " << var_
+        << " is of type BOOLEAN and it should not be used to construct a "
+           "symbolic expression.";
+    throw runtime_error(oss.str());
+  }
 }
 
 Variables ExpressionVar::GetVariables() const { return {get_variable()}; }

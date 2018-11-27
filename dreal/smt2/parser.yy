@@ -295,9 +295,7 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
                 //    (f1 = f2)
                 // -> (f1 ⇔ f2)
                 // -> (f1 ∧ f2) ∨ (¬f1 ∧ ¬f2)
-                const Formula& f1 = t1.formula();
-                const Formula& f2 = t2.formula();
-                $$ = new Term((f1 && f2) || (!f1 && !f2));
+                $$ = new Term(t1.formula() == t2.formula());
             } else {
                 std::cerr << @1 << " : Type mismatch in `t1 == t2`:" << std::endl
                           << "    t1 = " << t1 << std::endl

@@ -173,8 +173,18 @@ FormulaVar::FormulaVar(const Variable& v)
     : FormulaCell{FormulaKind::Var, hash_value<Variable>{}(v)}, var_{v} {
   // Dummy symbolic variable (ID = 0) should not be used in constructing
   // symbolic formulas.
-  assert(!var_.is_dummy());
-  assert(var_.get_type() == Variable::Type::BOOLEAN);
+  if (var_.is_dummy()) {
+    throw runtime_error("Dummy variable is used to construct an expression.");
+  }
+  // Boolean symbolic variable should be used in constructing symbolic
+  // formulas.
+  if (var_.get_type() != Variable::Type::BOOLEAN) {
+    ostringstream oss;
+    oss << "Variable " << var_ << " is of type " << var_.get_type()
+        << " and it should not be used to construct a "
+           "symbolic formula.";
+    throw runtime_error(oss.str());
+  }
 }
 
 Variables FormulaVar::GetFreeVariables() const { return Variables{var_}; }

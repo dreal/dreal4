@@ -5,6 +5,7 @@
 #include <iostream>
 #include <set>
 #include <sstream>
+#include <stdexcept>
 
 #include "dreal/symbolic/symbolic_environment.h"
 #include "dreal/symbolic/symbolic_expression.h"
@@ -18,6 +19,7 @@ namespace symbolic {
 
 using std::ostream;
 using std::ostringstream;
+using std::runtime_error;
 using std::set;
 using std::string;
 
@@ -291,6 +293,22 @@ ostream& operator<<(ostream& os, const Formula& f) {
   return f.ptr_->Display(os);
 }
 
+Formula operator==(const Variable& v1, const Variable& v2) {
+  if (v1.get_type() == Variable::Type::BOOLEAN &&
+      v2.get_type() == Variable::Type::BOOLEAN) {
+    return Formula{v1} == Formula{v2};
+  } else if (v1.get_type() != Variable::Type::BOOLEAN &&
+             v2.get_type() != Variable::Type::BOOLEAN) {
+    return Expression{v1} == Expression{v2};
+  } else {
+    ostringstream oss;
+    oss << "We cannot form " << v1 << " == " << v2 << " because " << v1
+        << " is of type " << v1.get_type() << " while " << v2 << " is of type "
+        << v2.get_type() << ".";
+    throw std::runtime_error{oss.str()};
+  }
+}
+
 Formula operator==(const Expression& e1, const Expression& e2) {
   // Simplification: E1 - E2 == 0  =>  True
   const Expression diff{e1 - e2};
@@ -300,6 +318,34 @@ Formula operator==(const Expression& e1, const Expression& e2) {
   return Formula{new FormulaEq(e1, e2)};
 }
 
+Formula operator==(const Formula& f1, const Formula& f2) {
+  return (!f1 || f2) && (!f2 || f1);
+}
+
+Formula operator==(const Variable& v, const Formula& f) {
+  return Formula{v} == f;
+}
+
+Formula operator==(const Formula& f, const Variable& v) {
+  return f == Formula{v};
+}
+
+Formula operator!=(const Variable& v1, const Variable& v2) {
+  if (v1.get_type() == Variable::Type::BOOLEAN &&
+      v2.get_type() == Variable::Type::BOOLEAN) {
+    return !(Formula{v1} == Formula{v2});
+  } else if (v1.get_type() != Variable::Type::BOOLEAN &&
+             v2.get_type() != Variable::Type::BOOLEAN) {
+    return Expression{v1} != Expression{v2};
+  } else {
+    ostringstream oss;
+    oss << "We cannot form " << v1 << " != " << v2 << " because " << v1
+        << " is of type " << v1.get_type() << " while " << v2 << " is of type "
+        << v2.get_type() << ".";
+    throw std::runtime_error{oss.str()};
+  }
+}
+
 Formula operator!=(const Expression& e1, const Expression& e2) {
   // Simplification: E1 - E2 != 0  =>  True
   const Expression diff{e1 - e2};
@@ -307,6 +353,16 @@ Formula operator!=(const Expression& e1, const Expression& e2) {
     return diff.Evaluate() != 0.0 ? Formula::True() : Formula::False();
   }
   return Formula{new FormulaNeq(e1, e2)};
+}
+
+Formula operator!=(const Formula& f1, const Formula& f2) { return !(f1 == f2); }
+
+Formula operator!=(const Variable& v, const Formula& f) {
+  return Formula{v} != f;
+}
+
+Formula operator!=(const Formula& f, const Variable& v) {
+  return f != Formula{v};
 }
 
 Formula operator<(const Expression& e1, const Expression& e2) {
