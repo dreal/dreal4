@@ -166,6 +166,14 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "jorge_test",
+    tags = ["unit"],
+    deps = [
+        ":solver",
+    ],
+)
+
+dreal_cc_googletest(
     name = "sat_solver_test",
     tags = ["unit"],
     deps = [
