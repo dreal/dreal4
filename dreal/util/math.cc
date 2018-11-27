@@ -31,7 +31,6 @@ int convert_int64_to_int(const int64_t v) {
 
 double convert_int64_to_double(const int64_t v) {
   constexpr int64_t m{1ul << numeric_limits<double>::digits};
-  std::cerr << m << std::endl;
   if (-m <= v && v <= m) {
     return v;
   } else {
