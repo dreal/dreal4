@@ -240,16 +240,28 @@ ostream& operator<<(ostream& os, const Box& box) {
   for (const Variable& var : *(box.variables_)) {
     const Box::Interval interval{box.values_[i++]};
     os << var << " : ";
-    if (var.get_type() == Variable::Type::INTEGER ||
-        var.get_type() == Variable::Type::BINARY) {
-      if (interval.is_empty()) {
-        os << "[ empty ]";
-      } else {
-        os << "[" << static_cast<int>(interval.lb()) << ", "
-           << static_cast<int>(interval.ub()) << "]";
-      }
-    } else {
-      os << interval;
+    switch (var.get_type()) {
+      case Variable::Type::INTEGER:
+      case Variable::Type::BINARY:
+        if (interval.is_empty()) {
+          os << "[ empty ]";
+        } else {
+          os << "[" << static_cast<int>(interval.lb()) << ", "
+             << static_cast<int>(interval.ub()) << "]";
+        }
+        break;
+      case Variable::Type::CONTINUOUS:
+        os << interval;
+        break;
+      case Variable::Type::BOOLEAN:
+        if (interval.ub() == 0.0) {
+          os << "False";
+        } else if (interval.lb() == 1.0) {
+          os << "True";
+        } else {
+          os << "Unassigned";
+        }
+        break;
     }
     if (i != box.size()) {
       os << "\n";
