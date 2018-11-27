@@ -19,3 +19,11 @@ def logical_and(*formulas):
 def logical_or(*formulas):
     assert len(formulas) >= 1, "Must supply at least one operand"
     return reduce(__logical_or, formulas)
+
+
+# Add aliases
+And = logical_and
+Or = logical_or
+Not = logical_not
+Iff = logical_iff
+Implies = logical_imply

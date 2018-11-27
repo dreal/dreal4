@@ -106,27 +106,27 @@ class SymbolicVariableTest(unittest.TestCase):
     def test_logical(self):
         f1 = (x == 0)
         f2 = (y == 0)
-        self.assertEqual(str(logical_not(f1)), "!((x = 0))")
+        self.assertEqual(str(Not(f1)), "!((x = 0))")
         self.assertEqual(
-            str(logical_imply(f1, f2)), str(logical_or(logical_not(f1), f2)))
+            str(Implies(f1, f2)), str(Or(Not(f1), f2)))
         self.assertEqual(
-            str(logical_iff(f1, f2)),
-            str(logical_and(logical_imply(f1, f2), logical_imply(f2, f1))))
+            str(Iff(f1, f2)),
+            str(And(Implies(f1, f2), Implies(f2, f1))))
 
         # Test single-operand logical statements
-        self.assertEqual(str(logical_and(x >= 1)), "(x >= 1)")
-        self.assertEqual(str(logical_or(x >= 1)), "(x >= 1)")
+        self.assertEqual(str(And(x >= 1)), "(x >= 1)")
+        self.assertEqual(str(Or(x >= 1)), "(x >= 1)")
         # Test binary operand logical statements
         self.assertEqual(
-            str(logical_and(x >= 1, x <= 2)), "((x >= 1) and (x <= 2))")
+            str(And(x >= 1, x <= 2)), "((x >= 1) and (x <= 2))")
         self.assertEqual(
-            str(logical_or(x <= 1, x >= 2)), "((x >= 2) or (x <= 1))")
+            str(Or(x <= 1, x >= 2)), "((x >= 2) or (x <= 1))")
         # Test multiple operand logical statements
         self.assertEqual(
-            str(logical_and(x >= 1, x <= 2, y == 2)),
+            str(And(x >= 1, x <= 2, y == 2)),
             "((y = 2) and (x >= 1) and (x <= 2))")
         self.assertEqual(
-            str(logical_or(x >= 1, x <= 2, y == 2)),
+            str(Or(x >= 1, x <= 2, y == 2)),
             "((y = 2) or (x >= 1) or (x <= 2))")
 
     def test_functions_with_variable(self):

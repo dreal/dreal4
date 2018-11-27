@@ -31,13 +31,13 @@ def make_config():
 def make_domain(tuples):
     def make_bound(name_of_var, lb, ub):
         v = Variable(name_of_var)
-        return (v, logical_and(lb <= v, v <= ub))
+        return (v, And(lb <= v, v <= ub))
 
     def reducer(vars_bounds, item):
         (var, bound) = make_bound(*item)
         vars = vars_bounds[0]
         bounds = vars_bounds[1]
-        return (vars + [var], logical_and(bounds, bound))
+        return (vars + [var], And(bounds, bound))
 
     return reduce((lambda vars_bounds, item: reducer(vars_bounds, item)),
                   tuples, ([], Formula.TRUE()))
@@ -94,8 +94,8 @@ class UnconstrainedOptimizationTest(CavTest):
 
         def objective(x, y):
             return (-20 * exp(-0.02 * sqrt(0.5 * (x**2 + y**2))) - exp(
-                0.5 *
-                (cos(2 * math.pi * x) + cos(2 * math.pi * y))) + math.e + 20)
+                0.5 * (cos(2 * math.pi * x) + cos(2 * math.pi * y))) + math.e +
+                    20)
 
         sol = Minimize(objective(*vars), domain, self.config)
         self.global_min = 0.0
@@ -116,8 +116,8 @@ class UnconstrainedOptimizationTest(CavTest):
             return (-20 * exp(-0.02 * sqrt(1.0 / 4.0 *
                                            (x1**2 + x2**2 + x3**2 + x4**2))) -
                     exp(1.0 / 4.0 *
-                        (cos(2 * math.pi * x1) + cos(2 * math.pi * x2) +
-                         cos(2 * math.pi * x3) + cos(2 * math.pi * x4))) +
+                        (cos(2 * math.pi * x1) + cos(2 * math.pi * x2) + cos(
+                            2 * math.pi * x3) + cos(2 * math.pi * x4))) +
                     math.e + 20)
 
         sol = Minimize(objective(*vars), domain, self.config)
@@ -269,9 +269,9 @@ class UnconstrainedOptimizationTest(CavTest):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x, y):
-            return (sin(3 * math.pi * x))**2 + (x - 1)**2 * (
-                1 + (sin(3 * math.pi * y))**2) + (y - 1)**2 * (
-                    1 + (sin(2 * math.pi * y))**2)
+            return (sin(3 * math.pi * x)
+                    )**2 + (x - 1)**2 * (1 + (sin(3 * math.pi * y))**2) + (
+                        y - 1)**2 * (1 + (sin(2 * math.pi * y))**2)
 
         sol = Minimize(objective(*vars), domain, self.config)
         self.global_min = 0
@@ -301,8 +301,8 @@ class UnconstrainedOptimizationTest(CavTest):
         (vars, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
 
         def objective(x, y):
-            return 0.5 + ((sin(x**2 - y**2))**2 - 0.5) / (1 + 0.001 *
-                                                          (x**2 + y**2))**2
+            return 0.5 + (
+                (sin(x**2 - y**2))**2 - 0.5) / (1 + 0.001 * (x**2 + y**2))**2
 
         sol = Minimize(objective(*vars), domain, self.config)
         self.global_min = 0
@@ -329,8 +329,8 @@ class UnconstrainedOptimizationTest(CavTest):
         (vars, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
 
         def objective(x1, x2):
-            return exp(sin(50 * x1)) + sin(
-                60 * exp(x2)) + sin(70 * sin(x1)) + sin(sin(80 * x2)) - sin(
+            return exp(sin(50 * x1)) + sin(60 * exp(x2)) + sin(
+                70 * sin(x1)) + sin(sin(80 * x2)) - sin(
                     10 * (x1 + x2)) + 0.25 * (x1**2 + x2**2)
 
         sol = Minimize(objective(*vars), domain, self.config)
@@ -376,8 +376,7 @@ class ConstrainedOptimizationTest(CavTest):
         def objective(x, y):
             return (1 - x)**2 + 100 * (y - x**2)**2
 
-        constraints = logical_and(domain, (x - 1)**3 - y + 1 < 0,
-                                  x + y - 2 < 0)
+        constraints = And(domain, (x - 1)**3 - y + 1 < 0, x + y - 2 < 0)
 
         sol = Minimize(objective(*vars), constraints, self.config)
         self.global_min = 0.0
@@ -393,7 +392,7 @@ class ConstrainedOptimizationTest(CavTest):
         def objective(x, y):
             return (1 - x)**2 + 100 * (y - x**2)**2
 
-        constraints = logical_and(domain, x**2 + y**2 < 2)
+        constraints = And(domain, x**2 + y**2 < 2)
 
         sol = Minimize(objective(*vars), constraints, self.config)
         self.global_min = 0.0
@@ -410,7 +409,7 @@ class ConstrainedOptimizationTest(CavTest):
             return sin(y) * exp((1 - cos(x))**2) + cos(x) * exp(
                 (1 - sin(y))**2) + (x - y)**2
 
-        constraints = logical_and(domain, (x + 5)**2 + (y + 5)**2 < 25)
+        constraints = And(domain, (x + 5)**2 + (y + 5)**2 < 25)
 
         sol = Minimize(objective(*vars), constraints, self.config)
         self.global_min = -106.7645367
@@ -426,7 +425,7 @@ class ConstrainedOptimizationTest(CavTest):
         def objective(x, y):
             return -(cos((x - 0.1) * y))**2 - x * sin(3 * x + y)
 
-        constraints = logical_and(
+        constraints = And(
             domain, x**2 + y**2 <
             (2 * cos(atan2(x, y)) - 0.5 * cos(2 * atan2(x, y)) -
              0.25 * cos(3 * atan2(x, y)) - 0.125 * cos(4 * atan2(x, y)))**2 +
@@ -446,8 +445,8 @@ class ConstrainedOptimizationTest(CavTest):
         def objective(x, y):
             return 0.1 * x * y
 
-        constraints = logical_and(domain, x**2 + y**2 <=
-                                  (1 + 0.2 * cos(8 * atan(x / y)))**2)
+        constraints = And(domain,
+                          x**2 + y**2 <= (1 + 0.2 * cos(8 * atan(x / y)))**2)
 
         sol = Minimize(objective(*vars), constraints, self.config)
         self.global_min = -0.072625
