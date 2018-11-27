@@ -24,6 +24,14 @@ Formula iff(const Formula& f1, const Formula& f2) {
   return imply(f1, f2) && imply(f2, f1);
 }
 
+Formula iff(const Variable& v, const Formula& f) { return iff(Formula{v}, f); }
+
+Formula iff(const Formula& f, const Variable& v) { return iff(f, Formula{v}); }
+
+Formula iff(const Variable& v1, const Variable& v2) {
+  return iff(Formula{v1}, Formula{v2});
+}
+
 set<Formula> map(const set<Formula>& formulas,
                  const function<Formula(const Formula&)>& func) {
   set<Formula> result;

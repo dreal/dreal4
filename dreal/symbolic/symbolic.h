@@ -42,6 +42,15 @@ Formula imply(const Formula& f1, const Formula& f2);
 /// Returns a formula @p f1 ⇔ @p f2.
 Formula iff(const Formula& f1, const Formula& f2);
 
+/// Returns a formula @p v ⇔ @p f.
+Formula iff(const Variable& v, const Formula& f);
+
+/// Returns a formula @p f ⇔ @p v.
+Formula iff(const Formula& f, const Variable& v);
+
+/// Returns a formula @p v1 ⇔ @p v2.
+Formula iff(const Variable& v1, const Variable& v2);
+
 // Given @p formulas = {f₁, ..., fₙ} and a @p func : Formula →
 // Formula, `map(formulas, func)` returns a set `{func(f₁),
 // ... func(fₙ)}`.
