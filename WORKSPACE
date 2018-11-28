@@ -24,9 +24,9 @@ github_archive(
 github_archive(
     name = "pycodestyle",  # Expat
     build_file = "//tools:pycodestyle.BUILD.bazel",
-    commit = "566cdc0cb22e5530902e456d0b315403ebab980c",
+    commit = "c507b725d9e0bed14505f87cd2397ac7ac489485",
     repository = "PyCQA/pycodestyle",
-    sha256 = "32fdb7320ed8ee47f522245371c30b783dddd80da0a801db4232209554eb0472",
+    sha256 = "b7b206c182f4a4eea6967c6619664e0a91275cd99e929e2bf47b4a8cd48fd218",
 )
 
 github_archive(
