@@ -38,11 +38,10 @@ github_archive(
 )
 
 github_archive(
-    name = "gtest",  # GOOGLE
-    build_file = "//tools:gtest.BUILD.bazel",
-    commit = "release-1.8.1",
-    repository = "google/googletest",
-    sha256 = "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c",
+    name = "com_google_googletest",  # GOOGLE
+    commit = "191f9336bc9212b5f5410ab663176f685cafed2a",  # 20181126
+    repository = "abseil/googletest",
+    sha256 = "3fd23cebab37bf4b789ed432b97d6f1bcb6351222d91ddf16e80c41ee19e501e",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")

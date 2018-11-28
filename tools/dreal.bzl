@@ -230,19 +230,22 @@ def dreal_cc_googletest(
         **kwargs):
     """Creates a rule to declare a C++ unit test using googletest.
 
-    Always adds a deps= entry for googletest main (@gtest//:main).
+    Always adds a deps= entry for googletest main
+    (@com_google_googletest//:gtest_main).
 
     By default, sets size="small" because that indicates a unit test.
     By default, sets name="test/${name}.cc" per Dreal's filename convention.
     By default, sets use_default_main=True to use GTest's main, via
-    @gtest//:main. Otherwise, it will depend on @gtest//:without_main.
+    @com_google_googletest//:gtest_main. Otherwise, it will depend on
+    @com_google_googlegtest//:gtest.
+
     """
     if deps == None:
         deps = []
     if use_default_main:
-        deps.append("@gtest//:main")
+        deps.append("@com_google_googletest//:gtest_main")
     else:
-        deps.append("@gtest//:without_main")
+        deps.append("@com_google_googletest//:gtest")
     dreal_cc_test(
         name = name,
         deps = deps,
