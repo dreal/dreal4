@@ -6,6 +6,8 @@
 
 #include <nlopt.hpp>
 
+namespace {
+
 using std::cerr;
 using std::cos;
 using std::cout;
@@ -22,7 +24,7 @@ double obj(unsigned, const double* x, double* grad, void*) {
   return sin(x[0]) * cos(x[1]);
 }
 
-int main() {
+GTEST_TEST(NloptTest, Test) {
   nlopt::opt opt(nlopt::LD_SLSQP, 2);
 
   // lower bound
@@ -61,5 +63,5 @@ int main() {
   EXPECT_NEAR(init[1], 6.2834450901676488, 0.0001);
   EXPECT_GT(result, 0);
   EXPECT_NEAR(sol, -1, 1e-4);
-  return 0;
 }
+}  // namespace
