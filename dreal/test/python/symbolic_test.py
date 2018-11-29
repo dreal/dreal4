@@ -62,7 +62,7 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(str(x > 1), "(x > 1)")
         self.assertEqual(str(x <= 1), "(x <= 1)")
         self.assertEqual(str(x < 1), "(x < 1)")
-        self.assertEqual(str(x == 1), "(x = 1)")
+        self.assertEqual(str(x == 1), "(x == 1)")
         self.assertEqual(str(x != 1), "(x != 1)")
 
         # float rop Variable
@@ -70,7 +70,7 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(str(1 <= y), "(y >= 1)")
         self.assertEqual(str(1 > y), "(y < 1)")
         self.assertEqual(str(1 >= y), "(y <= 1)")
-        self.assertEqual(str(1 == y), "(y = 1)")
+        self.assertEqual(str(1 == y), "(y == 1)")
         self.assertEqual(str(1 != y), "(y != 1)")
 
         # Variable rop Variable
@@ -78,7 +78,7 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(str(x <= y), "(x <= y)")
         self.assertEqual(str(x > y), "(x > y)")
         self.assertEqual(str(x >= y), "(x >= y)")
-        self.assertEqual(str(x == y), "(x = y)")
+        self.assertEqual(str(x == y), "(x == y)")
         self.assertEqual(str(x != y), "(x != y)")
 
     def test_repr(self):
@@ -106,7 +106,7 @@ class SymbolicVariableTest(unittest.TestCase):
     def test_logical(self):
         f1 = (x == 0)
         f2 = (y == 0)
-        self.assertEqual(str(Not(f1)), "!((x = 0))")
+        self.assertEqual(str(Not(f1)), "!((x == 0))")
         self.assertEqual(
             str(Implies(f1, f2)), str(Or(Not(f1), f2)))
         self.assertEqual(
@@ -124,10 +124,10 @@ class SymbolicVariableTest(unittest.TestCase):
         # Test multiple operand logical statements
         self.assertEqual(
             str(And(x >= 1, x <= 2, y == 2)),
-            "((y = 2) and (x >= 1) and (x <= 2))")
+            "((y == 2) and (x >= 1) and (x <= 2))")
         self.assertEqual(
             str(Or(x >= 1, x <= 2, y == 2)),
-            "((y = 2) or (x >= 1) or (x <= 2))")
+            "((y == 2) or (x >= 1) or (x <= 2))")
 
     def test_functions_with_variable(self):
         self.assertEqual(str(log(x)), "log(x)")
@@ -339,7 +339,7 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(e_x <= e_y), "(x <= y)")
         self.assertEqual(str(e_x > e_y), "(x > y)")
         self.assertEqual(str(e_x >= e_y), "(x >= y)")
-        self.assertEqual(str(e_x == e_y), "(x = y)")
+        self.assertEqual(str(e_x == e_y), "(x == y)")
         self.assertEqual(str(e_x != e_y), "(x != y)")
 
         # Expression rop Variable
@@ -347,7 +347,7 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(e_x <= y), "(x <= y)")
         self.assertEqual(str(e_x > y), "(x > y)")
         self.assertEqual(str(e_x >= y), "(x >= y)")
-        self.assertEqual(str(e_x == y), "(x = y)")
+        self.assertEqual(str(e_x == y), "(x == y)")
         self.assertEqual(str(e_x != y), "(x != y)")
 
         # Variable rop Expression
@@ -355,7 +355,7 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(x <= e_y), "(x <= y)")
         self.assertEqual(str(x > e_y), "(x > y)")
         self.assertEqual(str(x >= e_y), "(x >= y)")
-        self.assertEqual(str(x == e_y), "(x = y)")
+        self.assertEqual(str(x == e_y), "(x == y)")
         self.assertEqual(str(x != e_y), "(x != y)")
 
         # Expression rop float
@@ -363,7 +363,7 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(e_x <= 1), "(x <= 1)")
         self.assertEqual(str(e_x > 1), "(x > 1)")
         self.assertEqual(str(e_x >= 1), "(x >= 1)")
-        self.assertEqual(str(e_x == 1), "(x = 1)")
+        self.assertEqual(str(e_x == 1), "(x == 1)")
         self.assertEqual(str(e_x != 1), "(x != 1)")
 
         # float rop Expression
@@ -371,7 +371,7 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(1 <= e_y), "(y >= 1)")
         self.assertEqual(str(1 > e_y), "(y < 1)")
         self.assertEqual(str(1 >= e_y), "(y <= 1)")
-        self.assertEqual(str(1 == e_y), "(y = 1)")
+        self.assertEqual(str(1 == e_y), "(y == 1)")
         self.assertEqual(str(1 != e_y), "(y != 1)")
 
     def test_functions_with_float(self):
@@ -481,13 +481,13 @@ class TestSymbolicExpression(unittest.TestCase):
         # Formula == Boolean Variable
         self.assertEqual((x > 3) == b1, Iff(x > 3, b1))
         # Scalar Variable == Scalar Variable
-        self.assertEqual(str(x == y), '(x = y)')
+        self.assertEqual(str(x == y), '(x == y)')
         # Scalar Variable == Expression
-        self.assertEqual(str(x == (y + 3)), '(x = (3 + y))')
+        self.assertEqual(str(x == (y + 3)), '(x == (3 + y))')
         # Expression == Scalar Variable
-        self.assertEqual(str((3 + y) == x), '((3 + y) = x)')
+        self.assertEqual(str((3 + y) == x), '((3 + y) == x)')
         # Expression == Expression
-        self.assertEqual(str((1 + x) == (2 + y)), '((1 + x) = (2 + y))')
+        self.assertEqual(str((1 + x) == (2 + y)), '((1 + x) == (2 + y))')
 
     def test_inequality(self):
         # Boolean Variable != Boolean Variable
@@ -553,9 +553,9 @@ class TestSymbolicFormula(unittest.TestCase):
 
     def test_forall(self):
         self.assertEqual(
-            str(forall(Variables([x, y, z]), x == 0)), "forall({x}. (x = 0))")
+            str(forall(Variables([x, y, z]), x == 0)), "forall({x}. (x == 0))")
         self.assertEqual(
-            str(forall([x, y, z], x == 0)), "forall({x}. (x = 0))")
+            str(forall([x, y, z], x == 0)), "forall({x}. (x == 0))")
 
     def test_if_then_else(self):
         c = x > y

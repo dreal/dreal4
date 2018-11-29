@@ -277,7 +277,7 @@ Formula FormulaEq::Substitute(const ExpressionSubstitution& expr_subst,
 }
 
 ostream& FormulaEq::Display(ostream& os) const {
-  return os << "(" << get_lhs_expression() << " = " << get_rhs_expression()
+  return os << "(" << get_lhs_expression() << " == " << get_rhs_expression()
             << ")";
 }
 

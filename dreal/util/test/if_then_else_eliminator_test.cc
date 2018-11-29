@@ -88,8 +88,8 @@ TEST_F(IfThenElseEliminatorTest, ITEsInForall) {
   IfThenElseEliminator ite_elim;
   const Formula processed{ite_elim.Process(f)};
   EXPECT_EQ(processed.to_string(),
-            "forall({y, ITE1}. ((ITE1 > 0) or ((x > y) and !((ITE1 = x))) or "
-            "(!((ITE1 = y)) and !((x > y)))))");
+            "forall({y, ITE1}. ((ITE1 > 0) or ((x > y) and !((ITE1 == x))) or "
+            "(!((ITE1 == y)) and !((x > y)))))");
 }
 
 }  // namespace
