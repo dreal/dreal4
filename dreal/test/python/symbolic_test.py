@@ -31,6 +31,8 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(int_var.get_type(), Variable.Int)
         bool_var = Variable("x", Variable.Bool)
         self.assertEqual(bool_var.get_type(), Variable.Bool)
+        binary_var = Variable("x", Variable.Binary)
+        self.assertEqual(binary_var.get_type(), Variable.Binary)
 
     def test_addition(self):
         self.assertEqual(str(x + y), "(x + y)")

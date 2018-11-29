@@ -85,6 +85,8 @@ ostream& PrintModel(ostream& os, const Box& box) {
         os << Sort::Real;
         break;
       case Variable::Type::BINARY:
+        os << Sort::Binary;
+        break;
       case Variable::Type::INTEGER:
         os << Sort::Int;
         break;
