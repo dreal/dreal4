@@ -9,6 +9,7 @@ namespace dreal {
 
 // TODO(soonho): Extend this.
 enum class Sort {
+  Binary,
   Bool,
   Int,
   Real,

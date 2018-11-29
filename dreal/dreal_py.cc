@@ -306,6 +306,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .value("Real", Variable::Type::CONTINUOUS)
       .value("Int", Variable::Type::INTEGER)
       .value("Bool", Variable::Type::BOOLEAN)
+      .value("Binary", Variable::Type::BINARY)
       .export_values();
 
   py::class_<Variables>(m, "Variables")

@@ -17,6 +17,9 @@ Sort ParseSort(const string& s) {
   if (s == "Bool") {
     return Sort::Bool;
   }
+  if (s == "Binary") {
+    return Sort::Binary;
+  }
   throw DREAL_RUNTIME_ERROR("{} is not one of {Real, Int, Bool}.", s);
 }
 
@@ -28,12 +31,16 @@ ostream& operator<<(ostream& os, const Sort& sort) {
       return os << "Int";
     case Sort::Real:
       return os << "Real";
+    case Sort::Binary:
+      return os << "Binary";
   }
   DREAL_UNREACHABLE();
 }
 
 Variable::Type SortToType(Sort sort) {
   switch (sort) {
+    case Sort::Binary:
+      return Variable::Type::BINARY;
     case Sort::Bool:
       return Variable::Type::BOOLEAN;
     case Sort::Int:
