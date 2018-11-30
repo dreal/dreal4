@@ -1,6 +1,6 @@
 workspace(name = "dreal")
 
-load("//third_party:com_github_robotlocomotion_drake/tools/workspace/github.bzl", "github_archive")
+load("//third_party/com_github_robotlocomotion_drake:tools/workspace/github.bzl", "github_archive")
 
 github_archive(
     name = "bazel_skylib", # Apache-2.0
