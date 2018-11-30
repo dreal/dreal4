@@ -7,11 +7,13 @@ def dreal_workspace():
         modname = "ibex",
         pkg_config_paths = [
             # macOS
+            "/usr/local/opt/ibex@2.7.4/share/pkgconfig",
             "/usr/local/opt/ibex@2.7.2/share/pkgconfig",
             "/usr/local/opt/ibex@2.6.5/share/pkgconfig",  # TODO(soonho): Remove this
-            "/usr/local/opt/clp/lib/pkgconfig",  # dep of ibex, EPL
-            "/usr/local/opt/coinutils/lib/pkgconfig",  # dep of clp, EPL
+            "/usr/local/opt/clp/lib/pkgconfig",           # dep of ibex, EPL
+            "/usr/local/opt/coinutils/lib/pkgconfig",     # dep of clp, EPL
             # Linux
+            "/opt/libibex/2.7.4/share/pkgconfig",
             "/opt/libibex/2.7.2/share/pkgconfig",
         ],
     )

@@ -11,4 +11,3 @@ brew tap-pin bazelbuild/tap
 brew tap dreal/dreal
 brew update
 brew install dreal --only-dependencies --build-from-source
-brew install ibex@2.7.2  # TODO(soonho): remove this
