@@ -31,7 +31,7 @@ def _build_dreal():
     if subprocess.call([
             'bazel',
             'build',
-            '//:archive',
+            '//...',
             '--python_path={}'.format(sys.executable),
             '--force_python={}'.format(FORCE_PYTHON),
     ]) != 0:
