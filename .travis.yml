@@ -176,6 +176,13 @@ matrix:
         - COMPILER=clang
         - BUILD_TYPE="-c opt" CONFIG="--config asan"
         - TEST_TAG_FILTERS="unit,-no_asan"
+    - os: osx
+      osx_image: xcode10.1  # macOS-10.13
+      compiler: clang
+      env:
+        - COMPILER=clang
+        - BUILD_TYPE="-c opt"
+        - TEST_TAG_FILTERS="unit"
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
@@ -204,6 +211,12 @@ install:
 
 script:
   - export CC=${COMPILER}
+  - if [[ "$(uname)" == "Darwin" ]]; then
+        HOST_CPU="darwin_x86_64";
+    fi
+  - if [ "$(uname)" == "Linux" ]; then
+        HOST_CPU="k8";
+    fi
   - |
     bazel \
       --batch \
@@ -214,6 +227,7 @@ script:
       --local_resources=${BAZEL_LOCAL_RESOURCES} \
       //... ${BUILD_TYPE} ${CONFIG} \
       ${COV_OPTION} \
+      --host_cpu=${HOST_CPU} \
       --test_tag_filters=${TEST_TAG_FILTERS}
 
 after_success:
