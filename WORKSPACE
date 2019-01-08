@@ -39,9 +39,9 @@ github_archive(
 
 github_archive(
     name = "com_google_googletest",  # GOOGLE
-    commit = "191f9336bc9212b5f5410ab663176f685cafed2a",  # 20181126
+    commit = "50f1a77955bde27cf49173c4133688d61f201e85",  # 20190108
     repository = "abseil/googletest",
-    sha256 = "3fd23cebab37bf4b789ed432b97d6f1bcb6351222d91ddf16e80c41ee19e501e",
+    sha256 = "49e8af9cb72ea7425dcceed5cc021f31ec353cb67badee3c89b3f0931c2e4ef6",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")
