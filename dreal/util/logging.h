@@ -57,7 +57,7 @@ spdlog::logger* log();
 #define DREAL_LOG_DEBUG_ENABLED (log()->should_log(spdlog::level::debug))
 #define DREAL_LOG_INFO_ENABLED (log()->should_log(spdlog::level::info))
 #define DREAL_LOG_WARN_ENABLED (log()->should_log(spdlog::level::warn))
-#define DREAL_LOG_ERROR_ENABLED (log()->should_log(spdlog::level::error))
+#define DREAL_LOG_ERROR_ENABLED (log()->should_log(spdlog::level::err))
 #define DREAL_LOG_CRITICAL_ENABLED (log()->should_log(spdlog::level::critical))
 
 }  // namespace dreal
