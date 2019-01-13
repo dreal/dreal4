@@ -18,6 +18,7 @@
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/exception.h"
+#include "dreal/util/logging.h"
 
 namespace pybind11 {
 namespace detail {
@@ -468,7 +469,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("Differentiate", &Expression::Differentiate)
       .def("ToPrefix", [](const Expression& self) { return ToPrefix(self); });
 
-  m.def("log", &log)
+  m.def("log", py::overload_cast<const Expression&>(&log))
       .def("abs", &abs)
       .def("exp", &exp)
       .def("sqrt", &sqrt)
@@ -681,6 +682,18 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("Minimize",
            py::overload_cast<const Expression&, const Formula&, Config, Box*>(
                &Minimize));
+
+  // Exposes spdlog::level::level_enum.
+  py::enum_<spdlog::level::level_enum>(m, "LogLevel")
+      .value("TRACE", spdlog::level::trace)
+      .value("DEBUG", spdlog::level::debug)
+      .value("WARNING", spdlog::level::warn)
+      .value("ERROR", spdlog::level::err)
+      .value("CRITICAL", spdlog::level::critical)
+      .value("OFF", spdlog::level::off);
+
+  m.def("set_log_level",
+        [](const spdlog::level::level_enum l) { log()->set_level(l); });
 
   // NOLINTNEXTLINE(readability/fn_size)
 }

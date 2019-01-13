@@ -335,5 +335,16 @@ class BoxTest(unittest.TestCase):
         self.assertEqual(d[z], Interval(2, 5))
 
 
+class LogTest(unittest.TestCase):
+    def test_set_log_level(self):
+        # Checks if we can use set_log_level.
+        set_log_level(LogLevel.TRACE)
+        set_log_level(LogLevel.DEBUG)
+        set_log_level(LogLevel.WARNING)
+        set_log_level(LogLevel.ERROR)
+        set_log_level(LogLevel.CRITICAL)
+        set_log_level(LogLevel.OFF)
+
+
 if __name__ == '__main__':
     unittest.main()
