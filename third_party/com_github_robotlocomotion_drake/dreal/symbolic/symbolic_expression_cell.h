@@ -70,6 +70,9 @@ class ExpressionCell {
   /** Outputs string representation of expression into output stream @p os. */
   virtual std::ostream& Display(std::ostream& os) const = 0;
 
+  /** Returns the reference count of this cell. */
+  unsigned use_count() const { return rc_; }
+
  protected:
   /** Default constructor. */
   ExpressionCell() = default;
