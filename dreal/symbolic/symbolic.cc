@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <utility>
 
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
@@ -250,16 +251,18 @@ class DeltaStrengthenVisitor {
     }
   }
   Formula VisitConjunction(const Formula& f, const double delta) const {
-    return make_conjunction(
-        map(get_operands(f), [this, delta](const Formula& formula) {
-          return this->Visit(formula, delta);
-        }));
+    Formula ret{Formula::True()};
+    for (const auto& f_i : get_operands(f)) {
+      ret = std::move(ret) && this->Visit(f_i, delta);
+    }
+    return ret;
   }
   Formula VisitDisjunction(const Formula& f, const double delta) const {
-    return make_disjunction(
-        map(get_operands(f), [this, delta](const Formula& formula) {
-          return this->Visit(formula, delta);
-        }));
+    Formula ret{Formula::False()};
+    for (const auto& f_i : get_operands(f)) {
+      ret = std::move(ret) || this->Visit(f_i, delta);
+    }
+    return ret;
   }
   Formula VisitNegation(const Formula& f, const double delta) const {
     return !Visit(get_operand(f), -delta);
@@ -409,11 +412,19 @@ bool IsDifferentiable(const Expression& e) {
 }
 
 Formula make_conjunction(const vector<Formula>& formulas) {
-  return make_conjunction(set<Formula>(formulas.begin(), formulas.end()));
+  Formula ret{Formula::True()};
+  for (const auto& f_i : formulas) {
+    ret = std::move(ret) && f_i;
+  }
+  return ret;
 }
 
 Formula make_disjunction(const vector<Formula>& formulas) {
-  return make_disjunction(set<Formula>(formulas.begin(), formulas.end()));
+  Formula ret{Formula::False()};
+  for (const auto& f_i : formulas) {
+    ret = std::move(ret) || f_i;
+  }
+  return ret;
 }
 
 vector<Variable> CreateVector(const string& prefix, const int size,
