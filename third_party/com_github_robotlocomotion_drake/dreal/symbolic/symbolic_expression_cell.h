@@ -279,7 +279,7 @@ class ExpressionAdd : public ExpressionCell {
   /** Constructs ExpressionAdd from @p constant_term and @p term_to_coeff_map.
    */
   ExpressionAdd(double constant,
-                const std::map<Expression, double>& expr_to_coeff_map);
+                std::map<Expression, double> expr_to_coeff_map);
   Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
@@ -382,7 +382,7 @@ class ExpressionMul : public ExpressionCell {
  public:
   /** Constructs ExpressionMul from @p constant and @p base_to_exponent_map. */
   ExpressionMul(double constant,
-                const std::map<Expression, Expression>& base_to_exponent_map);
+                std::map<Expression, Expression> base_to_exponent_map);
   Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;

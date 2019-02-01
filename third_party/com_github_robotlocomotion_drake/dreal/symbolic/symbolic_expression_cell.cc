@@ -33,6 +33,7 @@ using std::equal;
 using std::hash;
 using std::lexicographical_compare;
 using std::map;
+using std::move;
 using std::numeric_limits;
 using std::ostream;
 using std::ostringstream;
@@ -461,12 +462,12 @@ Expression ExpressionNaN::Differentiate(const Variable&) const {
 ostream& ExpressionNaN::Display(ostream& os) const { return os << "NaN"; }
 
 ExpressionAdd::ExpressionAdd(const double constant,
-                             const map<Expression, double>& expr_to_coeff_map)
+                             map<Expression, double> expr_to_coeff_map)
     : ExpressionCell{ExpressionKind::Add,
                      hash_combine(hash<double>{}(constant), expr_to_coeff_map),
                      determine_polynomial(expr_to_coeff_map)},
       constant_(constant),
-      expr_to_coeff_map_(expr_to_coeff_map) {
+      expr_to_coeff_map_{move(expr_to_coeff_map)} {
   assert(!expr_to_coeff_map_.empty());
 }
 
@@ -608,7 +609,7 @@ ostream& ExpressionAdd::DisplayTerm(ostream& os, const bool print_plus,
 
 ExpressionAddFactory::ExpressionAddFactory(
     const double constant, map<Expression, double> expr_to_coeff_map)
-    : constant_{constant}, expr_to_coeff_map_{std::move(expr_to_coeff_map)} {}
+    : constant_{constant}, expr_to_coeff_map_{move(expr_to_coeff_map)} {}
 
 ExpressionAddFactory::ExpressionAddFactory(const ExpressionAdd* const ptr)
     : ExpressionAddFactory{ptr->get_constant(), ptr->get_expr_to_coeff_map()} {}
@@ -700,15 +701,14 @@ void ExpressionAddFactory::AddMap(
   }
 }
 
-ExpressionMul::ExpressionMul(
-    const double constant,
-    const map<Expression, Expression>& base_to_exponent_map)
+ExpressionMul::ExpressionMul(const double constant,
+                             map<Expression, Expression> base_to_exponent_map)
     : ExpressionCell{ExpressionKind::Mul,
                      hash_combine(hash<double>{}(constant),
                                   base_to_exponent_map),
                      determine_polynomial(base_to_exponent_map)},
       constant_(constant),
-      base_to_exponent_map_(base_to_exponent_map) {
+      base_to_exponent_map_{move(base_to_exponent_map)} {
   assert(!base_to_exponent_map_.empty());
 }
 
@@ -881,8 +881,7 @@ ostream& ExpressionMul::DisplayTerm(ostream& os, const bool print_mul,
 
 ExpressionMulFactory::ExpressionMulFactory(
     const double constant, map<Expression, Expression> base_to_exponent_map)
-    : constant_{constant},
-      base_to_exponent_map_{std::move(base_to_exponent_map)} {}
+    : constant_{constant}, base_to_exponent_map_{move(base_to_exponent_map)} {}
 
 ExpressionMulFactory::ExpressionMulFactory(const ExpressionMul* const ptr)
     : ExpressionMulFactory{ptr->get_constant(),
