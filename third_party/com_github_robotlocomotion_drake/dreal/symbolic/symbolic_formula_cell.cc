@@ -67,10 +67,9 @@ bool RelationalFormulaCell::Less(const FormulaCell& f) const {
   return e_rhs_.Less(rel_f.e_rhs_);
 }
 
-NaryFormulaCell::NaryFormulaCell(const FormulaKind k,
-                                 const set<Formula>& formulas)
+NaryFormulaCell::NaryFormulaCell(const FormulaKind k, set<Formula> formulas)
     : FormulaCell{k, hash_value<set<Formula>>{}(formulas)},
-      formulas_{formulas} {}
+      formulas_{std::move(formulas)} {}
 
 Variables NaryFormulaCell::GetFreeVariables() const {
   Variables ret{};
@@ -411,8 +410,8 @@ ostream& FormulaLeq::Display(ostream& os) const {
             << ")";
 }
 
-FormulaAnd::FormulaAnd(const set<Formula>& formulas)
-    : NaryFormulaCell{FormulaKind::And, formulas} {
+FormulaAnd::FormulaAnd(set<Formula> formulas)
+    : NaryFormulaCell{FormulaKind::And, std::move(formulas)} {
   assert(get_operands().size() > 1u);
 }
 
@@ -456,8 +455,8 @@ ostream& FormulaAnd::Display(ostream& os) const {
   return DisplayWithOp(os, "and");
 }
 
-FormulaOr::FormulaOr(const set<Formula>& formulas)
-    : NaryFormulaCell{FormulaKind::Or, formulas} {
+FormulaOr::FormulaOr(set<Formula> formulas)
+    : NaryFormulaCell{FormulaKind::Or, std::move(formulas)} {
   assert(get_operands().size() > 1u);
 }
 

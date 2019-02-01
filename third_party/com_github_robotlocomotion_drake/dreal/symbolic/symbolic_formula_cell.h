@@ -134,7 +134,7 @@ class NaryFormulaCell : public FormulaCell {
   /** Copy-assign (DELETED). */
   NaryFormulaCell& operator=(const NaryFormulaCell& f) = delete;
   /** Construct NaryFormulaCell of kind @p k with @p formulas. */
-  NaryFormulaCell(FormulaKind k, const std::set<Formula>& formulas);
+  NaryFormulaCell(FormulaKind k, std::set<Formula> formulas);
   Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
@@ -266,7 +266,7 @@ class FormulaLeq : public RelationalFormulaCell {
 class FormulaAnd : public NaryFormulaCell {
  public:
   /** Constructs from @p formulas. */
-  explicit FormulaAnd(const std::set<Formula>& formulas);
+  explicit FormulaAnd(std::set<Formula> formulas);
   /** Constructs @p f1 ∧ @p f2. */
   FormulaAnd(const Formula& f1, const Formula& f2);
   bool Evaluate(const Environment& env) const override;
@@ -279,7 +279,7 @@ class FormulaAnd : public NaryFormulaCell {
 class FormulaOr : public NaryFormulaCell {
  public:
   /** Constructs from @p formulas. */
-  explicit FormulaOr(const std::set<Formula>& formulas);
+  explicit FormulaOr(std::set<Formula> formulas);
   /** Constructs @p f1 ∨ @p f2. */
   FormulaOr(const Formula& f1, const Formula& f2);
   bool Evaluate(const Environment& env) const override;
