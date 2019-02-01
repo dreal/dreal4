@@ -299,12 +299,19 @@ class ExpressionAdd : public ExpressionCell {
     return expr_to_coeff_map_;
   }
 
+  // TODO(soonho): Make the following private and allow
+  // only selected functions/method to use them.
+  /** Returns map from an expression to its coefficient. */
+  std::map<Expression, double>& get_mutable_expr_to_coeff_map() {
+    return expr_to_coeff_map_;
+  }
+
  private:
   std::ostream& DisplayTerm(std::ostream& os, bool print_plus, double coeff,
                             const Expression& term) const;
 
-  const double constant_{};
-  const std::map<Expression, double> expr_to_coeff_map_;
+  double constant_{};
+  std::map<Expression, double> expr_to_coeff_map_;
 };
 
 /** Factory class to help build ExpressionAdd expressions.
@@ -404,8 +411,15 @@ class ExpressionMul : public ExpressionCell {
   std::ostream& Display(std::ostream& os) const override;
   /** Returns constant term. */
   double get_constant() const { return constant_; }
-  /** Returns map from a term to its coefficient. */
+  /** Returns map from a term to its exponent. */
   const std::map<Expression, Expression>& get_base_to_exponent_map() const {
+    return base_to_exponent_map_;
+  }
+
+  // TODO(soonho): Make the following private and allow
+  // only selected functions/method to use them.
+  /** Returns map from a term to its exponent. */
+  std::map<Expression, Expression>& get_mutable_base_to_exponent_map() {
     return base_to_exponent_map_;
   }
 
