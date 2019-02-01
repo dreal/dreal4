@@ -942,6 +942,14 @@ const ExpressionAdd* to_addition(const ExpressionCell* const expr_ptr);
  *  @pre @c *(e.ptr_) is of @c ExpressionAdd.
  */
 const ExpressionAdd* to_addition(const Expression& e);
+/** Casts @p expr_ptr of ExpressionCell* to @c ExpressionAdd*.
+ *  @pre @c *expr_ptr is of @c ExpressionAdd.
+ */
+ExpressionAdd* to_addition(ExpressionCell* expr_ptr);
+/** Casts @p e of Expression to @c ExpressionAdd*.
+ *  @pre @c *(e.ptr_) is of @c ExpressionAdd.
+ */
+ExpressionAdd* to_addition(Expression& e);
 
 /** Casts @p expr_ptr of const ExpressionCell* to
  *  @c const ExpressionMul*.
@@ -952,6 +960,14 @@ const ExpressionMul* to_multiplication(const ExpressionCell* const expr_ptr);
  *  @pre @c *(e.ptr_) is of @c ExpressionMul.
  */
 const ExpressionMul* to_multiplication(const Expression& e);
+/** Casts @p expr_ptr of ExpressionCell* to @c ExpressionMul*.
+ *  @pre @c *expr_ptr is of @c ExpressionMul.
+ */
+ExpressionMul* to_multiplication(ExpressionCell* expr_ptr);
+/** Casts @p e of Expression to @c ExpressionMul*.
+ *  @pre @c *(e.ptr_) is of @c ExpressionMul.
+ */
+ExpressionMul* to_multiplication(Expression& e);
 
 /** Casts @p expr_ptr of const ExpressionCell* to
  *  @c const ExpressionDiv*.

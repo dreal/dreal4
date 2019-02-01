@@ -2225,12 +2225,24 @@ const ExpressionAdd* to_addition(const ExpressionCell* const expr_ptr) {
 const ExpressionAdd* to_addition(const Expression& e) {
   return to_addition(e.ptr_);
 }
+ExpressionAdd* to_addition(ExpressionCell* expr_ptr) {
+  assert(is_addition(*expr_ptr));
+  return static_cast<ExpressionAdd*>(expr_ptr);
+}
+ExpressionAdd* to_addition(Expression& e) { return to_addition(e.ptr_); }
 
 const ExpressionMul* to_multiplication(const ExpressionCell* const expr_ptr) {
   assert(is_multiplication(*expr_ptr));
   return static_cast<const ExpressionMul*>(expr_ptr);
 }
 const ExpressionMul* to_multiplication(const Expression& e) {
+  return to_multiplication(e.ptr_);
+}
+ExpressionMul* to_multiplication(ExpressionCell* const expr_ptr) {
+  assert(is_multiplication(*expr_ptr));
+  return static_cast<ExpressionMul*>(expr_ptr);
+}
+ExpressionMul* to_multiplication(Expression& e) {
   return to_multiplication(e.ptr_);
 }
 

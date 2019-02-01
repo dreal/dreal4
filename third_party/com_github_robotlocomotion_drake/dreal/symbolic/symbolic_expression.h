@@ -444,7 +444,9 @@ class Expression {
   friend const UnaryExpressionCell* to_unary(const Expression& e);
   friend const BinaryExpressionCell* to_binary(const Expression& e);
   friend const ExpressionAdd* to_addition(const Expression& e);
+  friend ExpressionAdd* to_addition(Expression& e);
   friend const ExpressionMul* to_multiplication(const Expression& e);
+  friend ExpressionMul* to_multiplication(Expression& e);
   friend const ExpressionDiv* to_division(const Expression& e);
   friend const ExpressionLog* to_log(const Expression& e);
   friend const ExpressionAbs* to_abs(const Expression& e);
