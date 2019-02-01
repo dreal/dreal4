@@ -254,6 +254,11 @@ class Formula {
   friend const FormulaNot* to_negation(const Formula& f);
   friend const FormulaForall* to_forall(const Formula& f);
 
+  // Returns f1 = f1 && f2.
+  static Formula make_conjunction(Formula& f1, const Formula& f2);
+  // Returns f1 = f1 || f2.
+  static Formula make_disjunction(Formula& f1, const Formula& f2);
+
   friend FormulaCell;
 
  private:
@@ -278,8 +283,14 @@ Formula forall(const Variables& vars, const Formula& f);
  */
 Formula make_conjunction(const std::set<Formula>& formulas);
 Formula operator&&(const Formula& f1, const Formula& f2);
+Formula operator&&(const Formula& f1, Formula&& f2);
+Formula operator&&(Formula&& f1, const Formula& f2);
+Formula operator&&(Formula&& f1, Formula&& f2);
+
 Formula operator&&(const Variable& v, const Formula& f);
+Formula operator&&(const Variable& v, Formula&& f);
 Formula operator&&(const Formula& f, const Variable& v);
+Formula operator&&(Formula&& f, const Variable& v);
 Formula operator&&(const Variable& v1, const Variable& v2);
 
 /** Returns a disjunction of @p formulas. It performs the following
@@ -294,9 +305,16 @@ Formula operator&&(const Variable& v1, const Variable& v2);
  */
 Formula make_disjunction(const std::set<Formula>& formulas);
 Formula operator||(const Formula& f1, const Formula& f2);
+Formula operator||(const Formula& f1, Formula&& f2);
+Formula operator||(Formula&& f1, const Formula& f2);
+Formula operator||(Formula&& f1, Formula&& f2);
+
 Formula operator||(const Variable& v, const Formula& f);
+Formula operator||(const Variable& v, Formula&& f);
 Formula operator||(const Formula& f, const Variable& v);
+Formula operator||(Formula&& f, const Variable& v);
 Formula operator||(const Variable& v1, const Variable& v2);
+
 Formula operator!(const Formula& f);
 Formula operator!(const Variable& v);
 

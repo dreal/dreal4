@@ -367,6 +367,39 @@ TEST_F(SymbolicTest, DestructiveUpdateMultiplication3) {
     e = Variable("var_" + std::to_string(i)) * std::move(e);
   }
 }
+
+TEST_F(SymbolicTest, DestructiveUpdateAnd1) {
+  constexpr int N{1000};
+  Formula f{Formula::True()};
+  for (int i = 0; i < N; ++i) {
+    f = std::move(f) && (Variable("var_" + std::to_string(i)) == 0.0);
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateAnd2) {
+  constexpr int N{1000};
+  Formula f{Formula::True()};
+  for (int i = 0; i < N; ++i) {
+    f = (Variable("var_" + std::to_string(i)) == 0.0) && std::move(f);
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateOr1) {
+  constexpr int N{1000};
+  Formula f{Formula::False()};
+  for (int i = 0; i < N; ++i) {
+    f = std::move(f) || (Variable("var_" + std::to_string(i)) == 0.0);
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateOr2) {
+  constexpr int N{1000};
+  Formula f{Formula::False()};
+  for (int i = 0; i < N; ++i) {
+    f = (Variable("var_" + std::to_string(i)) == 0.0) || std::move(f);
+  }
+}
+
 GTEST_TEST(Symbolic, is_nothrow_move_constructible) {
   static_assert(std::is_nothrow_move_constructible<Variable>::value,
                 "Variable should be nothrow_move_constructible.");

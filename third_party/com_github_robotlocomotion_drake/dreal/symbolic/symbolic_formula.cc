@@ -177,6 +177,54 @@ Formula forall(const Variables& vars, const Formula& f) {
   return Formula{new FormulaForall(intersect(vars, f.GetFreeVariables()), f)};
 }
 
+namespace {
+void MergeConjunction(const Formula f, set<Formula>* const s) {
+  if (is_conjunction(f)) {
+    for (const auto& g : get_operands(f)) {
+      s->insert(g);
+    }
+  } else {
+    s->insert(f);
+  }
+}
+}  // namespace
+
+// Returns f1 = f1 && f2;
+Formula Formula::make_conjunction(Formula& f1, const Formula& f2) {
+  if (is_false(f1)) {
+    return f1;
+  }
+  if (is_false(f2)) {
+    return f1 = Formula::False();
+  }
+  if (is_true(f1)) {
+    return f1 = f2;
+  }
+  if (is_true(f2)) {
+    return f1;
+  }
+  if (f1.EqualTo(f2)) {
+    return f1;
+  }
+  if (is_conjunction(f1)) {
+    if (f1.ptr_->use_count() == 1) {
+      set<Formula>& operands{to_nary(f1)->get_mutable_operands()};  // reference
+      MergeConjunction(f2, &operands);
+      return f1 = Formula{new FormulaAnd(std::move(operands))};
+    } else {
+      set<Formula> operands{to_nary(f1)->get_operands()};  // Make a copy
+      MergeConjunction(f2, &operands);
+      return f1 = Formula{new FormulaAnd(std::move(operands))};
+    }
+  }
+  if (is_conjunction(f2)) {
+    set<Formula> operands{to_nary(f2)->get_operands()};  // Make a copy
+    MergeConjunction(f1, &operands);
+    return f1 = Formula{new FormulaAnd(std::move(operands))};
+  }
+  return f1 = Formula{new FormulaAnd(set<Formula>{f1, f2})};
+}
+
 Formula make_conjunction(const set<Formula>& formulas) {
   set<Formula> operands;
   for (const Formula& f : formulas) {
@@ -212,17 +260,97 @@ Formula make_conjunction(const set<Formula>& formulas) {
 }
 
 Formula operator&&(const Formula& f1, const Formula& f2) {
-  return make_conjunction({f1, f2});
+  Formula f1_copy{f1};
+  return Formula::make_conjunction(f1_copy, f2);
+}
+
+Formula operator&&(const Formula& f1, Formula&& f2) {
+  return Formula::make_conjunction(f2, f1);
+}
+
+Formula operator&&(Formula&& f1, const Formula& f2) {
+  return Formula::make_conjunction(f1, f2);
+}
+
+Formula operator&&(Formula&& f1, Formula&& f2) {
+  if (is_conjunction(f1)) {
+    if (is_conjunction(f2) &&
+        (get_operands(f2).size() > get_operands(f1).size())) {
+      return Formula::make_conjunction(f2, f1);
+    }
+  } else if (is_conjunction(f2)) {
+    return Formula::make_conjunction(f2, f1);
+  }
+  return Formula::make_conjunction(f1, f2);
 }
 
 Formula operator&&(const Variable& v, const Formula& f) {
   return Formula(v) && f;
 }
+
+Formula operator&&(const Variable& v, Formula&& f) {
+  return Formula(v) && std::move(f);
+}
+
 Formula operator&&(const Formula& f, const Variable& v) {
   return f && Formula(v);
 }
+
+Formula operator&&(Formula&& f, const Variable& v) {
+  return std::move(f) && Formula(v);
+}
+
 Formula operator&&(const Variable& v1, const Variable& v2) {
   return Formula(v1) && Formula(v2);
+}
+
+namespace {
+// Updates s by adding f into it.
+void MergeDisjunction(const Formula f, set<Formula>* const s) {
+  if (is_disjunction(f)) {
+    for (const auto& g : get_operands(f)) {
+      s->insert(g);
+    }
+  } else {
+    s->insert(f);
+  }
+}
+}  // namespace
+
+// Returns f1 = f1 || f2;
+Formula Formula::make_disjunction(Formula& f1, const Formula& f2) {
+  if (is_true(f1)) {
+    return f1;
+  }
+  if (is_true(f2)) {
+    return f1 = Formula::True();
+  }
+  if (is_false(f1)) {
+    return f1 = f2;
+  }
+  if (is_false(f2)) {
+    return f1;
+  }
+  if (f1.EqualTo(f2)) {
+    return f1;
+  }
+  if (is_disjunction(f1)) {
+    if (f1.ptr_->use_count() == 1) {
+      set<Formula>& operands{to_nary(f1)->get_mutable_operands()};  // reference
+      MergeDisjunction(f2, &operands);
+      return f1 = Formula{new FormulaOr(std::move(operands))};
+    } else {
+      set<Formula> operands{to_nary(f1)->get_operands()};  // Make a copy
+      MergeDisjunction(f2, &operands);
+      return f1 = Formula{new FormulaOr(std::move(operands))};
+    }
+  }
+  if (is_disjunction(f2)) {
+    set<Formula> operands{to_nary(f2)->get_operands()};  // Make a copy
+    MergeDisjunction(f1, &operands);
+    return f1 = Formula{new FormulaOr(std::move(operands))};
+  }
+  return f1 = Formula{new FormulaOr(set<Formula>{f1, f2})};
 }
 
 Formula make_disjunction(const set<Formula>& formulas) {
@@ -260,14 +388,46 @@ Formula make_disjunction(const set<Formula>& formulas) {
 }
 
 Formula operator||(const Formula& f1, const Formula& f2) {
-  return make_disjunction({f1, f2});
+  Formula f1_copy{f1};
+  return Formula::make_disjunction(f1_copy, f2);
 }
+
+Formula operator||(const Formula& f1, Formula&& f2) {
+  return Formula::make_disjunction(f2, f1);
+}
+
+Formula operator||(Formula&& f1, const Formula& f2) {
+  return Formula::make_disjunction(f1, f2);
+}
+
+Formula operator||(Formula&& f1, Formula&& f2) {
+  if (is_disjunction(f1)) {
+    if (is_disjunction(f2) &&
+        (get_operands(f2).size() > get_operands(f1).size())) {
+      return Formula::make_disjunction(f2, f1);
+    }
+  } else if (is_disjunction(f2)) {
+    return Formula::make_disjunction(f2, f1);
+  }
+  return Formula::make_disjunction(f1, f2);
+}
+
 Formula operator||(const Variable& v, const Formula& f) {
   return Formula(v) || f;
 }
+
+Formula operator||(const Variable& v, Formula&& f) {
+  return Formula(v) || std::move(f);
+}
+
 Formula operator||(const Formula& f, const Variable& v) {
   return f || Formula(v);
 }
+
+Formula operator||(Formula&& f, const Variable& v) {
+  return std::move(f) || Formula(v);
+}
+
 Formula operator||(const Variable& v1, const Variable& v2) {
   return Formula(v1) || Formula(v2);
 }
