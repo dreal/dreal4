@@ -747,6 +747,13 @@ const NaryFormulaCell* to_nary(const FormulaCell* f_ptr) {
 
 const NaryFormulaCell* to_nary(const Formula& f) { return to_nary(f.ptr_); }
 
+NaryFormulaCell* to_nary(FormulaCell* f_ptr) {
+  assert(is_nary(*f_ptr));
+  return static_cast<NaryFormulaCell*>(f_ptr);
+}
+
+NaryFormulaCell* to_nary(Formula& f) { return to_nary(f.ptr_); }
+
 const FormulaAnd* to_conjunction(const FormulaCell* f_ptr) {
   assert(is_conjunction(*f_ptr));
   return static_cast<const FormulaAnd*>(f_ptr);

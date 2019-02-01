@@ -248,6 +248,7 @@ class Formula {
   friend const FormulaLt* to_less_than(const Formula& f);
   friend const FormulaLeq* to_less_than_or_equal_to(const Formula& f);
   friend const NaryFormulaCell* to_nary(const Formula& f);
+  friend NaryFormulaCell* to_nary(Formula& f);
   friend const FormulaAnd* to_conjunction(const Formula& f);
   friend const FormulaOr* to_disjunction(const Formula& f);
   friend const FormulaNot* to_negation(const Formula& f);

@@ -144,11 +144,14 @@ class NaryFormulaCell : public FormulaCell {
   /** Returns the formulas. */
   const std::set<Formula>& get_operands() const { return formulas_; }
 
+  /** Returns the formulas. */
+  std::set<Formula>& get_mutable_operands() { return formulas_; }
+
  protected:
   std::ostream& DisplayWithOp(std::ostream& os, const std::string& op) const;
 
  private:
-  const std::set<Formula> formulas_;
+  std::set<Formula> formulas_;
 };
 
 /** Symbolic formula representing true. */
@@ -489,6 +492,16 @@ const NaryFormulaCell* to_nary(const FormulaCell* f_ptr);
  * @pre @c is_nary(f) is true.
  */
 const NaryFormulaCell* to_nary(const Formula& f);
+
+/** Casts @p f_ptr to `NaryFormulaCell*`.
+ * @pre `is_nary(*f_ptr)` is true.
+ */
+NaryFormulaCell* to_nary(FormulaCell* f_ptr);
+
+/** Casts @p f to `NaryFormulaCell*`.
+ * @pre `is_nary(f)` is true.
+ */
+NaryFormulaCell* to_nary(Formula& f);
 
 /** Casts @p f_ptr to @c const FormulaNot*.
  *  @pre @c is_negation(*f_ptr) is true.
