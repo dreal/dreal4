@@ -266,6 +266,107 @@ TEST_F(SymbolicTest, Prod) {
   EXPECT_PRED2(ExprEqual, (Prod({e1, e2, e3})), e1 * e2 * e3);
 }
 
+TEST_F(SymbolicTest, DestructiveUpdateAddition1) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e += Variable("var_" + std::to_string(i));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateAddition2) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e = std::move(e) + Variable("var_" + std::to_string(i));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateAddition3) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e = Variable("var_" + std::to_string(i)) + std::move(e);
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateSubtraction1) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e -= Variable("var_" + std::to_string(i));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateSubtraction2) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e = std::move(e) - Variable("var_" + std::to_string(i));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateSubtraction3) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e = Variable("var_" + std::to_string(i)) + (-std::move(e));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateSubtraction4) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e = Variable("var_" + std::to_string(i)) - std::move(e);
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateUnaryMinus1) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e += Variable("var_" + std::to_string(i));
+  }
+  for (int i = 0; i < N; ++i) {
+    e = -std::move(e);
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateUnaryMinus2) {
+  constexpr int N{1000};
+  Expression e;
+  for (int i = 0; i < N; ++i) {
+    e += Variable("var_" + std::to_string(i));
+  }
+  for (int i = 0; i < N; ++i) {
+    e *= -1;
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateMultiplication1) {
+  constexpr int N{1000};
+  Expression e{1.0};
+  for (int i = 0; i < N; ++i) {
+    e *= Variable("var_" + std::to_string(i));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateMultiplication2) {
+  constexpr int N{1000};
+  Expression e{1.0};
+  for (int i = 0; i < N; ++i) {
+    e = std::move(e) * Variable("var_" + std::to_string(i));
+  }
+}
+
+TEST_F(SymbolicTest, DestructiveUpdateMultiplication3) {
+  constexpr int N{1000};
+  Expression e{1.0};
+  for (int i = 0; i < N; ++i) {
+    e = Variable("var_" + std::to_string(i)) * std::move(e);
+  }
+}
 GTEST_TEST(Symbolic, is_nothrow_move_constructible) {
   static_assert(std::is_nothrow_move_constructible<Variable>::value,
                 "Variable should be nothrow_move_constructible.");

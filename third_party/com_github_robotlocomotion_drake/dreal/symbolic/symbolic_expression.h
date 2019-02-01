@@ -310,7 +310,10 @@ class Expression {
   /** Returns NaN (Not-a-Number). */
   static Expression NaN();
 
-  friend Expression operator+(Expression lhs, const Expression& rhs);
+  friend Expression operator+(const Expression& lhs, const Expression& rhs);
+  friend Expression operator+(const Expression& lhs, Expression&& rhs);
+  friend Expression operator+(Expression&& lhs, const Expression& rhs);
+  friend Expression operator+(Expression&& lhs, Expression&& rhs);
   // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
   friend Expression& operator+=(Expression& lhs, const Expression& rhs);
 
@@ -319,18 +322,26 @@ class Expression {
   /** Provides postfix increment operator (i.e. x++). */
   Expression operator++(int);
 
-  friend Expression operator-(Expression lhs, const Expression& rhs);
+  friend Expression operator-(const Expression& lhs, const Expression& rhs);
+  friend Expression operator-(const Expression& lhs, Expression&& rhs);
+  friend Expression operator-(Expression&& lhs, const Expression& rhs);
+  friend Expression operator-(Expression&& lhs, Expression&& rhs);
   // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
   friend Expression& operator-=(Expression& lhs, const Expression& rhs);
 
   /** Provides unary minus operator. */
   friend Expression operator-(const Expression& e);
+  friend Expression operator-(Expression&& e);
+
   /** Provides prefix decrement operator (i.e. --x). */
   Expression& operator--();
   /** Provides postfix decrement operator (i.e. x--). */
   Expression operator--(int);
 
-  friend Expression operator*(Expression lhs, const Expression& rhs);
+  friend Expression operator*(const Expression& lhs, const Expression& rhs);
+  friend Expression operator*(const Expression& lhs, Expression&& rhs);
+  friend Expression operator*(Expression&& lhs, const Expression& rhs);
+  friend Expression operator*(Expression&& lhs, Expression&& rhs);
   // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
   friend Expression& operator*=(Expression& lhs, const Expression& rhs);
 
@@ -484,16 +495,30 @@ class Expression {
   mutable std::experimental::optional<Variables> variables_;
 };
 
-Expression operator+(Expression lhs, const Expression& rhs);
+Expression operator+(const Expression& lhs, const Expression& rhs);
+Expression operator+(const Expression& lhs, Expression&& rhs);
+Expression operator+(Expression&& lhs, const Expression& rhs);
+Expression operator+(Expression&& lhs, Expression&& rhs);
 // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
 Expression& operator+=(Expression& lhs, const Expression& rhs);
-Expression operator-(Expression lhs, const Expression& rhs);
+
+Expression operator-(const Expression& lhs, const Expression& rhs);
+Expression operator-(const Expression& lhs, Expression&& rhs);
+Expression operator-(Expression&& lhs, const Expression& rhs);
+Expression operator-(Expression&& lhs, Expression&& rhs);
 // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
 Expression& operator-=(Expression& lhs, const Expression& rhs);
+
 Expression operator-(const Expression& e);
-Expression operator*(Expression lhs, const Expression& rhs);
+Expression operator-(Expression&& e);
+
+Expression operator*(const Expression& lhs, const Expression& rhs);
+Expression operator*(const Expression& lhs, Expression&& rhs);
+Expression operator*(Expression&& lhs, const Expression& rhs);
+Expression operator*(Expression&& lhs, Expression&& rhs);
 // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
 Expression& operator*=(Expression& lhs, const Expression& rhs);
+
 Expression operator/(Expression lhs, const Expression& rhs);
 // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
 Expression& operator/=(Expression& lhs, const Expression& rhs);
