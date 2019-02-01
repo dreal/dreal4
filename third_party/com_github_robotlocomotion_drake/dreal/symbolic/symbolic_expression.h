@@ -472,11 +472,11 @@ class Expression {
   friend class ExpressionCell;
 
  private:
-  static const ExpressionCell* make_cell(const double d);
+  static ExpressionCell* make_cell(const double d);
 
-  explicit Expression(const ExpressionCell* ptr);
+  explicit Expression(ExpressionCell* ptr);
 
-  const ExpressionCell* ptr_{nullptr};
+  ExpressionCell* ptr_{nullptr};
 
   // Storage to cache the result of GetVariables().
   mutable std::experimental::optional<Variables> variables_;

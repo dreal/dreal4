@@ -186,7 +186,7 @@ ExpressionCell::ExpressionCell(const ExpressionKind k, const size_t hash,
       hash_{hash_combine(static_cast<size_t>(kind_), hash)},
       is_polynomial_{is_poly} {}
 
-Expression ExpressionCell::GetExpression() const { return Expression{this}; }
+Expression ExpressionCell::GetExpression() { return Expression{this}; }
 
 UnaryExpressionCell::UnaryExpressionCell(const ExpressionKind k,
                                          const Expression& e,
@@ -306,11 +306,10 @@ double ExpressionVar::Evaluate(const Environment& env) const {
   throw runtime_error(oss.str());
 }
 
-Expression ExpressionVar::Expand() const { return GetExpression(); }
+Expression ExpressionVar::Expand() { return GetExpression(); }
 
-Expression ExpressionVar::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionVar::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const ExpressionSubstitution::const_iterator it{expr_subst.find(var_)};
   if (it != expr_subst.end()) {
     return it->second;
@@ -351,10 +350,10 @@ double ExpressionConstant::Evaluate(const Environment&) const {
   return v_;
 }
 
-Expression ExpressionConstant::Expand() const { return GetExpression(); }
+Expression ExpressionConstant::Expand() { return GetExpression(); }
 
 Expression ExpressionConstant::Substitute(const ExpressionSubstitution&,
-                                          const FormulaSubstitution&) const {
+                                          const FormulaSubstitution&) {
   assert(!std::isnan(v_));
   return GetExpression();
 }
@@ -403,10 +402,10 @@ double ExpressionRealConstant::Evaluate(const Environment&) const {
   return get_value();
 }
 
-Expression ExpressionRealConstant::Expand() const { return GetExpression(); }
+Expression ExpressionRealConstant::Expand() { return GetExpression(); }
 
-Expression ExpressionRealConstant::Substitute(
-    const ExpressionSubstitution&, const FormulaSubstitution&) const {
+Expression ExpressionRealConstant::Substitute(const ExpressionSubstitution&,
+                                              const FormulaSubstitution&) {
   return GetExpression();
 }
 
@@ -446,12 +445,12 @@ double ExpressionNaN::Evaluate(const Environment&) const {
   throw runtime_error("NaN is detected during Symbolic computation.");
 }
 
-Expression ExpressionNaN::Expand() const {
+Expression ExpressionNaN::Expand() {
   throw runtime_error("NaN is detected during expansion.");
 }
 
 Expression ExpressionNaN::Substitute(const ExpressionSubstitution&,
-                                     const FormulaSubstitution&) const {
+                                     const FormulaSubstitution&) {
   throw runtime_error("NaN is detected during substitution.");
 }
 
@@ -535,7 +534,7 @@ double ExpressionAdd::Evaluate(const Environment& env) const {
       });
 }
 
-Expression ExpressionAdd::Expand() const {
+Expression ExpressionAdd::Expand() {
   //   (c0 + c1 * e_1 + ... + c_n * e_n).Expand()
   // =  c0 + c1 * e_1.Expand() + ... + c_n * e_n.Expand()
   return accumulate(
@@ -546,9 +545,8 @@ Expression ExpressionAdd::Expand() const {
       });
 }
 
-Expression ExpressionAdd::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionAdd::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   return accumulate(
       expr_to_coeff_map_.begin(), expr_to_coeff_map_.end(),
       Expression{constant_},
@@ -780,7 +778,7 @@ double ExpressionMul::Evaluate(const Environment& env) const {
       });
 }
 
-Expression ExpressionMul::Expand() const {
+Expression ExpressionMul::Expand() {
   //   (c * ∏ᵢ pow(bᵢ, eᵢ)).Expand()
   // = c * ExpandMultiplication(∏ ExpandPow(bᵢ.Expand(), eᵢ.Expand()))
   return accumulate(
@@ -792,9 +790,8 @@ Expression ExpressionMul::Expand() const {
       });
 }
 
-Expression ExpressionMul::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionMul::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   return accumulate(
       base_to_exponent_map_.begin(), base_to_exponent_map_.end(),
       Expression{constant_},
@@ -1125,7 +1122,7 @@ class DivExpandVisitor {
 };
 }  // namespace
 
-Expression ExpressionDiv::Expand() const {
+Expression ExpressionDiv::Expand() {
   const Expression e1{get_first_argument().Expand()};
   const Expression e2{get_second_argument().Expand()};
   if (is_constant(e2)) {
@@ -1137,9 +1134,8 @@ Expression ExpressionDiv::Expand() const {
   }
 }
 
-Expression ExpressionDiv::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionDiv::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& e1{get_first_argument()};
   const Expression& e2{get_second_argument()};
   const Expression e1_subst{e1.Substitute(expr_subst, formula_subst)};
@@ -1187,7 +1183,7 @@ void ExpressionLog::check_domain(const double v) {
   }
 }
 
-Expression ExpressionLog::Expand() const {
+Expression ExpressionLog::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1197,9 +1193,8 @@ Expression ExpressionLog::Expand() const {
   }
 }
 
-Expression ExpressionLog::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionLog::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1227,7 +1222,7 @@ double ExpressionLog::DoEvaluate(const double v) const {
 ExpressionAbs::ExpressionAbs(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Abs, e, false} {}
 
-Expression ExpressionAbs::Expand() const {
+Expression ExpressionAbs::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1237,9 +1232,8 @@ Expression ExpressionAbs::Expand() const {
   }
 }
 
-Expression ExpressionAbs::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionAbs::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1268,7 +1262,7 @@ double ExpressionAbs::DoEvaluate(const double v) const { return std::fabs(v); }
 ExpressionExp::ExpressionExp(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Exp, e, false} {}
 
-Expression ExpressionExp::Expand() const {
+Expression ExpressionExp::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1278,9 +1272,8 @@ Expression ExpressionExp::Expand() const {
   }
 }
 
-Expression ExpressionExp::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionExp::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1314,7 +1307,7 @@ void ExpressionSqrt::check_domain(const double v) {
   }
 }
 
-Expression ExpressionSqrt::Expand() const {
+Expression ExpressionSqrt::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1326,7 +1319,7 @@ Expression ExpressionSqrt::Expand() const {
 
 Expression ExpressionSqrt::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1366,7 +1359,7 @@ void ExpressionPow::check_domain(const double v1, const double v2) {
   }
 }
 
-Expression ExpressionPow::Expand() const {
+Expression ExpressionPow::Expand() {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_expanded{arg1.Expand()};
@@ -1378,9 +1371,8 @@ Expression ExpressionPow::Expand() const {
   }
 }
 
-Expression ExpressionPow::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionPow::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_subst{arg1.Substitute(expr_subst, formula_subst)};
@@ -1409,7 +1401,7 @@ double ExpressionPow::DoEvaluate(const double v1, const double v2) const {
 ExpressionSin::ExpressionSin(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Sin, e, false} {}
 
-Expression ExpressionSin::Expand() const {
+Expression ExpressionSin::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1419,9 +1411,8 @@ Expression ExpressionSin::Expand() const {
   }
 }
 
-Expression ExpressionSin::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionSin::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1446,7 +1437,7 @@ double ExpressionSin::DoEvaluate(const double v) const { return std::sin(v); }
 ExpressionCos::ExpressionCos(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Cos, e, false} {}
 
-Expression ExpressionCos::Expand() const {
+Expression ExpressionCos::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1456,9 +1447,8 @@ Expression ExpressionCos::Expand() const {
   }
 }
 
-Expression ExpressionCos::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionCos::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1483,7 +1473,7 @@ double ExpressionCos::DoEvaluate(const double v) const { return std::cos(v); }
 ExpressionTan::ExpressionTan(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Tan, e, false} {}
 
-Expression ExpressionTan::Expand() const {
+Expression ExpressionTan::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1493,9 +1483,8 @@ Expression ExpressionTan::Expand() const {
   }
 }
 
-Expression ExpressionTan::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionTan::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1529,7 +1518,7 @@ void ExpressionAsin::check_domain(const double v) {
   }
 }
 
-Expression ExpressionAsin::Expand() const {
+Expression ExpressionAsin::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1541,7 +1530,7 @@ Expression ExpressionAsin::Expand() const {
 
 Expression ExpressionAsin::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1578,7 +1567,7 @@ void ExpressionAcos::check_domain(const double v) {
   }
 }
 
-Expression ExpressionAcos::Expand() const {
+Expression ExpressionAcos::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1590,7 +1579,7 @@ Expression ExpressionAcos::Expand() const {
 
 Expression ExpressionAcos::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1618,7 +1607,7 @@ double ExpressionAcos::DoEvaluate(const double v) const {
 ExpressionAtan::ExpressionAtan(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Atan, e, false} {}
 
-Expression ExpressionAtan::Expand() const {
+Expression ExpressionAtan::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1630,7 +1619,7 @@ Expression ExpressionAtan::Expand() const {
 
 Expression ExpressionAtan::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1655,7 +1644,7 @@ double ExpressionAtan::DoEvaluate(const double v) const { return std::atan(v); }
 ExpressionAtan2::ExpressionAtan2(const Expression& e1, const Expression& e2)
     : BinaryExpressionCell{ExpressionKind::Atan2, e1, e2, false} {}
 
-Expression ExpressionAtan2::Expand() const {
+Expression ExpressionAtan2::Expand() {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_expanded{arg1.Expand()};
@@ -1669,7 +1658,7 @@ Expression ExpressionAtan2::Expand() const {
 
 Expression ExpressionAtan2::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_subst{arg1.Substitute(expr_subst, formula_subst)};
@@ -1701,7 +1690,7 @@ double ExpressionAtan2::DoEvaluate(const double v1, const double v2) const {
 ExpressionSinh::ExpressionSinh(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Sinh, e, false} {}
 
-Expression ExpressionSinh::Expand() const {
+Expression ExpressionSinh::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1713,7 +1702,7 @@ Expression ExpressionSinh::Expand() const {
 
 Expression ExpressionSinh::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1738,7 +1727,7 @@ double ExpressionSinh::DoEvaluate(const double v) const { return std::sinh(v); }
 ExpressionCosh::ExpressionCosh(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Cosh, e, false} {}
 
-Expression ExpressionCosh::Expand() const {
+Expression ExpressionCosh::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1750,7 +1739,7 @@ Expression ExpressionCosh::Expand() const {
 
 Expression ExpressionCosh::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1775,7 +1764,7 @@ double ExpressionCosh::DoEvaluate(const double v) const { return std::cosh(v); }
 ExpressionTanh::ExpressionTanh(const Expression& e)
     : UnaryExpressionCell{ExpressionKind::Tanh, e, false} {}
 
-Expression ExpressionTanh::Expand() const {
+Expression ExpressionTanh::Expand() {
   const Expression& arg{get_argument()};
   const Expression arg_expanded{arg.Expand()};
   if (!arg.EqualTo(arg_expanded)) {
@@ -1787,7 +1776,7 @@ Expression ExpressionTanh::Expand() const {
 
 Expression ExpressionTanh::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Expression& arg{get_argument()};
   const Expression arg_subst{arg.Substitute(expr_subst, formula_subst)};
   if (!arg.EqualTo(arg_subst)) {
@@ -1812,7 +1801,7 @@ double ExpressionTanh::DoEvaluate(const double v) const { return std::tanh(v); }
 ExpressionMin::ExpressionMin(const Expression& e1, const Expression& e2)
     : BinaryExpressionCell{ExpressionKind::Min, e1, e2, false} {}
 
-Expression ExpressionMin::Expand() const {
+Expression ExpressionMin::Expand() {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_expanded{arg1.Expand()};
@@ -1824,9 +1813,8 @@ Expression ExpressionMin::Expand() const {
   }
 }
 
-Expression ExpressionMin::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionMin::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_subst{arg1.Substitute(expr_subst, formula_subst)};
@@ -1860,7 +1848,7 @@ double ExpressionMin::DoEvaluate(const double v1, const double v2) const {
 ExpressionMax::ExpressionMax(const Expression& e1, const Expression& e2)
     : BinaryExpressionCell{ExpressionKind::Max, e1, e2, false} {}
 
-Expression ExpressionMax::Expand() const {
+Expression ExpressionMax::Expand() {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_expanded{arg1.Expand()};
@@ -1872,9 +1860,8 @@ Expression ExpressionMax::Expand() const {
   }
 }
 
-Expression ExpressionMax::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Expression ExpressionMax::Substitute(const ExpressionSubstitution& expr_subst,
+                                     const FormulaSubstitution& formula_subst) {
   const Expression& arg1{get_first_argument()};
   const Expression& arg2{get_second_argument()};
   const Expression arg1_subst{arg1.Substitute(expr_subst, formula_subst)};
@@ -1961,7 +1948,7 @@ double ExpressionIfThenElse::Evaluate(const Environment& env) const {
   return e_else_.Evaluate(env);
 }
 
-Expression ExpressionIfThenElse::Expand() const {
+Expression ExpressionIfThenElse::Expand() {
   // TODO(soonho): use the following line when Formula::Expand() is implemented.
   // return if_then_else(f_cond_.Expand(), e_then_.Expand(), e_else_.Expand());
   throw runtime_error("Not yet implemented.");
@@ -1969,7 +1956,7 @@ Expression ExpressionIfThenElse::Expand() const {
 
 Expression ExpressionIfThenElse::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   const Formula f_cond_subst{f_cond_.Substitute(expr_subst, formula_subst)};
   const Expression e_then_subst{e_then_.Substitute(expr_subst, formula_subst)};
   const Expression e_else_subst{e_else_.Substitute(expr_subst, formula_subst)};
@@ -2035,13 +2022,11 @@ double ExpressionUninterpretedFunction::Evaluate(const Environment&) const {
   throw runtime_error("Uninterpreted-function expression cannot be evaluated.");
 }
 
-Expression ExpressionUninterpretedFunction::Expand() const {
-  return GetExpression();
-}
+Expression ExpressionUninterpretedFunction::Expand() { return GetExpression(); }
 
 Expression ExpressionUninterpretedFunction::Substitute(
     const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+    const FormulaSubstitution& formula_subst) {
   // This method implements the following substitution:
   //     uf(name, {v₁, ..., vₙ}).Substitute(expr_subst, formula_subst)
   //   = uf(name, ⋃ᵢ (expr_subst[vᵢ].GetVariables() ∪ formula_subst[vᵢ])

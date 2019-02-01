@@ -90,7 +90,7 @@ Expression::Expression() : Expression{Zero().ptr_} {}
 Expression::Expression(const Variable& var)
     : Expression{new ExpressionVar(var)} {}
 
-const ExpressionCell* Expression::make_cell(const double d) {
+ExpressionCell* Expression::make_cell(const double d) {
   if (std::isnan(d)) {
     return Expression::NaN().ptr_;
   }
@@ -109,9 +109,7 @@ const ExpressionCell* Expression::make_cell(const double d) {
 
 Expression::Expression(const double d) : Expression{make_cell(d)} {}
 
-Expression::Expression(const ExpressionCell* ptr) : ptr_{ptr} {
-  ptr_->increase_rc();
-}
+Expression::Expression(ExpressionCell* ptr) : ptr_{ptr} { ptr_->increase_rc(); }
 
 ExpressionKind Expression::get_kind() const {
   assert(ptr_ != nullptr);
