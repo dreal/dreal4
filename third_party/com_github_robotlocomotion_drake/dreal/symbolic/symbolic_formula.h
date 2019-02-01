@@ -109,7 +109,7 @@ class Formula {
   Formula& operator=(Formula&&) noexcept;
   ~Formula();
 
-  explicit Formula(const FormulaCell* ptr);
+  explicit Formula(FormulaCell* ptr);
 
   /** Constructs a formula from @p var.
    * @pre @p var is of BOOLEAN type and not a dummy variable.
@@ -256,7 +256,7 @@ class Formula {
   friend FormulaCell;
 
  private:
-  const FormulaCell* ptr_;
+  FormulaCell* ptr_;
 
   // Storage to cache the result of GetFreevariables().
   mutable std::experimental::optional<Variables> free_variables_;

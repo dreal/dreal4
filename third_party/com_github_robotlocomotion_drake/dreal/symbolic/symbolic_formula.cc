@@ -65,7 +65,7 @@ Formula::~Formula() {
   }
 }
 
-Formula::Formula(const FormulaCell* ptr) : ptr_{ptr} { ptr_->increase_rc(); }
+Formula::Formula(FormulaCell* const ptr) : ptr_{ptr} { ptr_->increase_rc(); }
 
 Formula::Formula(const Variable& var) : Formula{new FormulaVar(var)} {}
 

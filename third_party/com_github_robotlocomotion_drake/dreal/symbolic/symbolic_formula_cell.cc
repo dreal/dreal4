@@ -32,7 +32,7 @@ using std::string;
 FormulaCell::FormulaCell(const FormulaKind k, const size_t hash)
     : kind_{k}, hash_{hash_combine(hash, static_cast<size_t>(kind_))} {}
 
-Formula FormulaCell::GetFormula() const { return Formula{this}; }
+Formula FormulaCell::GetFormula() { return Formula{this}; }
 
 RelationalFormulaCell::RelationalFormulaCell(const FormulaKind k,
                                              const Expression& lhs,
@@ -136,7 +136,7 @@ bool FormulaTrue::Less(const FormulaCell& f) const {
 bool FormulaTrue::Evaluate(const Environment&) const { return true; }
 
 Formula FormulaTrue::Substitute(const ExpressionSubstitution&,
-                                const FormulaSubstitution&) const {
+                                const FormulaSubstitution&) {
   return Formula::True();
 }
 
@@ -163,7 +163,7 @@ bool FormulaFalse::Less(const FormulaCell& f) const {
 bool FormulaFalse::Evaluate(const Environment&) const { return false; }
 
 Formula FormulaFalse::Substitute(const ExpressionSubstitution&,
-                                 const FormulaSubstitution&) const {
+                                 const FormulaSubstitution&) {
   return Formula::False();
 }
 
@@ -218,7 +218,7 @@ bool FormulaVar::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaVar::Substitute(const ExpressionSubstitution&,
-                               const FormulaSubstitution& formula_subst) const {
+                               const FormulaSubstitution& formula_subst) {
   const auto it = formula_subst.find(var_);
   if (it != formula_subst.end()) {
     return it->second;
@@ -264,7 +264,7 @@ bool FormulaEq::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaEq::Substitute(const ExpressionSubstitution& expr_subst,
-                              const FormulaSubstitution& formula_subst) const {
+                              const FormulaSubstitution& formula_subst) {
   const Expression& lhs{get_lhs_expression()};
   const Expression& rhs{get_rhs_expression()};
   const Expression lhs_subst{lhs.Substitute(expr_subst, formula_subst)};
@@ -290,7 +290,7 @@ bool FormulaNeq::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaNeq::Substitute(const ExpressionSubstitution& expr_subst,
-                               const FormulaSubstitution& formula_subst) const {
+                               const FormulaSubstitution& formula_subst) {
   const Expression& lhs{get_lhs_expression()};
   const Expression& rhs{get_rhs_expression()};
   const Expression lhs_subst{lhs.Substitute(expr_subst, formula_subst)};
@@ -316,7 +316,7 @@ bool FormulaGt::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaGt::Substitute(const ExpressionSubstitution& expr_subst,
-                              const FormulaSubstitution& formula_subst) const {
+                              const FormulaSubstitution& formula_subst) {
   const Expression& lhs{get_lhs_expression()};
   const Expression& rhs{get_rhs_expression()};
   const Expression lhs_subst{lhs.Substitute(expr_subst, formula_subst)};
@@ -342,7 +342,7 @@ bool FormulaGeq::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaGeq::Substitute(const ExpressionSubstitution& expr_subst,
-                               const FormulaSubstitution& formula_subst) const {
+                               const FormulaSubstitution& formula_subst) {
   const Expression& lhs{get_lhs_expression()};
   const Expression& rhs{get_rhs_expression()};
   const Expression lhs_subst{lhs.Substitute(expr_subst, formula_subst)};
@@ -368,7 +368,7 @@ bool FormulaLt::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaLt::Substitute(const ExpressionSubstitution& expr_subst,
-                              const FormulaSubstitution& formula_subst) const {
+                              const FormulaSubstitution& formula_subst) {
   const Expression& lhs{get_lhs_expression()};
   const Expression& rhs{get_rhs_expression()};
   const Expression lhs_subst{lhs.Substitute(expr_subst, formula_subst)};
@@ -394,7 +394,7 @@ bool FormulaLeq::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaLeq::Substitute(const ExpressionSubstitution& expr_subst,
-                               const FormulaSubstitution& formula_subst) const {
+                               const FormulaSubstitution& formula_subst) {
   const Expression& lhs{get_lhs_expression()};
   const Expression& rhs{get_rhs_expression()};
   const Expression lhs_subst{lhs.Substitute(expr_subst, formula_subst)};
@@ -429,7 +429,7 @@ bool FormulaAnd::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaAnd::Substitute(const ExpressionSubstitution& expr_subst,
-                               const FormulaSubstitution& formula_subst) const {
+                               const FormulaSubstitution& formula_subst) {
   Formula ret{Formula::True()};
   bool changed{false};
   for (const auto& f : get_operands()) {
@@ -474,7 +474,7 @@ bool FormulaOr::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaOr::Substitute(const ExpressionSubstitution& expr_subst,
-                              const FormulaSubstitution& formula_subst) const {
+                              const FormulaSubstitution& formula_subst) {
   Formula ret{Formula::False()};
   bool changed{false};
   for (const auto& f : get_operands()) {
@@ -525,7 +525,7 @@ bool FormulaNot::Evaluate(const Environment& env) const {
 }
 
 Formula FormulaNot::Substitute(const ExpressionSubstitution& expr_subst,
-                               const FormulaSubstitution& formula_subst) const {
+                               const FormulaSubstitution& formula_subst) {
   const Formula f_subst{f_.Substitute(expr_subst, formula_subst)};
   if (!f_.EqualTo(f_subst)) {
     return !f_subst;
@@ -575,9 +575,8 @@ bool FormulaForall::Evaluate(const Environment&) const {
   throw runtime_error("not implemented yet");
 }
 
-Formula FormulaForall::Substitute(
-    const ExpressionSubstitution& expr_subst,
-    const FormulaSubstitution& formula_subst) const {
+Formula FormulaForall::Substitute(const ExpressionSubstitution& expr_subst,
+                                  const FormulaSubstitution& formula_subst) {
   // Quantified variables are already bound and should not be substituted by s.
   // We construct a new substitution new_s from s by removing the entries of
   // bound variables.
