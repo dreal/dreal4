@@ -307,7 +307,12 @@ class ExpressionAdd : public ExpressionCell {
   const std::map<Expression, double> expr_to_coeff_map_;
 };
 
-/** Factory class to help build ExpressionAdd expressions. */
+/** Factory class to help build ExpressionAdd expressions.
+ *
+ * @note Once `GetExpression()` is called and an expression is
+ * generated, this class should not be used again. If another
+ * `GetExpression()` is called, it will throws an exception.
+ */
 class ExpressionAddFactory {
  public:
   ExpressionAddFactory(const ExpressionAddFactory&) = default;
@@ -340,7 +345,7 @@ class ExpressionAddFactory {
    */
   ExpressionAddFactory& Negate();
   /** Returns a symbolic expression. */
-  Expression GetExpression() const;
+  Expression GetExpression();
 
  private:
   /* Adds constant to this factory.
@@ -365,6 +370,7 @@ class ExpressionAddFactory {
   ExpressionAddFactory& AddMap(
       const std::map<Expression, double>& expr_to_coeff_map);
 
+  bool get_expression_is_called_{false};
   double constant_{0.0};
   std::map<Expression, double> expr_to_coeff_map_;
 };
@@ -412,7 +418,12 @@ class ExpressionMul : public ExpressionCell {
   std::map<Expression, Expression> base_to_exponent_map_;
 };
 
-/** Factory class to help build ExpressionMul expressions. */
+/** Factory class to help build ExpressionMul expressions.
+ *
+ * @note Once `GetExpression()` is called and an expression is
+ * generated, this class should not be used again. If another
+ * `GetExpression()` is called, it will throws an exception.
+ */
 class ExpressionMulFactory {
  public:
   ExpressionMulFactory(const ExpressionMulFactory&) = default;
@@ -444,7 +455,7 @@ class ExpressionMulFactory {
    */
   ExpressionMulFactory& Negate();
   /** Returns a symbolic expression. */
-  Expression GetExpression() const;
+  Expression GetExpression();
 
  private:
   /* Adds constant to this factory.
@@ -469,6 +480,7 @@ class ExpressionMulFactory {
   ExpressionMulFactory& AddMap(
       const std::map<Expression, Expression>& base_to_exponent_map);
 
+  bool get_expression_is_called_{false};
   double constant_{1.0};
   std::map<Expression, Expression> base_to_exponent_map_;
 };

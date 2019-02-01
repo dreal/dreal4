@@ -609,7 +609,9 @@ ostream& ExpressionAdd::DisplayTerm(ostream& os, const bool print_plus,
 
 ExpressionAddFactory::ExpressionAddFactory(
     const double constant, map<Expression, double> expr_to_coeff_map)
-    : constant_{constant}, expr_to_coeff_map_{move(expr_to_coeff_map)} {}
+    : get_expression_is_called_{false},
+      constant_{constant},
+      expr_to_coeff_map_{move(expr_to_coeff_map)} {}
 
 ExpressionAddFactory::ExpressionAddFactory(const ExpressionAdd* const ptr)
     : ExpressionAddFactory{ptr->get_constant(), ptr->get_expr_to_coeff_map()} {}
@@ -658,7 +660,13 @@ ExpressionAddFactory& ExpressionAddFactory::Negate() {
   return *this;
 }
 
-Expression ExpressionAddFactory::GetExpression() const {
+Expression ExpressionAddFactory::GetExpression() {
+  if (get_expression_is_called_) {
+    throw runtime_error(
+        "ExpressionAddFactory::GetExpression() is already called, and it "
+        "should not be invoked again.");
+  }
+  get_expression_is_called_ = true;
   if (expr_to_coeff_map_.empty()) {
     return Expression{constant_};
   }
@@ -667,7 +675,8 @@ Expression ExpressionAddFactory::GetExpression() const {
     const auto it(expr_to_coeff_map_.cbegin());
     return it->first * it->second;
   }
-  return Expression{new ExpressionAdd(constant_, expr_to_coeff_map_)};
+  return Expression{
+      new ExpressionAdd(constant_, std::move(expr_to_coeff_map_))};
 }
 
 ExpressionAddFactory& ExpressionAddFactory::AddConstant(const double constant) {
@@ -886,7 +895,9 @@ ostream& ExpressionMul::DisplayTerm(ostream& os, const bool print_mul,
 
 ExpressionMulFactory::ExpressionMulFactory(
     const double constant, map<Expression, Expression> base_to_exponent_map)
-    : constant_{constant}, base_to_exponent_map_{move(base_to_exponent_map)} {}
+    : get_expression_is_called_{false},
+      constant_{constant},
+      base_to_exponent_map_{move(base_to_exponent_map)} {}
 
 ExpressionMulFactory::ExpressionMulFactory(const ExpressionMul* const ptr)
     : ExpressionMulFactory{ptr->get_constant(),
@@ -922,7 +933,13 @@ ExpressionMulFactory& ExpressionMulFactory::Negate() {
   return *this;
 }
 
-Expression ExpressionMulFactory::GetExpression() const {
+Expression ExpressionMulFactory::GetExpression() {
+  if (get_expression_is_called_) {
+    throw runtime_error(
+        "ExpressionMulFactory::GetExpression() is already called, and it "
+        "should not be invoked again.");
+  }
+  get_expression_is_called_ = true;
   if (base_to_exponent_map_.empty()) {
     return Expression{constant_};
   }
@@ -931,7 +948,8 @@ Expression ExpressionMulFactory::GetExpression() const {
     const auto it(base_to_exponent_map_.cbegin());
     return pow(it->first, it->second);
   }
-  return Expression{new ExpressionMul(constant_, base_to_exponent_map_)};
+  return Expression{
+      new ExpressionMul(constant_, std::move(base_to_exponent_map_))};
 }
 
 ExpressionMulFactory& ExpressionMulFactory::AddConstant(const double constant) {
