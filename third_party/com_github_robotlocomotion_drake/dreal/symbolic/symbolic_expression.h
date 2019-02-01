@@ -678,30 +678,6 @@ const Expression& get_else_expression(const Expression& e);
  */
 const std::string& get_uninterpreted_function_name(const Expression& e);
 
-// NOLINTNEXTLINE(runtime/references) per C++ standard signature.
-Expression& operator+=(Expression& lhs, const Variable& rhs);
-Expression operator+(const Variable& lhs, const Variable& rhs);
-Expression operator+(Expression lhs, const Variable& rhs);
-Expression operator+(const Variable& lhs, Expression rhs);
-
-// NOLINTNEXTLINE(runtime/references) per C++ standard signature.
-Expression& operator-=(Expression& lhs, const Variable& rhs);
-Expression operator-(const Variable& lhs, const Variable& rhs);
-Expression operator-(Expression lhs, const Variable& rhs);
-Expression operator-(const Variable& lhs, const Expression& rhs);
-
-// NOLINTNEXTLINE(runtime/references) per C++ standard signature.
-Expression& operator*=(Expression& lhs, const Variable& rhs);
-Expression operator*(const Variable& lhs, const Variable& rhs);
-Expression operator*(Expression lhs, const Variable& rhs);
-Expression operator*(const Variable& lhs, Expression rhs);
-
-// NOLINTNEXTLINE(runtime/references) per C++ standard signature.
-Expression& operator/=(Expression& lhs, const Variable& rhs);
-Expression operator/(const Variable& lhs, const Variable& rhs);
-Expression operator/(Expression lhs, const Variable& rhs);
-Expression operator/(const Variable& lhs, const Expression& rhs);
-
 Expression operator+(const Variable& var);
 Expression operator-(const Variable& var);
 
