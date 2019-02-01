@@ -327,9 +327,9 @@ class ExpressionAddFactory {
   explicit ExpressionAddFactory(const ExpressionAdd* const ptr);
 
   /** Adds @p e to this factory. */
-  void AddExpression(const Expression& e);
+  ExpressionAddFactory& AddExpression(const Expression& e);
   /** Adds ExpressionAdd pointed by @p ptr to this factory. */
-  void Add(const ExpressionAdd* const ptr);
+  ExpressionAddFactory& Add(const ExpressionAdd* const ptr);
   /** Assigns a factory from a pointer to ExpressionAdd.  */
   ExpressionAddFactory& operator=(const ExpressionAdd* const ptr);
 
@@ -349,7 +349,7 @@ class ExpressionAddFactory {
    *     c0 + c1 * t1 + ... + cn * tn
    *
    * results in (c0 + constant) + c1 * t1 + ... + cn * tn.  */
-  void AddConstant(double constant);
+  ExpressionAddFactory& AddConstant(double constant);
   /* Adds coeff * term to this factory.
    *
    * Adding (coeff * term) into an add factory representing
@@ -359,10 +359,11 @@ class ExpressionAddFactory {
    * results in c0 + c1 * t1 + ... + (coeff * term) + ... + cn * tn. Note that
    * it also performs simplifications to merge the coefficients of common terms.
    */
-  void AddTerm(double coeff, const Expression& term);
+  ExpressionAddFactory& AddTerm(double coeff, const Expression& term);
   /* Adds expr_to_coeff_map to this factory. It calls AddConstant and AddTerm
    * methods. */
-  void AddMap(const std::map<Expression, double>& expr_to_coeff_map);
+  ExpressionAddFactory& AddMap(
+      const std::map<Expression, double>& expr_to_coeff_map);
 
   double constant_{0.0};
   std::map<Expression, double> expr_to_coeff_map_;
@@ -431,9 +432,9 @@ class ExpressionMulFactory {
   explicit ExpressionMulFactory(const ExpressionMul* const ptr);
 
   /** Adds @p e to this factory. */
-  void AddExpression(const Expression& e);
+  ExpressionMulFactory& AddExpression(const Expression& e);
   /** Adds ExpressionMul pointed by @p ptr to this factory. */
-  void Add(const ExpressionMul* const ptr);
+  ExpressionMulFactory& Add(const ExpressionMul* const ptr);
   /** Assigns a factory from a pointer to ExpressionMul.  */
   ExpressionMulFactory& operator=(const ExpressionMul* const ptr);
   /** Negates the expressions in factory.
@@ -452,7 +453,7 @@ class ExpressionMulFactory {
          c * b1 ^ e1 * ... * bn ^ en
 
      results in (constant * c) * b1 ^ e1 * ... * bn ^ en. */
-  void AddConstant(double constant);
+  ExpressionMulFactory& AddConstant(double constant);
   /* Adds pow(base, exponent) to this factory.
      Adding pow(base, exponent) into an mul factory representing
 
@@ -461,10 +462,12 @@ class ExpressionMulFactory {
      results in c * b1 ^ e1 * ... * base^exponent * ... * bn ^ en. Note that
      it also performs simplifications to merge the exponents of common bases.
   */
-  void AddTerm(const Expression& base, const Expression& exponent);
+  ExpressionMulFactory& AddTerm(const Expression& base,
+                                const Expression& exponent);
   /* Adds base_to_exponent_map to this factory. It calls AddConstant and AddTerm
    * methods. */
-  void AddMap(const std::map<Expression, Expression>& base_to_exponent_map);
+  ExpressionMulFactory& AddMap(
+      const std::map<Expression, Expression>& base_to_exponent_map);
 
   double constant_{1.0};
   std::map<Expression, Expression> base_to_exponent_map_;

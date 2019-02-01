@@ -614,7 +614,7 @@ ExpressionAddFactory::ExpressionAddFactory(
 ExpressionAddFactory::ExpressionAddFactory(const ExpressionAdd* const ptr)
     : ExpressionAddFactory{ptr->get_constant(), ptr->get_expr_to_coeff_map()} {}
 
-void ExpressionAddFactory::AddExpression(const Expression& e) {
+ExpressionAddFactory& ExpressionAddFactory::AddExpression(const Expression& e) {
   if (is_constant(e)) {
     const double v{get_constant_value(e)};
     return AddConstant(v);
@@ -637,9 +637,10 @@ void ExpressionAddFactory::AddExpression(const Expression& e) {
   return AddTerm(1.0, e);
 }
 
-void ExpressionAddFactory::Add(const ExpressionAdd* const ptr) {
+ExpressionAddFactory& ExpressionAddFactory::Add(
+    const ExpressionAdd* const ptr) {
   AddConstant(ptr->get_constant());
-  AddMap(ptr->get_expr_to_coeff_map());
+  return AddMap(ptr->get_expr_to_coeff_map());
 }
 
 ExpressionAddFactory& ExpressionAddFactory::operator=(
@@ -669,11 +670,13 @@ Expression ExpressionAddFactory::GetExpression() const {
   return Expression{new ExpressionAdd(constant_, expr_to_coeff_map_)};
 }
 
-void ExpressionAddFactory::AddConstant(const double constant) {
+ExpressionAddFactory& ExpressionAddFactory::AddConstant(const double constant) {
   constant_ += constant;
+  return *this;
 }
 
-void ExpressionAddFactory::AddTerm(const double coeff, const Expression& term) {
+ExpressionAddFactory& ExpressionAddFactory::AddTerm(const double coeff,
+                                                    const Expression& term) {
   assert(!is_constant(term));
 
   const auto it(expr_to_coeff_map_.find(term));
@@ -692,13 +695,15 @@ void ExpressionAddFactory::AddTerm(const double coeff, const Expression& term) {
     // Add the entry (term, coeff).
     expr_to_coeff_map_.emplace(term, coeff);
   }
+  return *this;
 }
 
-void ExpressionAddFactory::AddMap(
+ExpressionAddFactory& ExpressionAddFactory::AddMap(
     const map<Expression, double>& expr_to_coeff_map) {
   for (const auto& p : expr_to_coeff_map) {
     AddTerm(p.second, p.first);
   }
+  return *this;
 }
 
 ExpressionMul::ExpressionMul(const double constant,
@@ -887,7 +892,7 @@ ExpressionMulFactory::ExpressionMulFactory(const ExpressionMul* const ptr)
     : ExpressionMulFactory{ptr->get_constant(),
                            ptr->get_base_to_exponent_map()} {}
 
-void ExpressionMulFactory::AddExpression(const Expression& e) {
+ExpressionMulFactory& ExpressionMulFactory::AddExpression(const Expression& e) {
   if (is_constant(e)) {
     return AddConstant(get_constant_value(e));
   }
@@ -899,9 +904,10 @@ void ExpressionMulFactory::AddExpression(const Expression& e) {
   return AddTerm(e, Expression{1.0});
 }
 
-void ExpressionMulFactory::Add(const ExpressionMul* const ptr) {
+ExpressionMulFactory& ExpressionMulFactory::Add(
+    const ExpressionMul* const ptr) {
   AddConstant(ptr->get_constant());
-  AddMap(ptr->get_base_to_exponent_map());
+  return AddMap(ptr->get_base_to_exponent_map());
 }
 
 ExpressionMulFactory& ExpressionMulFactory::operator=(
@@ -928,12 +934,13 @@ Expression ExpressionMulFactory::GetExpression() const {
   return Expression{new ExpressionMul(constant_, base_to_exponent_map_)};
 }
 
-void ExpressionMulFactory::AddConstant(const double constant) {
+ExpressionMulFactory& ExpressionMulFactory::AddConstant(const double constant) {
   constant_ *= constant;
+  return *this;
 }
 
-void ExpressionMulFactory::AddTerm(const Expression& base,
-                                   const Expression& exponent) {
+ExpressionMulFactory& ExpressionMulFactory::AddTerm(
+    const Expression& base, const Expression& exponent) {
   // The following assertion holds because of
   // ExpressionMulFactory::AddExpression.
   assert(!(is_constant(base) && is_constant(exponent)));
@@ -971,13 +978,15 @@ void ExpressionMulFactory::AddTerm(const Expression& base,
     // exponent).
     base_to_exponent_map_.emplace(base, exponent);
   }
+  return *this;
 }
 
-void ExpressionMulFactory::AddMap(
+ExpressionMulFactory& ExpressionMulFactory::AddMap(
     const map<Expression, Expression>& base_to_exponent_map) {
   for (const auto& p : base_to_exponent_map) {
     AddTerm(p.first, p.second);
   }
+  return *this;
 }
 
 ExpressionDiv::ExpressionDiv(const Expression& e1, const Expression& e2)
