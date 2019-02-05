@@ -51,7 +51,7 @@ Box::Interval ExpressionEvaluator::VisitAddition(const Expression& e,
   const auto& expr_to_coeff_map = get_expr_to_coeff_map_in_addition(e);
   return accumulate(expr_to_coeff_map.begin(), expr_to_coeff_map.end(),
                     ibex::Interval{c},
-                    [this, &box](const Box::Interval init,
+                    [this, &box](const Box::Interval& init,
                                  const pair<const Expression, double>& p) {
                       return init + Visit(p.first, box) * p.second;
                     });
@@ -64,7 +64,7 @@ Box::Interval ExpressionEvaluator::VisitMultiplication(const Expression& e,
       get_base_to_exponent_map_in_multiplication(e);
   return accumulate(base_to_exponent_map.begin(), base_to_exponent_map.end(),
                     ibex::Interval{c},
-                    [this, &box](const Box::Interval init,
+                    [this, &box](const Box::Interval& init,
                                  const pair<const Expression, Expression>& p) {
                       return init * VisitPow(p.first, p.second, box);
                     });
