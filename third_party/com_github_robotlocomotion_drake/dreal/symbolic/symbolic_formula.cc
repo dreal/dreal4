@@ -178,7 +178,7 @@ Formula forall(const Variables& vars, const Formula& f) {
 }
 
 namespace {
-void MergeConjunction(const Formula f, set<Formula>* const s) {
+void MergeConjunction(const Formula& f, set<Formula>* const s) {
   if (is_conjunction(f)) {
     for (const auto& g : get_operands(f)) {
       s->insert(g);
@@ -306,7 +306,7 @@ Formula operator&&(const Variable& v1, const Variable& v2) {
 
 namespace {
 // Updates s by adding f into it.
-void MergeDisjunction(const Formula f, set<Formula>* const s) {
+void MergeDisjunction(const Formula& f, set<Formula>* const s) {
   if (is_disjunction(f)) {
     for (const auto& g : get_operands(f)) {
       s->insert(g);
