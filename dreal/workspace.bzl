@@ -70,8 +70,8 @@ def dreal_workspace():
     github_archive(
         name = "spdlog",  # MIT
         repository = "gabime/spdlog",
-        commit = "v1.3.0",
-        sha256 = "78786c641ca278388107e30f1f0fa0307e7e98e1c5279c3d29f71a143f9176b6",
+        commit = "v1.3.1",
+        sha256 = "160845266e94db1d4922ef755637f6901266731c4cb3b30b45bf41efa0e6ab70",
         build_file = str(Label("//tools:spdlog.BUILD.bazel")),
     )
 
@@ -102,6 +102,6 @@ def dreal_workspace():
     github_archive(
         name = "com_google_absl",  # BSD
         repository = "abseil/abseil-cpp",
-        commit = "b16aeb6756bdab08cdf12d40baab5b51f7d15b16",  # 20190107
-        sha256 = "0d042c15d349bf62586b86e4c70d785cb2d1e1948636920abdd8a79d6027879a",
+        commit = "d78310fe5a82f2e0e6e16509ef8079c8d7e4674e",  # 20190131
+        sha256 = "4c2e4194bbddcb5162933e45fe574d2c4e77a2ef00818b8dac0392459707bfff",
     )

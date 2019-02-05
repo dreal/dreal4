@@ -24,9 +24,9 @@ github_archive(
 github_archive(
     name = "pycodestyle",  # Expat
     build_file = "//tools:pycodestyle.BUILD.bazel",
-    commit = "c507b725d9e0bed14505f87cd2397ac7ac489485",
+    commit = "e71908e1ac65f05cd92b1c6a71ef118f4138b2d7",  # 20190201
     repository = "PyCQA/pycodestyle",
-    sha256 = "b7b206c182f4a4eea6967c6619664e0a91275cd99e929e2bf47b4a8cd48fd218",
+    sha256 = "1b6ce6f278d803ddc5fef599f2eb144c839b50c8f8d4a3950831ad358c870302",
 )
 
 github_archive(
@@ -39,9 +39,9 @@ github_archive(
 
 github_archive(
     name = "com_google_googletest",  # GOOGLE
-    commit = "50f1a77955bde27cf49173c4133688d61f201e85",  # 20190108
-    repository = "abseil/googletest",
-    sha256 = "49e8af9cb72ea7425dcceed5cc021f31ec353cb67badee3c89b3f0931c2e4ef6",
+    commit = "9a502a5b14b4a6160103c1f2c64331772878d86a",  # 20190108
+    repository = "google/googletest",
+    sha256 = "6b2df434f90104376713c4fb666f2c97a7375edc2e576bcb7dde4eccb291b959",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")
