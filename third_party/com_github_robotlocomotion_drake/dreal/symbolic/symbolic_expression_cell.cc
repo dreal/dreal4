@@ -117,23 +117,25 @@ Expression ExpandMultiplication(const Expression& e1, const Expression& e2) {
     //   (c0 + c1 * e_{1,1} + ... + c_n * e_{1, n}) * e2
     // = c0 * e2 + c1 * e_{1,1} * e2 + ... + c_n * e_{1,n} * e2
     const double c0{get_constant_in_addition(e1)};
-    const map<Expression, double>& m1{get_expr_to_coeff_map_in_addition(e1)};
-    return accumulate(
-        m1.begin(), m1.end(), ExpandMultiplication(c0, e2),
-        [&e2](const Expression& init, const pair<const Expression, double>& p) {
-          return init + ExpandMultiplication(p.second, p.first, e2);
-        });
+    Expression ret{ExpandMultiplication(c0, e2)};
+    for (const auto& p : get_expr_to_coeff_map_in_addition(e1)) {
+      const Expression& e_1_i{p.first};
+      const double c_i{p.second};
+      ret += ExpandMultiplication(c_i, e_1_i, e2);
+    }
+    return ret;
   }
   if (is_addition(e2)) {
     //   e1 * (c0 + c1 * e_{2,1} + ... + c_n * e_{2, n})
     // = e1 * c0 + e1 * c1 * e_{2,1} + ... + e1 * c_n * e_{2,n}
     const double c0{get_constant_in_addition(e2)};
-    const map<Expression, double>& m1{get_expr_to_coeff_map_in_addition(e2)};
-    return accumulate(
-        m1.begin(), m1.end(), ExpandMultiplication(e1, c0),
-        [&e1](const Expression& init, const pair<const Expression, double>& p) {
-          return init + ExpandMultiplication(e1, p.second, p.first);
-        });
+    Expression ret{ExpandMultiplication(e1, c0)};
+    for (const auto& p : get_expr_to_coeff_map_in_addition(e2)) {
+      const Expression& e_2_i{p.first};
+      const double c_i{p.second};
+      ret += ExpandMultiplication(e1, c_i, e_2_i);
+    }
+    return ret;
   }
   return e1 * e2;
 }
@@ -538,34 +540,37 @@ double ExpressionAdd::Evaluate(const Environment& env) const {
 Expression ExpressionAdd::Expand() {
   //   (c0 + c1 * e_1 + ... + c_n * e_n).Expand()
   // =  c0 + c1 * e_1.Expand() + ... + c_n * e_n.Expand()
-  return accumulate(
-      expr_to_coeff_map_.begin(), expr_to_coeff_map_.end(),
-      Expression{constant_},
-      [](const Expression& init, const pair<const Expression, double>& p) {
-        return init + ExpandMultiplication(p.first.Expand(), p.second);
-      });
+  Expression ret{constant_};
+  for (const auto& p : expr_to_coeff_map_) {
+    const Expression& e_i{p.first};
+    const double c_i{p.second};
+    ret += ExpandMultiplication(e_i.Expand(), c_i);
+  }
+  return ret;
 }
 
 Expression ExpressionAdd::Substitute(const ExpressionSubstitution& expr_subst,
                                      const FormulaSubstitution& formula_subst) {
-  return accumulate(
-      expr_to_coeff_map_.begin(), expr_to_coeff_map_.end(),
-      Expression{constant_},
-      [&expr_subst, &formula_subst](const Expression& init,
-                                    const pair<const Expression, double>& p) {
-        return init + p.first.Substitute(expr_subst, formula_subst) * p.second;
-      });
+  Expression ret{constant_};
+  for (const auto& p : expr_to_coeff_map_) {
+    const Expression& e_i{p.first};
+    const double c_i{p.second};
+    ret += e_i.Substitute(expr_subst, formula_subst) * c_i;
+  }
+  return ret;
 }
 
 Expression ExpressionAdd::Differentiate(const Variable& x) const {
   //   ∂/∂x (c_0 + c_1 * f_1 + ... + c_n * f_n)
   // = (∂/∂x c_0) + (∂/∂x c_1 * f_1) + ... + (∂/∂x c_n * f_n)
   // =  0.0       + c_1 * (∂/∂x f_1) + ... + c_n * (∂/∂x f_n)
-  return accumulate(
-      expr_to_coeff_map_.begin(), expr_to_coeff_map_.end(), Expression::Zero(),
-      [&x](const Expression& init, const pair<const Expression, double>& p) {
-        return init + p.second * p.first.Differentiate(x);
-      });
+  Expression ret{Expression::Zero()};
+  for (const auto& p : expr_to_coeff_map_) {
+    const Expression& e_i{p.first};
+    const double c_i{p.second};
+    ret += c_i * e_i.Differentiate(x);
+  }
+  return ret;
 }
 
 ostream& ExpressionAdd::Display(ostream& os) const {
@@ -795,25 +800,26 @@ double ExpressionMul::Evaluate(const Environment& env) const {
 Expression ExpressionMul::Expand() {
   //   (c * ∏ᵢ pow(bᵢ, eᵢ)).Expand()
   // = c * ExpandMultiplication(∏ ExpandPow(bᵢ.Expand(), eᵢ.Expand()))
-  return accumulate(
-      base_to_exponent_map_.begin(), base_to_exponent_map_.end(),
-      Expression{constant_},
-      [](const Expression& init, const pair<const Expression, Expression>& p) {
-        return ExpandMultiplication(
-            init, ExpandPow(p.first.Expand(), p.second.Expand()));
-      });
+  Expression ret{constant_};
+  for (const auto& p : base_to_exponent_map_) {
+    const Expression& b_i{p.first};
+    const Expression& e_i{p.second};
+    ret = ExpandMultiplication(std::move(ret),
+                               ExpandPow(b_i.Expand(), e_i.Expand()));
+  }
+  return ret;
 }
 
 Expression ExpressionMul::Substitute(const ExpressionSubstitution& expr_subst,
                                      const FormulaSubstitution& formula_subst) {
-  return accumulate(
-      base_to_exponent_map_.begin(), base_to_exponent_map_.end(),
-      Expression{constant_},
-      [&expr_subst, &formula_subst](
-          const Expression& init, const pair<const Expression, Expression>& p) {
-        return init * pow(p.first.Substitute(expr_subst, formula_subst),
-                          p.second.Substitute(expr_subst, formula_subst));
-      });
+  Expression ret{constant_};
+  for (const auto& p : base_to_exponent_map_) {
+    const Expression& b_i{p.first};
+    const Expression& e_i{p.second};
+    ret *= pow(b_i.Substitute(expr_subst, formula_subst),
+               e_i.Substitute(expr_subst, formula_subst));
+  }
+  return ret;
 }
 
 // Computes ∂/∂x pow(f, g).
