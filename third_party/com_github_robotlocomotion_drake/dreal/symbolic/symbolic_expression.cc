@@ -430,13 +430,11 @@ Expression operator*(const Expression& lhs, const Expression& rhs) {
 }
 
 Expression operator*(const Expression& lhs, Expression&& rhs) {
-  rhs *= lhs;
-  return rhs;
+  return rhs *= lhs;
 }
 
 Expression operator*(Expression&& lhs, const Expression& rhs) {
-  lhs *= rhs;
-  return lhs;
+  return lhs *= rhs;
 }
 
 Expression operator*(Expression&& lhs, Expression&& rhs) {
