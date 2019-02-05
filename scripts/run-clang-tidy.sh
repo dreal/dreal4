@@ -24,7 +24,7 @@ clang-tidy $@ -header-filter=$(realpath .) -system-headers=0 -p ./ \
            -isystem ${BAZEL_EXTERNAL}/fmt/include \
            -isystem ${BAZEL_EXTERNAL}/drake_symbolic \
            -isystem ${BAZEL_EXTERNAL}/ezoptionparser \
-           -isystem ${BAZEL_EXTERNAL}/gtest/googletest/include \
+           -isystem ${BAZEL_EXTERNAL}/com_google_googletest/googletest/include \
            -isystem ${BAZEL_EXTERNAL}/picosat \
            -isystem ${BAZEL_EXTERNAL}/pybind11/include \
            -isystem ${BAZEL_THIRD_PARTY}/com_github_robotlocomotion_drake \
