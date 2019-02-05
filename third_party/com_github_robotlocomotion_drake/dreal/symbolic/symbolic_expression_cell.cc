@@ -312,7 +312,7 @@ double ExpressionVar::Evaluate(const Environment& env) const {
 Expression ExpressionVar::Expand() { return GetExpression(); }
 
 Expression ExpressionVar::Substitute(const ExpressionSubstitution& expr_subst,
-                                     const FormulaSubstitution& formula_subst) {
+                                     const FormulaSubstitution&) {
   const ExpressionSubstitution::const_iterator it{expr_subst.find(var_)};
   if (it != expr_subst.end()) {
     return it->second;
@@ -388,8 +388,7 @@ Variables ExpressionRealConstant::GetVariables() const { return Variables{}; }
 bool ExpressionRealConstant::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
   assert(get_kind() == e.get_kind());
-  const ExpressionRealConstant& r =
-      static_cast<const ExpressionRealConstant&>(e);
+  const auto& r = static_cast<const ExpressionRealConstant&>(e);
   return lb_ == r.lb_ && ub_ == r.ub_ &&
          use_lb_as_representative_ == r.use_lb_as_representative_;
 }
@@ -804,8 +803,7 @@ Expression ExpressionMul::Expand() {
   for (const auto& p : base_to_exponent_map_) {
     const Expression& b_i{p.first};
     const Expression& e_i{p.second};
-    ret = ExpandMultiplication(std::move(ret),
-                               ExpandPow(b_i.Expand(), e_i.Expand()));
+    ret = ExpandMultiplication(ret, ExpandPow(b_i.Expand(), e_i.Expand()));
   }
   return ret;
 }

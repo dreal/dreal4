@@ -26,7 +26,6 @@ using std::ostream;
 using std::ostringstream;
 using std::runtime_error;
 using std::set;
-using std::static_pointer_cast;
 using std::string;
 
 FormulaCell::FormulaCell(const FormulaKind k, const size_t hash)

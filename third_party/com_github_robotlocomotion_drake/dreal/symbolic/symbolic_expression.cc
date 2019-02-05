@@ -126,7 +126,10 @@ ExpressionCell* Expression::make_cell(const double d) {
 
 Expression::Expression(const double d) : Expression{make_cell(d)} {}
 
-Expression::Expression(ExpressionCell* ptr) : ptr_{ptr} { ptr_->increase_rc(); }
+Expression::Expression(ExpressionCell* ptr) : ptr_{ptr} {
+  assert(ptr_ != nullptr);
+  ptr_->increase_rc();
+}
 
 ExpressionKind Expression::get_kind() const {
   assert(ptr_ != nullptr);

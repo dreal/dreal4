@@ -69,13 +69,16 @@ class Environment {
   /** Default constructor. */
   Environment() = default;
 
+  /** Default destructor. */
+  ~Environment() = default;
+
   /** List constructor. Constructs an environment from a list of (Variable *
    * double). */
-  explicit Environment(std::initializer_list<value_type> init);
+  Environment(std::initializer_list<value_type> init);
 
   /** List constructor. Constructs an environment from a list of
    * Variable. Initializes the variables with 0.0. */
-  explicit Environment(std::initializer_list<key_type> vars);
+  Environment(std::initializer_list<key_type> vars);
 
   /** Constructs an environment from @p m*/
   explicit Environment(map m);

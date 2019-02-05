@@ -45,6 +45,9 @@ class Variable {
         type_{Type::CONTINUOUS},
         name_{std::make_shared<std::string>()} {}
 
+  /** Default destructor. */
+  ~Variable() = default;
+
   /** Constructs a variable with a string. If not specified, it has CONTINUOUS
    * type by default.*/
   explicit Variable(std::string name, Type type = Type::CONTINUOUS);

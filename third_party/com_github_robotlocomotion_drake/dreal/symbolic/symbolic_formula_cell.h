@@ -26,6 +26,21 @@ namespace symbolic {
  */
 class FormulaCell {
  public:
+  /** Default constructor (DELETED). */
+  FormulaCell() = delete;
+
+  /** Move-assign (DELETED). */
+  FormulaCell& operator=(FormulaCell&& f) = delete;
+
+  /** Copy-construct a formula from an lvalue. (DELETED) */
+  FormulaCell(const FormulaCell& f) = delete;
+
+  /** Move-construct a formula from an rvalue (DELETED). */
+  FormulaCell(FormulaCell&& f) = delete;
+
+  /** Copy-assign (DELETED). */
+  FormulaCell& operator=(const FormulaCell& f) = delete;
+
   /** Returns kind of formula. */
   FormulaKind get_kind() const { return kind_; }
   /** Returns hash of formula. */
@@ -51,16 +66,6 @@ class FormulaCell {
   unsigned use_count() const { return rc_; }
 
  protected:
-  /** Default constructor (deleted). */
-  FormulaCell() = delete;
-  /** Move-construct a formula from an rvalue. */
-  FormulaCell(FormulaCell&& f) = default;
-  /** Copy-construct a formula from an lvalue. */
-  FormulaCell(const FormulaCell& f) = default;
-  /** Move-assign (DELETED). */
-  FormulaCell& operator=(FormulaCell&& f) = delete;
-  /** Copy-assign (DELETED). */
-  FormulaCell& operator=(const FormulaCell& f) = delete;
   /** Construct FormulaCell of kind @p k with @p hash. */
   FormulaCell(FormulaKind k, size_t hash);
   /** Default destructor. */
@@ -94,10 +99,12 @@ class RelationalFormulaCell : public FormulaCell {
  public:
   /** Default constructor (deleted). */
   RelationalFormulaCell() = delete;
-  /** Move-construct a formula from an rvalue. */
-  RelationalFormulaCell(RelationalFormulaCell&& f) = default;
-  /** Copy-construct a formula from an lvalue. */
-  RelationalFormulaCell(const RelationalFormulaCell& f) = default;
+  /** Default destructor (deleted). */
+  ~RelationalFormulaCell() override = default;
+  /** Move-construct a formula from an rvalue (DELETED). */
+  RelationalFormulaCell(RelationalFormulaCell&& f) = delete;
+  /** Copy-construct a formula from an lvalue (DELETED). */
+  RelationalFormulaCell(const RelationalFormulaCell& f) = delete;
   /** Move-assign (DELETED). */
   RelationalFormulaCell& operator=(RelationalFormulaCell&& f) = delete;
   /** Copy-assign (DELETED). */
@@ -128,10 +135,12 @@ class NaryFormulaCell : public FormulaCell {
  public:
   /** Default constructor (deleted). */
   NaryFormulaCell() = delete;
-  /** Move-construct a formula from an rvalue. */
-  NaryFormulaCell(NaryFormulaCell&& f) = default;
-  /** Copy-construct a formula from an lvalue. */
-  NaryFormulaCell(const NaryFormulaCell& f) = default;
+  /** Default destructor (deleted). */
+  ~NaryFormulaCell() override = default;
+  /** Move-construct a formula from an rvalue (DELETED). */
+  NaryFormulaCell(NaryFormulaCell&& f) = delete;
+  /** Copy-construct a formula from an lvalue (DELETED). */
+  NaryFormulaCell(const NaryFormulaCell& f) = delete;
   /** Move-assign (DELETED). */
   NaryFormulaCell& operator=(NaryFormulaCell&& f) = delete;
   /** Copy-assign (DELETED). */

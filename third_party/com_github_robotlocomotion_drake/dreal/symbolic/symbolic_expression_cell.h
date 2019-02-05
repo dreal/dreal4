@@ -73,17 +73,21 @@ class ExpressionCell {
   /** Returns the reference count of this cell. */
   unsigned use_count() const { return rc_; }
 
+  /** Copy-constructs an ExpressionCell from an lvalue. (DELETED) */
+  ExpressionCell(const ExpressionCell& e) = delete;
+
+  /** Move-constructs an ExpressionCell from an rvalue. (DELETED) */
+  ExpressionCell(ExpressionCell&& e) = delete;
+
+  /** Move-assigns (DELETED). */
+  ExpressionCell& operator=(ExpressionCell&& e) = delete;
+
+  /** Copy-assigns (DELETED). */
+  ExpressionCell& operator=(const ExpressionCell& e) = delete;
+
  protected:
   /** Default constructor. */
   ExpressionCell() = default;
-  /** Move-constructs an ExpressionCell from an rvalue. */
-  ExpressionCell(ExpressionCell&& e) = default;
-  /** Copy-constructs an ExpressionCell from an lvalue. */
-  ExpressionCell(const ExpressionCell& e) = default;
-  /** Move-assigns (DELETED). */
-  ExpressionCell& operator=(ExpressionCell&& e) = delete;
-  /** Copy-assigns (DELETED). */
-  ExpressionCell& operator=(const ExpressionCell& e) = delete;
   /** Constructs ExpressionCell of kind @p k with @p hash and @p is_poly . */
   ExpressionCell(ExpressionKind k, size_t hash, bool is_poly);
   /** Default destructor. */
@@ -122,17 +126,26 @@ class UnaryExpressionCell : public ExpressionCell {
   /** Returns the argument. */
   const Expression& get_argument() const { return e_; }
 
- protected:
+  /** Copy-constructs from an lvalue. (DELETED) */
+  UnaryExpressionCell(const UnaryExpressionCell& e) = delete;
+
   /** Default constructor (DELETED). */
   UnaryExpressionCell() = delete;
-  /** Move-constructs from an rvalue. */
-  UnaryExpressionCell(UnaryExpressionCell&& e) = default;
-  /** Copy-constructs from an lvalue. */
-  UnaryExpressionCell(const UnaryExpressionCell& e) = default;
+
   /** Move-assigns (DELETED). */
   UnaryExpressionCell& operator=(UnaryExpressionCell&& e) = delete;
+
   /** Copy-assigns (DELETED). */
   UnaryExpressionCell& operator=(const UnaryExpressionCell& e) = delete;
+
+  /** Move-constructs from an rvalue. (DELETED) */
+  UnaryExpressionCell(UnaryExpressionCell&& e) = delete;
+
+  /** Default destructor. */
+  ~UnaryExpressionCell() override = default;
+
+ protected:
+
   /** Constructs UnaryExpressionCell of kind @p k with @p hash, @p e, and @p
    * is_poly. */
   UnaryExpressionCell(ExpressionKind k, const Expression& e, bool is_poly);
@@ -156,17 +169,25 @@ class BinaryExpressionCell : public ExpressionCell {
   /** Returns the second argument. */
   const Expression& get_second_argument() const { return e2_; }
 
- protected:
+  /** Copy-constructs from an lvalue. (DELETED) */
+  BinaryExpressionCell(const BinaryExpressionCell& e) = delete;
+
+  /** Move-constructs from an rvalue. (DELETED) */
+  BinaryExpressionCell(BinaryExpressionCell&& e) = delete;
+
   /** Default constructor (DELETED). */
   BinaryExpressionCell() = delete;
-  /** Move-constructs from an rvalue. */
-  BinaryExpressionCell(BinaryExpressionCell&& e) = default;
-  /** Copy-constructs from an lvalue. */
-  BinaryExpressionCell(const BinaryExpressionCell& e) = default;
+
   /** Move-assigns (DELETED). */
   BinaryExpressionCell& operator=(BinaryExpressionCell&& e) = delete;
+
   /** Copy-assigns (DELETED). */
   BinaryExpressionCell& operator=(const BinaryExpressionCell& e) = delete;
+
+  /** Default destructor. */
+  ~BinaryExpressionCell() override = default;
+
+ protected:
   /** Constructs BinaryExpressionCell of kind @p k with @p hash, @p e1, @p e2,
    * @p is_poly.
    */
@@ -330,20 +351,23 @@ class ExpressionAddFactory {
   /** Default constructor. */
   ExpressionAddFactory() = default;
 
+  /** Default destructor. */
+  ~ExpressionAddFactory() = default;
+
   /** Constructs ExpressionAddFactory with @p constant and @p
    * expr_to_coeff_map. */
   ExpressionAddFactory(double constant,
                        std::map<Expression, double> expr_to_coeff_map);
 
   /** Constructs ExpressionAddFactory from @p ptr. */
-  explicit ExpressionAddFactory(const ExpressionAdd* const ptr);
+  explicit ExpressionAddFactory(const ExpressionAdd* ptr);
 
   /** Adds @p e to this factory. */
   ExpressionAddFactory& AddExpression(const Expression& e);
   /** Adds ExpressionAdd pointed by @p ptr to this factory. */
-  ExpressionAddFactory& Add(const ExpressionAdd* const ptr);
+  ExpressionAddFactory& Add(const ExpressionAdd* ptr);
   /** Assigns a factory from a pointer to ExpressionAdd.  */
-  ExpressionAddFactory& operator=(const ExpressionAdd* const ptr);
+  ExpressionAddFactory& operator=(const ExpressionAdd* ptr);
 
   /** Negates the expressions in factory.
    * If it represents c0 + c1 * t1 + ... + * cn * tn,
@@ -448,20 +472,23 @@ class ExpressionMulFactory {
   /** Default constructor. It constructs. */
   ExpressionMulFactory() = default;
 
+  /** Default destructor. */
+  ~ExpressionMulFactory() = default;
+
   /** Constructs ExpressionMulFactory with @p constant and @p
    * base_to_exponent_map. */
   ExpressionMulFactory(double constant,
                        std::map<Expression, Expression> base_to_exponent_map);
 
   /** Constructs ExpressionMulFactory from @p ptr. */
-  explicit ExpressionMulFactory(const ExpressionMul* const ptr);
+  explicit ExpressionMulFactory(const ExpressionMul* ptr);
 
   /** Adds @p e to this factory. */
   ExpressionMulFactory& AddExpression(const Expression& e);
   /** Adds ExpressionMul pointed by @p ptr to this factory. */
-  ExpressionMulFactory& Add(const ExpressionMul* const ptr);
+  ExpressionMulFactory& Add(const ExpressionMul* ptr);
   /** Assigns a factory from a pointer to ExpressionMul.  */
-  ExpressionMulFactory& operator=(const ExpressionMul* const ptr);
+  ExpressionMulFactory& operator=(const ExpressionMul* ptr);
   /** Negates the expressions in factory.
    * If it represents c0 * p1 * ... * pn,
    * this method flips it into -c0 * p1 * ... * pn.
@@ -886,7 +913,7 @@ bool is_uninterpreted_function(const ExpressionCell& c);
  *  @c const ExpressionConstant*.
  *  @pre @p *expr_ptr is of @c ExpressionConstant.
  */
-const ExpressionConstant* to_constant(const ExpressionCell* const expr_ptr);
+const ExpressionConstant* to_constant(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionConstant*.
  *  @pre @p *(e.ptr_) is of @c ExpressionConstant.
  */
@@ -897,7 +924,7 @@ const ExpressionConstant* to_constant(const Expression& e);
  *  @pre @p *expr_ptr is of @c ExpressionRealConstant.
  */
 const ExpressionRealConstant* to_real_constant(
-    const ExpressionCell* const expr_ptr);
+    const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionRealConstant*.
  *  @pre @p *(e.ptr_) is of @c ExpressionRealConstant.
  */
@@ -907,7 +934,7 @@ const ExpressionRealConstant* to_real_constant(const Expression& e);
  *  @c const ExpressionVar*.
  *  @pre @p *expr_ptr is of @c ExpressionVar.
  */
-const ExpressionVar* to_variable(const ExpressionCell* const expr_ptr);
+const ExpressionVar* to_variable(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionVar*.
  *  @pre @p *(e.ptr_) is of @c ExpressionVar.
  */
@@ -917,7 +944,7 @@ const ExpressionVar* to_variable(const Expression& e);
  *  @c const UnaryExpressionCell*.
  *  @pre @c *expr_ptr is of @c UnaryExpressionCell.
  */
-const UnaryExpressionCell* to_unary(const ExpressionCell* const expr_ptr);
+const UnaryExpressionCell* to_unary(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const UnaryExpressionCell*.
  *  @pre @c *(e.ptr_) is of @c UnaryExpressionCell.
  */
@@ -927,7 +954,7 @@ const UnaryExpressionCell* to_unary(const Expression& e);
  *  @c const BinaryExpressionCell*.
  *  @pre @c *expr_ptr is of @c BinaryExpressionCell.
  */
-const BinaryExpressionCell* to_binary(const ExpressionCell* const expr_ptr);
+const BinaryExpressionCell* to_binary(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const BinaryExpressionCell*.
  *  @pre @c *(e.ptr_) is of @c BinaryExpressionCell.
  */
@@ -937,7 +964,7 @@ const BinaryExpressionCell* to_binary(const Expression& e);
  *  @c const ExpressionAdd*.
  *  @pre @c *expr_ptr is of @c ExpressionAdd.
  */
-const ExpressionAdd* to_addition(const ExpressionCell* const expr_ptr);
+const ExpressionAdd* to_addition(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionAdd*.
  *  @pre @c *(e.ptr_) is of @c ExpressionAdd.
  */
@@ -955,7 +982,7 @@ ExpressionAdd* to_addition(Expression& e);
  *  @c const ExpressionMul*.
  *  @pre @c *expr_ptr is of @c ExpressionMul.
  */
-const ExpressionMul* to_multiplication(const ExpressionCell* const expr_ptr);
+const ExpressionMul* to_multiplication(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionMul*.
  *  @pre @c *(e.ptr_) is of @c ExpressionMul.
  */
@@ -973,7 +1000,7 @@ ExpressionMul* to_multiplication(Expression& e);
  *  @c const ExpressionDiv*.
  *  @pre @c *expr_ptr is of @c ExpressionDiv.
  */
-const ExpressionDiv* to_division(const ExpressionCell* const expr_ptr);
+const ExpressionDiv* to_division(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionDiv*.
  *  @pre @c *(e.ptr_) is of @c ExpressionDiv.
  */
@@ -983,7 +1010,7 @@ const ExpressionDiv* to_division(const Expression& e);
  *  @c const ExpressionLog*.
  *  @pre @c *expr_ptr is of @c ExpressionLog.
  */
-const ExpressionLog* to_log(const ExpressionCell* const expr_ptr);
+const ExpressionLog* to_log(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionLog*.
  *  @pre @c *(e.ptr_) is of @c ExpressionLog.
  */
@@ -993,7 +1020,7 @@ const ExpressionLog* to_log(const Expression& e);
  *  @c const ExpressionExp*.
  *  @pre @c *expr_ptr is of @c ExpressionExp.
  */
-const ExpressionExp* to_exp(const ExpressionCell* const expr_ptr);
+const ExpressionExp* to_exp(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionExp*.
  *  @pre @c *(e.ptr_) is of @c ExpressionExp.
  */
@@ -1003,7 +1030,7 @@ const ExpressionExp* to_exp(const Expression& e);
  *  @c const ExpressionAbs*.
  *  @pre @c *expr_ptr is of @c ExpressionAbs.
  */
-const ExpressionAbs* to_abs(const ExpressionCell* const expr_ptr);
+const ExpressionAbs* to_abs(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionAbs*.
  *  @pre @c *(e.ptr_) is of @c ExpressionAbs.
  */
@@ -1013,7 +1040,7 @@ const ExpressionAbs* to_abs(const Expression& e);
  *  @c const ExpressionExp*.
  *  @pre @c *expr_ptr is of @c ExpressionExp.
  */
-const ExpressionExp* to_exp(const ExpressionCell* const expr_ptr);
+const ExpressionExp* to_exp(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionExp*.
  *  @pre @c *(e.ptr_) is of @c ExpressionExp.
  */
@@ -1023,7 +1050,7 @@ const ExpressionExp* to_exp(const Expression& e);
  *  @c const ExpressionSqrt*.
  *  @pre @c *expr_ptr is of @c ExpressionSqrt.
  */
-const ExpressionSqrt* to_sqrt(const ExpressionCell* const expr_ptr);
+const ExpressionSqrt* to_sqrt(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionSqrt*.
  *  @pre @c *(e.ptr_) is of @c ExpressionSqrt.
  */
@@ -1033,7 +1060,7 @@ const ExpressionSqrt* to_sqrt(const Expression& e);
  *  @c const ExpressionPow*.
  *  @pre @c *expr_ptr is of @c ExpressionPow.
  */
-const ExpressionPow* to_pow(const ExpressionCell* const expr_ptr);
+const ExpressionPow* to_pow(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionPow*.
  *  @pre @c *(e.ptr_) is of @c ExpressionPow.
  */
@@ -1043,7 +1070,7 @@ const ExpressionPow* to_pow(const Expression& e);
  *  @c const ExpressionSin*.
  *  @pre @c *expr_ptr is of @c ExpressionSin.
  */
-const ExpressionSin* to_sin(const ExpressionCell* const expr_ptr);
+const ExpressionSin* to_sin(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionSin*.
  *  @pre @c *(e.ptr_) is of @c ExpressionSin.
  */
@@ -1053,7 +1080,7 @@ const ExpressionSin* to_sin(const Expression& e);
  *  @c const ExpressionCos*.
  *  @pre @c *expr_ptr is of @c ExpressionCos.
  */
-const ExpressionCos* to_cos(const ExpressionCell* const expr_ptr);
+const ExpressionCos* to_cos(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionCos*.
  *  @pre @c *(e.ptr_) is of @c ExpressionCos.
  */
@@ -1063,7 +1090,7 @@ const ExpressionCos* to_cos(const Expression& e);
  *  @c const ExpressionTan*.
  *  @pre @c *expr_ptr is of @c ExpressionTan.
  */
-const ExpressionTan* to_tan(const ExpressionCell* const expr_ptr);
+const ExpressionTan* to_tan(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionTan*.
  *  @pre @c *(e.ptr_) is of @c ExpressionTan.
  */
@@ -1073,7 +1100,7 @@ const ExpressionTan* to_tan(const Expression& e);
  *  @c const ExpressionAsin*.
  *  @pre @c *expr_ptr is of @c ExpressionAsin.
  */
-const ExpressionAsin* to_asin(const ExpressionCell* const expr_ptr);
+const ExpressionAsin* to_asin(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionAsin*.
  *  @pre @c *(e.ptr_) is of @c ExpressionAsin.
  */
@@ -1083,7 +1110,7 @@ const ExpressionAsin* to_asin(const Expression& e);
  *  @c const ExpressionAcos*.
  *  @pre @c *expr_ptr is of @c ExpressionAcos.
  */
-const ExpressionAcos* to_acos(const ExpressionCell* const expr_ptr);
+const ExpressionAcos* to_acos(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionAcos*.
  *  @pre @c *(e.ptr_) is of @c ExpressionAcos.
  */
@@ -1093,7 +1120,7 @@ const ExpressionAcos* to_acos(const Expression& e);
  *  @c const ExpressionAtan*.
  *  @pre @c *expr_ptr is of @c ExpressionAtan.
  */
-const ExpressionAtan* to_atan(const ExpressionCell* const expr_ptr);
+const ExpressionAtan* to_atan(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionAtan*.
  *  @pre @c *(e.ptr_) is of @c ExpressionAtan.
  */
@@ -1103,7 +1130,7 @@ const ExpressionAtan* to_atan(const Expression& e);
  *  @c const ExpressionAtan2*.
  *  @pre @c *expr_ptr is of @c ExpressionAtan2.
  */
-const ExpressionAtan2* to_atan2(const ExpressionCell* const expr_ptr);
+const ExpressionAtan2* to_atan2(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionAtan2*.
  *  @pre @c *(e.ptr_) is of @c ExpressionAtan2.
  */
@@ -1113,7 +1140,7 @@ const ExpressionAtan2* to_atan2(const Expression& e);
  *  @c const ExpressionSinh*.
  *  @pre @c *expr_ptr is of @c ExpressionSinh.
  */
-const ExpressionSinh* to_sinh(const ExpressionCell* const expr_ptr);
+const ExpressionSinh* to_sinh(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionSinh*.
  *  @pre @c *(e.ptr_) is of @c ExpressionSinh.
  */
@@ -1123,7 +1150,7 @@ const ExpressionSinh* to_sinh(const Expression& e);
  *  @c const ExpressionCosh*.
  *  @pre @c *expr_ptr is of @c ExpressionCosh.
  */
-const ExpressionCosh* to_cosh(const ExpressionCell* const expr_ptr);
+const ExpressionCosh* to_cosh(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionCosh*.
  *  @pre @c *(e.ptr_) is of @c ExpressionCosh.
  */
@@ -1133,7 +1160,7 @@ const ExpressionCosh* to_cosh(const Expression& e);
  *  @c const ExpressionTanh*.
  *  @pre @c *expr_ptr is of @c ExpressionTanh.
  */
-const ExpressionTanh* to_tanh(const ExpressionCell* const expr_ptr);
+const ExpressionTanh* to_tanh(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionTanh*.
  *  @pre @c *(e.ptr_) is of @c ExpressionTanh.
  */
@@ -1143,7 +1170,7 @@ const ExpressionTanh* to_tanh(const Expression& e);
  *  @c const ExpressionMin*.
  *  @pre @c *expr_ptr is of @c ExpressionMin.
  */
-const ExpressionMin* to_min(const ExpressionCell* const expr_ptr);
+const ExpressionMin* to_min(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionMin*.
  *  @pre @c *(e.ptr_) is of @c ExpressionMin.
  */
@@ -1153,7 +1180,7 @@ const ExpressionMin* to_min(const Expression& e);
  *  @c const ExpressionMax*.
  *  @pre @c *expr_ptr is of @c ExpressionMax.
  */
-const ExpressionMax* to_max(const ExpressionCell* const expr_ptr);
+const ExpressionMax* to_max(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionMax*.
  *  @pre @c *(e.ptr_) is of @c ExpressionMax.
  */
@@ -1164,7 +1191,7 @@ const ExpressionMax* to_max(const Expression& e);
  *  @pre @c *expr_ptr is of @c ExpressionIfThenElse.
  */
 const ExpressionIfThenElse* to_if_then_else(
-    const ExpressionCell* const expr_ptr);
+    const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionIfThenElse*.
  *  @pre @c *(e.ptr_) is of @c ExpressionIfThenElse.
  */
@@ -1175,7 +1202,7 @@ const ExpressionIfThenElse* to_if_then_else(const Expression& e);
  *  @pre @c *expr_ptr is of @c ExpressionUninterpretedFunction.
  */
 const ExpressionUninterpretedFunction* to_uninterpreted_function(
-    const ExpressionCell* const expr_ptr);
+    const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to `const ExpressionUninterpretedFunction*`.
  * @pre @c *(e.ptr_) is of @c ExpressionUninterpretedFunction.
  */

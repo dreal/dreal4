@@ -485,7 +485,7 @@ class Expression {
   friend class ExpressionCell;
 
  private:
-  static ExpressionCell* make_cell(const double d);
+  static ExpressionCell* make_cell(double d);
 
   explicit Expression(ExpressionCell* ptr);
 
