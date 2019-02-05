@@ -11,7 +11,7 @@ github_archive(
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check(minimum_bazel_version = "0.21.0")
+versions.check(minimum_bazel_version = "0.22.0")
 
 github_archive(
     name = "google_styleguide",  # GOOGLE
