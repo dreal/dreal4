@@ -11,7 +11,6 @@
 
 #include "dreal/symbolic/hash.h"
 
-using std::accumulate;
 using std::includes;
 using std::initializer_list;
 using std::inserter;

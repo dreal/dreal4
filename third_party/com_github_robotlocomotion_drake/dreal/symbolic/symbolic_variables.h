@@ -39,6 +39,9 @@ class Variables {
   /** Default constructor. */
   Variables() = default;
 
+  /** Default destructor. */
+  ~Variables() = default;
+
   /** List constructor. */
   Variables(std::initializer_list<Variable> init);
 
