@@ -179,7 +179,7 @@ you need to set up `PKG_CONFIG_PATH` as follows:
 macOS 10.14 / 10.13 / 10.12:
 
 ```bash
-export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.6.5/share/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
 Ubuntu 18.04 / 16.04:
