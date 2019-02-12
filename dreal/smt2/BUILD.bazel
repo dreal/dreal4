@@ -10,24 +10,21 @@ package(default_visibility = ["//visibility:private"])
 
 genyacc(
     name = "parser",
-    srcs = ["parser.yy"],
-    outs = [
-        "parser.yy.cc",
-        "parser.yy.hh",
-        # Do not sort the above two.
+    src = "parser.yy",
+    extra_outs = [
         "location.hh",
         "position.hh",
         "stack.hh",
     ],
+    header_out = "parser.yy.hh",
+    source_out = "parser.yy.cc",
 )
 
 genlex(
     name = "scanner",
-    srcs = [
-        "scanner.ll",
-        ":parser",
-    ],
+    src = "scanner.ll",
     out = "scanner.ll.cc",
+    includes = [":parser"],
 )
 
 dreal_cc_library(
