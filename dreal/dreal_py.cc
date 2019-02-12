@@ -20,6 +20,13 @@
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
+#if defined __clang__
+#if __has_warning("-Wself-assign-overloaded")
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif
+#endif
+
 namespace pybind11 {
 namespace detail {
 // Need this specialization to make optional<Box> working.
@@ -700,3 +707,9 @@ PYBIND11_MODULE(_dreal_py, m) {
 }
 
 }  // namespace dreal
+
+#if defined __clang__
+#if __has_warning("-Wself-assign-overloaded")
+#pragma clang diagnostic pop
+#endif
+#endif
