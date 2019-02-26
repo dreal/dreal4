@@ -59,8 +59,14 @@ config_setting(
 )
 
 config_setting(
-    name = "py3config",
-    values = {"force_python": "PY3"},
+    name = "PY2",
+    flag_values = {"@bazel_tools//tools/python:python_version": "PY2"},
+    visibility = ["//visibility:public"],
+)
+
+config_setting(
+    name = "PY3",
+    flag_values = {"@bazel_tools//tools/python:python_version": "PY3"},
     visibility = ["//visibility:public"],
 )
 

@@ -25,15 +25,15 @@ SRC_DIR = os.path.join(ROOT_DIR, '..', '..')
 
 def _build_dreal():
     if sys.version_info.major == 2:
-        FORCE_PYTHON = 'py2'
+        PYTHON_VERSION = 'PY2'
     else:
-        FORCE_PYTHON = 'py3'
+        PYTHON_VERSION = 'PY3'
     if subprocess.call([
             'bazel',
             'build',
             '//...',
             '--python_path={}'.format(sys.executable),
-            '--force_python={}'.format(FORCE_PYTHON),
+            '--python_version={}'.format(PYTHON_VERSION),
     ]) != 0:
         raise LibError("Unable to build dReal.")
 

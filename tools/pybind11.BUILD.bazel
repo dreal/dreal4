@@ -29,7 +29,7 @@ cc_library(
     ],
     includes = ["include"],
     deps = select({
-        "@dreal//tools:py3config": ["@python3"],
-        "//conditions:default": ["@python2"],
+        "@dreal//tools:PY3": ["@python3"],
+        "@dreal//tools:PY2": ["@python2"],
     }),
 )

@@ -6,8 +6,8 @@ DREAL_VERSION = "4.19.02.1"
 DREAL_PREFIX = "opt/dreal/%s" % DREAL_VERSION
 
 PYTHON_VERSION_STRING = select({
-    "@dreal//tools:py3config": "3",
-    "//conditions:default": "2.7",
+    "@dreal//tools:PY3": "3",
+    "@dreal//tools:PY2": "2.7",
 })
 
 PYTHON_PACKAGE_DIR = "lib/python" + PYTHON_VERSION_STRING + "/site-packages"
