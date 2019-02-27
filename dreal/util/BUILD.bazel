@@ -185,7 +185,10 @@ dreal_cc_library(
     hdrs = [
         "logging.h",
     ],
-    visibility = ["//dreal:__subpackages__"],
+    visibility = [
+        "//:__pkg__",
+        "//dreal:__subpackages__",
+    ],
     deps = [
         "@spdlog",
     ],
@@ -447,6 +450,7 @@ filegroup(
     srcs = [
         "assert.h",
         "box.h",
+        "logging.h",
         "option_value.h",
         "scoped_vector.h",
     ],

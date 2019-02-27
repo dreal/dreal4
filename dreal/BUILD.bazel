@@ -55,9 +55,6 @@ dreal_cc_binary(
 # ----------------------
 dreal_pybind_library(
     name = "dreal_py",
-    cc_deps = [
-        "//dreal/symbolic",
-    ],
     cc_srcs = ["dreal_py.cc"],
     py_srcs = ["__init__.py"],
 )

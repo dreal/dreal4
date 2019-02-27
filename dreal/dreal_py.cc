@@ -17,7 +17,6 @@
 #include "dreal/symbolic/prefix_printer.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
-#include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 
 #if defined __clang__
@@ -500,10 +499,12 @@ PYBIND11_MODULE(_dreal_py, m) {
            [](const Variable& v, const Expression& e_then,
               const Expression& e_else) {
              if (v.get_type() != Variable::Type::BOOLEAN) {
-               throw DREAL_RUNTIME_ERROR(
-                   "{} is not a Boolean variable but used as a "
-                   "conditional in if-then-else({}, {}, {})",
-                   v, v, e_then, e_else);
+               throw std::runtime_error(
+                   v.get_name() +
+                   " is not a Boolean variable but used as a "
+                   "conditional in if-then-else(" +
+                   v.get_name() + ", " + e_then.to_string() + ", " +
+                   e_else.to_string() + ")");
              }
              return if_then_else(Formula(v), e_then, e_else);
            })
