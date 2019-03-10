@@ -97,6 +97,11 @@ def setup_pkg_config_repository(repository_ctx):
             linkopts[i] = "-undefined dynamic_lookup"
             continue
 
+        # On Linux, skip "-lpython..."
+        if os_name == "linux" and linkopt.startswith("-lpython"):
+            linkopts[i] = ""
+            continue
+
         # Switches stay put.
         if linkopt.startswith("-"):
             continue
