@@ -133,7 +133,7 @@ def dreal_pybind_library(
             "@pybind11",
         ],
         copts = [
-            # "-fvisibility=hidden",
+            "-fvisibility=hidden",
         ],
         linkopts = select({
             "@dreal//tools:linux": [
