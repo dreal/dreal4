@@ -123,9 +123,7 @@ def dreal_pybind_library(
     levels_to_root = native.package_name().count("/") + name.count("/") + 3
     dreal_cc_binary(
         name = cc_so_name,
-        srcs = cc_srcs + [
-            "//:libdreal.so",
-        ],
+        srcs = cc_srcs,
         linkshared = 1,
         linkstatic = 1,
         deps = cc_deps + [

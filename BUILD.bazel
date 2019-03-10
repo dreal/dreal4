@@ -34,6 +34,7 @@ cc_binary(
 
 cc_library(
     name = "dreal_shared_library",
+    srcs = [":libdreal.so"],
     hdrs = [
         "//dreal:headers",
         "//dreal/api:headers",
