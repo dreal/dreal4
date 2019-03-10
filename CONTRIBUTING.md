@@ -98,7 +98,7 @@ consider adding the following information to your issue:
 
  - dReal version: Output from `dreal`.
  - OS version: Output from `sw_vers` (macOS), `lsb_release -a` (Ubuntu).
- - Compiler: g++/llvm-clang/apple-clang + version.
+ - Compiler: g++/llvm-clang/apple-clang + version. If you are running macOS, please make sure that `xcode-select -p` returns `/Applications/Xcode.app/Contents/Developer`.
  - SMT2 file(s) or code snippet which demonstrates the problem.
  - Bazel version: Output from `bazel version`.
  - Build commit: Output from `git log -n 1 --oneline`.
