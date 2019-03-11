@@ -18,7 +18,7 @@ from setuptools.command.develop import develop as _develop
 # Python 3 only projects can skip this import
 from io import open
 
-VERSION = '4.19.02.1'
+VERSION = '4.19.03.1'
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 SRC_DIR = os.path.join(ROOT_DIR, '..', '..')
 
