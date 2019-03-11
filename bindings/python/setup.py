@@ -109,6 +109,15 @@ if 'bdist_wheel' in sys.argv and '--plat-name' not in sys.argv:
         # https://www.python.org/dev/peps/pep-0425/
         sys.argv.insert(idx + 1, name.replace('.', '_').replace('-', '_'))
 
+    # Make a wheel which is specific to the minor version of Python
+    # For example, "cp35" or "cp27".
+    if not any(arg.startswith('--python-tag') for arg in sys.argv):
+        import wheel.pep425tags
+        python_tag = "%s%d%d" % (wheel.pep425tags.get_abbr_impl(),
+                                 sys.version_info.major,
+                                 sys.version_info.minor)
+        sys.argv.extend(['--python-tag', python_tag])
+
 setuptools.setup(
     name='dreal',  # Required
     version=VERSION,  # Required
