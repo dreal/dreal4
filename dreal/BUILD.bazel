@@ -77,6 +77,31 @@ py_test(
     ],
 )
 
+# To test ODR (one definition rule).
+dreal_pybind_library(
+    name = "odr_test_module_py",
+    cc_srcs = ["odr_test_module_py.cc"],
+)
+
+py_test(
+    name = "odr_test_py",
+    srcs = [
+        "test/python/odr_test.py",
+    ],
+    main = "test/python/odr_test.py",
+    srcs_version = "PY2AND3",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        ":dreal_py",
+        ":odr_test_module_py",
+    ],
+)
+
 py_test(
     name = "util_test_py",
     srcs = [
