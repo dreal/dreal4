@@ -5,8 +5,8 @@ load("//third_party/com_github_robotlocomotion_drake:tools/workspace/github.bzl"
 github_archive(
     name = "bazel_skylib", # Apache-2.0
     repository = "bazelbuild/bazel-skylib",
-    commit = "0.7.0",
-    sha256 = "2c62d8cd4ab1e65c08647eb4afe38f51591f43f7f0885e7769832fa137633dcb",
+    commit = "0.8.0",
+    sha256 = "2ea8a5ed2b448baf4a6855d3ce049c4c452a6470b1efd1504fdb7c1c134d220a",
 )
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
