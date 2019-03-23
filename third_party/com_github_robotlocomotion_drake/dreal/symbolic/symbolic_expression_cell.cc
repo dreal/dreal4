@@ -1153,12 +1153,17 @@ class DivExpandVisitor {
 }  // namespace
 
 Expression ExpressionDiv::Expand() {
-  const Expression e1{get_first_argument().Expand()};
-  const Expression e2{get_second_argument().Expand()};
+  const Expression& e1{get_first_argument()};
+  const Expression& e2{get_second_argument()};
+  const Expression e1_expand{e1.Expand()};
   if (is_constant(e2)) {
     // Simplifies the 'division by a constant' case, using DivExpandVisitor
     // defined above.
-    return DivExpandVisitor{}.Simplify(e1, get_constant_value(e2));
+    return DivExpandVisitor{}.Simplify(e1_expand, get_constant_value(e2));
+  }
+  const Expression e2_expand{e2.Expand()};
+  if (!e1.EqualTo(e1_expand) || !e2.EqualTo(e2_expand)) {
+    return e1_expand / e2_expand;
   } else {
     return GetExpression();
   }
@@ -1394,11 +1399,7 @@ Expression ExpressionPow::Expand() {
   const Expression& arg2{get_second_argument()};
   const Expression arg1_expanded{arg1.Expand()};
   const Expression arg2_expanded{arg2.Expand()};
-  if (!arg1.EqualTo(arg1_expanded) || !arg2.EqualTo(arg2_expanded)) {
-    return ExpandPow(arg1_expanded, arg2_expanded);
-  } else {
-    return GetExpression();
-  }
+  return ExpandPow(arg1_expanded, arg2_expanded);
 }
 
 Expression ExpressionPow::Substitute(const ExpressionSubstitution& expr_subst,

@@ -26,6 +26,25 @@ class SymbolicTest : public ::testing::Test {
   const Variable b3_{"B3", Variable::Type::BOOLEAN};
 };
 
+TEST_F(SymbolicTest, Expand) {
+  const Variable x1{"x1", Variable::Type::CONTINUOUS};
+  const Variable x2{"x2", Variable::Type::CONTINUOUS};
+  const Variable x3{"x3", Variable::Type::CONTINUOUS};
+  const Variable x4{"x4", Variable::Type::CONTINUOUS};
+  const Variable x5{"x5", Variable::Type::CONTINUOUS};
+  const Variable x6{"x6", Variable::Type::CONTINUOUS};
+  const Variable x7{"x7", Variable::Type::CONTINUOUS};
+  const Variable x8{"x8", Variable::Type::CONTINUOUS};
+
+  const Expression e1{pow(x1 + x2, 2) / pow(x3 + x4, 2)};
+  const Expression e2{pow(x5 + x6, 2) / pow(x7 + x8, 2)};
+  const Expression e3{e1 * e2};
+  const Expression e4{e1 / e2};
+
+  EXPECT_PRED2(ExprEqual, e3.Expand(), e3.Expand().Expand());
+  EXPECT_PRED2(ExprEqual, e4.Expand(), e4.Expand().Expand());
+}
+
 TEST_F(SymbolicTest, Imply) {
   // b₁ ⇒ b₂
   const Formula f{imply(Formula{b1_}, Formula{b2_})};
