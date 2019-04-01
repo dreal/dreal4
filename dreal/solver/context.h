@@ -6,12 +6,11 @@
 #include <utility>
 #include <vector>
 
-#include <experimental/optional>
-
 #include "dreal/smt2/logic.h"
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/optional.h"
 #include "dreal/util/scoped_vector.h"
 #include "dreal/version.h"
 
@@ -48,7 +47,7 @@ class Context {
   void Assert(const Formula& f);
 
   /// Checks the satisfiability of the asserted formulas.
-  std::experimental::optional<Box> CheckSat();
+  optional<Box> CheckSat();
 
   /// Declare a variable @p v. By default @p v is considered as a
   /// model variable. If @p is_model_variable is false, it is declared as

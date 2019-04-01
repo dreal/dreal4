@@ -6,10 +6,9 @@
 #include <string>
 #include <utility>
 
-#include <experimental/optional>
-
 #include "dreal/dr/scanner.h"
 #include "dreal/solver/expression_evaluator.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -22,7 +21,6 @@ using std::istream;
 using std::istringstream;
 using std::move;
 using std::string;
-using std::experimental::optional;
 
 DrDriver::DrDriver(Context context) : context_{move(context)} {}
 

@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <utility>
 
-#include <experimental/optional>
-
 #include "dreal/contractor/contractor.h"
 #include "dreal/contractor/contractor_cell.h"
 #include "dreal/contractor/counterexample_refiner.h"
@@ -16,6 +14,7 @@
 #include "dreal/util/box.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/nnfizer.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -177,8 +176,7 @@ class ContractorForall : public ContractorCell {
       // Alternate the stacking order.
       config_for_counterexample.mutable_stack_left_box_first() =
           !config_for_counterexample.stack_left_box_first();
-      std::experimental::optional<Box> counterexample_opt =
-          context_for_counterexample_.CheckSat();
+      optional<Box> counterexample_opt = context_for_counterexample_.CheckSat();
       if (counterexample_opt) {
         Box& counterexample{*counterexample_opt};
         // 1.1. Counterexample found.

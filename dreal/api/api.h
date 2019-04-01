@@ -1,10 +1,9 @@
 #pragma once
 
-#include <experimental/optional>
-
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -14,13 +13,11 @@ namespace dreal {
 /// @returns a model, a mapping from a variable to an interval, if @p f is
 /// δ-satisfiable.
 /// @returns a nullopt, if @p is unsatisfiable.
-std::experimental::optional<Box> CheckSatisfiability(const Formula& f,
-                                                     double delta);
+optional<Box> CheckSatisfiability(const Formula& f, double delta);
 
 /// Checks the satisfiability of a given formula @p f with a given configuration
 /// @p config.
-std::experimental::optional<Box> CheckSatisfiability(const Formula& f,
-                                                     Config config);
+optional<Box> CheckSatisfiability(const Formula& f, Config config);
 
 /// Checks the satisfiability of a given formula @p f with a given precision
 /// @p delta.
@@ -28,8 +25,7 @@ std::experimental::optional<Box> CheckSatisfiability(const Formula& f,
 /// @returns true if it finds a model which will be saved in @p box.
 /// @returns false if it concludes unsat.
 ///
-/// @note We provide this version of API to avoid the use of
-/// std::experimental::optional.
+/// @note We provide this version of API to avoid the use of optional.
 bool CheckSatisfiability(const Formula& f, double delta, Box* box);
 
 /// Checks the satisfiability of a given formula @p f with a given configuration
@@ -42,15 +38,13 @@ bool CheckSatisfiability(const Formula& f, Config config, Box* box);
 /// @returns a model, a mapping from a variable to an interval, if a solution
 /// exists.
 /// @returns nullopt, if there is no solution.
-std::experimental::optional<Box> Minimize(const Expression& objective,
-                                          const Formula& constraint,
-                                          double delta);
+optional<Box> Minimize(const Expression& objective, const Formula& constraint,
+                       double delta);
 
 /// Finds a solution to minimize @p objective function while satisfying a
 /// given @p constraint using @p delta.
-std::experimental::optional<Box> Minimize(const Expression& objective,
-                                          const Formula& constraint,
-                                          Config config);
+optional<Box> Minimize(const Expression& objective, const Formula& constraint,
+                       Config config);
 
 /// Finds a solution to minimize @p objective function while satisfying a
 /// given @p constraint using @p delta.
@@ -58,8 +52,7 @@ std::experimental::optional<Box> Minimize(const Expression& objective,
 /// @returns true if it finds a model which will be saved in @p box.
 /// @returns false if it concludes unsat.
 ///
-/// @note We provide this version of API to avoid the use of
-/// std::experimental::optional.
+/// @note We provide this version of API to avoid the use of optional.
 bool Minimize(const Expression& objective, const Formula& constraint,
               double delta, Box* box);
 

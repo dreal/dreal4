@@ -168,7 +168,7 @@ Expression Expression::NaN() {
 const Variables& Expression::GetVariables() const {
   assert(ptr_ != nullptr);
   if (!variables_) {
-    variables_ = ptr_->GetVariables();
+    variables_ = std::make_shared<Variables>(ptr_->GetVariables());
   }
   return *variables_;
 }

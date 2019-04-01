@@ -6,8 +6,6 @@
 #include <string>
 #include <utility>
 
-#include <experimental/optional>
-
 #include "dreal/symbolic/hash.h"
 #include "dreal/symbolic/symbolic_environment.h"
 #include "dreal/symbolic/symbolic_expression.h"
@@ -265,7 +263,7 @@ class Formula {
   FormulaCell* ptr_;
 
   // Storage to cache the result of GetFreevariables().
-  mutable std::experimental::optional<Variables> free_variables_;
+  mutable std::shared_ptr<Variables> free_variables_;
 };
 
 /** Returns a formula @p f, universally quantified by variables @p vars. */

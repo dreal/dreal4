@@ -25,7 +25,7 @@ class Context::Impl {
   ~Impl() = default;
 
   void Assert(const Formula& f);
-  std::experimental::optional<Box> CheckSat();
+  optional<Box> CheckSat();
   void DeclareVariable(const Variable& v, bool is_model_variable);
   void SetDomain(const Variable& v, const Expression& lb, const Expression& ub);
   void Minimize(const std::vector<Expression>& functions);
@@ -52,8 +52,8 @@ class Context::Impl {
   void AddToBox(const Variable& v);
 
   // Returns the current box in the stack.
-  std::experimental::optional<Box> CheckSatCore(
-      const ScopedVector<Formula>& stack, Box box, SatSolver* sat_solver);
+  optional<Box> CheckSatCore(const ScopedVector<Formula>& stack, Box box,
+                             SatSolver* sat_solver);
 
   // Marks variable @p v as a model variable
   void mark_model_variable(const Variable& v);
@@ -68,7 +68,7 @@ class Context::Impl {
   Box ExtractModel(const Box& box) const;
 
   Config config_;
-  std::experimental::optional<Logic> logic_{};
+  optional<Logic> logic_{};
   std::unordered_map<std::string, std::string> info_;
   std::unordered_map<std::string, std::string> option_;
 

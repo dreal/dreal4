@@ -2,7 +2,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include <experimental/optional>
 
 #include "fmt/format.h"
 #include "fmt/ostream.h"
@@ -18,6 +17,7 @@
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/optional.h"
 
 #if defined __clang__
 #if __has_warning("-Wself-assign-overloaded")
@@ -30,8 +30,8 @@ namespace pybind11 {
 namespace detail {
 // Need this specialization to make optional<Box> working.
 template <>
-struct type_caster<std::experimental::optional<dreal::Box>>
-    : public optional_caster<std::experimental::optional<dreal::Box>> {};
+struct type_caster<dreal::optional<dreal::Box>>
+    : public optional_caster<dreal::optional<dreal::Box>> {};
 }  // namespace detail
 }  // namespace pybind11
 

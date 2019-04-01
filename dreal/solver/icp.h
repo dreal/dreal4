@@ -2,12 +2,11 @@
 
 #include <vector>
 
-#include <experimental/optional>
-
 #include "dreal/contractor/contractor.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -50,7 +49,7 @@ class Icp {
   // It sets @p cs's box empty if it detects UNSAT. It also calls
   // cs->AddUsedConstraint to store the constraint that is responsible
   // for the UNSAT.
-  std::experimental::optional<ibex::BitSet> EvaluateBox(
+  optional<ibex::BitSet> EvaluateBox(
       const std::vector<FormulaEvaluator>& formula_evaluators, const Box& box,
       ContractorStatus* cs);
 

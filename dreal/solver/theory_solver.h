@@ -4,14 +4,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include <experimental/optional>
-
 #include "dreal/contractor/contractor.h"
 #include "dreal/solver/config.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/solver/icp.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -37,9 +36,8 @@ class TheorySolver {
   //
   // @note This method updates @p box as it calls FilterAssertion
   // function.
-  std::experimental::optional<Contractor> BuildContractor(
-      const std::vector<Formula>& assertions,
-      ContractorStatus* contractor_status);
+  optional<Contractor> BuildContractor(const std::vector<Formula>& assertions,
+                                       ContractorStatus* contractor_status);
   std::vector<FormulaEvaluator> BuildFormulaEvaluator(
       const std::vector<Formula>& assertions);
 

@@ -75,6 +75,17 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "optional",
+    hdrs = [
+        "optional.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party/com_github_tartanllama_optional:optional",
+    ],
+)
+
+dreal_cc_library(
     name = "stat",
     hdrs = [
         "stat.h",
@@ -452,7 +463,9 @@ filegroup(
         "box.h",
         "logging.h",
         "option_value.h",
+        "optional.h",
         "scoped_vector.h",
+        "//third_party/com_github_tartanllama_optional:headers",
     ],
     visibility = ["//:__pkg__"],
 )

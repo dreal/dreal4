@@ -5,12 +5,11 @@
 #include <utility>
 #include <vector>
 
-#include <experimental/optional>
-
 #include "./picosat.h"
 
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
+#include "dreal/util/optional.h"
 #include "dreal/util/predicate_abstractor.h"
 #include "dreal/util/scoped_unordered_map.h"
 #include "dreal/util/scoped_unordered_set.h"
@@ -63,7 +62,7 @@ class SatSolver {
   ///
   /// @returns a witness, satisfying model if the problem is satisfiable.
   /// @returns nullopt if UNSAT.
-  std::experimental::optional<Model> CheckSat();
+  optional<Model> CheckSat();
 
   // TODO(soonho): Push/Pop cnfizer and predicate_abstractor?
   void Pop();

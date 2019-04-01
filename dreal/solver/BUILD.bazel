@@ -96,6 +96,7 @@ dreal_cc_library(
         "//dreal/util:assert",
         "//dreal/util:exception",
         "//dreal/util:logging",
+        "//dreal/util:optional",
         "//dreal/util:predicate_abstractor",
         "//dreal/util:scoped_unordered_map",
         "//dreal/util:scoped_unordered_set",

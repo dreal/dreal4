@@ -1,0 +1,22 @@
+# -*- python -*-
+# This file contains rules for Bazel; see https://bazel.io/ .
+
+licenses(["notice"])
+
+# Headers to expose.
+filegroup(
+    name = "headers",
+    srcs = [
+        "dreal/util/optional.hpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "optional",
+    hdrs = [
+        ":headers",
+    ],
+    includes = ["."],
+    visibility = ["//visibility:public"],
+)

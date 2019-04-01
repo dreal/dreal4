@@ -28,6 +28,7 @@ dreal_cc_library(
         "//dreal/util:box",
         "//dreal/util:exception",
         "//dreal/util:logging",
+        "//dreal/util:optional",
     ],
 )
 

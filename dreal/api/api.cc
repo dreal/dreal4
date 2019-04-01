@@ -6,8 +6,6 @@
 
 namespace dreal {
 
-using std::experimental::optional;
-
 optional<Box> CheckSatisfiability(const Formula& f, const double delta) {
   Config config;
   config.mutable_precision() = delta;

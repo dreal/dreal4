@@ -4,12 +4,11 @@
 #include <set>
 #include <utility>
 
-#include <experimental/optional>
-
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -17,7 +16,6 @@ using std::move;
 using std::ostream;
 using std::set;
 using std::vector;
-using std::experimental::optional;
 
 namespace {
 

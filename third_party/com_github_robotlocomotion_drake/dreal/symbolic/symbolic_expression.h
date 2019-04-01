@@ -11,8 +11,6 @@
 #include <utility>
 #include <vector>
 
-#include <experimental/optional>
-
 #include "dreal/symbolic/hash.h"
 #include "dreal/symbolic/symbolic_environment.h"
 #include "dreal/symbolic/symbolic_variable.h"
@@ -492,7 +490,7 @@ class Expression {
   ExpressionCell* ptr_{nullptr};
 
   // Storage to cache the result of GetVariables().
-  mutable std::experimental::optional<Variables> variables_;
+  mutable std::shared_ptr<Variables> variables_;
 };
 
 Expression operator+(const Expression& lhs, const Expression& rhs);

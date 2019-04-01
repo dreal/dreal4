@@ -26,7 +26,6 @@ using std::set;
 using std::string;
 using std::unordered_set;
 using std::vector;
-using std::experimental::optional;
 
 namespace {
 // It is possible that a solution box has a dimension whose diameter

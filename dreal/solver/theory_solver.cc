@@ -20,7 +20,6 @@ using std::cout;
 using std::numeric_limits;
 using std::set;
 using std::vector;
-using std::experimental::optional;
 
 TheorySolver::TheorySolver(const Config& config)
     : config_{config}, icp_{config_} {}

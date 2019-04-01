@@ -6,9 +6,8 @@
 #include <string>
 #include <utility>
 
-#include <experimental/optional>
-
 #include "dreal/smt2/scanner.h"
+#include "dreal/util/optional.h"
 
 namespace dreal {
 
@@ -23,7 +22,6 @@ using std::move;
 using std::ostream;
 using std::ostringstream;
 using std::string;
-using std::experimental::optional;
 
 Smt2Driver::Smt2Driver(Context context) : context_{move(context)} {}
 

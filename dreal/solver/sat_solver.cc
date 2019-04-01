@@ -14,7 +14,6 @@ namespace dreal {
 using std::cout;
 using std::set;
 using std::vector;
-using std::experimental::optional;
 
 SatSolver::SatSolver(const Config& config) : sat_{picosat_init()} {
   // Enable partial checks via picosat_deref_partial. See the call-site in
@@ -103,7 +102,7 @@ class SatSolverStat : public Stat {
 };
 }  // namespace
 
-std::experimental::optional<SatSolver::Model> SatSolver::CheckSat() {
+optional<SatSolver::Model> SatSolver::CheckSat() {
   static SatSolverStat stat{DREAL_LOG_INFO_ENABLED};
   DREAL_LOG_DEBUG("SatSolver::CheckSat(#vars = {}, #clauses = {})",
                   picosat_variables(sat_),
