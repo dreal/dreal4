@@ -3,7 +3,12 @@ set -euo pipefail
 
 OLD_VERSION=$1
 NEW_VERSION=$2
-sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" README.md bindings/python/setup.py setup/ubuntu/*/install.sh tools/dreal.bzl
+sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" \
+    README.md \
+    bindings/python/setup.py \
+    setup/ubuntu/*/install.sh \
+    tools/dreal.bzl \
+    dreal/__init__.py
 
 DREAL_DEBNAME=dreal_${NEW_VERSION}_amd64.deb
 DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
