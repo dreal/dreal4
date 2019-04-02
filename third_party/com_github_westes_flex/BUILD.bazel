@@ -1,0 +1,14 @@
+# -*- python -*-
+# This file contains rules for Bazel; see https://bazel.io/ .
+
+licenses(["notice"])
+
+# Headers to expose.
+cc_library(
+    name = "flex_lexer_h",
+    hdrs = [
+        "FlexLexer.h",
+    ],
+    includes = ["."],
+    visibility = ["//visibility:public"],
+)

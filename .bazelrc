@@ -8,6 +8,9 @@ build --host_cxxopt=-std=c++14
 # Default to an optimized build.
 build -c opt
 
+# lexyacc
+build --extra_toolchains=@dreal//third_party/com_github_google_kythe/tools/build_rules:lexyacc_remote_toolchain
+
 # Default build options.
 build --force_pic
 build --strip=never
@@ -65,7 +68,7 @@ test:ubsan --test_timeout=120,600,1800,7200
 ### Kcov coverage build. ###
 build:kcov --copt -g
 build:kcov --copt -O0
-test:kcov --spawn_strategy=standalone
+test:kcov --spawn_strategy=local
 test:kcov --run_under //tools:kcov
 test:kcov --local_test_jobs=1
 test:kcov --test_tag_filters=-cpplint,-pycodestyle,-no_kcov

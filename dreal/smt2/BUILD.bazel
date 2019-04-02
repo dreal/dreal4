@@ -1,4 +1,4 @@
-load("//third_party:com_github_google_kythe/tools/build_rules/lexyacc.bzl", "genlex", "genyacc")
+load("//third_party/com_github_google_kythe/tools/build_rules:lexyacc.bzl", "genlex", "genyacc")
 load("//third_party/com_github_robotlocomotion_drake:tools/workspace/cpplint.bzl", "cpplint")
 load(
     "//tools:dreal.bzl",
@@ -112,6 +112,7 @@ dreal_cc_library(
         "//dreal/util:math",
         "//dreal/util:scoped_unordered_map",
         "//dreal/util:string_to_interval",
+        "//third_party/com_github_westes_flex:flex_lexer_h",
     ],
 )
 
