@@ -32,10 +32,10 @@
 %skeleton "lalr1.cc"
 
 /* namespace to enclose parser in */
-%name-prefix="dreal"
+%define api.prefix {dreal}
 
 /* set the parser's class identifier */
-%define "parser_class_name" "DrParser"
+%define parser_class_name {DrParser}
 
 /* keep track of the current position within the input */
 %locations
@@ -51,7 +51,7 @@
 %parse-param { class DrDriver& driver }
 
 /* verbose error messages */
-%error-verbose
+%define parse.error verbose
 
 
 %union

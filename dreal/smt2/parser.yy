@@ -41,10 +41,10 @@
 %skeleton "lalr1.cc"
 
 /* namespace to enclose parser in */
-%name-prefix="dreal"
+%define api.prefix {dreal}
 
 /* set the parser's class identifier */
-%define "parser_class_name" "Smt2Parser"
+%define parser_class_name {Smt2Parser}
 
 /* keep track of the current position within the input */
 %locations
@@ -60,7 +60,7 @@
 %parse-param { class Smt2Driver& driver }
 
 /* verbose error messages */
-%error-verbose
+%define parse.error verbose
 
 
 %union

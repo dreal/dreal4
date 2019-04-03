@@ -8,8 +8,8 @@ def dreal_workspace():
         pkg_config_paths = [
             # macOS
             "/usr/local/opt/ibex@2.7.4/share/pkgconfig",
-            "/usr/local/opt/clp/lib/pkgconfig",           # dep of ibex, EPL
-            "/usr/local/opt/coinutils/lib/pkgconfig",     # dep of clp, EPL
+            "/usr/local/opt/clp/lib/pkgconfig",  # dep of ibex, EPL
+            "/usr/local/opt/coinutils/lib/pkgconfig",  # dep of clp, EPL
             # Linux
             "/opt/libibex/2.7.4/share/pkgconfig",
         ],
