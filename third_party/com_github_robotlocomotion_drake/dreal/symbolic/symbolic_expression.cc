@@ -385,6 +385,8 @@ Expression& operator-=(Expression& lhs, const Expression& rhs) {
   return lhs += -rhs;
 }
 
+Expression operator+(const Expression& e) { return e; }
+
 Expression operator-(const Expression& e) {
   // Simplification: constant folding
   if (is_constant(e)) {

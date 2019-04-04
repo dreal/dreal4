@@ -328,6 +328,9 @@ class Expression {
   // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
   friend Expression& operator-=(Expression& lhs, const Expression& rhs);
 
+  /** Provides unary plus operator. */
+  friend Expression operator+(const Expression& e);
+
   /** Provides unary minus operator. */
   friend Expression operator-(const Expression& e);
   friend Expression operator-(Expression&& e);
@@ -507,6 +510,8 @@ Expression operator-(Expression&& lhs, const Expression& rhs);
 Expression operator-(Expression&& lhs, Expression&& rhs);
 // NOLINTNEXTLINE(runtime/references) per C++ standard signature.
 Expression& operator-=(Expression& lhs, const Expression& rhs);
+
+Expression operator+(const Expression& e);
 
 Expression operator-(const Expression& e);
 Expression operator-(Expression&& e);
