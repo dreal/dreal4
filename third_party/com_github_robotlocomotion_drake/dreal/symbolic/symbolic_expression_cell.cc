@@ -915,6 +915,9 @@ ExpressionMulFactory& ExpressionMulFactory::AddExpression(const Expression& e) {
     // Flattening
     return Add(to_multiplication(e));
   }
+  if (is_pow(e)) {
+    return AddTerm(get_first_argument(e), get_second_argument(e));
+  }
   // Add e^1
   return AddTerm(e, Expression{1.0});
 }

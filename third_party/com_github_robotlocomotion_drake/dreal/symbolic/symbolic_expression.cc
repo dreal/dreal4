@@ -34,6 +34,18 @@ bool operator<(ExpressionKind k1, ExpressionKind k2) {
 }
 
 namespace {
+
+// Returns true if @p v is represented by `int`.
+bool is_integer(const double v) {
+  // v should be in [int_min, int_max].
+  if (!((std::numeric_limits<int>::lowest() <= v) &&
+        (v <= std::numeric_limits<int>::max()))) {
+    return false;
+  }
+  double intpart;  // dummy variable
+  return modf(v, &intpart) == 0.0;
+}
+
 // Negates an addition expression.
 // - (E_1 + ... + E_n) => (-E_1 + ... + -E_n)
 Expression NegateAddition(const ExpressionAdd* e) {
@@ -522,6 +534,37 @@ Expression& operator*=(Expression& lhs, const Expression& rhs) {
     return lhs = Expression{get_constant_value(lhs) * get_constant_value(rhs)};
   }
 
+  // Pow-related simplifications.
+  if (is_pow(lhs)) {
+    const Expression& e1{get_first_argument(lhs)};
+    if (is_pow(rhs)) {
+      const Expression& e3{get_first_argument(rhs)};
+      if (e1.EqualTo(e3)) {
+        // Simplification: pow(e1, e2) * pow(e1, e4) => pow(e1, e2 + e4)
+        const Expression& e2{get_second_argument(lhs)};
+        const Expression& e4{get_second_argument(rhs)};
+        lhs = pow(e1, e2 + e4);
+        return lhs;
+      }
+    }
+    if (e1.EqualTo(rhs)) {
+      // Simplification: pow(e1, e2) * e1 => pow(e1, e2 + 1)
+      const Expression& e2{get_second_argument(lhs)};
+      lhs = pow(e1, e2 + 1);
+      return lhs;
+    }
+  } else {
+    if (is_pow(rhs)) {
+      const Expression& e1{get_first_argument(rhs)};
+      if (e1.EqualTo(lhs)) {
+        // Simplification: (lhs * rhs == e1 * pow(e1, e2)) => pow(e1, 1 + e2)
+        const Expression& e2{get_second_argument(rhs)};
+        lhs = pow(e1, 1 + e2);
+        return lhs;
+      }
+    }
+  }
+
   // Simplification: flattening
   ExpressionMulFactory mul_factory{};
   if (is_multiplication(lhs)) {
@@ -690,6 +733,18 @@ Expression pow(const Expression& e1, const Expression& e2) {
     // pow(E, 1) => E
     if (v2 == 1.0) {
       return e1;
+    }
+  }
+  if (is_pow(e1) && is_constant(e2)) {
+    // pow(base, exponent) ^ e2 => pow(base, exponent * e2)
+    //
+    // only if both of exponent and e2 are integers.
+    const Expression& exponent{get_second_argument(e1)};
+    const double v1{get_constant_value(exponent)};
+    const double v2{get_constant_value(e2)};
+    if (is_integer(v1) && is_integer(v2)) {
+      const Expression& base{get_first_argument(e1)};
+      return Expression{new ExpressionPow(base, v1 * v2)};
     }
   }
   return Expression{new ExpressionPow(e1, e2)};
