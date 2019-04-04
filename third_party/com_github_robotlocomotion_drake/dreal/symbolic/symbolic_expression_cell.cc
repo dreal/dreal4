@@ -577,7 +577,7 @@ ostream& ExpressionAdd::Display(ostream& os) const {
   bool print_plus{false};
   os << "(";
   if (constant_ != 0.0) {
-    os << constant_;
+    os << setprecision(numeric_limits<double>::max_digits10) << constant_;
     print_plus = true;
   }
   for (auto& p : expr_to_coeff_map_) {
@@ -869,7 +869,7 @@ ostream& ExpressionMul::Display(ostream& os) const {
   bool print_mul{false};
   os << "(";
   if (constant_ != 1.0) {
-    os << constant_;
+    os << setprecision(numeric_limits<double>::max_digits10) << constant_;
     print_mul = true;
   }
   for (auto& p : base_to_exponent_map_) {
