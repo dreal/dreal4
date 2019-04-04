@@ -3,6 +3,7 @@
 #include <algorithm>  // for cpplint only
 #include <cstddef>
 #include <functional>
+#include <limits>
 #include <map>
 #include <ostream>
 #include <string>
@@ -742,5 +743,10 @@ struct hash<dreal::drake::symbolic::Expression> {
     return e.get_hash();
   }
 };
+
+/* Provides std::numeric_limits<dreal::drake::symbolic::Expression>. */
+template <>
+struct numeric_limits<dreal::drake::symbolic::Expression>
+    : public numeric_limits<double> {};
 
 }  // namespace std
