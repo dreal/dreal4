@@ -1,8 +1,13 @@
 # Install required packages
 ```bash
-python2 -m pip install --upgrade twine
-python2 -m pip install --user --upgrade setuptools wheel
-python3 -m pip install --user --upgrade setuptools wheel
+python3 -m pip install --upgrade twine
+python2 -m pip install --user --upgrade setuptools wheel pip
+python3 -m pip install --user --upgrade setuptools wheel pip
+```
+
+# Extra
+```bash
+python3 -m pip install keyring keyrings.alt 
 ```
 
 # To build
