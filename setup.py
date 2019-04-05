@@ -18,9 +18,9 @@ from setuptools.command.develop import develop as _develop
 # Python 3 only projects can skip this import
 from io import open
 
-VERSION = '4.19.04.1'
+VERSION = '4.19.04.1'.replace(".0", ".")
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
-SRC_DIR = os.path.join(ROOT_DIR, '..', '..')
+SRC_DIR = os.path.join(ROOT_DIR)
 
 
 def _build_dreal():
@@ -31,11 +31,14 @@ def _build_dreal():
     if subprocess.call([
             'bazel',
             'build',
-            '//...',
+            '//:libdreal.so',
+            '//dreal:_dreal_py.so',
             '--python_path={}'.format(sys.executable),
             '--python_version={}'.format(PYTHON_VERSION),
     ]) != 0:
-        raise LibError("Unable to build dReal.")
+        raise LibError("Unable to build dReal.\n" +
+                       "Please visit https://pypi.org/project/dreal and " +
+                       "follow the instructions to install the prerequsites.")
 
 
 def _copy_bins():
@@ -86,7 +89,7 @@ class sdist(_sdist):
 
 # Get the long description from the README file
 here = os.path.abspath(os.path.dirname(__file__))
-with open(os.path.join(here, 'README'), encoding='utf-8') as f:
+with open(os.path.join(here, 'README_PIP.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 if 'bdist_wheel' in sys.argv and '--plat-name' not in sys.argv:
@@ -132,7 +135,6 @@ setuptools.setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',

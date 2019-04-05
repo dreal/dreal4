@@ -1,0 +1,22 @@
+graft dreal
+graft third_party
+graft tools
+
+include .bazelrc
+include BUILD.bazel
+include LICENSE.txt
+include README.md
+include README_PIP.md
+include WORKSPACE
+
+prune test
+prune dreal/contractor/test
+prune dreal/test
+prune dreal/util/test
+prune dreal/optimization/test
+prune dreal/solver/test
+prune dreal/api/test
+prune dreal/symbolic/test
+
+global-exclude *.so
+global-exclude .DS_Store
