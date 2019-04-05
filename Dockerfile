@@ -22,7 +22,7 @@ RUN apt-get update \
       && tar xfz bazel-bin/archive.tar.gz \
       && cp -r opt/dreal/`cat /DREAL_VERSION`/* /usr \
       && rm -rf opt/ \
-# Install python3.5, build bindings for python3.5 and install it under
+# Install python3.6, build bindings for python3 and install it under
 # /usr/lib/python3/dist-packages.
       && bazel build //:archive --python_version=py3 --python_path=python3 \
       && tar xfz bazel-bin/archive.tar.gz \
