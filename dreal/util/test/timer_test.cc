@@ -46,7 +46,7 @@ GTEST_TEST(Timer, Test1) {
   timer.start();
   DoSomeWork(10);
   const auto duration5{timer.elapsed()};
-  EXPECT_LT(duration5, duration1);
+  EXPECT_LE(duration5, duration1);
   EXPECT_TRUE(timer.is_running());
 }
 }  // namespace
