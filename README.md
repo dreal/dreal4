@@ -83,7 +83,7 @@ Ubuntu 18.04. Try the following to test it:
 
 ```bash
 docker pull dreal/dreal4
-docker run --rm dreal/dreal4 dreal --version  # Run "dreal --version"
+docker run --rm dreal/dreal4 dreal -h  # Run "dreal -h"
 ```
 
 
