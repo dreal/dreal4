@@ -1,5 +1,6 @@
 load("//third_party/com_github_robotlocomotion_drake:tools/workspace/github.bzl", "github_archive")
 load("//third_party/com_github_robotlocomotion_drake:tools/workspace/pkg_config.bzl", "pkg_config_repository")
+load("//third_party/com_github_tensorflow_tensorflow/py:python_configure.bzl", "python_configure")
 
 def dreal_workspace():
     pkg_config_repository(
@@ -21,48 +22,7 @@ def dreal_workspace():
             "/usr/local/opt/nlopt/lib/pkgconfig",
         ],
     )
-    pkg_config_repository(
-        name = "python2",
-        modname = "python2",
-        pkg_config_paths = [
-            "/usr/local/opt/python@2/lib/pkgconfig",
-        ],
-    )
-
-    pkg_config_repository(
-        name = "python3",
-        modname = "python3",
-        pkg_config_paths = [
-            "/usr/local/opt/python@3/lib/pkgconfig",
-        ],
-    )
-
-    # We do not use this one, yet.
-    pkg_config_repository(
-        name = "python-3.5",
-        modname = "python-3.5",
-        pkg_config_paths = [
-            "/usr/local/opt/python@3/lib/pkgconfig",
-        ],
-    )
-
-    # We do not use this one, yet.
-    pkg_config_repository(
-        name = "python-3.6",
-        modname = "python-3.6",
-        pkg_config_paths = [
-            "/usr/local/opt/python@3/lib/pkgconfig",
-        ],
-    )
-
-    # We do not use this one, yet.
-    pkg_config_repository(
-        name = "python-3.7",
-        modname = "python-3.7",
-        pkg_config_paths = [
-            "/usr/local/opt/python@3/lib/pkgconfig",
-        ],
-    )
+    python_configure(name = "local_config_python")
 
     github_archive(
         name = "spdlog",  # MIT
