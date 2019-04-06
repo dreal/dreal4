@@ -2,8 +2,9 @@
 *.so
 .DS_Store
 .ycm_extra_conf.py
+/.python-version
+/MANIFEST
 /user.bazelrc
-MANIFEST
 bazel-*
 build/
 compile_commands.json

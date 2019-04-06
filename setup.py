@@ -28,14 +28,14 @@ def _build_dreal():
         PYTHON_VERSION = 'PY2'
     else:
         PYTHON_VERSION = 'PY3'
+    new_env = os.environ.copy()
+    new_env["PYTHON_BIN_PATH"] = sys.executable
     if subprocess.call([
-            'bazel',
-            'build',
-            '//:libdreal.so',
-            '//dreal:_dreal_py.so',
-            '--python_path={}'.format(sys.executable),
-            '--python_version={}'.format(PYTHON_VERSION),
-    ]) != 0:
+            'bazel', 'build', '//:libdreal.so', '//dreal:_dreal_py.so',
+            '--python_path={}'.format(
+                sys.executable), '--python_version={}'.format(PYTHON_VERSION)
+    ],
+                       env=new_env) != 0:
         raise LibError("Unable to build dReal.\n" +
                        "Please visit https://pypi.org/project/dreal and " +
                        "follow the instructions to install the prerequsites.")
