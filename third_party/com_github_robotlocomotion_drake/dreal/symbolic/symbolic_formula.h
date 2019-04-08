@@ -107,8 +107,6 @@ class Formula {
   Formula& operator=(Formula&&) noexcept;
   ~Formula();
 
-  explicit Formula(FormulaCell* ptr);
-
   /** Constructs a formula from @p var.
    * @pre @p var is of BOOLEAN type and not a dummy variable.
    */
@@ -258,8 +256,20 @@ class Formula {
   static Formula make_disjunction(Formula& f1, const Formula& f2);
 
   friend FormulaCell;
+  friend Formula forall(const Variables& vars, const Formula& f);
+  friend Formula make_conjunction(const std::set<Formula>& formulas);
+  friend Formula make_disjunction(const std::set<Formula>& formulas);
+  friend Formula operator!(const Formula& f);
+  friend Formula operator==(const Expression& e1, const Expression& e2);
+  friend Formula operator!=(const Expression& e1, const Expression& e2);
+  friend Formula operator<(const Expression& e1, const Expression& e2);
+  friend Formula operator<=(const Expression& e1, const Expression& e2);
+  friend Formula operator>(const Expression& e1, const Expression& e2);
+  friend Formula operator>=(const Expression& e1, const Expression& e2);
 
  private:
+  explicit Formula(FormulaCell* ptr);
+
   FormulaCell* ptr_;
 
   // Storage to cache the result of GetFreevariables().
