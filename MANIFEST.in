@@ -6,7 +6,6 @@ include .bazelrc
 include BUILD.bazel
 include LICENSE.txt
 include README.md
-include README_PIP.md
 include WORKSPACE
 
 prune test
