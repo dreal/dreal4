@@ -28,6 +28,7 @@ cc_binary(
         "//dreal/symbolic",
         "//dreal/symbolic:prefix_printer",
         "//dreal/util:box",
+        "//dreal/util:interrupt",
         "//dreal/util:logging",
     ],
 )
