@@ -461,11 +461,18 @@ filegroup(
     srcs = [
         "assert.h",
         "box.h",
-        "logging.h",
         "option_value.h",
         "optional.h",
         "scoped_vector.h",
         "//third_party/com_github_tartanllama_optional:headers",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+filegroup(
+    name = "private_headers",
+    srcs = [
+        "logging.h",
     ],
     visibility = ["//:__pkg__"],
 )

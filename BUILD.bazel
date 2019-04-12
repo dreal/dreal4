@@ -42,6 +42,7 @@ cc_library(
         "//dreal/solver:headers",
         "//dreal/symbolic:headers",
         "//dreal/util:headers",
+        "//dreal/util:private_headers",
     ],
     includes = [
         "third_party/com_github_robotlocomotion_drake",
