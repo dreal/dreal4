@@ -16,8 +16,10 @@
 #include "dreal/symbolic/prefix_printer.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/optional.h"
+#include "dreal/util/signal_handler_guard.h"
 
 #if defined __clang__
 #if __has_warning("-Wself-assign-overloaded")
@@ -43,6 +45,10 @@ using std::vector;
 
 // NOLINTNEXTLINE(build/namespaces)
 namespace py = pybind11;
+
+namespace {
+void sigint_handler(int sig) { g_interrupted = true; }
+}  // namespace
 
 PYBIND11_MODULE(_dreal_py, m) {
   m.doc() = "dReal Python Module";
@@ -635,7 +641,11 @@ PYBIND11_MODULE(_dreal_py, m) {
   py::class_<Context>(m, "Context")
       .def(py::init<>())
       .def("Assert", &Context::Assert)
-      .def("CheckSat", &Context::CheckSat)
+      .def("CheckSat",
+           [](Context& self) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return self.CheckSat();
+           })
       .def("DeclareVariable",
            [](Context& self, const Variable& v) {
              return self.DeclareVariable(v);
@@ -670,27 +680,49 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def_property_readonly("box", &Context::box);
 
   m.def("CheckSatisfiability",
-        py::overload_cast<const Formula&, double>(&CheckSatisfiability))
+        [](const Formula& f, double delta) {
+          SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+          return CheckSatisfiability(f, delta);
+        })
       .def("CheckSatisfiability",
-           py::overload_cast<const Formula&, Config>(&CheckSatisfiability))
-      .def(
-          "CheckSatisfiability",
-          py::overload_cast<const Formula&, double, Box*>(&CheckSatisfiability))
-      .def(
-          "CheckSatisfiability",
-          py::overload_cast<const Formula&, Config, Box*>(&CheckSatisfiability))
+           [](const Formula& f, Config config) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return CheckSatisfiability(f, config);
+           })
+      .def("CheckSatisfiability",
+           [](const Formula& f, double delta, Box* box) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return CheckSatisfiability(f, delta, box);
+           })
+      .def("CheckSatisfiability",
+           [](const Formula& f, Config config, Box* box) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return CheckSatisfiability(f, config, box);
+           })
       .def("Minimize",
-           py::overload_cast<const Expression&, const Formula&, double>(
-               &Minimize))
+           [](const Expression& objective, const Formula& constraint,
+              const double delta) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return Minimize(objective, constraint, delta);
+           })
       .def("Minimize",
-           py::overload_cast<const Expression&, const Formula&, Config>(
-               &Minimize))
+           [](const Expression& objective, const Formula& constraint,
+              Config config) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return Minimize(objective, constraint, config);
+           })
       .def("Minimize",
-           py::overload_cast<const Expression&, const Formula&, double, Box*>(
-               &Minimize))
+           [](const Expression& objective, const Formula& constraint,
+              const double delta, Box* const box) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return Minimize(objective, constraint, delta, box);
+           })
       .def("Minimize",
-           py::overload_cast<const Expression&, const Formula&, Config, Box*>(
-               &Minimize));
+           [](const Expression& objective, const Formula& constraint,
+              Config config, Box* const box) {
+             SignalHandlerGuard guard{SIGINT, &sigint_handler, &g_interrupted};
+             return Minimize(objective, constraint, config, box);
+           });
 
   // Exposes spdlog::level::level_enum.
   py::enum_<spdlog::level::level_enum>(m, "LogLevel")
