@@ -3,6 +3,8 @@
 #include <utility>
 
 #include "dreal/util/assert.h"
+#include "dreal/util/exception.h"
+#include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
 
 using std::move;
@@ -29,6 +31,14 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
 
 void ContractorFixpoint::Prune(ContractorStatus* cs) const {
   do {
+    // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
+    // when we build dReal python package.
+#ifdef DREAL_CHECK_INTERRUPT
+    if (g_interrupted) {
+      DREAL_LOG_DEBUG("KeyboardInterrupt(SIGINT) Detected.");
+      throw std::runtime_error("KeyboardInterrupt(SIGINT) Detected.");
+    }
+#endif
     old_iv_ = cs->box().interval_vector();
     for (const Contractor& ctc : contractors_) {
       ctc.Prune(cs);
