@@ -32,6 +32,7 @@ def _build_dreal():
     new_env["PYTHON_BIN_PATH"] = sys.executable
     if subprocess.call([
             'bazel', 'build', '//:libdreal.so', '//dreal:_dreal_py.so',
+            '--cxxopt=-DDREAL_CHECK_INTERRUPT',
             '--python_path={}'.format(
                 sys.executable), '--python_version={}'.format(PYTHON_VERSION)
     ],
