@@ -53,6 +53,7 @@ cc_library(
         "//dreal:__subpackages__",
     ],
     deps = [
+        "//dreal/util:signal_handler_guard",
         "@fmt",
         "@ibex",
         "@spdlog",

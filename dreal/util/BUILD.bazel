@@ -97,6 +97,17 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "signal_handler_guard",
+    srcs = [
+        "signal_handler_guard.cc",
+    ],
+    hdrs = [
+        "signal_handler_guard.h",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+dreal_cc_library(
     name = "stat",
     hdrs = [
         "stat.h",
@@ -485,6 +496,7 @@ filegroup(
     srcs = [
         "interrupt.h",
         "logging.h",
+        "signal_handler_guard.h",
     ],
     visibility = ["//:__pkg__"],
 )
