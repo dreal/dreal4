@@ -75,6 +75,17 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "interrupt",
+    srcs = [
+        "interrupt.cc",
+    ],
+    hdrs = [
+        "interrupt.h",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+dreal_cc_library(
     name = "optional",
     hdrs = [
         "optional.h",
@@ -472,6 +483,7 @@ filegroup(
 filegroup(
     name = "private_headers",
     srcs = [
+        "interrupt.h",
         "logging.h",
     ],
     visibility = ["//:__pkg__"],
