@@ -13,7 +13,7 @@ fi
 
 SCRIPT_PATH="`dirname \"$0\"`"
 ROOT_PATH="${SCRIPT_PATH}/.."
-OLD_VERSION=`grep "DREAL_VERSION = " tools/dreal.bzl | cut -d '"' -f 2`
+OLD_VERSION=`grep "DREAL_VERSION = " "${ROOT_PATH}/tools/dreal.bzl" | cut -d '"' -f 2`
 NEW_VERSION=$1
 
 echo -n "Updating ${OLD_VERSION} => ${NEW_VERSION}... "
@@ -32,5 +32,5 @@ DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
 wget ${DREAL_URL} -O ${DREAL_DEBNAME}
 SHA256=`shasum -a 256 ${DREAL_DEBNAME} | cut -d ' ' -f 1`
 rm ${DREAL_DEBNAME}
-sed -i "s/DREAL_SHA256=.*/DREAL_SHA256=${SHA256}/g" `find setup -type f`
+sed -i "s/DREAL_SHA256=.*/DREAL_SHA256=${SHA256}/g" `find "${ROOT_PATH}/setup" -type f`
 echo -n "Updated dReal SHA in setup scripts."
