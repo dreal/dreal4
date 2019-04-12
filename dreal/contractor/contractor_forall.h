@@ -12,6 +12,8 @@
 #include "dreal/contractor/generic_contractor_generator.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/box.h"
+#include "dreal/util/exception.h"
+#include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/nnfizer.h"
 #include "dreal/util/optional.h"
@@ -167,6 +169,15 @@ class ContractorForall : public ContractorCell {
     Config& config_for_counterexample{
         context_for_counterexample_.mutable_config()};
     while (true) {
+      // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
+      // when we build dReal python package.
+#ifdef DREAL_CHECK_INTERRUPT
+      if (g_interrupted) {
+        DREAL_LOG_DEBUG("KeyboardInterrupt(SIGINT) Detected.");
+        throw std::runtime_error("KeyboardInterrupt(SIGINT) Detected.");
+      }
+#endif
+
       // 1. Find Counterexample.
       for (const Variable& exist_var : current_box.variables()) {
         context_for_counterexample_.SetInterval(exist_var,

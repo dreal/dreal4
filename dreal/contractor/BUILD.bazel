@@ -49,6 +49,7 @@ dreal_cc_library(
         "//dreal/util:assert",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
+        "//dreal/util:interrupt",
         "//dreal/util:logging",
         "//dreal/util:math",
         "//dreal/util:nnfizer",
