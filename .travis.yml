@@ -224,7 +224,6 @@ script:
   - export CC=${COMPILER}
   - |
     bazel \
-      --batch \
       --output_base="$HOME/.bazel-output-base" \
       --host_jvm_args=-Xmx500m \
       --host_jvm_args=-Xms500m \
@@ -232,7 +231,9 @@ script:
       --local_resources=${BAZEL_LOCAL_RESOURCES} \
       //... ${BUILD_TYPE} ${CONFIG} \
       ${COV_OPTION} \
-      --test_tag_filters=${TEST_TAG_FILTERS}
+      --test_output=errors \
+      --test_tag_filters=${TEST_TAG_FILTERS} \
+      --verbose_failures
 
 after_success:
   - if [ "${TRAVIS_REPO_SLUG}" == "dreal/dreal4" ] && [ "${COV}" == "ON" ]; then
