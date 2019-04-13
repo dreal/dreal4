@@ -8,7 +8,6 @@
 #include "dreal/version.h"
 
 using std::make_unique;
-using std::move;
 using std::string;
 using std::vector;
 
@@ -16,7 +15,8 @@ namespace dreal {
 
 Context::Context() : Context{Config{}} {}
 
-Context::Context(Context&& context) noexcept : impl_{move(context.impl_)} {}
+Context::Context(Context&& context) noexcept
+    : impl_{std::move(context.impl_)} {}
 
 Context::~Context() = default;
 

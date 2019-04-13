@@ -12,10 +12,9 @@
 namespace dreal {
 
 using std::accumulate;
-using std::move;
 using std::pair;
 
-ExpressionEvaluator::ExpressionEvaluator(Expression e) : e_{move(e)} {}
+ExpressionEvaluator::ExpressionEvaluator(Expression e) : e_{std::move(e)} {}
 
 Box::Interval ExpressionEvaluator::operator()(const Box& box) const {
   return Visit(e_, box);

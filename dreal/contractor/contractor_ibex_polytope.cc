@@ -7,7 +7,6 @@
 #include "dreal/util/math.h"
 
 using std::make_unique;
-using std::move;
 using std::ostream;
 using std::ostringstream;
 using std::unique_ptr;
@@ -23,7 +22,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
                                                const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
                      ibex::BitSet::empty(box.size()), config},
-      formulas_{move(formulas)},
+      formulas_{std::move(formulas)},
       ibex_converter_{box},
       old_iv_{1 /* Will be overwritten anyway */} {
   DREAL_LOG_DEBUG("ContractorIbexPolytope::ContractorIbexPolytope");

@@ -12,7 +12,6 @@
 
 using std::atomic;
 using std::make_shared;
-using std::move;
 using std::ostream;
 using std::ostringstream;
 using std::string;
@@ -30,12 +29,14 @@ Variable::Id Variable::get_next_id() {
 }
 
 Variable::Variable(string name, const Type type)
-    : id_{get_next_id()}, type_{type}, name_{make_shared<string>(move(name))} {
+    : id_{get_next_id()},
+      type_{type},
+      name_{make_shared<string>(std::move(name))} {
   assert(id_ > 0);
 }
 
 Variable::Variable(string name, const Type type, bool)
-    : Variable{move(name), type} {}
+    : Variable{std::move(name), type} {}
 
 Variable::Id Variable::get_id() const { return id_; }
 Variable::Type Variable::get_type() const { return type_; }

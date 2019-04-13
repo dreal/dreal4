@@ -12,7 +12,6 @@
 
 namespace dreal {
 
-using std::move;
 using std::ostream;
 using std::set;
 using std::vector;
@@ -50,7 +49,7 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
 
 ForallFormulaEvaluator::ForallFormulaEvaluator(Formula f, const double epsilon,
                                                const double delta)
-    : FormulaEvaluatorCell{move(f)},
+    : FormulaEvaluatorCell{std::move(f)},
       evaluators_{BuildFormulaEvaluators(formula())} {
   DREAL_ASSERT(is_forall(formula()));
   DREAL_LOG_DEBUG("ForallFormulaEvaluator({})", formula());

@@ -19,10 +19,9 @@ using std::endl;
 using std::ifstream;
 using std::istream;
 using std::istringstream;
-using std::move;
 using std::string;
 
-DrDriver::DrDriver(Context context) : context_{move(context)} {}
+DrDriver::DrDriver(Context context) : context_{std::move(context)} {}
 
 bool DrDriver::parse_stream(istream& in, const string& sname) {
   streamname_ = sname;

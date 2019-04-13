@@ -7,7 +7,6 @@
 
 namespace dreal {
 
-using std::move;
 using std::ostream;
 
 namespace {
@@ -64,7 +63,7 @@ Expression ExtractExpression(const Formula& f) {
 }  // namespace
 
 RelationalFormulaEvaluator::RelationalFormulaEvaluator(Formula f)
-    : FormulaEvaluatorCell{move(f)},
+    : FormulaEvaluatorCell{std::move(f)},
       op_{GetRelationalOperator(formula())},
       expression_evaluator_{ExtractExpression(formula())} {}
 

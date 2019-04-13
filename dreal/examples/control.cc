@@ -10,7 +10,6 @@
 namespace dreal {
 
 using std::accumulate;
-using std::move;
 using std::vector;
 
 optional<Box> CheckLyapunov(const vector<Variable>& x,
@@ -41,7 +40,7 @@ optional<Box> CheckLyapunov(const vector<Variable>& x,
       (ball_lb * ball_lb <= ball) && (ball <= ball_ub * ball_ub);
   const Formula condition = (imply(ball_in_bound, V >= 0) &&
                              imply(ball_in_bound, lie_derivative_of_V <= 0));
-  return CheckSatisfiability(!condition, move(config));
+  return CheckSatisfiability(!condition, std::move(config));
 }
 
 optional<Box> CheckLyapunov(const vector<Variable>& x, const Variable& t,
@@ -75,7 +74,7 @@ optional<Box> CheckLyapunov(const vector<Variable>& x, const Variable& t,
       imply(t_lb <= t && t <= t_ub,
             imply(ball_in_bound, V >= 0) &&
                 imply(ball_in_bound, lie_derivative_of_V <= 0));
-  return CheckSatisfiability(!condition, move(config));
+  return CheckSatisfiability(!condition, std::move(config));
 }
 
 optional<Box> SynthesizeLyapunov(const vector<Variable>& x,
@@ -143,7 +142,7 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x,
     const Expression found_V = V.Substitute(subst_solution);
     std::cout << "Found V = " << found_V << std::endl;
     const auto confirm =
-        CheckLyapunov(x, f, found_V, ball_lb, ball_ub, move(config));
+        CheckLyapunov(x, f, found_V, ball_lb, ball_ub, std::move(config));
     if (!confirm) {
       std::cout << "Confirmed! Found V = " << found_V << std::endl;
       return solution;
@@ -219,7 +218,7 @@ optional<Box> SynthesizeLyapunov(const vector<Variable>& x, const Variable& t,
     const Expression found_V = V.Substitute(subst_solution);
     std::cout << "Found V = " << found_V << std::endl;
     const auto confirm = CheckLyapunov(x, t, f, found_V, ball_lb, ball_ub, t_lb,
-                                       t_ub, move(config));
+                                       t_ub, std::move(config));
     if (!confirm) {
       std::cout << "Confirmed! Found V = " << found_V << std::endl;
       return solution;

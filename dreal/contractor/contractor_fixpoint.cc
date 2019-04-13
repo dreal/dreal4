@@ -7,7 +7,6 @@
 #include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
 
-using std::move;
 using std::ostream;
 using std::vector;
 
@@ -19,8 +18,8 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
     : ContractorCell{Contractor::Kind::FIXPOINT,
                      ibex::BitSet::empty(ComputeInputSize(contractors)),
                      config},
-      term_cond_{move(term_cond)},
-      contractors_{move(contractors)},
+      term_cond_{std::move(term_cond)},
+      contractors_{std::move(contractors)},
       old_iv_{1 /* will be updated anyway */} {
   DREAL_ASSERT(!contractors_.empty());
   ibex::BitSet& input{mutable_input()};

@@ -18,7 +18,6 @@
 using std::any_of;
 using std::cout;
 using std::make_shared;
-using std::move;
 using std::ostream;
 using std::shared_ptr;
 using std::vector;
@@ -74,7 +73,8 @@ class ContractorStat : public Stat {
 Contractor::Contractor(const Config& config)
     : ptr_{make_shared<ContractorId>(config)} {}
 
-Contractor::Contractor(std::shared_ptr<ContractorCell> ptr) : ptr_{move(ptr)} {}
+Contractor::Contractor(std::shared_ptr<ContractorCell> ptr)
+    : ptr_{std::move(ptr)} {}
 
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 
@@ -110,13 +110,14 @@ Contractor make_contractor_seq(const vector<Contractor>& contractors,
 
 Contractor make_contractor_ibex_fwdbwd(Formula f, const Box& box,
                                        const Config& config) {
-  return Contractor{make_shared<ContractorIbexFwdbwd>(move(f), box, config)};
+  return Contractor{
+      make_shared<ContractorIbexFwdbwd>(std::move(f), box, config)};
 }
 
 Contractor make_contractor_ibex_polytope(vector<Formula> formulas,
                                          const Box& box, const Config& config) {
   return Contractor{
-      make_shared<ContractorIbexPolytope>(move(formulas), box, config)};
+      make_shared<ContractorIbexPolytope>(std::move(formulas), box, config)};
 }
 
 Contractor make_contractor_fixpoint(TerminationCondition term_cond,
@@ -126,8 +127,8 @@ Contractor make_contractor_fixpoint(TerminationCondition term_cond,
   if (ctcs.empty()) {
     return make_contractor_id(config);
   } else {
-    return Contractor{
-        make_shared<ContractorFixpoint>(move(term_cond), move(ctcs), config)};
+    return Contractor{make_shared<ContractorFixpoint>(std::move(term_cond),
+                                                      std::move(ctcs), config)};
   }
 }
 
@@ -139,12 +140,12 @@ Contractor make_contractor_worklist_fixpoint(
     return make_contractor_id(config);
   } else {
     return Contractor{make_shared<ContractorWorklistFixpoint>(
-        move(term_cond), move(ctcs), config)};
+        std::move(term_cond), std::move(ctcs), config)};
   }
 }
 
 Contractor make_contractor_join(vector<Contractor> vec, const Config& config) {
-  return Contractor{make_shared<ContractorJoin>(move(vec), config)};
+  return Contractor{make_shared<ContractorJoin>(std::move(vec), config)};
 }
 
 ostream& operator<<(ostream& os, const Contractor& ctc) {

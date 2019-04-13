@@ -18,12 +18,11 @@ using std::endl;
 using std::ifstream;
 using std::istream;
 using std::istringstream;
-using std::move;
 using std::ostream;
 using std::ostringstream;
 using std::string;
 
-Smt2Driver::Smt2Driver(Context context) : context_{move(context)} {}
+Smt2Driver::Smt2Driver(Context context) : context_{std::move(context)} {}
 
 bool Smt2Driver::parse_stream(istream& in, const string& sname) {
   streamname_ = sname;

@@ -10,7 +10,6 @@
 
 namespace dreal {
 
-using std::move;
 using std::vector;
 
 Contractor GenericContractorGenerator::Generate(const Formula& f,
@@ -121,7 +120,7 @@ Contractor GenericContractorGenerator::VisitDisjunction(
   for (const Formula& f_i : get_operands(f)) {
     contractors.push_back(Visit(f_i, box, config));
   }
-  return make_contractor_join(move(contractors), config);
+  return make_contractor_join(std::move(contractors), config);
 }
 
 Contractor GenericContractorGenerator::VisitNegation(const Formula& f,

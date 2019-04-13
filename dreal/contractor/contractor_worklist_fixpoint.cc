@@ -7,7 +7,6 @@
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 
-using std::move;
 using std::ostream;
 using std::vector;
 
@@ -31,8 +30,8 @@ ContractorWorklistFixpoint::ContractorWorklistFixpoint(
     : ContractorCell{Contractor::Kind::WORKLIST_FIXPOINT,
                      ibex::BitSet::empty(ComputeInputSize(contractors)),
                      config},
-      term_cond_{move(term_cond)},
-      contractors_{move(contractors)},
+      term_cond_{std::move(term_cond)},
+      contractors_{std::move(contractors)},
       input_to_contractors_{static_cast<size_t>(ComputeInputSize(contractors_)),
                             ibex::BitSet::empty(contractors_.size())},
       worklist_{ibex::BitSet::empty(contractors_.size())},

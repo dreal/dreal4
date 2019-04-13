@@ -9,14 +9,13 @@
 namespace dreal {
 
 using std::make_unique;
-using std::move;
 using std::vector;
 
 CounterexampleRefiner::CounterexampleRefiner(const Formula& query,
                                              Variables forall_variables,
                                              const Config& config)
     : init_(forall_variables.size(), 0.0),
-      forall_variables_{move(forall_variables)} {
+      forall_variables_{std::move(forall_variables)} {
   // Build forall_vec_ (of vector<Variable>).
   for (const Variable& var : forall_variables_) {
     forall_vec_.push_back(var);

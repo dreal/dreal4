@@ -7,7 +7,6 @@
 #include "dreal/util/stat.h"
 #include "dreal/util/timer.h"
 
-using std::move;
 using std::set;
 using std::vector;
 
@@ -47,7 +46,7 @@ class ContractorStatusStat : public Stat {
 }  // namespace
 
 ContractorStatus::ContractorStatus(Box box, const int branching_point)
-    : box_{move(box)},
+    : box_{std::move(box)},
       branching_point_{branching_point},
       output_{ibex::BitSet::empty(box_.size())} {
   DREAL_ASSERT(!box_.empty());

@@ -10,7 +10,6 @@
 namespace dreal {
 
 using std::make_unique;
-using std::move;
 using std::ostream;
 using std::vector;
 
@@ -55,7 +54,7 @@ double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
 // CachedExpression
 // ----------------
 CachedExpression::CachedExpression(Expression e, const Box& box)
-    : expression_{move(e)}, box_{&box} {
+    : expression_{std::move(e)}, box_{&box} {
   DREAL_ASSERT(box_);
 }
 
@@ -94,7 +93,7 @@ ostream& operator<<(ostream& os, const CachedExpression& expression) {
 NloptOptimizer::NloptOptimizer(const nlopt::algorithm algorithm, Box bound,
                                const Config& config)
     : opt_{algorithm, static_cast<unsigned>(bound.size())},
-      box_{move(bound)},
+      box_{std::move(bound)},
       delta_{config.precision()} {
   DREAL_ASSERT(delta_ > 0.0);
   DREAL_LOG_DEBUG("NloptOptimizer::NloptOptimizer: Box = \n{}", box_);
@@ -163,18 +162,18 @@ void NloptOptimizer::AddRelationalConstraint(const Formula& formula) {
     const Expression& e1{get_lhs_expression(formula)};
     const Expression& e2{get_rhs_expression(formula)};
     auto cached_expression = make_unique<CachedExpression>(e2 - e1, box_);
-    constraints_.push_back(move(cached_expression));
+    constraints_.push_back(std::move(cached_expression));
   } else if (is_less_than(formula) || is_less_than_or_equal_to(formula)) {
     // f := e₁ < e₂  –>  e₁ - e₂ < 0.
     const Expression& e1{get_lhs_expression(formula)};
     const Expression& e2{get_rhs_expression(formula)};
     auto cached_expression = make_unique<CachedExpression>(e1 - e2, box_);
-    constraints_.push_back(move(cached_expression));
+    constraints_.push_back(std::move(cached_expression));
   } else if (is_equal_to(formula)) {
     // f := e₁ == e₂  -> e₁ - e₂ == 0
     auto cached_expression = make_unique<CachedExpression>(
         get_lhs_expression(formula) - get_rhs_expression(formula), box_);
-    constraints_.push_back(move(cached_expression));
+    constraints_.push_back(std::move(cached_expression));
     equality = true;
   } else {
     throw DREAL_RUNTIME_ERROR(

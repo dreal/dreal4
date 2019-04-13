@@ -4,7 +4,6 @@
 
 #include "dreal/util/assert.h"
 
-using std::move;
 using std::ostream;
 using std::vector;
 
@@ -15,7 +14,7 @@ ContractorSeq::ContractorSeq(vector<Contractor> contractors,
     : ContractorCell{Contractor::Kind::SEQ,
                      ibex::BitSet::empty(ComputeInputSize(contractors)),
                      config},
-      contractors_{move(contractors)} {
+      contractors_{std::move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {

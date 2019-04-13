@@ -13,7 +13,6 @@
 namespace dreal {
 
 using std::make_shared;
-using std::move;
 using std::ostream;
 using std::shared_ptr;
 
@@ -46,7 +45,7 @@ ostream& operator<<(ostream& os, const FormulaEvaluationResult& result) {
 }
 
 FormulaEvaluator::FormulaEvaluator(std::shared_ptr<FormulaEvaluatorCell> ptr)
-    : ptr_{move(ptr)} {
+    : ptr_{std::move(ptr)} {
   DREAL_ASSERT(ptr_);
 }
 

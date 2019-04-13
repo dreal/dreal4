@@ -4,8 +4,6 @@
 
 namespace dreal {
 
-using std::move;
-
-FormulaEvaluatorCell::FormulaEvaluatorCell(Formula f) : f_{move(f)} {}
+FormulaEvaluatorCell::FormulaEvaluatorCell(Formula f) : f_{std::move(f)} {}
 
 }  // namespace dreal

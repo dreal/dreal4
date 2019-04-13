@@ -9,7 +9,6 @@
 
 using std::cout;
 using std::make_unique;
-using std::move;
 using std::ostream;
 using std::ostringstream;
 
@@ -47,7 +46,7 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
                                            const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
                      ibex::BitSet::empty(box.size()), config},
-      f_{move(f)},
+      f_{std::move(f)},
       ibex_converter_{box},
       old_iv_{1 /* Will be overwritten anyway */} {
   // Build num_ctr and ctc_.

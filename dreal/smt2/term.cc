@@ -7,12 +7,11 @@
 
 namespace dreal {
 
-using std::move;
 using std::ostream;
 using std::runtime_error;
 
-Term::Term(Expression e) : type_{Term::Type::EXPRESSION}, e_{move(e)} {}
-Term::Term(Formula f) : type_{Term::Type::FORMULA}, f_{move(f)} {}
+Term::Term(Expression e) : type_{Term::Type::EXPRESSION}, e_{std::move(e)} {}
+Term::Term(Formula f) : type_{Term::Type::FORMULA}, f_{std::move(f)} {}
 
 Term::Type Term::type() const { return type_; }
 
