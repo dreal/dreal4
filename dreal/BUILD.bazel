@@ -38,8 +38,8 @@ dreal_cc_binary(
         "dreal_main.h",
     ],
     visibility = [
-        "//dreal/test/dr:__pkg__",
-        "//dreal/test/smt2:__pkg__",
+        "//dreal/test/dr:__subpackages__",
+        "//dreal/test/smt2:__subpackages__",
     ],
     deps = [
         "//dreal/dr",

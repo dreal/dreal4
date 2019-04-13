@@ -793,6 +793,108 @@ smt2_test(
     size = "small",
 )
 
+smt2_test(
+    name = "hong/hong_1",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_2",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_3",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_4",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_5",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_6",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_7",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_8",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_9",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_10",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_11",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_12",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_13",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_14",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_15",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_16",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_17",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_18",
+    size = "small",
+)
+
+smt2_test(
+    name = "hong/hong_19",
+    size = "small",
+    tags = ["manual"],
+)
+
+smt2_test(
+    name = "hong/hong_20",
+    size = "small",
+    tags = ["manual"],
+)
+
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE"])
