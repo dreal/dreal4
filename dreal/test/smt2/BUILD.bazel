@@ -895,6 +895,91 @@ smt2_test(
     tags = ["manual"],
 )
 
+smt2_test(
+    name = "powersystem/dreal_file_1_20",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_1_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_2_15",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_2_20",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_2_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_2_50",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_3_10",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_3_20",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_3_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_3_30",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_3_40",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_4_5",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_5_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_6_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_7_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_8_25",
+    size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_9_25",
+    size = "small",
+)
+
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE"])
