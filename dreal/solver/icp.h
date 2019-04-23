@@ -19,8 +19,8 @@ class Icp {
   /// Checks the delta-satisfiability of the current assertions.
   /// @param[in] contractor Contractor to use in pruning phase
   /// @param[in] formula_evaluators A vector of FormulaEvaluator which
-  ///                           determines when to stop and which
-  ///                           dimension to branch.
+  ///                               determines when to stop and which
+  ///                               dimension to branch.
   /// @param[in,out] cs A contractor to be updated.
   /// Returns true  if it's delta-SAT.
   /// Returns false if it's UNSAT.
@@ -29,7 +29,8 @@ class Icp {
                 ContractorStatus* cs);
 
  private:
-  // Evaluates each assertion fᵢ with @p box.
+  // Evaluates each formula with @p box using interval
+  // arithmetic. There are three possible outcomes:
   //
   // Returns None                if there is fᵢ such that fᵢ(box) is empty.
   //                             (This indicates the problem is UNSAT)
@@ -44,7 +45,16 @@ class Icp {
   //                                fᵢ(x) is valid for all x ∈ B *and*
   //                             2) |fᵢ(B)| > δ.
   //                             Vars = {v | v ∈ fᵢ ∧ |fᵢ(B)| > δ for all fᵢs}.
-  //                             (This indicates the problem is delta-SAT)
+  //
+  //                             It cannot conclude if the constraint
+  //                             is satisfied or not completely. It
+  //                             checks the width/diameter of the
+  //                             interval evaluation and adds the free
+  //                             variables in the constraint into the
+  //                             set that it will return.
+  //
+  // If it returns an ibex::BitSet, it represents the dimensions on
+  // which the ICP algorithm needs to consider branching.
   //
   // It sets @p cs's box empty if it detects UNSAT. It also calls
   // cs->AddUsedConstraint to store the constraint that is responsible
