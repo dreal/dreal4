@@ -57,7 +57,7 @@ def _add_linter_rules(source_labels, source_filenames, name, data=None):
     srcs = ["@google_styleguide//:cpplint"],
     data = data + cpplint_cfg + source_labels,
     args = _EXTENSIONS_ARGS + source_filenames,
-    main = "@google_styleguide//:cpplint/cpplint.py",
+    main = "@google_styleguide//:cpplint.py",
     size = size,
     tags = tags,
   )

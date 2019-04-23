@@ -16,9 +16,9 @@ versions.check(minimum_bazel_version = "0.22.0")
 github_archive(
     name = "google_styleguide",  # GOOGLE
     build_file = "//tools:google_styleguide.BUILD.bazel",
-    commit = "313b6b359086984c8a0bb1d77c195ce3ea3bd78b",
-    repository = "dreal-deps/styleguide",  # Use custom version for python3
-    sha256 = "ac8214c0c086c186c8d04fb7271792a8bbb3b42c5fee165ff917d908a495109b",
+    commit = "bbea616e75aa60cd5a1b9ac7f80fafb244f69f28",  # 20190423
+    repository = "dreal-deps/styleguide",
+    sha256 = "0641ba2c32a0b9f9303af28f64c249efa88b84171517174d1ebe596ed844a9a5",
 )
 
 github_archive(
