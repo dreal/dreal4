@@ -17,6 +17,18 @@ cc_test(
     ],
 )
 
+dreal_cc_googletest(
+    name = "cds_test",
+    size = "small",
+    srcs = [
+        "cds_test.cc",
+    ],
+    tags = ["extlib"],
+    deps = [
+        "@cds",
+    ],
+)
+
 cc_test(
     name = "ibex_test",
     size = "small",
