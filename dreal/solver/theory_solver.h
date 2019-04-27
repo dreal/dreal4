@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <set>
 #include <unordered_map>
 #include <vector>
@@ -42,7 +43,7 @@ class TheorySolver {
       const std::vector<Formula>& assertions);
 
   const Config& config_;
-  Icp icp_;
+  std::unique_ptr<Icp> icp_;
   Box model_;
   std::set<Formula> explanation_;
   std::unordered_map<Formula, Contractor> contractor_cache_;

@@ -40,7 +40,7 @@ dreal_cc_library(
         "formula_evaluator.cc",
         "formula_evaluator_cell.cc",
         "formula_evaluator_cell.h",
-        "icp.cc",
+        "icp_seq.cc",
         "relational_formula_evaluator.cc",
         "relational_formula_evaluator.h",
         "theory_solver.cc",
@@ -50,6 +50,7 @@ dreal_cc_library(
         "expression_evaluator.h",
         "formula_evaluator.h",
         "icp.h",
+        "icp_seq.h",
         "theory_solver.h",
     ],
     visibility = [
