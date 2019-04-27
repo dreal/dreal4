@@ -9,7 +9,7 @@
 #include "dreal/solver/context.h"
 #include "dreal/solver/filter_assertion.h"
 #include "dreal/solver/formula_evaluator.h"
-#include "dreal/solver/icp.h"
+#include "dreal/solver/icp_seq.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/stat.h"
@@ -17,12 +17,15 @@
 namespace dreal {
 
 using std::cout;
+using std::make_unique;
 using std::numeric_limits;
 using std::set;
 using std::vector;
 
 TheorySolver::TheorySolver(const Config& config)
-    : config_{config}, icp_{config_} {}
+    : config_{config}, icp_{nullptr} {
+  icp_ = make_unique<IcpSeq>(config);
+}
 
 namespace {
 bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
@@ -173,8 +176,8 @@ bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   const optional<Contractor> contractor{
       BuildContractor(assertions, &contractor_status)};
   if (contractor) {
-    icp_.CheckSat(*contractor, BuildFormulaEvaluator(assertions),
-                  &contractor_status);
+    icp_->CheckSat(*contractor, BuildFormulaEvaluator(assertions),
+                   &contractor_status);
     if (contractor_status.box().empty()) {
       explanation_ = contractor_status.Explanation();
       return false;

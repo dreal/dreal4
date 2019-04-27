@@ -1,4 +1,4 @@
-#include "dreal/solver/icp.h"
+#include "dreal/solver/icp_seq.h"
 
 #include <ostream>
 #include <tuple>
@@ -62,7 +62,7 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
       stack->emplace_back(bisected_boxes.first, branching_point);
       stack->emplace_back(bisected_boxes.second, branching_point);
       DREAL_LOG_DEBUG(
-          "Icp::CheckSat() Branch {}\n"
+          "IcpSeq::CheckSat() Branch {}\n"
           "on {}\n"
           "Box1=\n{}\n"
           "Box2=\n{}",
@@ -72,7 +72,7 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
       stack->emplace_back(bisected_boxes.second, branching_point);
       stack->emplace_back(bisected_boxes.first, branching_point);
       DREAL_LOG_DEBUG(
-          "Icp::CheckSat() Branch {}\n"
+          "IcpSeq::CheckSat() Branch {}\n"
           "on {}\n"
           "Box1=\n{}\n"
           "Box2=\n{}",
@@ -86,7 +86,7 @@ bool Branch(const Box& box, const ibex::BitSet& bitset,
 }
 
 // A class to show statistics information at destruction. We have a
-// static instance in Icp::CheckSat() to keep track of the numbers of
+// static instance in IcpSeq::CheckSat() to keep track of the numbers of
 // branching and pruning operations.
 class IcpStat : public Stat {
  public:
@@ -126,9 +126,9 @@ class IcpStat : public Stat {
 };
 }  // namespace
 
-Icp::Icp(const Config& config) : config_{config} {}
+IcpSeq::IcpSeq(const Config& config) : Icp{config} {}
 
-optional<ibex::BitSet> Icp::EvaluateBox(
+optional<ibex::BitSet> IcpSeq::EvaluateBox(
     const vector<FormulaEvaluator>& formula_evaluators, const Box& box,
     ContractorStatus* const cs) {
   ibex::BitSet branching_candidates(box.size());  // This function returns this.
@@ -137,7 +137,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(
     switch (result.type()) {
       case FormulaEvaluationResult::Type::UNSAT:
         DREAL_LOG_DEBUG(
-            "Icp::EvaluateBox() Found that the box\n"
+            "IcpSeq::EvaluateBox() Found that the box\n"
             "{0}\n"
             "has no solution for {1} (evaluation = {2}).",
             box, formula_evaluator, result.evaluation());
@@ -146,7 +146,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(
         return nullopt;
       case FormulaEvaluationResult::Type::VALID:
         DREAL_LOG_DEBUG(
-            "Icp::EvaluateBox() Found that all points in the box\n"
+            "IcpSeq::EvaluateBox() Found that all points in the box\n"
             "{0}\n"
             "satisfies the constraint {1} (evaluation = {2}).",
             box, formula_evaluator, result.evaluation());
@@ -156,7 +156,7 @@ optional<ibex::BitSet> Icp::EvaluateBox(
         const double diam = evaluation.diam();
         if (diam > config_.precision()) {
           DREAL_LOG_DEBUG(
-              "Icp::EvaluateBox() Found an interval >= precision({2}):\n"
+              "IcpSeq::EvaluateBox() Found an interval >= precision({2}):\n"
               "{0} -> {1}",
               formula_evaluator, evaluation, config_.precision());
           for (const Variable& v : formula_evaluator.variables()) {
@@ -170,13 +170,13 @@ optional<ibex::BitSet> Icp::EvaluateBox(
   return branching_candidates;
 }
 
-bool Icp::CheckSat(const Contractor& contractor,
-                   const vector<FormulaEvaluator>& formula_evaluators,
-                   ContractorStatus* const cs) {
+bool IcpSeq::CheckSat(const Contractor& contractor,
+                      const vector<FormulaEvaluator>& formula_evaluators,
+                      ContractorStatus* const cs) {
   // Use the stacking policy set by the configuration.
   stack_left_box_first_ = config_.stack_left_box_first();
   static IcpStat stat{DREAL_LOG_INFO_ENABLED};
-  DREAL_LOG_DEBUG("Icp::CheckSat()");
+  DREAL_LOG_DEBUG("IcpSeq::CheckSat()");
   // Stack of Box x BranchingPoint.
   vector<pair<Box, int>> stack;
   stack.emplace_back(
@@ -199,7 +199,7 @@ bool Icp::CheckSat(const Contractor& contractor,
                                 false /* start_timer */);
 
   while (!stack.empty()) {
-    DREAL_LOG_DEBUG("Icp::CheckSat() Loop Head");
+    DREAL_LOG_DEBUG("IcpSeq::CheckSat() Loop Head");
 
     // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
     // when we build dReal python package.
@@ -215,17 +215,17 @@ bool Icp::CheckSat(const Contractor& contractor,
     stack.pop_back();
 
     // 2. Prune the current box.
-    DREAL_LOG_TRACE("Icp::CheckSat() Current Box:\n{}", current_box);
+    DREAL_LOG_TRACE("IcpSeq::CheckSat() Current Box:\n{}", current_box);
     prune_timer_guard.resume();
     contractor.Prune(cs);
     prune_timer_guard.pause();
     stat.num_prune_++;
-    DREAL_LOG_TRACE("Icp::CheckSat() After pruning, the current box =\n{}",
+    DREAL_LOG_TRACE("IcpSeq::CheckSat() After pruning, the current box =\n{}",
                     current_box);
 
     if (current_box.empty()) {
       // 3.1. The box is empty after pruning.
-      DREAL_LOG_DEBUG("Icp::CheckSat() Box is empty after pruning");
+      DREAL_LOG_DEBUG("IcpSeq::CheckSat() Box is empty after pruning");
       continue;
     }
     // 3.2. The box is non-empty. Check if the box is still feasible
@@ -236,14 +236,14 @@ bool Icp::CheckSat(const Contractor& contractor,
     if (!evaluation_result) {
       // 3.2.1. We detect that the current box is not a feasible solution.
       DREAL_LOG_DEBUG(
-          "Icp::CheckSat() Detect that the current box is not feasible by "
+          "IcpSeq::CheckSat() Detect that the current box is not feasible by "
           "evaluation:\n{}",
           current_box);
       continue;
     }
     if (evaluation_result->empty()) {
       // 3.2.2. delta-SAT : We find a box which is smaller enough.
-      DREAL_LOG_DEBUG("Icp::CheckSat() Found a delta-box:\n{}", current_box);
+      DREAL_LOG_DEBUG("IcpSeq::CheckSat() Found a delta-box:\n{}", current_box);
       return true;
     }
     eval_timer_guard.pause();
@@ -253,7 +253,7 @@ bool Icp::CheckSat(const Contractor& contractor,
     if (!Branch(current_box, *evaluation_result, stack_left_box_first_,
                 &stack)) {
       DREAL_LOG_DEBUG(
-          "Icp::CheckSat() Found that the current box is not satisfying "
+          "IcpSeq::CheckSat() Found that the current box is not satisfying "
           "delta-condition but it's not bisectable.:\n{}",
           current_box);
       return true;
@@ -265,7 +265,7 @@ bool Icp::CheckSat(const Contractor& contractor,
     stack_left_box_first_ = !stack_left_box_first_;
     stat.num_branch_++;
   }
-  DREAL_LOG_DEBUG("Icp::CheckSat() No solution");
+  DREAL_LOG_DEBUG("IcpSeq::CheckSat() No solution");
   return false;
 }
 }  // namespace dreal
