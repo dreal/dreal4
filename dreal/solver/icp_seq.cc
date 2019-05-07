@@ -1,180 +1,26 @@
 #include "dreal/solver/icp_seq.h"
 
-#include <ostream>
 #include <tuple>
 #include <utility>
 
-#include "dreal/util/assert.h"
-#include "dreal/util/exception.h"
+#include "dreal/solver/branch.h"
+#include "dreal/solver/icp_stat.h"
 #include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
-#include "dreal/util/stat.h"
-#include "dreal/util/timer.h"
 
-using std::cout;
-using std::make_pair;
 using std::pair;
 using std::tie;
 using std::vector;
 
 namespace dreal {
 
-namespace {
-/// Finds the dimension with the maximum diameter in a @p box. It only
-/// consider the dimensions enabled in @p bitset.
-///
-/// @returns a pair of (max dimension, variable index).
-pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset) {
-  DREAL_ASSERT(!bitset.empty());
-  double max_diam{0.0};
-  int max_diam_idx{-1};
-  for (int i = 0, idx = bitset.min(); i < bitset.size();
-       ++i, idx = bitset.next(idx)) {
-    const Box::Interval& iv_i{box[idx]};
-    const double diam_i{iv_i.diam()};
-    if (diam_i > max_diam && iv_i.is_bisectable()) {
-      max_diam = diam_i;
-      max_diam_idx = idx;
-    }
-  }
-  return make_pair(max_diam, max_diam_idx);
-}
-
-/// Partitions @p box into two sub-boxes and add them into the @p
-/// stack. It traverses only the variables enabled by @p bitset, to find a
-/// branching dimension.
-///
-/// @returns true if it finds a branching dimension and adds boxes to the @p
-/// stack.
-/// @returns false if it fails to find a branching dimension.
-bool Branch(const Box& box, const ibex::BitSet& bitset,
-            const bool stack_left_box_first,
-            vector<pair<Box, int>>* const stack) {
-  DREAL_ASSERT(!bitset.empty());
-
-  // TODO(soonho): For now, we fixated the branching heuristics.
-  // Generalize it later.
-  const pair<double, int> max_diam_and_idx{FindMaxDiam(box, bitset)};
-  const int branching_point{max_diam_and_idx.second};
-  if (branching_point >= 0) {
-    const pair<Box, Box> bisected_boxes{box.bisect(branching_point)};
-    if (stack_left_box_first) {
-      stack->emplace_back(bisected_boxes.first, branching_point);
-      stack->emplace_back(bisected_boxes.second, branching_point);
-      DREAL_LOG_DEBUG(
-          "IcpSeq::CheckSat() Branch {}\n"
-          "on {}\n"
-          "Box1=\n{}\n"
-          "Box2=\n{}",
-          box, box.variable(branching_point), bisected_boxes.first,
-          bisected_boxes.second);
-    } else {
-      stack->emplace_back(bisected_boxes.second, branching_point);
-      stack->emplace_back(bisected_boxes.first, branching_point);
-      DREAL_LOG_DEBUG(
-          "IcpSeq::CheckSat() Branch {}\n"
-          "on {}\n"
-          "Box1=\n{}\n"
-          "Box2=\n{}",
-          box, box.variable(branching_point), bisected_boxes.second,
-          bisected_boxes.first);
-    }
-    return true;
-  }
-  // Fail to find a branching point.
-  return false;
-}
-
-// A class to show statistics information at destruction. We have a
-// static instance in IcpSeq::CheckSat() to keep track of the numbers of
-// branching and pruning operations.
-class IcpStat : public Stat {
- public:
-  explicit IcpStat(const bool enabled) : Stat{enabled} {}
-  IcpStat(const IcpStat&) = default;
-  IcpStat(IcpStat&&) = default;
-  IcpStat& operator=(const IcpStat&) = default;
-  IcpStat& operator=(IcpStat&&) = default;
-  ~IcpStat() override {
-    if (enabled()) {
-      using fmt::print;
-      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Branching",
-            "ICP level", num_branch_);
-      print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of Pruning",
-            "ICP level", num_prune_);
-      if (num_branch_) {
-        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
-              "Total time spent in Branching", "ICP level",
-              timer_branch_.seconds());
-      }
-      if (num_prune_) {
-        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
-              "Total time spent in Pruning", "ICP level",
-              timer_prune_.seconds());
-      }
-      print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
-            "Total time spent in Evaluation", "ICP level",
-            timer_eval_.seconds());
-    }
-  }
-
-  int num_branch_{0};
-  int num_prune_{0};
-  Timer timer_branch_;
-  Timer timer_prune_;
-  Timer timer_eval_;
-};
-}  // namespace
-
 IcpSeq::IcpSeq(const Config& config) : Icp{config} {}
-
-optional<ibex::BitSet> IcpSeq::EvaluateBox(
-    const vector<FormulaEvaluator>& formula_evaluators, const Box& box,
-    ContractorStatus* const cs) {
-  ibex::BitSet branching_candidates(box.size());  // This function returns this.
-  for (const FormulaEvaluator& formula_evaluator : formula_evaluators) {
-    const FormulaEvaluationResult result{formula_evaluator(box)};
-    switch (result.type()) {
-      case FormulaEvaluationResult::Type::UNSAT:
-        DREAL_LOG_DEBUG(
-            "IcpSeq::EvaluateBox() Found that the box\n"
-            "{0}\n"
-            "has no solution for {1} (evaluation = {2}).",
-            box, formula_evaluator, result.evaluation());
-        cs->mutable_box().set_empty();
-        cs->AddUsedConstraint(formula_evaluator.formula());
-        return nullopt;
-      case FormulaEvaluationResult::Type::VALID:
-        DREAL_LOG_DEBUG(
-            "IcpSeq::EvaluateBox() Found that all points in the box\n"
-            "{0}\n"
-            "satisfies the constraint {1} (evaluation = {2}).",
-            box, formula_evaluator, result.evaluation());
-        continue;
-      case FormulaEvaluationResult::Type::UNKNOWN: {
-        const Box::Interval& evaluation{result.evaluation()};
-        const double diam = evaluation.diam();
-        if (diam > config_.precision()) {
-          DREAL_LOG_DEBUG(
-              "IcpSeq::EvaluateBox() Found an interval >= precision({2}):\n"
-              "{0} -> {1}",
-              formula_evaluator, evaluation, config_.precision());
-          for (const Variable& v : formula_evaluator.variables()) {
-            branching_candidates.add(box.index(v));
-          }
-        }
-        break;
-      }
-    }
-  }
-  return branching_candidates;
-}
 
 bool IcpSeq::CheckSat(const Contractor& contractor,
                       const vector<FormulaEvaluator>& formula_evaluators,
                       ContractorStatus* const cs) {
   // Use the stacking policy set by the configuration.
-  stack_left_box_first_ = config_.stack_left_box_first();
+  stack_left_box_first_ = config().stack_left_box_first();
   static IcpStat stat{DREAL_LOG_INFO_ENABLED};
   DREAL_LOG_DEBUG("IcpSeq::CheckSat()");
   // Stack of Box x BranchingPoint.
