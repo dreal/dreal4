@@ -26,6 +26,36 @@ dreal_cc_library(
     deps = ["//dreal/util:option_value"],
 )
 
+dreal_cc_library(
+    name = "branch",
+    srcs = [
+        "branch.cc",
+    ],
+    hdrs = [
+        "branch.h",
+    ],
+    deps = [
+        "//dreal/util:assert",
+        "//dreal/util:box",
+        "//dreal/util:logging",
+    ],
+)
+
+dreal_cc_library(
+    name = "icp_stat",
+    srcs = [
+        "icp_stat.cc",
+    ],
+    hdrs = [
+        "icp_stat.h",
+    ],
+    deps = [
+        "@fmt",
+        "//dreal/util:stat",
+        "//dreal/util:timer",
+    ],
+)
+
 # We combine context and theory_solver in a single target because they
 # have mutual dependencies.
 dreal_cc_library(
@@ -40,6 +70,7 @@ dreal_cc_library(
         "formula_evaluator.cc",
         "formula_evaluator_cell.cc",
         "formula_evaluator_cell.h",
+        "icp.cc",
         "icp_seq.cc",
         "relational_formula_evaluator.cc",
         "relational_formula_evaluator.h",
@@ -61,8 +92,10 @@ dreal_cc_library(
         "//dreal/smt2:__pkg__",
     ],
     deps = [
+        ":branch",
         ":config",
         ":filter_assertion",
+        ":icp_stat",
         ":sat_solver",
         "//dreal:version_header",
         "//dreal/contractor",
