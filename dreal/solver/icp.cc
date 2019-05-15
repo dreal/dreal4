@@ -16,9 +16,9 @@ namespace dreal {
 
 Icp::Icp(const Config& config) : config_{config} {}
 
-optional<ibex::BitSet> Icp::EvaluateBox(
+optional<ibex::BitSet> EvaluateBox(
     const vector<FormulaEvaluator>& formula_evaluators, const Box& box,
-    ContractorStatus* const cs) {
+    const double precision, ContractorStatus* const cs) {
   ibex::BitSet branching_candidates(box.size());  // This function returns this.
   for (const FormulaEvaluator& formula_evaluator : formula_evaluators) {
     const FormulaEvaluationResult result{formula_evaluator(box)};
@@ -42,11 +42,11 @@ optional<ibex::BitSet> Icp::EvaluateBox(
       case FormulaEvaluationResult::Type::UNKNOWN: {
         const Box::Interval& evaluation{result.evaluation()};
         const double diam = evaluation.diam();
-        if (diam > config_.precision()) {
+        if (diam > precision) {
           DREAL_LOG_DEBUG(
               "Icp::EvaluateBox() Found an interval >= precision({2}):\n"
               "{0} -> {1}",
-              formula_evaluator, evaluation, config_.precision());
+              formula_evaluator, evaluation, precision);
           for (const Variable& v : formula_evaluator.variables()) {
             branching_candidates.add(box.index(v));
           }
