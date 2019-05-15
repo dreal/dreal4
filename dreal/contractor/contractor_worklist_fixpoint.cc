@@ -34,8 +34,7 @@ ContractorWorklistFixpoint::ContractorWorklistFixpoint(
       contractors_{std::move(contractors)},
       input_to_contractors_{static_cast<size_t>(ComputeInputSize(contractors_)),
                             ibex::BitSet::empty(contractors_.size())},
-      worklist_{ibex::BitSet::empty(contractors_.size())},
-      old_iv_{1 /* It will be updated anyway. */} {
+      worklist_{ibex::BitSet::empty(contractors_.size())} {
   DREAL_ASSERT(!contractors_.empty());
   // Setup the input member.
   ibex::BitSet& input{mutable_input()};
@@ -82,7 +81,8 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
 
   // DREAL_LOG_ERROR("ContractorWorklistFixpoint::Prune -- Fill the Queue");
   // 1. Fill the queue.
-  old_iv_ = cs->box().interval_vector();
+  const Box::IntervalVector& iv{cs->box().interval_vector()};
+  Box::IntervalVector old_iv{iv};  // TODO(soonho): FIXME
   if (branching_point < 0) {
     // No branching_point information specified, add all contractors.
     for (const auto& contractor : contractors_) {
@@ -111,14 +111,14 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
       UpdateWorklist(cs->output(), input_to_contractors_, &worklist_);
     }
   }
-  if (worklist_.empty() || term_cond_(old_iv_, cs->box().interval_vector())) {
+  if (worklist_.empty() || term_cond_(old_iv, iv)) {
     return;
   }
 
   // 2. Run worklist algorithm
   do {
     int ctc_idx = worklist_.min();
-    old_iv_ = cs->box().interval_vector();
+    old_iv = iv;
     while (true) {
       worklist_.remove(ctc_idx);
       cs->mutable_output().clear();
@@ -135,7 +135,7 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
       }
       ctc_idx = worklist_.next(ctc_idx);
     }
-  } while (!term_cond_(old_iv_, cs->box().interval_vector()));
+  } while (!term_cond_(old_iv, iv));
 }
 
 ostream& ContractorWorklistFixpoint::display(ostream& os) const {

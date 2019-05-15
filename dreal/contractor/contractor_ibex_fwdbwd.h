@@ -5,8 +5,8 @@
 
 #include "./ibex.h"
 
-#include "dreal/contractor/contractor.h"
 #include "dreal/contractor/contractor_cell.h"
+#include "dreal/contractor/contractor_status.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
@@ -48,9 +48,6 @@ class ContractorIbexFwdbwd : public ContractorCell {
   IbexConverter ibex_converter_;
   std::unique_ptr<const ibex::ExprCtr> expr_ctr_;
   std::unique_ptr<ibex::CtcFwdBwd> ctc_;
-
-  // Temporary storage to store an old interval vector.
-  mutable Box::IntervalVector old_iv_;
 };
 
 }  // namespace dreal
