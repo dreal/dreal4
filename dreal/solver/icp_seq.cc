@@ -78,7 +78,7 @@ bool IcpSeq::CheckSat(const Contractor& contractor,
     // under evaluation and it's small enough.
     eval_timer_guard.resume();
     const optional<ibex::BitSet> evaluation_result{
-        EvaluateBox(formula_evaluators, current_box, cs)};
+        EvaluateBox(formula_evaluators, current_box, config().precision(), cs)};
     if (!evaluation_result) {
       // 3.2.1. We detect that the current box is not a feasible solution.
       DREAL_LOG_DEBUG(
