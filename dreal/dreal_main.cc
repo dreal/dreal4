@@ -111,6 +111,11 @@ void MainProgram::AddOptions() {
            "Use local optimization algorithm for exist-forall problems.\n",
            "--local-optimization");
 
+  opt_.add("1" /* Default */, false /* Required? */,
+           1 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */, "Number of jobs.\n",
+           "--jobs", "-j");
+
   opt_.add("1e-6" /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
@@ -244,6 +249,15 @@ void MainProgram::ExtractOptions() {
     config_.mutable_use_polytope().set_from_command_line(true);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --polytope = {}",
                     config_.use_polytope());
+  }
+
+  // --jobs
+  if (opt_.isSet("--jobs")) {
+    int jobs{};
+    opt_.get("--jobs")->getInt(jobs);
+    config_.mutable_number_of_jobs().set_from_command_line(jobs);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --jobs = {}",
+                    config_.number_of_jobs());
   }
 
   // --forall-polytope
