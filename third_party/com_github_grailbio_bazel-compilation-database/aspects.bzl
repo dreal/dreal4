@@ -32,7 +32,11 @@ load(
 
 CompilationAspect = provider()
 
-_cpp_extensions = ["cc", "cpp", "cxx"]
+_cpp_extensions = [
+    "cc",
+    "cpp",
+    "cxx",
+]
 
 def _compilation_db_json(compilation_db):
     # Return a JSON string for the compilation db entries.
@@ -59,13 +63,42 @@ def _sources(target, ctx):
 
     return srcs
 
+# Function copied from https://gist.github.com/oquenchil/7e2c2bd761aa1341b458cc25608da50c
+def get_compile_flags(dep):
+    options = []
+    compilation_context = dep[CcInfo].compilation_context
+    for define in compilation_context.defines.to_list():
+        options.append("-D{}".format(define))
+
+    for system_include in compilation_context.system_includes.to_list():
+        if len(system_include) == 0:
+            system_include = "."
+        options.append("-isystem {}".format(system_include))
+
+    for include in compilation_context.includes.to_list():
+        if len(include) == 0:
+            include = "."
+        options.append("-I {}".format(include))
+
+    for quote_include in compilation_context.quote_includes.to_list():
+        if len(quote_include) == 0:
+            quote_include = "."
+        options.append("-iquote {}".format(quote_include))
+
+    return options
+
 def _compilation_database_aspect_impl(target, ctx):
     # Write the compile commands for this target to a file, and return
     # the commands for the transitive closure.
 
     # We support only these rule kinds.
-    if ctx.rule.kind not in ["cc_library", "cc_binary", "cc_test",
-                             "cc_inc_library", "cc_proto_library"]:
+    if ctx.rule.kind not in [
+        "cc_library",
+        "cc_binary",
+        "cc_test",
+        "cc_inc_library",
+        "cc_proto_library",
+    ]:
         return []
 
     compilation_db = []
@@ -117,12 +150,15 @@ def _compilation_database_aspect_impl(target, ctx):
         force_cpp_mode_option = " -x c++"
 
     compile_flags = (compiler_options +
-                     target.cc.compile_flags +
+                     get_compile_flags(target) +
                      (ctx.rule.attr.copts if "copts" in dir(ctx.rule.attr) else []))
+
     # system built-in directories (helpful for macOS).
     if cc_toolchain.libc == "macosx":
-        compile_flags += ["-isystem " + str(d)
-                          for d in cc_toolchain.built_in_include_directories]
+        compile_flags += [
+            "-isystem " + str(d)
+            for d in cc_toolchain.built_in_include_directories
+        ]
     compile_command = compiler + " " + " ".join(compile_flags) + force_cpp_mode_option
 
     for src in srcs:
@@ -130,13 +166,15 @@ def _compilation_database_aspect_impl(target, ctx):
 
         exec_root_marker = "__EXEC_ROOT__"
         compilation_db.append(
-            struct(directory=exec_root_marker, command=command_for_file, file=src.path))
+            struct(command = command_for_file, directory = exec_root_marker, file = src.path),
+        )
 
     # Write the commands for this target.
     compdb_file = ctx.actions.declare_file(ctx.label.name + ".compile_commands.json")
     ctx.actions.write(
         content = _compilation_db_json(compilation_db),
-        output = compdb_file)
+        output = compdb_file,
+    )
 
     # Collect all transitive dependencies.
     compilation_db = depset(compilation_db)
@@ -147,26 +185,39 @@ def _compilation_database_aspect_impl(target, ctx):
         compilation_db += dep[CompilationAspect].compilation_db
         all_compdb_files += dep[OutputGroupInfo].compdb_files
 
-    return [CompilationAspect(compilation_db=compilation_db),
-            OutputGroupInfo(compdb_files=all_compdb_files)]
-
+    return [
+        CompilationAspect(compilation_db = compilation_db),
+        OutputGroupInfo(compdb_files = all_compdb_files),
+    ]
 
 compilation_database_aspect = aspect(
     attr_aspects = ["deps"],
-    fragments = ["cpp"],
-    required_aspect_providers = [CompilationAspect],
-    implementation = _compilation_database_aspect_impl,
     attrs = {
         "_cc_toolchain": attr.label(
             default = Label("@bazel_tools//tools/cpp:current_cc_toolchain"),
         ),
     },
+    fragments = ["cpp"],
+    required_aspect_providers = [CompilationAspect],
+    implementation = _compilation_database_aspect_impl,
 )
-
 
 def _compilation_database_impl(ctx):
     # Generates a single compile_commands.json file with the
     # transitive depset of specified targets.
+
+    if ctx.attr.disable:
+        ctx.actions.write(output = ctx.outputs.filename, content = "[]\n")
+        return
+
+    # We make this rule a no-op on Windows because it is not supported.
+    # We use the exposed host path separator as a hack to detect Windows.
+    # The ideal solution here would be to use toolchains.
+    # https://github.com/bazelbuild/bazel/issues/2045
+    if ctx.configuration.host_path_separator != ":":
+        print("Windows is not supported in compilation_database rule")
+        ctx.actions.write(output = ctx.outputs.filename, content = "[]\n")
+        return
 
     compilation_db = depset()
     for target in ctx.attr.targets:
@@ -174,17 +225,25 @@ def _compilation_database_impl(ctx):
 
     content = "[\n" + _compilation_db_json(compilation_db) + "\n]\n"
     content = content.replace("__EXEC_ROOT__", ctx.attr.exec_root)
-    ctx.file_action(output=ctx.outputs.filename, content=content)
-
+    ctx.actions.write(output = ctx.outputs.filename, content = content)
 
 compilation_database = rule(
     attrs = {
         "targets": attr.label_list(
             aspects = [compilation_database_aspect],
-            doc = "List of all cc targets which should be included."),
+            doc = "List of all cc targets which should be included.",
+        ),
         "exec_root": attr.string(
             default = "__EXEC_ROOT__",
-            doc = "Execution root of Bazel as returned by 'bazel info execution_root'."),
+            doc = "Execution root of Bazel as returned by 'bazel info execution_root'.",
+        ),
+        "disable": attr.bool(
+            default = False,
+            doc = ("Makes this operation a no-op; useful in combination with a 'select' " +
+                   "for platforms where the internals of this rule are not properly " +
+                   "supported. For known unsupported platforms (e.g. Windows), the " +
+                   "rule is always a no-op."),
+        ),
     },
     outputs = {
         "filename": "compile_commands.json",
