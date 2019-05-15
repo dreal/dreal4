@@ -7,6 +7,12 @@
 
 namespace dreal {
 
+/// Finds the dimension with the maximum diameter in a @p box. It only
+/// consider the dimensions enabled in @p bitset.
+///
+/// @returns a pair of (max dimension, variable index).
+std::pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset);
+
 /// Partitions @p box into two sub-boxes and add them into the @p
 /// stack. It traverses only the variables enabled by @p bitset, to find a
 /// branching dimension.
