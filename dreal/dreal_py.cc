@@ -629,6 +629,10 @@ PYBIND11_MODULE(_dreal_py, m) {
                     [](Config& self, const bool nlopt_maxtime) {
                       self.mutable_nlopt_maxtime() = nlopt_maxtime;
                     })
+      .def_property("number_of_jobs", &Config::number_of_jobs,
+                    [](Config& self, const int number_of_jobs) {
+                      self.mutable_number_of_jobs() = number_of_jobs;
+                    })
       .def("__str__",
            [](const Config& self) { return fmt::format("{}", self); });
 
