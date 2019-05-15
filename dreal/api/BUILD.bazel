@@ -2,8 +2,8 @@ load("//third_party/com_github_robotlocomotion_drake:tools/workspace/cpplint.bzl
 load("//third_party/com_github_robotlocomotion_drake:tools/workspace/python_lint.bzl", "python_lint")
 load(
     "//tools:dreal.bzl",
-    "dreal_cc_googletest",
     "dreal_cc_binary",
+    "dreal_cc_googletest",
     "dreal_cc_library",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
