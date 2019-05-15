@@ -43,6 +43,17 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "cds",
+    hdrs = [
+        "cds.h",
+    ],
+    visibility = ["//dreal:__subpackages__"],
+    deps = [
+        "@cds",
+    ],
+)
+
+dreal_cc_library(
     name = "interval",
     srcs = [
         "interval.cc",
