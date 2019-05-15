@@ -71,7 +71,9 @@ class ExpressionCell {
   virtual std::ostream& Display(std::ostream& os) const = 0;
 
   /** Returns the reference count of this cell. */
-  unsigned use_count() const { return rc_; }
+  unsigned use_count() const {
+    return atomic_load_explicit(&rc_, std::memory_order_acquire);
+  }
 
   /** Copy-constructs an ExpressionCell from an lvalue. (DELETED) */
   ExpressionCell(const ExpressionCell& e) = delete;
@@ -104,13 +106,12 @@ class ExpressionCell {
 
   // Reference counter.
   mutable std::atomic<unsigned> rc_{0};
-  void increase_rc() const { ++rc_; }
-  size_t decrease_rc() const {
-    if (--rc_ == 0) {
+  void increase_rc() const {
+    atomic_fetch_add_explicit(&rc_, 1U, std::memory_order_relaxed);
+  }
+  void decrease_rc() const {
+    if (atomic_fetch_sub_explicit(&rc_, 1U, std::memory_order_acq_rel) == 1U) {
       delete this;
-      return 0;
-    } else {
-      return rc_;
     }
   }
 
