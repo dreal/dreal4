@@ -58,8 +58,6 @@ class ContractorWorklistFixpoint : public ContractorCell {
   // worklist_[i] means that i-th contractor in contractors_ needs to be
   // applied.
   mutable ibex::BitSet worklist_;
-  // A temporary variable to save an old interval vector.
-  mutable Box::IntervalVector old_iv_;
 };
 
 }  // namespace dreal
