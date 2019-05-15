@@ -9,11 +9,6 @@ using std::make_pair;
 using std::pair;
 using std::vector;
 
-namespace {
-/// Finds the dimension with the maximum diameter in a @p box. It only
-/// consider the dimensions enabled in @p bitset.
-///
-/// @returns a pair of (max dimension, variable index).
 pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset) {
   DREAL_ASSERT(!bitset.empty());
   double max_diam{0.0};
@@ -29,15 +24,7 @@ pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset) {
   }
   return make_pair(max_diam, max_diam_idx);
 }
-}  // namespace
 
-/// Partitions @p box into two sub-boxes and add them into the @p
-/// stack. It traverses only the variables enabled by @p bitset, to find a
-/// branching dimension.
-///
-/// @returns true if it finds a branching dimension and adds boxes to the @p
-/// stack.
-/// @returns false if it fails to find a branching dimension.
 bool Branch(const Box& box, const ibex::BitSet& bitset,
             const bool stack_left_box_first,
             vector<pair<Box, int>>* const stack) {
