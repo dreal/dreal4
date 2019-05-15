@@ -168,13 +168,6 @@ matrix:
         - COV="ON" COV_OPTION="--config=kcov"
         - TEST_TAG_FILTERS="unit"
     - os: osx
-      osx_image: xcode8.3  # macOS-10.12
-      compiler: clang
-      env:
-        - COMPILER=clang
-        - BUILD_TYPE="-c opt"
-        - TEST_TAG_FILTERS="unit"
-    - os: osx
       osx_image: xcode9.4  # macOS-10.13
       compiler: clang
       env:
