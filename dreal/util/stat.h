@@ -15,9 +15,9 @@ class Stat {
   /// Returns true if the logging is enabled. Normally, this is
   /// checked in the destructor of a derived class and determine
   /// whether to log or not.
-  bool enabled() { return enabled_; }
+  bool enabled() const { return enabled_; }
 
  private:
-  bool enabled_{false};
+  const bool enabled_{false};
 };
 }  // namespace dreal
