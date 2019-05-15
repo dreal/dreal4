@@ -51,6 +51,12 @@ class Config {
   /// Returns a mutable OptionValue for 'use_local_optimization'.
   OptionValue<bool>& mutable_use_local_optimization();
 
+  /// Returns the number of parallel jobs.
+  int number_of_jobs() const;
+
+  /// Returns a mutable OptionValue for 'number_of_jobs'.
+  OptionValue<int>& mutable_number_of_jobs();
+
   /// Returns whether the ICP algorithm stacks the left box first
   /// after branching.
   bool stack_left_box_first() const;
@@ -120,6 +126,7 @@ class Config {
   OptionValue<bool> use_polytope_in_forall_{false};
   OptionValue<bool> use_worklist_fixpoint_{false};
   OptionValue<bool> use_local_optimization_{false};
+  OptionValue<int> number_of_jobs_{1};
   OptionValue<bool> stack_left_box_first_{false};
 
   // --------------------------------------------------------------------------
