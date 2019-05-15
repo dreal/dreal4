@@ -46,8 +46,7 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
     : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
                      ibex::BitSet::empty(box.size()), config},
       f_{std::move(f)},
-      ibex_converter_{box},
-      old_iv_{1 /* Will be overwritten anyway */} {
+      ibex_converter_{box} {
   // Build num_ctr and ctc_.
   expr_ctr_.reset(ibex_converter_.Convert(f_));
   if (expr_ctr_) {
@@ -69,14 +68,15 @@ ContractorIbexFwdbwd::~ContractorIbexFwdbwd() {
 }
 
 void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
-  static ContractorIbexFwdbwdStat stat{DREAL_LOG_INFO_ENABLED};
+  thread_local ContractorIbexFwdbwdStat stat{DREAL_LOG_INFO_ENABLED};
+
   if (ctc_) {
     Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
-    old_iv_ = iv;
+    const Box::IntervalVector old_iv{iv};  // TODO(soonho): FIXME
     DREAL_LOG_TRACE("ContractorIbexFwdbwd::Prune");
     DREAL_LOG_TRACE("CTC = {}", ctc_->ctr);
     DREAL_LOG_TRACE("F = {}", f_);
-    ctc_->contract(iv);
+    ctc_->contract(iv);  // TODO(soonho): FIXME
     stat.num_pruning_++;
     bool changed{false};
     // Update output.
@@ -84,9 +84,9 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
       changed = true;
       cs->mutable_output().fill(0, cs->box().size() - 1);
     } else {
-      for (int i = 0, idx = ctc_->output->min(); i < ctc_->output->size();
+      for (int i{0}, idx = ctc_->output->min(); i < ctc_->output->size();
            ++i, idx = ctc_->output->next(idx)) {
-        if (old_iv_[idx] != iv[idx]) {
+        if (old_iv[idx] != iv[idx]) {
           cs->mutable_output().add(idx);
           changed = true;
         }
@@ -97,7 +97,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
       cs->AddUsedConstraint(f_);
       if (DREAL_LOG_TRACE_ENABLED) {
         ostringstream oss;
-        DisplayDiff(oss, cs->box().variables(), old_iv_,
+        DisplayDiff(oss, cs->box().variables(), old_iv,
                     cs->box().interval_vector());
         DREAL_LOG_TRACE("Changed\n{}", oss.str());
       }

@@ -46,9 +46,6 @@ class ContractorFixpoint : public ContractorCell {
   // Stop the fixed-point iteration if term_cond(old_box, new_box) is true.
   const TerminationCondition term_cond_;
   std::vector<Contractor> contractors_;
-
-  // Temporary storage for old interval vector.
-  mutable Box::IntervalVector old_iv_;
 };
 
 }  // namespace dreal
