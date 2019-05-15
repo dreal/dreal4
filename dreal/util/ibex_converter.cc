@@ -1,6 +1,7 @@
 #include "dreal/util/ibex_converter.h"
 
 #include <algorithm>
+#include <atomic>
 #include <sstream>
 #include <utility>
 
@@ -26,10 +27,10 @@ namespace {
 class IbexConverterStat : public Stat {
  public:
   explicit IbexConverterStat(const bool enabled) : Stat{enabled} {}
-  IbexConverterStat(const IbexConverterStat&) = default;
-  IbexConverterStat(IbexConverterStat&&) = default;
-  IbexConverterStat& operator=(const IbexConverterStat&) = default;
-  IbexConverterStat& operator=(IbexConverterStat&&) = default;
+  IbexConverterStat(const IbexConverterStat&) = delete;
+  IbexConverterStat(IbexConverterStat&&) = delete;
+  IbexConverterStat& operator=(const IbexConverterStat&) = delete;
+  IbexConverterStat& operator=(IbexConverterStat&&) = delete;
   ~IbexConverterStat() override {
     if (enabled()) {
       using fmt::print;
@@ -42,9 +43,12 @@ class IbexConverterStat : public Stat {
       }
     }
   }
+  void increase_convert() { increase(&num_convert_); }
 
-  int num_convert_{0};
   Timer timer_convert_;
+
+ private:
+  std::atomic<int> num_convert_{0};
 };
 }  // namespace
 
@@ -81,7 +85,7 @@ const ExprCtr* IbexConverter::Convert(const Formula& f) {
   DREAL_LOG_DEBUG("IbexConverter::Convert({})", f);
   static IbexConverterStat stat{DREAL_LOG_INFO_ENABLED};
   TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
-  ++stat.num_convert_;
+  stat.increase_convert();
 
   const ExprCtr* expr_ctr{Visit(f, true)};
   if (expr_ctr) {
