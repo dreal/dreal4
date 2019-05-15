@@ -351,6 +351,7 @@ dreal_cc_library(
     ],
     visibility = ["//dreal:__subpackages__"],
     deps = [
+        ":rounding_mode_guard",
         "//dreal/util:box",
     ],
 )
