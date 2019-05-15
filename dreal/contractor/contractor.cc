@@ -1,6 +1,7 @@
 #include "dreal/contractor/contractor.h"
 
 #include <algorithm>
+#include <atomic>
 #include <utility>
 
 #include "dreal/contractor/contractor_cell.h"
@@ -54,10 +55,10 @@ vector<Contractor> Flatten(const vector<Contractor>& contractors) {
 class ContractorStat : public Stat {
  public:
   explicit ContractorStat(const bool enabled) : Stat{enabled} {}
-  ContractorStat(const ContractorStat&) = default;
-  ContractorStat(ContractorStat&&) = default;
-  ContractorStat& operator=(const ContractorStat&) = default;
-  ContractorStat& operator=(ContractorStat&&) = default;
+  ContractorStat(const ContractorStat&) = delete;
+  ContractorStat(ContractorStat&&) = delete;
+  ContractorStat& operator=(const ContractorStat&) = delete;
+  ContractorStat& operator=(ContractorStat&&) = delete;
   ~ContractorStat() override {
     if (enabled()) {
       using fmt::print;
@@ -65,7 +66,11 @@ class ContractorStat : public Stat {
             "Contractor level", num_prune_);
     }
   }
-  int num_prune_{0};
+
+  void increase_prune() { increase(&num_prune_); }
+
+ private:
+  std::atomic<int> num_prune_{0};
 };
 
 }  // namespace
@@ -79,8 +84,10 @@ Contractor::Contractor(std::shared_ptr<ContractorCell> ptr)
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 
 void Contractor::Prune(ContractorStatus* cs) const {
-  static ContractorStat stat{DREAL_LOG_INFO_ENABLED};
-  stat.num_prune_++;
+  if (DREAL_LOG_INFO_ENABLED) {
+    static ContractorStat stat{DREAL_LOG_INFO_ENABLED};
+    stat.increase_prune();
+  }
   ptr_->Prune(cs);
 }
 
