@@ -298,6 +298,14 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "rounding_mode_guard",
+    hdrs = [
+        "rounding_mode_guard.h",
+    ],
+    visibility = ["//dreal:__subpackages__"],
+)
+
+dreal_cc_library(
     name = "scoped_unordered_map",
     hdrs = [
         "scoped_unordered_map.h",
