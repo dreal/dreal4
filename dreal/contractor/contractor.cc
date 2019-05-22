@@ -93,6 +93,10 @@ void Contractor::Prune(ContractorStatus* cs) const {
 
 Contractor::Kind Contractor::kind() const { return ptr_->kind(); }
 
+bool Contractor::include_forall() const { return ptr_->include_forall(); }
+
+void Contractor::set_include_forall() { ptr_->set_include_forall(); }
+
 Contractor make_contractor_id(const Config& config) {
   return Contractor{config};
 }

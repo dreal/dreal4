@@ -70,6 +70,12 @@ class Contractor {
   /// Returns kind.
   Kind kind() const;
 
+  /// Returns true if this contractor includes a forall contractor.
+  bool include_forall() const;
+
+  /// Sets include_forall true.
+  void set_include_forall();
+
   friend std::ostream& operator<<(std::ostream& os, Contractor const& ctc);
 
  private:
