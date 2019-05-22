@@ -51,14 +51,20 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
   // Build num_ctr and ctc_.
   expr_ctr_.reset(ibex_converter_.Convert(f_));
   if (expr_ctr_) {
-    num_ctr_ = make_unique<ibex::NumConstraint>(ibex_converter_.variables(),
-                                                *expr_ctr_);
-    ctc_ = make_unique<ibex::CtcFwdBwd>(*num_ctr_);
+    auto* const num_ctr =
+        new ibex::NumConstraint{ibex_converter_.variables(), *expr_ctr_};
+    ctc_ = make_unique<ibex::CtcFwdBwd>(*num_ctr);
     // Build input.
     ibex::BitSet& input{mutable_input()};
     for (const Variable& var : f_.GetFreeVariables()) {
       input.add(box.index(var));
     }
+  }
+}
+
+ContractorIbexFwdbwd::~ContractorIbexFwdbwd() {
+  if (ctc_) {
+    delete &ctc_->ctr;
   }
 }
 
@@ -68,7 +74,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
     Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
     old_iv_ = iv;
     DREAL_LOG_TRACE("ContractorIbexFwdbwd::Prune");
-    DREAL_LOG_TRACE("CTC = {}", *num_ctr_);
+    DREAL_LOG_TRACE("CTC = {}", ctc_->ctr);
     DREAL_LOG_TRACE("F = {}", f_);
     ctc_->contract(iv);
     stat.num_pruning_++;
@@ -103,12 +109,13 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
 }
 
 Box::Interval ContractorIbexFwdbwd::Evaluate(const Box& box) const {
-  return num_ctr_->f.eval(box.interval_vector());
+  return ctc_->ctr.f.eval(box.interval_vector());
 }
 
 ostream& ContractorIbexFwdbwd::display(ostream& os) const {
-  if (num_ctr_) {
-    return os << "IbexFwdbwd(" << *num_ctr_ << ")";
+  if (ctc_) {
+    const ibex::NumConstraint& num_ctr{ctc_->ctr};
+    return os << "IbexFwdbwd(" << num_ctr << ")";
   } else {
     return os << "IbexFwdbwd()";
   }
