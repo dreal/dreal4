@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& os,
     case Config::SatDefaultPhase::False:
       return os << "False";
     case Config::SatDefaultPhase::True:
-      return os << "False";
+      return os << "True";
     case Config::SatDefaultPhase::JeroslowWang:
       return os << "Jeroslow-Wang";
     case Config::SatDefaultPhase::RandomInitialPhase:

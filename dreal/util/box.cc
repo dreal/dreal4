@@ -154,7 +154,6 @@ pair<Box, Box> Box::bisect(const int i) const {
     case Variable::Type::CONTINUOUS:
       return bisect_continuous(i);
     case Variable::Type::INTEGER:
-      return bisect_int(i);
     case Variable::Type::BINARY:
       return bisect_int(i);
     case Variable::Type::BOOLEAN:

@@ -6,10 +6,6 @@
 
 #include "dreal/util/logging.h"
 
-using std::cout;
-using std::make_pair;
-using std::pair;
-using std::tie;
 using std::vector;
 
 namespace dreal {
