@@ -116,9 +116,6 @@ class Formula {
   size_t get_hash() const;
 
   /** Gets free variables (unquantified variables).
-   *
-   * @note For the first call, it traverses every node in the formula tree and
-   * caches the result. The following calls are done in O(1) time.
    */
   const Variables& GetFreeVariables() const;
 
@@ -271,9 +268,6 @@ class Formula {
   explicit Formula(FormulaCell* ptr);
 
   FormulaCell* ptr_;
-
-  // Storage to cache the result of GetFreevariables().
-  mutable std::shared_ptr<Variables> free_variables_;
 };
 
 /** Returns a formula @p f, universally quantified by variables @p vars. */
