@@ -32,7 +32,7 @@ class ExpressionCell {
   size_t get_hash() const { return hash_; }
 
   /** Collects variables in expression. */
-  virtual Variables GetVariables() const = 0;
+  const Variables& GetVariables() const;
 
   /** Checks structural equality. */
   virtual bool EqualTo(const ExpressionCell& c) const = 0;
@@ -89,7 +89,8 @@ class ExpressionCell {
   /** Default constructor. */
   ExpressionCell() = default;
   /** Constructs ExpressionCell of kind @p k with @p hash and @p is_poly . */
-  ExpressionCell(ExpressionKind k, size_t hash, bool is_poly);
+  ExpressionCell(ExpressionKind k, size_t hash, bool is_poly,
+                 Variables variables);
   /** Default destructor. */
   virtual ~ExpressionCell() = default;
   /** Returns an expression pointing to this ExpressionCell. */
@@ -99,6 +100,7 @@ class ExpressionCell {
   const ExpressionKind kind_{};
   const size_t hash_{};
   const bool is_polynomial_{false};
+  const Variables variables_;
 
   // Reference counter.
   mutable std::atomic<unsigned> rc_{0};
@@ -119,7 +121,6 @@ class ExpressionCell {
 /** Represents the base class for unary expressions.  */
 class UnaryExpressionCell : public ExpressionCell {
  public:
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -160,7 +161,6 @@ class UnaryExpressionCell : public ExpressionCell {
  */
 class BinaryExpressionCell : public ExpressionCell {
  public:
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -209,7 +209,6 @@ class ExpressionVar : public ExpressionCell {
    */
   explicit ExpressionVar(const Variable& v);
   const Variable& get_variable() const { return var_; }
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -228,7 +227,6 @@ class ExpressionConstant : public ExpressionCell {
  public:
   explicit ExpressionConstant(double v);
   double get_value() const { return v_; }
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -254,7 +252,6 @@ class ExpressionRealConstant : public ExpressionCell {
   double get_lb() const { return lb_; }
   double get_ub() const { return ub_; }
   double get_value() const { return use_lb_as_representative_ ? lb_ : ub_; }
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -274,7 +271,6 @@ class ExpressionRealConstant : public ExpressionCell {
 class ExpressionNaN : public ExpressionCell {
  public:
   ExpressionNaN();
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -304,7 +300,6 @@ class ExpressionAdd : public ExpressionCell {
    */
   ExpressionAdd(double constant,
                 std::map<Expression, double> expr_to_coeff_map);
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -328,6 +323,8 @@ class ExpressionAdd : public ExpressionCell {
   }
 
  private:
+  static Variables ExtractVariables(
+      const std::map<Expression, double>& expr_to_coeff_map);
   std::ostream& DisplayTerm(std::ostream& os, bool print_plus, double coeff,
                             const Expression& term) const;
 
@@ -424,7 +421,6 @@ class ExpressionMul : public ExpressionCell {
   /** Constructs ExpressionMul from @p constant and @p base_to_exponent_map. */
   ExpressionMul(double constant,
                 std::map<Expression, Expression> base_to_exponent_map);
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -448,6 +444,8 @@ class ExpressionMul : public ExpressionCell {
   }
 
  private:
+  static Variables ExtractVariables(
+      const std::map<Expression, Expression>& base_to_exponent_map);
   std::ostream& DisplayTerm(std::ostream& os, bool print_mul,
                             const Expression& base,
                             const Expression& exponent) const;
@@ -810,7 +808,6 @@ class ExpressionIfThenElse : public ExpressionCell {
    * e_else. */
   ExpressionIfThenElse(const Formula& f_cond, const Expression& e_then,
                        const Expression& e_else);
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;
@@ -828,6 +825,10 @@ class ExpressionIfThenElse : public ExpressionCell {
   const Expression& get_else_expression() const { return e_else_; }
 
  private:
+  static Variables ExtractVariables(const Formula& f_cond,
+                                    const Expression& e_then,
+                                    const Expression& e_else);
+
   const Formula f_cond_;
   const Expression e_then_;
   const Expression e_else_;
@@ -840,7 +841,6 @@ class ExpressionUninterpretedFunction : public ExpressionCell {
    */
   ExpressionUninterpretedFunction(const std::string& name,
                                   const Variables& vars);
-  Variables GetVariables() const override;
   bool EqualTo(const ExpressionCell& e) const override;
   bool Less(const ExpressionCell& e) const override;
   double Evaluate(const Environment& env) const override;

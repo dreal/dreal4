@@ -184,12 +184,7 @@ class Expression {
   ExpressionKind get_kind() const;
   /** Returns hash value. */
   size_t get_hash() const;
-  /** Collects variables in expression.
-   *
-   * @note For the first call, it traverses every node in the
-   * expression tree and caches the result. The following calls are
-   * done in O(1) time.
-   */
+  /** Collects variables in expression. */
   const Variables& GetVariables() const;
 
   /** Checks structural equality.
@@ -492,9 +487,6 @@ class Expression {
   explicit Expression(ExpressionCell* ptr);
 
   ExpressionCell* ptr_{nullptr};
-
-  // Storage to cache the result of GetVariables().
-  mutable std::shared_ptr<Variables> variables_;
 };
 
 Expression operator+(const Expression& lhs, const Expression& rhs);
