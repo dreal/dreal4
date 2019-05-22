@@ -1,4 +1,5 @@
 #pragma once
+
 #include <ostream>
 
 #include "dreal/util/option_value.h"

@@ -40,9 +40,6 @@ void Tighten(Box* box, const double delta) {
       const Variable& var{box->variable(i)};
       switch (var.get_type()) {
         case Variable::Type::BINARY:
-          // Always pick 1.0
-          interval = 1.0;
-          break;
         case Variable::Type::BOOLEAN:
           // Always pick True (1.0)
           interval = 1.0;
@@ -135,8 +132,8 @@ optional<Box> Context::Impl::CheckSatCore(const ScopedVector<Formula>& stack,
     return box;
   }
   while (true) {
-    // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
-    // when we build dReal python package.
+  // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
+  // when we build dReal python package.
 #ifdef DREAL_CHECK_INTERRUPT
     if (g_interrupted) {
       DREAL_LOG_DEBUG("KeyboardInterrupt(SIGINT) Detected.");

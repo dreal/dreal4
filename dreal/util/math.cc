@@ -30,7 +30,8 @@ int convert_int64_to_int(const int64_t v) {
 }
 
 double convert_int64_to_double(const int64_t v) {
-  constexpr int64_t m{1ul << numeric_limits<double>::digits};
+  constexpr int64_t m{
+      1UL << static_cast<unsigned>(numeric_limits<double>::digits)};
   if (-m <= v && v <= m) {
     return v;
   } else {
