@@ -28,23 +28,23 @@ using std::runtime_error;
 using std::set;
 using std::string;
 
-FormulaCell::FormulaCell(const FormulaKind k, const size_t hash)
-    : kind_{k}, hash_{hash_combine(hash, static_cast<size_t>(kind_))} {}
+FormulaCell::FormulaCell(const FormulaKind k, const size_t hash,
+                         Variables variables)
+    : kind_{k},
+      hash_{hash_combine(hash, static_cast<size_t>(kind_))},
+      variables_{std::move(variables)} {}
 
 Formula FormulaCell::GetFormula() { return Formula{this}; }
+
+const Variables& FormulaCell::GetFreeVariables() const { return variables_; }
 
 RelationalFormulaCell::RelationalFormulaCell(const FormulaKind k,
                                              const Expression& lhs,
                                              const Expression& rhs)
-    : FormulaCell{k, hash_combine(lhs.get_hash(), rhs)},
+    : FormulaCell{k, hash_combine(lhs.get_hash(), rhs),
+                  lhs.GetVariables() + rhs.GetVariables()},
       e_lhs_{lhs},
       e_rhs_{rhs} {}
-
-Variables RelationalFormulaCell::GetFreeVariables() const {
-  Variables ret{e_lhs_.GetVariables()};
-  ret.insert(e_rhs_.GetVariables());
-  return ret;
-}
 
 bool RelationalFormulaCell::EqualTo(const FormulaCell& f) const {
   // Formula::EqualTo guarantees the following assertion.
@@ -67,12 +67,13 @@ bool RelationalFormulaCell::Less(const FormulaCell& f) const {
 }
 
 NaryFormulaCell::NaryFormulaCell(const FormulaKind k, set<Formula> formulas)
-    : FormulaCell{k, hash_value<set<Formula>>{}(formulas)},
+    : FormulaCell{k, hash_value<set<Formula>>{}(formulas),
+                  ExtractFreeVariables(formulas)},
       formulas_{std::move(formulas)} {}
 
-Variables NaryFormulaCell::GetFreeVariables() const {
+Variables NaryFormulaCell::ExtractFreeVariables(const set<Formula>& formulas) {
   Variables ret{};
-  for (const auto& f : formulas_) {
+  for (const auto& f : formulas) {
     ret.insert(f.GetFreeVariables());
   }
   return ret;
@@ -114,9 +115,7 @@ ostream& NaryFormulaCell::DisplayWithOp(ostream& os, const string& op) const {
 }
 
 FormulaTrue::FormulaTrue()
-    : FormulaCell{FormulaKind::True, hash<string>{}("True")} {}
-
-Variables FormulaTrue::GetFreeVariables() const { return Variables{}; }
+    : FormulaCell{FormulaKind::True, hash<string>{}("True"), Variables{}} {}
 
 bool FormulaTrue::EqualTo(const FormulaCell& f) const {
   // Formula::EqualTo guarantees the following assertion.
@@ -141,9 +140,7 @@ Formula FormulaTrue::Substitute(const ExpressionSubstitution&,
 ostream& FormulaTrue::Display(ostream& os) const { return os << "True"; }
 
 FormulaFalse::FormulaFalse()
-    : FormulaCell{FormulaKind::False, hash<string>{}("False")} {}
-
-Variables FormulaFalse::GetFreeVariables() const { return Variables{}; }
+    : FormulaCell{FormulaKind::False, hash<string>{}("False"), Variables{}} {}
 
 bool FormulaFalse::EqualTo(const FormulaCell& f) const {
   // Formula::EqualTo guarantees the following assertion.
@@ -168,7 +165,7 @@ Formula FormulaFalse::Substitute(const ExpressionSubstitution&,
 ostream& FormulaFalse::Display(ostream& os) const { return os << "False"; }
 
 FormulaVar::FormulaVar(const Variable& v)
-    : FormulaCell{FormulaKind::Var, hash_value<Variable>{}(v)}, var_{v} {
+    : FormulaCell{FormulaKind::Var, hash_value<Variable>{}(v), {v}}, var_{v} {
   // Dummy symbolic variable (ID = 0) should not be used in constructing
   // symbolic formulas.
   if (var_.is_dummy()) {
@@ -184,8 +181,6 @@ FormulaVar::FormulaVar(const Variable& v)
     throw runtime_error(oss.str());
   }
 }
-
-Variables FormulaVar::GetFreeVariables() const { return Variables{var_}; }
 
 bool FormulaVar::EqualTo(const FormulaCell& f) const {
   // Formula::EqualTo guarantees the following assertion.
@@ -500,9 +495,8 @@ ostream& FormulaOr::Display(ostream& os) const {
 }
 
 FormulaNot::FormulaNot(const Formula& f)
-    : FormulaCell{FormulaKind::Not, f.get_hash()}, f_{f} {}
-
-Variables FormulaNot::GetFreeVariables() const { return f_.GetFreeVariables(); }
+    : FormulaCell{FormulaKind::Not, f.get_hash(), f.GetFreeVariables()},
+      f_{f} {}
 
 bool FormulaNot::EqualTo(const FormulaCell& f) const {
   // Formula::EqualTo guarantees the following assertion.
@@ -537,13 +531,10 @@ ostream& FormulaNot::Display(ostream& os) const {
 }
 
 FormulaForall::FormulaForall(const Variables& vars, const Formula& f)
-    : FormulaCell{FormulaKind::Forall, hash_combine(vars.get_hash(), f)},
+    : FormulaCell{FormulaKind::Forall, hash_combine(vars.get_hash(), f),
+                  f.GetFreeVariables() - vars},
       vars_{vars},
       f_{f} {}
-
-Variables FormulaForall::GetFreeVariables() const {
-  return f_.GetFreeVariables() - vars_;
-}
 
 bool FormulaForall::EqualTo(const FormulaCell& f) const {
   // Formula::EqualTo guarantees the following assertion.
