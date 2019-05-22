@@ -10,9 +10,9 @@ using std::runtime_error;
 
 SignalHandlerGuard::SignalHandlerGuard(const int sig, handler_t handler,
                                        volatile atomic_bool* flag)
-    : sig_{sig}, flag_{flag} {
+    : sig_{sig}, flag_{flag}, old_action_{} {
   // Register the new handler and save the current one.
-  struct sigaction new_action;
+  sigaction_t new_action{};
   new_action.sa_handler = handler;
   sigemptyset(&new_action.sa_mask);
   new_action.sa_flags = SA_RESTART;

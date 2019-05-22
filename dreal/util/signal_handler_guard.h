@@ -1,7 +1,7 @@
 #pragma once
 
-#include <signal.h>
 #include <atomic>
+#include <csignal>
 
 namespace dreal {
 
@@ -31,7 +31,11 @@ class SignalHandlerGuard {
 
   /// Registers the new handler and saves the current one.
   SignalHandlerGuard(int sig, handler_t handler,
-                           volatile std::atomic_bool* flag);
+                     volatile std::atomic_bool* flag);
+  SignalHandlerGuard(const SignalHandlerGuard&) = delete;
+  SignalHandlerGuard(SignalHandlerGuard&&) = delete;
+  SignalHandlerGuard& operator=(const SignalHandlerGuard&) = delete;
+  SignalHandlerGuard& operator=(SignalHandlerGuard&&) = delete;
 
   /// Restores the old signal handler. If the flag is set, clear it.
   ~SignalHandlerGuard();
@@ -39,6 +43,8 @@ class SignalHandlerGuard {
  private:
   const int sig_{0};
   volatile std::atomic_bool* flag_;
-  struct sigaction old_action_;
+
+  using sigaction_t = struct sigaction;
+  sigaction_t old_action_;
 };
 }  // namespace dreal
