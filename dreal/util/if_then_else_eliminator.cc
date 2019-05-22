@@ -23,8 +23,8 @@ class IfThenElseElimStat : public Stat {
   explicit IfThenElseElimStat(const bool enabled) : Stat{enabled} {}
   IfThenElseElimStat(const IfThenElseElimStat&) = default;
   IfThenElseElimStat(IfThenElseElimStat&&) = default;
-  IfThenElseElimStat& operator=(const IfThenElseElimStat&) = default;
-  IfThenElseElimStat& operator=(IfThenElseElimStat&&) = default;
+  IfThenElseElimStat& operator=(const IfThenElseElimStat&) = delete;
+  IfThenElseElimStat& operator=(IfThenElseElimStat&&) = delete;
   ~IfThenElseElimStat() override {
     if (enabled()) {
       using fmt::print;

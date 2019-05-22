@@ -22,8 +22,8 @@ class ContractorStatusStat : public Stat {
   explicit ContractorStatusStat(const bool enabled) : Stat{enabled} {}
   ContractorStatusStat(const ContractorStatusStat&) = default;
   ContractorStatusStat(ContractorStatusStat&&) = default;
-  ContractorStatusStat& operator=(const ContractorStatusStat&) = default;
-  ContractorStatusStat& operator=(ContractorStatusStat&&) = default;
+  ContractorStatusStat& operator=(const ContractorStatusStat&) = delete;
+  ContractorStatusStat& operator=(ContractorStatusStat&&) = delete;
   ~ContractorStatusStat() override {
     if (enabled()) {
       using fmt::print;
