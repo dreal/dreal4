@@ -62,6 +62,12 @@ class ContractorCell {
   /// Returns config.
   const Config& config() const;
 
+  /// Returns true if this contractor includes a forall contractor.
+  bool include_forall() const;
+
+  /// Sets include_forall true.
+  void set_include_forall();
+
   /// Performs pruning on @p cs.
   virtual void Prune(ContractorStatus* cs) const = 0;
 
@@ -72,6 +78,7 @@ class ContractorCell {
   const Contractor::Kind kind_;
   ibex::BitSet input_;
   const Config& config_;
+  bool include_forall_{false};
 };
 
 /// Returns max(c₁.input().max(), ..., cₙ.input().max()).
