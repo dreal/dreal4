@@ -664,7 +664,7 @@ Expression ExpressionAddFactory::GetExpression() {
   if (expr_to_coeff_map_.empty()) {
     return Expression{constant_};
   }
-  if (constant_ == 0.0 && expr_to_coeff_map_.size() == 1u) {
+  if (constant_ == 0.0 && expr_to_coeff_map_.size() == 1U) {
     // 0.0 + c1 * t1 -> c1 * t1
     const auto it(expr_to_coeff_map_.cbegin());
     return it->first * it->second;
@@ -942,7 +942,7 @@ Expression ExpressionMulFactory::GetExpression() {
   if (base_to_exponent_map_.empty()) {
     return Expression{constant_};
   }
-  if (constant_ == 1.0 && base_to_exponent_map_.size() == 1u) {
+  if (constant_ == 1.0 && base_to_exponent_map_.size() == 1U) {
     // 1.0 * c1^t1 -> c1^t1
     const auto it(base_to_exponent_map_.cbegin());
     return pow(it->first, it->second);
