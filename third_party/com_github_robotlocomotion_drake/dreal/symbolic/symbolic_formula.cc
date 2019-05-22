@@ -35,13 +35,7 @@ Formula::Formula(const Formula& f) : ptr_{f.ptr_} {
 }
 
 Formula& Formula::operator=(const Formula& f) {
-  assert(f.ptr_ != nullptr);
-  f.ptr_->increase_rc();
-  if (ptr_) {
-    ptr_->decrease_rc();
-  }
-  ptr_ = f.ptr_;
-  return *this;
+  return *this = Formula{f};  // move-assign
 }
 
 Formula::Formula(Formula&& f) noexcept : ptr_{f.ptr_} {
