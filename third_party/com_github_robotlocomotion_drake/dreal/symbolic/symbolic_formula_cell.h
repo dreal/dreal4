@@ -46,7 +46,7 @@ class FormulaCell {
   /** Returns hash of formula. */
   size_t get_hash() const { return hash_; }
   /** Returns set of free variables in formula. */
-  virtual Variables GetFreeVariables() const = 0;
+  const Variables& GetFreeVariables() const;
   /** Checks structural equality. */
   virtual bool EqualTo(const FormulaCell& c) const = 0;
   /** Checks ordering. */
@@ -67,7 +67,7 @@ class FormulaCell {
 
  protected:
   /** Construct FormulaCell of kind @p k with @p hash. */
-  FormulaCell(FormulaKind k, size_t hash);
+  FormulaCell(FormulaKind k, size_t hash, Variables variables);
   /** Default destructor. */
   virtual ~FormulaCell() = default;
   /** Returns a Formula pointing to this FormulaCell. */
@@ -76,6 +76,7 @@ class FormulaCell {
  private:
   const FormulaKind kind_{};
   const size_t hash_{};
+  const Variables variables_;
 
   // Reference counter.
   mutable std::atomic<unsigned> rc_{0};
@@ -112,7 +113,6 @@ class RelationalFormulaCell : public FormulaCell {
   /** Construct RelationalFormulaCell of kind @p k with @p lhs and @p rhs. */
   RelationalFormulaCell(FormulaKind k, const Expression& lhs,
                         const Expression& rhs);
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
 
@@ -147,7 +147,6 @@ class NaryFormulaCell : public FormulaCell {
   NaryFormulaCell& operator=(const NaryFormulaCell& f) = delete;
   /** Construct NaryFormulaCell of kind @p k with @p formulas. */
   NaryFormulaCell(FormulaKind k, std::set<Formula> formulas);
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   /** Returns the formulas. */
@@ -160,6 +159,8 @@ class NaryFormulaCell : public FormulaCell {
   std::ostream& DisplayWithOp(std::ostream& os, const std::string& op) const;
 
  private:
+  static Variables ExtractFreeVariables(const std::set<Formula>& formulas);
+
   std::set<Formula> formulas_;
 };
 
@@ -168,7 +169,6 @@ class FormulaTrue : public FormulaCell {
  public:
   /** Default Constructor. */
   FormulaTrue();
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   bool Evaluate(const Environment& env) const override;
@@ -182,7 +182,6 @@ class FormulaFalse : public FormulaCell {
  public:
   /** Default Constructor. */
   FormulaFalse();
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   bool Evaluate(const Environment& env) const override;
@@ -198,7 +197,6 @@ class FormulaVar : public FormulaCell {
    * @pre @p var is of BOOLEAN type and not a dummy variable.
    */
   explicit FormulaVar(const Variable& v);
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   bool Evaluate(const Environment& env) const override;
@@ -308,7 +306,6 @@ class FormulaNot : public FormulaCell {
  public:
   /** Constructs from @p f. */
   explicit FormulaNot(const Formula& f);
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   bool Evaluate(const Environment& env) const override;
@@ -329,7 +326,6 @@ class FormulaForall : public FormulaCell {
  public:
   /** Constructs from @p vars and @p f. */
   FormulaForall(const Variables& vars, const Formula& f);
-  Variables GetFreeVariables() const override;
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   bool Evaluate(const Environment& env) const override;
