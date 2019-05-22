@@ -147,7 +147,6 @@ class UnaryExpressionCell : public ExpressionCell {
   ~UnaryExpressionCell() override = default;
 
  protected:
-
   /** Constructs UnaryExpressionCell of kind @p k with @p hash, @p e, and @p
    * is_poly. */
   UnaryExpressionCell(ExpressionKind k, const Expression& e, bool is_poly);
@@ -924,8 +923,7 @@ const ExpressionConstant* to_constant(const Expression& e);
  *  @c const ExpressionRealConstant*.
  *  @pre @p *expr_ptr is of @c ExpressionRealConstant.
  */
-const ExpressionRealConstant* to_real_constant(
-    const ExpressionCell* expr_ptr);
+const ExpressionRealConstant* to_real_constant(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionRealConstant*.
  *  @pre @p *(e.ptr_) is of @c ExpressionRealConstant.
  */
@@ -1191,8 +1189,7 @@ const ExpressionMax* to_max(const Expression& e);
  *  @c const ExpressionIfThenElse*.
  *  @pre @c *expr_ptr is of @c ExpressionIfThenElse.
  */
-const ExpressionIfThenElse* to_if_then_else(
-    const ExpressionCell* expr_ptr);
+const ExpressionIfThenElse* to_if_then_else(const ExpressionCell* expr_ptr);
 /** Casts @p e of Expression to @c const ExpressionIfThenElse*.
  *  @pre @c *(e.ptr_) is of @c ExpressionIfThenElse.
  */
