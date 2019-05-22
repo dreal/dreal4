@@ -18,11 +18,10 @@ namespace {
 class ContractorIbexFwdbwdStat : public Stat {
  public:
   explicit ContractorIbexFwdbwdStat(const bool enabled) : Stat{enabled} {};
-  ContractorIbexFwdbwdStat(const ContractorIbexFwdbwdStat&) = default;
-  ContractorIbexFwdbwdStat(ContractorIbexFwdbwdStat&&) = default;
-  ContractorIbexFwdbwdStat& operator=(const ContractorIbexFwdbwdStat&) =
-      default;
-  ContractorIbexFwdbwdStat& operator=(ContractorIbexFwdbwdStat&&) = default;
+  ContractorIbexFwdbwdStat(const ContractorIbexFwdbwdStat&) = delete;
+  ContractorIbexFwdbwdStat(ContractorIbexFwdbwdStat&&) = delete;
+  ContractorIbexFwdbwdStat& operator=(const ContractorIbexFwdbwdStat&) = delete;
+  ContractorIbexFwdbwdStat& operator=(ContractorIbexFwdbwdStat&&) = delete;
   ~ContractorIbexFwdbwdStat() override {
     if (enabled()) {
       using fmt::print;
