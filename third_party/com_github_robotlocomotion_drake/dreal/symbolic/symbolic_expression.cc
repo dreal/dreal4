@@ -179,10 +179,7 @@ Expression Expression::NaN() {
 
 const Variables& Expression::GetVariables() const {
   assert(ptr_ != nullptr);
-  if (!variables_) {
-    variables_ = std::make_shared<Variables>(ptr_->GetVariables());
-  }
-  return *variables_;
+  return ptr_->GetVariables();
 }
 
 bool Expression::EqualTo(const Expression& e) const {

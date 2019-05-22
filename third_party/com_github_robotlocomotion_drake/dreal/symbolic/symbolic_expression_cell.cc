@@ -183,21 +183,20 @@ Expression ExpandPow(const Expression& base, const Expression& exponent) {
 }  // anonymous namespace
 
 ExpressionCell::ExpressionCell(const ExpressionKind k, const size_t hash,
-                               const bool is_poly)
+                               const bool is_poly, Variables variables)
     : kind_{k},
       hash_{hash_combine(static_cast<size_t>(kind_), hash)},
-      is_polynomial_{is_poly} {}
+      is_polynomial_{is_poly},
+      variables_{std::move(variables)} {}
 
 Expression ExpressionCell::GetExpression() { return Expression{this}; }
+
+const Variables& ExpressionCell::GetVariables() const { return variables_; }
 
 UnaryExpressionCell::UnaryExpressionCell(const ExpressionKind k,
                                          const Expression& e,
                                          const bool is_poly)
-    : ExpressionCell{k, e.get_hash(), is_poly}, e_{e} {}
-
-Variables UnaryExpressionCell::GetVariables() const {
-  return e_.GetVariables();
-}
+    : ExpressionCell{k, e.get_hash(), is_poly, e.GetVariables()}, e_{e} {}
 
 bool UnaryExpressionCell::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
@@ -222,15 +221,10 @@ BinaryExpressionCell::BinaryExpressionCell(const ExpressionKind k,
                                            const Expression& e1,
                                            const Expression& e2,
                                            const bool is_poly)
-    : ExpressionCell{k, hash_combine(e1.get_hash(), e2), is_poly},
+    : ExpressionCell{k, hash_combine(e1.get_hash(), e2), is_poly,
+                     e1.GetVariables() + e2.GetVariables()},
       e1_{e1},
       e2_{e2} {}
-
-Variables BinaryExpressionCell::GetVariables() const {
-  Variables ret{e1_.GetVariables()};
-  ret.insert(e2_.GetVariables());
-  return ret;
-}
 
 bool BinaryExpressionCell::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
@@ -260,7 +254,7 @@ double BinaryExpressionCell::Evaluate(const Environment& env) const {
 }
 
 ExpressionVar::ExpressionVar(const Variable& v)
-    : ExpressionCell{ExpressionKind::Var, hash_value<Variable>{}(v), true},
+    : ExpressionCell{ExpressionKind::Var, hash_value<Variable>{}(v), true, {v}},
       var_{v} {
   // Dummy symbolic variable (ID = 0) should not be used in constructing
   // symbolic expressions.
@@ -277,8 +271,6 @@ ExpressionVar::ExpressionVar(const Variable& v)
     throw runtime_error(oss.str());
   }
 }
-
-Variables ExpressionVar::GetVariables() const { return {get_variable()}; }
 
 bool ExpressionVar::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
@@ -329,11 +321,11 @@ Expression ExpressionVar::Differentiate(const Variable& x) const {
 ostream& ExpressionVar::Display(ostream& os) const { return os << var_; }
 
 ExpressionConstant::ExpressionConstant(const double v)
-    : ExpressionCell{ExpressionKind::Constant, hash<double>{}(v), true}, v_{v} {
+    : ExpressionCell{ExpressionKind::Constant, hash<double>{}(v), true,
+                     Variables{}},
+      v_{v} {
   assert(!std::isnan(v));
 }
-
-Variables ExpressionConstant::GetVariables() const { return Variables{}; }
 
 bool ExpressionConstant::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
@@ -372,7 +364,8 @@ ostream& ExpressionConstant::Display(ostream& os) const {
 
 ExpressionRealConstant::ExpressionRealConstant(const double lb, const double ub,
                                                bool use_lb_as_representative)
-    : ExpressionCell{ExpressionKind::RealConstant, hash<double>{}(lb), true},
+    : ExpressionCell{ExpressionKind::RealConstant, hash<double>{}(lb), true,
+                     Variables{}},
       lb_{lb},
       ub_{ub},
       use_lb_as_representative_{use_lb_as_representative} {
@@ -381,8 +374,6 @@ ExpressionRealConstant::ExpressionRealConstant(const double lb, const double ub,
   assert(lb < ub_);
   assert(std::nextafter(lb, std::numeric_limits<double>::infinity()) == ub);
 }
-
-Variables ExpressionRealConstant::GetVariables() const { return Variables{}; }
 
 bool ExpressionRealConstant::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
@@ -422,13 +413,11 @@ ostream& ExpressionRealConstant::Display(ostream& os) const {
 }
 
 ExpressionNaN::ExpressionNaN()
-    : ExpressionCell{ExpressionKind::NaN, 41, false} {
+    : ExpressionCell{ExpressionKind::NaN, 41, false, Variables{}} {
   // ExpressionCell constructor calls hash_combine(ExpressionKind::NaN, 41) to
   // compute the hash of ExpressionNaN. Here 41 does not have any special
   // meaning.
 }
-
-Variables ExpressionNaN::GetVariables() const { return Variables{}; }
 
 bool ExpressionNaN::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
@@ -465,15 +454,17 @@ ExpressionAdd::ExpressionAdd(const double constant,
                              map<Expression, double> expr_to_coeff_map)
     : ExpressionCell{ExpressionKind::Add,
                      hash_combine(hash<double>{}(constant), expr_to_coeff_map),
-                     determine_polynomial(expr_to_coeff_map)},
+                     determine_polynomial(expr_to_coeff_map),
+                     ExtractVariables(expr_to_coeff_map)},
       constant_(constant),
       expr_to_coeff_map_{std::move(expr_to_coeff_map)} {
   assert(!expr_to_coeff_map_.empty());
 }
 
-Variables ExpressionAdd::GetVariables() const {
+Variables ExpressionAdd::ExtractVariables(
+    const std::map<Expression, double>& expr_to_coeff_map) {
   Variables ret{};
-  for (const auto& p : expr_to_coeff_map_) {
+  for (const auto& p : expr_to_coeff_map) {
     ret.insert(p.first.GetVariables());
   }
   return ret;
@@ -723,15 +714,17 @@ ExpressionMul::ExpressionMul(const double constant,
     : ExpressionCell{ExpressionKind::Mul,
                      hash_combine(hash<double>{}(constant),
                                   base_to_exponent_map),
-                     determine_polynomial(base_to_exponent_map)},
+                     determine_polynomial(base_to_exponent_map),
+                     ExtractVariables(base_to_exponent_map)},
       constant_(constant),
       base_to_exponent_map_{std::move(base_to_exponent_map)} {
   assert(!base_to_exponent_map_.empty());
 }
 
-Variables ExpressionMul::GetVariables() const {
+Variables ExpressionMul::ExtractVariables(
+    const std::map<Expression, Expression>& base_to_exponent_map) {
   Variables ret{};
-  for (const auto& p : base_to_exponent_map_) {
+  for (const auto& p : base_to_exponent_map) {
     ret.insert(p.first.GetVariables());
     ret.insert(p.second.GetVariables());
   }
@@ -1933,15 +1926,17 @@ ExpressionIfThenElse::ExpressionIfThenElse(const Formula& f_cond,
     : ExpressionCell{ExpressionKind::IfThenElse,
                      hash_combine(hash_value<Formula>{}(f_cond), e_then,
                                   e_else),
-                     false},
+                     false, ExtractVariables(f_cond, e_then, e_else)},
       f_cond_{f_cond},
       e_then_{e_then},
       e_else_{e_else} {}
 
-Variables ExpressionIfThenElse::GetVariables() const {
-  Variables ret{f_cond_.GetFreeVariables()};
-  ret.insert(e_then_.GetVariables());
-  ret.insert(e_else_.GetVariables());
+Variables ExpressionIfThenElse::ExtractVariables(const Formula& f_cond,
+                                                 const Expression& e_then,
+                                                 const Expression& e_else) {
+  Variables ret{f_cond.GetFreeVariables()};
+  ret.insert(e_then.GetVariables());
+  ret.insert(e_else.GetVariables());
   return ret;
 }
 
@@ -2021,13 +2016,10 @@ ostream& ExpressionIfThenElse::Display(ostream& os) const {
 ExpressionUninterpretedFunction::ExpressionUninterpretedFunction(
     const string& name, const Variables& vars)
     : ExpressionCell{ExpressionKind::UninterpretedFunction,
-                     hash_combine(hash_value<string>{}(name), vars), false},
+                     hash_combine(hash_value<string>{}(name), vars), false,
+                     vars},
       name_{name},
       variables_{vars} {}
-
-Variables ExpressionUninterpretedFunction::GetVariables() const {
-  return variables_;
-}
 
 bool ExpressionUninterpretedFunction::EqualTo(const ExpressionCell& e) const {
   // Expression::EqualTo guarantees the following assertion.
