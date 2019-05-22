@@ -22,8 +22,8 @@ class PredicateAbstractorStat : public Stat {
   explicit PredicateAbstractorStat(const bool enabled) : Stat{enabled} {}
   PredicateAbstractorStat(const PredicateAbstractorStat&) = default;
   PredicateAbstractorStat(PredicateAbstractorStat&&) = default;
-  PredicateAbstractorStat& operator=(const PredicateAbstractorStat&) = default;
-  PredicateAbstractorStat& operator=(PredicateAbstractorStat&&) = default;
+  PredicateAbstractorStat& operator=(const PredicateAbstractorStat&) = delete;
+  PredicateAbstractorStat& operator=(PredicateAbstractorStat&&) = delete;
   ~PredicateAbstractorStat() override {
     if (enabled()) {
       using fmt::print;

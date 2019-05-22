@@ -84,8 +84,8 @@ class SatSolverStat : public Stat {
   explicit SatSolverStat(const bool enabled) : Stat{enabled} {};
   SatSolverStat(const SatSolverStat&) = default;
   SatSolverStat(SatSolverStat&&) = default;
-  SatSolverStat& operator=(const SatSolverStat&) = default;
-  SatSolverStat& operator=(SatSolverStat&&) = default;
+  SatSolverStat& operator=(const SatSolverStat&) = delete;
+  SatSolverStat& operator=(SatSolverStat&&) = delete;
   ~SatSolverStat() override {
     if (enabled()) {
       using fmt::print;

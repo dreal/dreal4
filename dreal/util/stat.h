@@ -10,8 +10,8 @@ class Stat {
   explicit Stat(bool enabled) : enabled_{enabled} {}
   Stat(const Stat&) = default;
   Stat(Stat&&) = default;
-  Stat& operator=(const Stat&) = default;
-  Stat& operator=(Stat&&) = default;
+  Stat& operator=(const Stat&) = delete;
+  Stat& operator=(Stat&&) = delete;
   virtual ~Stat() = default;
 
   /// Returns true if the logging is enabled. Normally, this is

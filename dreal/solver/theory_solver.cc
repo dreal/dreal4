@@ -63,8 +63,8 @@ class TheorySolverStat : public Stat {
   explicit TheorySolverStat(const bool enabled) : Stat{enabled} {}
   TheorySolverStat(const TheorySolverStat&) = default;
   TheorySolverStat(TheorySolverStat&&) = default;
-  TheorySolverStat& operator=(const TheorySolverStat&) = default;
-  TheorySolverStat& operator=(TheorySolverStat&&) = default;
+  TheorySolverStat& operator=(const TheorySolverStat&) = delete;
+  TheorySolverStat& operator=(TheorySolverStat&&) = delete;
   ~TheorySolverStat() override {
     if (enabled()) {
       using fmt::print;

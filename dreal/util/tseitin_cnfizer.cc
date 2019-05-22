@@ -27,8 +27,8 @@ class TseitinCnfizerStat : public Stat {
   explicit TseitinCnfizerStat(const bool enabled) : Stat{enabled} {}
   TseitinCnfizerStat(const TseitinCnfizerStat&) = default;
   TseitinCnfizerStat(TseitinCnfizerStat&&) = default;
-  TseitinCnfizerStat& operator=(const TseitinCnfizerStat&) = default;
-  TseitinCnfizerStat& operator=(TseitinCnfizerStat&&) = default;
+  TseitinCnfizerStat& operator=(const TseitinCnfizerStat&) = delete;
+  TseitinCnfizerStat& operator=(TseitinCnfizerStat&&) = delete;
   ~TseitinCnfizerStat() override {
     if (enabled()) {
       using fmt::print;

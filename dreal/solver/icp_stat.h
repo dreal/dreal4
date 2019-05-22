@@ -11,10 +11,10 @@ namespace dreal {
 class IcpStat : public Stat {
  public:
   explicit IcpStat(const bool enabled) : Stat{enabled} {}
-  IcpStat(const IcpStat&) = default;
-  IcpStat(IcpStat&&) = default;
-  IcpStat& operator=(const IcpStat&) = default;
-  IcpStat& operator=(IcpStat&&) = default;
+  IcpStat(const IcpStat&) = delete;
+  IcpStat(IcpStat&&) = delete;
+  IcpStat& operator=(const IcpStat&) = delete;
+  IcpStat& operator=(IcpStat&&) = delete;
   ~IcpStat() override;
 
   int num_branch_{0};
