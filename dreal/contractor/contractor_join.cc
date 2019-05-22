@@ -19,6 +19,9 @@ ContractorJoin::ContractorJoin(vector<Contractor> contractors,
   ibex::BitSet& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
+    if (c.include_forall()) {
+      set_include_forall();
+    }
   }
 }
 

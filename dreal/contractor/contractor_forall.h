@@ -70,6 +70,8 @@ class ContractorForall : public ContractorCell {
     DREAL_ASSERT(epsilon > inner_delta);
     DREAL_ASSERT(!is_false(strengthend_negated_nested_f_));
 
+    set_include_forall();
+
     // Setup context:
     // 0. Setup context, config, and the contractor for finding counterexamples.
     context_for_counterexample_.mutable_config().mutable_precision() =

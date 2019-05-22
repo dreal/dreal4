@@ -32,6 +32,10 @@ ibex::BitSet& ContractorCell::mutable_input() { return input_; }
 
 const Config& ContractorCell::config() const { return config_; }
 
+bool ContractorCell::include_forall() const { return include_forall_; }
+
+void ContractorCell::set_include_forall() { include_forall_ = true; }
+
 // Returns max(c₁.input().max(), ..., cₙ.input().max()).
 // This is used in ContractorSeq, ContractorFixpoint, and
 // ContractorWorklistFixpoint to find the size of its input BitSet.
