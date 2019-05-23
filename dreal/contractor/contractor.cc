@@ -8,7 +8,9 @@
 #include "dreal/contractor/contractor_fixpoint.h"
 #include "dreal/contractor/contractor_forall.h"
 #include "dreal/contractor/contractor_ibex_fwdbwd.h"
+#include "dreal/contractor/contractor_ibex_fwdbwd_mt.h"
 #include "dreal/contractor/contractor_ibex_polytope.h"
+#include "dreal/contractor/contractor_ibex_polytope_mt.h"
 #include "dreal/contractor/contractor_id.h"
 #include "dreal/contractor/contractor_integer.h"
 #include "dreal/contractor/contractor_join.h"
@@ -121,12 +123,30 @@ Contractor make_contractor_seq(const vector<Contractor>& contractors,
 
 Contractor make_contractor_ibex_fwdbwd(Formula f, const Box& box,
                                        const Config& config) {
-  return Contractor{
-      make_shared<ContractorIbexFwdbwd>(std::move(f), box, config)};
+  if (config.number_of_jobs() > 1 && !is_forall(f)) {
+    return Contractor{
+        make_shared<ContractorIbexFwdbwdMt>(std::move(f), box, config)};
+  } else {
+    return Contractor{
+        make_shared<ContractorIbexFwdbwd>(std::move(f), box, config)};
+  }
 }
 
 Contractor make_contractor_ibex_polytope(vector<Formula> formulas,
                                          const Box& box, const Config& config) {
+  if (config.number_of_jobs() > 1) {
+    bool include_forall{false};
+    for (const auto& f : formulas) {
+      if (is_forall(f)) {
+        include_forall = true;
+        break;
+      }
+    }
+    if (!include_forall) {
+      return Contractor{make_shared<ContractorIbexPolytopeMt>(
+          std::move(formulas), box, config)};
+    }
+  }
   return Contractor{
       make_shared<ContractorIbexPolytope>(std::move(formulas), box, config)};
 }
