@@ -149,14 +149,22 @@ Contractor make_contractor_seq(const std::vector<Contractor>& contractors,
                                const Config& config);
 
 /// Returns a contractor wrapping IBEX's forward/backward contractor.
+/// If the number of jobs (in @p config) > 1 and there is no forall
+/// formula in @p f, it creates a multi-threaded version of the
+/// contractor, which is based on ContractorIbexFwdbwdMt.
 ///
 /// @see ContractorIbexFwdbwd.
+/// @see ContractorIbexFwdbwdMt.
 Contractor make_contractor_ibex_fwdbwd(Formula f, const Box& box,
                                        const Config& config);
 
-/// Returns a contractor wrapping IBEX's polytope contractor.
+/// Returns a contractor wrapping IBEX's polytope contractor.  If the
+/// number of jobs (in @p config) > 1 and there is no forall formula
+/// in @p formulas, it creates a multi-threaded version of the
+/// contractor, which is based on ContractorIbexPolytopeMt.
 ///
 /// @see ContractorIbexPolytope.
+/// @see ContractorIbexPolytopeMt.
 Contractor make_contractor_ibex_polytope(std::vector<Formula> formulas,
                                          const Box& box, const Config& config);
 
