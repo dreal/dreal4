@@ -26,6 +26,8 @@ dreal_cc_library(
         "contractor_ibex_fwdbwd_mt.h",
         "contractor_ibex_polytope.cc",
         "contractor_ibex_polytope.h",
+        "contractor_ibex_polytope_mt.cc",
+        "contractor_ibex_polytope_mt.h",
         "contractor_id.cc",
         "contractor_id.h",
         "contractor_integer.cc",
