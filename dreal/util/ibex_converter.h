@@ -117,7 +117,7 @@ class IbexConverter {
   bool need_to_delete_variables_{true};
 
   // Variable → ibex::ExprSymbol*.
-  std::unordered_map<Variable, const ibex::ExprSymbol*, hash_value<Variable>>
+  std::unordered_map<Variable::Id, const ibex::ExprSymbol*>
       symbolic_var_to_ibex_var_;
 
   ibex::Array<const ibex::ExprSymbol> var_array_;

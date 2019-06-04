@@ -61,7 +61,7 @@ IbexConverter::IbexConverter(const vector<Variable>& variables)
     const ibex::ExprSymbol* v{
         &ibex::ExprSymbol::new_(var.get_name().c_str(), ibex::Dim::scalar())};
     // Update Variable → ibex::ExprSymbol*
-    symbolic_var_to_ibex_var_.emplace(var, v);
+    symbolic_var_to_ibex_var_.emplace(var.get_id(), v);
     // Update ibex::Array<const ibex::ExprSymbol>
     var_array_.add(*v);
   }
@@ -73,8 +73,7 @@ IbexConverter::IbexConverter(const Box& box) : IbexConverter{box.variables()} {}
 IbexConverter::~IbexConverter() {
   DREAL_LOG_DEBUG("IbexConverter::~IbexConverter()");
   if (need_to_delete_variables_) {
-    for (const pair<const Variable, const ibex::ExprSymbol*>& p :
-         symbolic_var_to_ibex_var_) {
+    for (const auto& p : symbolic_var_to_ibex_var_) {
       delete p.second;
     }
   }
@@ -83,9 +82,11 @@ IbexConverter::~IbexConverter() {
 
 const ExprCtr* IbexConverter::Convert(const Formula& f) {
   DREAL_LOG_DEBUG("IbexConverter::Convert({})", f);
-  static IbexConverterStat stat{DREAL_LOG_INFO_ENABLED};
-  TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
-  stat.increase_convert();
+  thread_local IbexConverterStat stat{DREAL_LOG_INFO_ENABLED};
+  TimerGuard timer_guard(&stat.timer_convert_, DREAL_LOG_INFO_ENABLED);
+  if (DREAL_LOG_INFO_ENABLED) {
+    stat.increase_convert();
+  }
 
   const ExprCtr* expr_ctr{Visit(f, true)};
   if (expr_ctr) {
@@ -117,7 +118,7 @@ const ExprNode* IbexConverter::Visit(const Expression& e) {
 
 const ExprNode* IbexConverter::VisitVariable(const Expression& e) {
   const Variable& var{get_variable(e)};
-  auto const it = symbolic_var_to_ibex_var_.find(var);
+  auto const it = symbolic_var_to_ibex_var_.find(var.get_id());
   if (it == symbolic_var_to_ibex_var_.cend()) {
     ostringstream oss;
     oss << "Variable " << var << " is not appeared in ";
