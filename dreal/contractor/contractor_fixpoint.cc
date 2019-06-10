@@ -34,8 +34,8 @@ void ContractorFixpoint::Prune(ContractorStatus* cs) const {
   const Box::IntervalVector& iv{cs->box().interval_vector()};
   Box::IntervalVector old_iv{iv};  // TODO(soonho): FIXME
   do {
-  // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
-  // when we build dReal python package.
+    // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
+    // when we build dReal python package.
 #ifdef DREAL_CHECK_INTERRUPT
     if (g_interrupted) {
       DREAL_LOG_DEBUG("KeyboardInterrupt(SIGINT) Detected.");
@@ -45,7 +45,7 @@ void ContractorFixpoint::Prune(ContractorStatus* cs) const {
     old_iv = iv;
     for (const Contractor& ctc : contractors_) {
       ctc.Prune(cs);
-      if (cs->box().empty()) {
+      if (iv.is_empty()) {
         return;
       }
     }
