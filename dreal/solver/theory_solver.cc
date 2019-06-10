@@ -163,8 +163,8 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
     if (it == formula_evaluator_cache_.end()) {
       DREAL_LOG_DEBUG("TheorySolver::BuildFormulaEvaluator: {}", f);
       if (is_forall(f)) {
-        formula_evaluators.push_back(
-            make_forall_formula_evaluator(f, epsilon, inner_delta));
+        formula_evaluators.push_back(make_forall_formula_evaluator(
+            f, epsilon, inner_delta, config_.number_of_jobs()));
       } else {
         formula_evaluators.push_back(make_relational_formula_evaluator(f));
       }
