@@ -1,6 +1,7 @@
 #include "dreal/util/if_then_else_eliminator.h"
 
 #include <algorithm>  // To suppress cpplint on max.
+#include <atomic>
 #include <set>
 #include <stdexcept>
 #include <string>
@@ -21,8 +22,8 @@ namespace dreal {
 class IfThenElseElimStat : public Stat {
  public:
   explicit IfThenElseElimStat(const bool enabled) : Stat{enabled} {}
-  IfThenElseElimStat(const IfThenElseElimStat&) = default;
-  IfThenElseElimStat(IfThenElseElimStat&&) = default;
+  IfThenElseElimStat(const IfThenElseElimStat&) = delete;
+  IfThenElseElimStat(IfThenElseElimStat&&) = delete;
   IfThenElseElimStat& operator=(const IfThenElseElimStat&) = delete;
   IfThenElseElimStat& operator=(IfThenElseElimStat&&) = delete;
   ~IfThenElseElimStat() override {
@@ -38,14 +39,18 @@ class IfThenElseElimStat : public Stat {
     }
   }
 
-  int num_process_{0};
+  void increase_num_process() { increase(&num_process_); }
+
   Timer timer_process_;
+
+ private:
+  std::atomic<int> num_process_{0};
 };
 
 Formula IfThenElseEliminator::Process(const Formula& f) {
   static IfThenElseElimStat stat{DREAL_LOG_INFO_ENABLED};
   TimerGuard timer_guard(&stat.timer_process_, stat.enabled());
-  ++stat.num_process_;
+  stat.increase_num_process();
 
   Formula new_f{Visit(f)};
   if (f.EqualTo(new_f) && added_formulas_.empty()) {

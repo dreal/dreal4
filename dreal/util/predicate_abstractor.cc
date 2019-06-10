@@ -1,5 +1,6 @@
 #include "dreal/util/predicate_abstractor.h"
 
+#include <atomic>
 #include <iostream>
 #include <set>
 #include <sstream>
@@ -37,8 +38,12 @@ class PredicateAbstractorStat : public Stat {
     }
   }
 
-  int num_convert_{0};
+  void increase_num_convert() { increase(&num_convert_); }
+
   Timer timer_convert_;
+
+ private:
+  std::atomic<int> num_convert_{0};
 };
 
 }  // namespace
@@ -51,7 +56,7 @@ void PredicateAbstractor::Add(const Variable& var, const Formula& f) {
 Formula PredicateAbstractor::Convert(const Formula& f) {
   static PredicateAbstractorStat stat{DREAL_LOG_INFO_ENABLED};
   TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
-  ++stat.num_convert_;
+  stat.increase_num_convert();
   return Visit(f);
 }
 
