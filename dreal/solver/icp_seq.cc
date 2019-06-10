@@ -85,6 +85,7 @@ bool IcpSeq::CheckSat(const Contractor& contractor,
           "IcpSeq::CheckSat() Detect that the current box is not feasible by "
           "evaluation:\n{}",
           current_box);
+      eval_timer_guard.pause();
       continue;
     }
     if (evaluation_result->empty()) {
