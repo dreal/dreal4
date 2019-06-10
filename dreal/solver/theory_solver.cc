@@ -1,5 +1,6 @@
 #include "dreal/solver/theory_solver.h"
 
+#include <atomic>
 #include <iostream>
 #include <limits>
 #include <memory>
@@ -13,6 +14,7 @@
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 namespace dreal {
 
@@ -61,8 +63,8 @@ bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
 class TheorySolverStat : public Stat {
  public:
   explicit TheorySolverStat(const bool enabled) : Stat{enabled} {}
-  TheorySolverStat(const TheorySolverStat&) = default;
-  TheorySolverStat(TheorySolverStat&&) = default;
+  TheorySolverStat(const TheorySolverStat&) = delete;
+  TheorySolverStat(TheorySolverStat&&) = delete;
   TheorySolverStat& operator=(const TheorySolverStat&) = delete;
   TheorySolverStat& operator=(TheorySolverStat&&) = delete;
   ~TheorySolverStat() override {
@@ -70,10 +72,18 @@ class TheorySolverStat : public Stat {
       using fmt::print;
       print(cout, "{:<45} @ {:<20} = {:>15}\n", "Total # of CheckSat",
             "Theory level", num_check_sat_);
+      print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+            "Total time spent in CheckSat", "Theory level",
+            timer_check_sat_.seconds());
     }
   }
 
-  int num_check_sat_{0};
+  void increase_num_check_sat() { increase(&num_check_sat_); }
+
+  Timer timer_check_sat_;
+
+ private:
+  std::atomic<int> num_check_sat_{0};
 };
 
 }  // namespace
@@ -168,7 +178,10 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
 
 bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   static TheorySolverStat stat{DREAL_LOG_INFO_ENABLED};
-  stat.num_check_sat_++;
+  stat.increase_num_check_sat();
+  TimerGuard check_sat_timer_guard(&stat.timer_check_sat_, stat.enabled(),
+                                   true /* start_timer */);
+
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
   ContractorStatus contractor_status(box);
 

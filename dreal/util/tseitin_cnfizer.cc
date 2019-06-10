@@ -1,6 +1,7 @@
 #include "dreal/util/tseitin_cnfizer.h"
 
 #include <algorithm>
+#include <atomic>
 #include <iostream>
 #include <iterator>
 #include <set>
@@ -25,8 +26,8 @@ namespace {
 class TseitinCnfizerStat : public Stat {
  public:
   explicit TseitinCnfizerStat(const bool enabled) : Stat{enabled} {}
-  TseitinCnfizerStat(const TseitinCnfizerStat&) = default;
-  TseitinCnfizerStat(TseitinCnfizerStat&&) = default;
+  TseitinCnfizerStat(const TseitinCnfizerStat&) = delete;
+  TseitinCnfizerStat(TseitinCnfizerStat&&) = delete;
   TseitinCnfizerStat& operator=(const TseitinCnfizerStat&) = delete;
   TseitinCnfizerStat& operator=(TseitinCnfizerStat&&) = delete;
   ~TseitinCnfizerStat() override {
@@ -42,8 +43,12 @@ class TseitinCnfizerStat : public Stat {
     }
   }
 
-  int num_convert_{0};
+  void increase_num_convert() { increase(&num_convert_); }
+
   Timer timer_convert_;
+
+ private:
+  std::atomic<int> num_convert_{0};
 };
 
 // Forward declarations for the helper functions.
@@ -63,7 +68,7 @@ void CnfizeDisjunction(const Variable& b, const Formula& f,
 vector<Formula> TseitinCnfizer::Convert(const Formula& f) {
   static TseitinCnfizerStat stat{DREAL_LOG_INFO_ENABLED};
   TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
-  ++stat.num_convert_;
+  stat.increase_num_convert();
   map_.clear();
   vector<Formula> ret;
   const Formula head{Visit(f)};
