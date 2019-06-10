@@ -39,15 +39,15 @@ bool DefaultTerminationCondition(const Box::IntervalVector& old_iv,
   // (return false).
   for (int i{0}; i < old_iv.size(); ++i) {
     const double new_i{new_iv[i].diam()};
-    const double old_i{old_iv[i].diam()};
     // If the width of new interval is +oo, it has no improvement
     if (new_i == numeric_limits<double>::infinity()) {
       continue;
     }
     // If the i-th dimension was already a point, nothing to improve.
-    if (old_i == 0) {
+    if (old_iv[i].is_degenerated()) {
       continue;
     }
+    const double old_i{old_iv[i].diam()};
     const double improvement{1 - new_i / old_i};
     DREAL_ASSERT(!std::isnan(improvement));
     if (improvement >= threshold) {
