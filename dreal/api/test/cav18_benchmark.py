@@ -17,14 +17,17 @@ import sys
 
 local_optimization = False
 precision = 0.0001
+number_of_jobs = 1
 
 
 def make_config():
     global local_optimization
     global precision
+    global number_of_jobs
     config = Config()
     config.precision = precision
     config.use_local_optimization = local_optimization
+    config.number_of_jobs = number_of_jobs
     return config
 
 
@@ -459,6 +462,7 @@ class ConstrainedOptimizationTest(CavTest):
 def main():
     global local_optimization
     global precision
+    global number_of_jobs
 
     parser = argparse.ArgumentParser(
         description="Run CAV'18 Optimization Benchmark")
@@ -475,10 +479,18 @@ def main():
         default=0.0001,
         type=float,
         help='Precision')
+    parser.add_argument(
+        '--jobs',
+        dest='number_of_jobs',
+        action='store',
+        default=1,
+        type=int,
+        help='number of jobs')
     parser.add_argument('unittest_args', nargs='*')
     args = parser.parse_args()
     local_optimization = args.local_optimization
     precision = args.precision
+    number_of_jobs = args.number_of_jobs
 
     sys.argv[1:] = args.unittest_args
     unittest.main(verbosity=0)
