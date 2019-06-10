@@ -37,7 +37,8 @@ namespace dreal {
 ///
 class ForallFormulaEvaluator : public FormulaEvaluatorCell {
  public:
-  ForallFormulaEvaluator(Formula f, double epsilon, double delta);
+  ForallFormulaEvaluator(Formula f, double epsilon, double delta,
+                         int number_of_jobs);
 
   /// Deleted copy constructor.
   ForallFormulaEvaluator(const ForallFormulaEvaluator&) = delete;
@@ -61,7 +62,10 @@ class ForallFormulaEvaluator : public FormulaEvaluatorCell {
   const Variables& variables() const override;
 
  private:
-  mutable Context context_;
+  Context& GetContext() const;
+
   std::vector<RelationalFormulaEvaluator> evaluators_;
+  mutable std::vector<Context> contexts_;
 };
+
 }  // namespace dreal

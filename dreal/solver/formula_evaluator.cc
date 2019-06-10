@@ -69,10 +69,11 @@ FormulaEvaluator make_relational_formula_evaluator(const Formula& f) {
 
 FormulaEvaluator make_forall_formula_evaluator(const Formula& f,
                                                const double epsilon,
-                                               const double delta) {
+                                               const double delta,
+                                               int number_of_jobs) {
   DREAL_ASSERT(is_forall(f));
   return FormulaEvaluator{
-      make_shared<ForallFormulaEvaluator>(f, epsilon, delta)};
+      make_shared<ForallFormulaEvaluator>(f, epsilon, delta, number_of_jobs)};
 }
 
 }  // namespace dreal
