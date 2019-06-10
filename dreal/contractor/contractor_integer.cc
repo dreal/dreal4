@@ -13,6 +13,7 @@ ContractorInteger::ContractorInteger(const Box& box, const Config& config)
     : ContractorCell{Contractor::Kind::INTEGER, ibex::BitSet::empty(box.size()),
                      config} {
   ibex::BitSet& input{mutable_input()};
+  int_indexes_.reserve(box.size());
   for (int i = 0; i < box.size(); ++i) {
     const Variable::Type type{box.variable(i).get_type()};
     if (type == Variable::Type::INTEGER || type == Variable::Type::BINARY) {
