@@ -33,21 +33,21 @@ class ContractorIbexFwdbwd : public ContractorCell {
   /// Deleted move assign operator.
   ContractorIbexFwdbwd& operator=(ContractorIbexFwdbwd&&) = delete;
 
-  ~ContractorIbexFwdbwd() override;
+  ~ContractorIbexFwdbwd() override = default;
 
   void Prune(ContractorStatus* cs) const override;
 
-  /// Evaluates the constraint using the input @p box and returns the
-  /// result.
-  Box::Interval Evaluate(const Box& box) const;
-
   std::ostream& display(std::ostream& os) const override;
+
+  /// Returns true if it has no internal ibex contractor.
+  bool is_dummy() const;
 
  private:
   const Formula f_;
+  bool is_dummy_{false};
   IbexConverter ibex_converter_;
   std::unique_ptr<const ibex::ExprCtr> expr_ctr_;
-  std::unique_ptr<ibex::CtcFwdBwd> ctc_;
+  std::unique_ptr<ibex::NumConstraint> num_ctr_;
 };
 
 }  // namespace dreal
