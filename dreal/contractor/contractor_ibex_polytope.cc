@@ -3,6 +3,7 @@
 #include <sstream>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 
@@ -46,6 +47,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
   // Build System.
   system_ = make_unique<ibex::System>(*system_factory_);
   if (system_->nb_ctr == 0) {
+    is_dummy_ = true;
     return;
   }
 
@@ -64,35 +66,34 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
 }
 
 void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
-  if (ctc_) {
-    Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
-    const Box::IntervalVector old_iv = iv;  // TODO(soonho): FIXME
-    DREAL_LOG_TRACE("ContractorIbexPolytope::Prune");
-    ctc_->contract(iv);
-    bool changed{false};
-    // Update output.
-    if (iv.is_empty()) {
-      changed = true;
-      cs->mutable_output().fill(0, cs->box().size() - 1);
-    } else {
-      for (int i = 0; i < old_iv.size(); ++i) {
-        if (old_iv[i] != iv[i]) {
-          cs->mutable_output().add(i);
-          changed = true;
-        }
+  DREAL_ASSERT(!is_dummy_ && ctc_);
+  Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
+  const Box::IntervalVector old_iv = iv;  // TODO(soonho): FIXME
+  DREAL_LOG_TRACE("ContractorIbexPolytope::Prune");
+  ctc_->contract(iv);
+  bool changed{false};
+  // Update output.
+  if (iv.is_empty()) {
+    changed = true;
+    cs->mutable_output().fill(0, cs->box().size() - 1);
+  } else {
+    for (int i = 0; i < old_iv.size(); ++i) {
+      if (old_iv[i] != iv[i]) {
+        cs->mutable_output().add(i);
+        changed = true;
       }
     }
-    // Update used constraints.
-    if (changed) {
-      cs->AddUsedConstraint(formulas_);
-      if (DREAL_LOG_TRACE_ENABLED) {
-        ostringstream oss;
-        DisplayDiff(oss, cs->box().variables(), old_iv, iv);
-        DREAL_LOG_TRACE("Changed\n{}", oss.str());
-      }
-    } else {
-      DREAL_LOG_TRACE("NO CHANGE");
+  }
+  // Update used constraints.
+  if (changed) {
+    cs->AddUsedConstraint(formulas_);
+    if (DREAL_LOG_TRACE_ENABLED) {
+      ostringstream oss;
+      DisplayDiff(oss, cs->box().variables(), old_iv, iv);
+      DREAL_LOG_TRACE("Changed\n{}", oss.str());
     }
+  } else {
+    DREAL_LOG_TRACE("NO CHANGE");
   }
 }
 
@@ -104,5 +105,7 @@ ostream& ContractorIbexPolytope::display(ostream& os) const {
   os << ")";
   return os;
 }
+
+bool ContractorIbexPolytope::is_dummy() const { return is_dummy_; }
 
 }  // namespace dreal
