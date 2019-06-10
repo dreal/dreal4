@@ -3,9 +3,11 @@
 #include <sstream>
 #include <utility>
 
+#include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
 #include "dreal/util/stat.h"
+#include "dreal/util/timer.h"
 
 using std::cout;
 using std::make_unique;
@@ -30,11 +32,18 @@ class ContractorIbexFwdbwdStat : public Stat {
       print(cout, "{:<45} @ {:<20} = {:>15}\n",
             "Total # of ibex-fwdbwd Pruning (zero-effect)", "Pruning level",
             num_zero_effect_pruning_);
+      if (num_pruning_) {
+        print(cout, "{:<45} @ {:<20} = {:>15f} sec\n",
+              "Total time spent in Pruning", "Pruning level",
+              timer_pruning_.seconds());
+      }
     }
   }
 
   int num_zero_effect_pruning_{0};
   int num_pruning_{0};
+
+  Timer timer_pruning_;
 };
 }  // namespace
 
@@ -50,75 +59,72 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
   // Build num_ctr and ctc_.
   expr_ctr_.reset(ibex_converter_.Convert(f_));
   if (expr_ctr_) {
-    auto* const num_ctr =
-        new ibex::NumConstraint{ibex_converter_.variables(), *expr_ctr_};
-    ctc_ = make_unique<ibex::CtcFwdBwd>(*num_ctr);
+    num_ctr_ = make_unique<ibex::NumConstraint>(ibex_converter_.variables(),
+                                                *expr_ctr_);
     // Build input.
     ibex::BitSet& input{mutable_input()};
     for (const Variable& var : f_.GetFreeVariables()) {
       input.add(box.index(var));
     }
-  }
-}
-
-ContractorIbexFwdbwd::~ContractorIbexFwdbwd() {
-  if (ctc_) {
-    delete &ctc_->ctr;
+  } else {
+    is_dummy_ = true;
   }
 }
 
 void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
   thread_local ContractorIbexFwdbwdStat stat{DREAL_LOG_INFO_ENABLED};
+  DREAL_ASSERT(!is_dummy_ && num_ctr_);
 
-  if (ctc_) {
-    Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
-    const Box::IntervalVector old_iv{iv};  // TODO(soonho): FIXME
-    DREAL_LOG_TRACE("ContractorIbexFwdbwd::Prune");
-    DREAL_LOG_TRACE("CTC = {}", ctc_->ctr);
-    DREAL_LOG_TRACE("F = {}", f_);
-    ctc_->contract(iv);  // TODO(soonho): FIXME
+  Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
+  DREAL_LOG_TRACE("ContractorIbexFwdbwd::Prune");
+  DREAL_LOG_TRACE("CTC = {}", *num_ctr_);
+  DREAL_LOG_TRACE("F = {}", f_);
+  Box::IntervalVector old_iv{iv};
+  stat.timer_pruning_.resume();
+  const bool is_inner{num_ctr_->f.backward(num_ctr_->right_hand_side(),
+                                           iv)};  // true if unchanged.
+  stat.timer_pruning_.pause();
+  if (stat.enabled()) {
     stat.num_pruning_++;
-    bool changed{false};
-    // Update output.
+  }
+  bool changed{false};
+  // Update output.
+  if (!is_inner) {
     if (iv.is_empty()) {
       changed = true;
       cs->mutable_output().fill(0, cs->box().size() - 1);
     } else {
-      for (int i{0}, idx = ctc_->output->min(); i < ctc_->output->size();
-           ++i, idx = ctc_->output->next(idx)) {
+      for (int i{0}, idx = input().min(); i < input().size();
+           ++i, idx = input().next(idx)) {
         if (old_iv[idx] != iv[idx]) {
           cs->mutable_output().add(idx);
           changed = true;
         }
       }
     }
-    // Update used constraints.
-    if (changed) {
-      cs->AddUsedConstraint(f_);
-      if (DREAL_LOG_TRACE_ENABLED) {
-        ostringstream oss;
-        DisplayDiff(oss, cs->box().variables(), old_iv,
-                    cs->box().interval_vector());
-        DREAL_LOG_TRACE("Changed\n{}", oss.str());
-      }
-    } else {
-      stat.num_zero_effect_pruning_++;
-      DREAL_LOG_TRACE("NO CHANGE");
-    }
   }
-}
-
-Box::Interval ContractorIbexFwdbwd::Evaluate(const Box& box) const {
-  return ctc_->ctr.f.eval(box.interval_vector());
+  // Update used constraints.
+  if (changed) {
+    cs->AddUsedConstraint(f_);
+    if (stat.enabled()) {
+      ostringstream oss;
+      DisplayDiff(oss, cs->box().variables(), old_iv,
+                  cs->box().interval_vector());
+      DREAL_LOG_TRACE("Changed\n{}", oss.str());
+    }
+  } else {
+    if (stat.enabled()) {
+      stat.num_zero_effect_pruning_++;
+    }
+    DREAL_LOG_TRACE("NO CHANGE");
+  }
 }
 
 ostream& ContractorIbexFwdbwd::display(ostream& os) const {
-  if (ctc_) {
-    const ibex::NumConstraint& num_ctr{ctc_->ctr};
-    return os << "IbexFwdbwd(" << num_ctr << ")";
-  } else {
-    return os << "IbexFwdbwd()";
-  }
+  DREAL_ASSERT(num_ctr_);
+  return os << "IbexFwdbwd(" << *num_ctr_ << ")";
 }
+
+bool ContractorIbexFwdbwd::is_dummy() const { return is_dummy_; }
 
 }  // namespace dreal
