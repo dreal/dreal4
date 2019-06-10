@@ -50,9 +50,9 @@ dreal_cc_library(
         "icp_stat.h",
     ],
     deps = [
-        "@fmt",
         "//dreal/util:stat",
         "//dreal/util:timer",
+        "@fmt",
     ],
 )
 
@@ -71,6 +71,7 @@ dreal_cc_library(
         "formula_evaluator_cell.cc",
         "formula_evaluator_cell.h",
         "icp.cc",
+        "icp_parallel.cc",
         "icp_seq.cc",
         "relational_formula_evaluator.cc",
         "relational_formula_evaluator.h",
@@ -81,6 +82,7 @@ dreal_cc_library(
         "expression_evaluator.h",
         "formula_evaluator.h",
         "icp.h",
+        "icp_parallel.h",
         "icp_seq.h",
         "theory_solver.h",
     ],
@@ -104,6 +106,7 @@ dreal_cc_library(
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:box",
+        "//dreal/util:cds",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:if_then_else_eliminator",
@@ -114,6 +117,7 @@ dreal_cc_library(
         "//dreal/util:scoped_vector",
         "//dreal/util:stat",
         "//dreal/util:timer",
+        "//third_party/com_github_progschj_threadpool:thread_pool",
     ],
 )
 
