@@ -1,5 +1,6 @@
 #include "dreal/contractor/contractor_status.h"
 
+#include <atomic>
 #include <utility>
 
 #include "dreal/util/assert.h"
@@ -20,8 +21,8 @@ using std::cout;
 class ContractorStatusStat : public Stat {
  public:
   explicit ContractorStatusStat(const bool enabled) : Stat{enabled} {}
-  ContractorStatusStat(const ContractorStatusStat&) = default;
-  ContractorStatusStat(ContractorStatusStat&&) = default;
+  ContractorStatusStat(const ContractorStatusStat&) = delete;
+  ContractorStatusStat(ContractorStatusStat&&) = delete;
   ContractorStatusStat& operator=(const ContractorStatusStat&) = delete;
   ContractorStatusStat& operator=(ContractorStatusStat&&) = delete;
   ~ContractorStatusStat() override {
@@ -39,8 +40,14 @@ class ContractorStatusStat : public Stat {
     }
   }
 
-  int num_explanation_generation_{0};
+  void increase_num_explanation_generation() {
+    increase(&num_explanation_generation_);
+  }
+
   Timer timer_explanation_generation_;
+
+ private:
+  std::atomic<int> num_explanation_generation_{0};
 };
 
 }  // namespace
@@ -90,7 +97,7 @@ void ContractorStatus::AddUnsatWitness(const Variable& var) {
 set<Formula> GenerateExplanation(const Variables& unsat_witness,
                                  const set<Formula>& used_constraints) {
   static ContractorStatusStat stat(DREAL_LOG_INFO_ENABLED);
-  stat.num_explanation_generation_++;
+  stat.increase_num_explanation_generation();
   TimerGuard timer_guard(&stat.timer_explanation_generation_, stat.enabled());
   if (unsat_witness.empty()) {
     return set<Formula>();
