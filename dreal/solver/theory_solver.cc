@@ -10,6 +10,7 @@
 #include "dreal/solver/context.h"
 #include "dreal/solver/filter_assertion.h"
 #include "dreal/solver/formula_evaluator.h"
+#include "dreal/solver/icp_parallel.h"
 #include "dreal/solver/icp_seq.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
@@ -26,7 +27,11 @@ using std::vector;
 
 TheorySolver::TheorySolver(const Config& config)
     : config_{config}, icp_{nullptr} {
-  icp_ = make_unique<IcpSeq>(config);
+  if (config_.number_of_jobs() > 1) {
+    icp_ = make_unique<IcpParallel>(config_);
+  } else {
+    icp_ = make_unique<IcpSeq>(config_);
+  }
 }
 
 namespace {
