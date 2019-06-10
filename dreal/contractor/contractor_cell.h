@@ -77,7 +77,7 @@ class ContractorCell {
  private:
   const Contractor::Kind kind_;
   ibex::BitSet input_;
-  const Config& config_;
+  const Config config_;
   bool include_forall_{false};
 };
 
