@@ -86,8 +86,8 @@ Contractor::Contractor(std::shared_ptr<ContractorCell> ptr)
 const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
 
 void Contractor::Prune(ContractorStatus* cs) const {
-  if (DREAL_LOG_INFO_ENABLED) {
-    static ContractorStat stat{DREAL_LOG_INFO_ENABLED};
+  static ContractorStat stat{DREAL_LOG_INFO_ENABLED};
+  if (stat.enabled()) {
     stat.increase_prune();
   }
   ptr_->Prune(cs);
@@ -123,32 +123,43 @@ Contractor make_contractor_seq(const vector<Contractor>& contractors,
 
 Contractor make_contractor_ibex_fwdbwd(Formula f, const Box& box,
                                        const Config& config) {
-  if (config.number_of_jobs() > 1 && !is_forall(f)) {
-    return Contractor{
-        make_shared<ContractorIbexFwdbwdMt>(std::move(f), box, config)};
+  if (config.number_of_jobs() > 1) {
+    const auto ctc =
+        make_shared<ContractorIbexFwdbwdMt>(std::move(f), box, config);
+    if (ctc->is_dummy()) {
+      return make_contractor_id(config);
+    } else {
+      return Contractor{ctc};
+    }
   } else {
-    return Contractor{
-        make_shared<ContractorIbexFwdbwd>(std::move(f), box, config)};
+    const auto ctc =
+        make_shared<ContractorIbexFwdbwd>(std::move(f), box, config);
+    if (ctc->is_dummy()) {
+      return make_contractor_id(config);
+    } else {
+      return Contractor{ctc};
+    }
   }
-}
+}  // namespace dreal
 
 Contractor make_contractor_ibex_polytope(vector<Formula> formulas,
                                          const Box& box, const Config& config) {
   if (config.number_of_jobs() > 1) {
-    bool include_forall{false};
-    for (const auto& f : formulas) {
-      if (is_forall(f)) {
-        include_forall = true;
-        break;
-      }
-    }
-    if (!include_forall) {
-      return Contractor{make_shared<ContractorIbexPolytopeMt>(
-          std::move(formulas), box, config)};
+    const auto ctc =
+        make_shared<ContractorIbexPolytopeMt>(std::move(formulas), box, config);
+    if (ctc->is_dummy()) {
+      return make_contractor_id(config);
+    } else {
+      return Contractor{ctc};
     }
   }
-  return Contractor{
-      make_shared<ContractorIbexPolytope>(std::move(formulas), box, config)};
+  const auto ctc =
+      make_shared<ContractorIbexPolytope>(std::move(formulas), box, config);
+  if (ctc->is_dummy()) {
+    return make_contractor_id(config);
+  } else {
+    return Contractor{ctc};
+  }
 }
 
 Contractor make_contractor_fixpoint(TerminationCondition term_cond,
