@@ -32,6 +32,8 @@ build:asan --copt=-fno-common
 build:asan --copt=-fsanitize=address
 build:asan --copt=-O0
 build:asan --copt=-fno-omit-frame-pointer
+build:asan --copt=-fno-optimize-sibling-calls
+build:asan --copt=-DCDS_ADDRESS_SANITIZER_ENABLED
 build:asan --linkopt=-fsanitize=address
 build:asan --test_env=ASAN_OPTIONS
 build:asan --test_env=LSAN_OPTIONS
@@ -56,6 +58,8 @@ build:tsan --copt -g
 build:tsan --copt -fsanitize=thread
 build:tsan --copt -O1
 build:tsan --copt -fno-omit-frame-pointer
+build:tsan --copt -DCDS_THREAD_SANITIZER_ENABLED
+
 # From Tsan documentation for Clang-3.9:
 # fsanitize=thread flag will cause Clang to act as though the -fPIE flag
 # had been supplied if compiling without -fPIC, and as though the
