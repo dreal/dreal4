@@ -82,7 +82,7 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
   // DREAL_LOG_ERROR("ContractorWorklistFixpoint::Prune -- Fill the Queue");
   // 1. Fill the queue.
   const Box::IntervalVector& iv{cs->box().interval_vector()};
-  Box::IntervalVector old_iv{iv};  // TODO(soonho): FIXME
+  Box::IntervalVector old_iv{iv};
   if (branching_point < 0) {
     // No branching_point information specified, add all contractors.
     for (const auto& contractor : contractors_) {

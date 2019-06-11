@@ -68,7 +68,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
 void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
   DREAL_ASSERT(!is_dummy_ && ctc_);
   Box::IntervalVector& iv{cs->mutable_box().mutable_interval_vector()};
-  const Box::IntervalVector old_iv = iv;  // TODO(soonho): FIXME
+  const Box::IntervalVector old_iv = iv;
   DREAL_LOG_TRACE("ContractorIbexPolytope::Prune");
   ctc_->contract(iv);
   bool changed{false};

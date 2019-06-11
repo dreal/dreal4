@@ -280,7 +280,6 @@ class ContractorForallMt : public ContractorCell {
     ContractorForall<ContextType>* const ctc{GetCtcOrCreate(cs->box())};
     DREAL_ASSERT(ctc);
     return ctc->Prune(cs);
-    // TODO(soonho): propagate output.
   }
 
   std::ostream& display(std::ostream& os) const override {
