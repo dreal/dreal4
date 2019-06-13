@@ -24,6 +24,16 @@ matrix:
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
           packages:
+          - g++-9
+      env:
+        - COMPILER="gcc-9" BUILD_TYPE="-c dbg"
+    - compiler: gcc
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          packages:
           - g++-8
       env:
         - COMPILER="gcc-8" BUILD_TYPE="-c dbg"
