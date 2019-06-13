@@ -10,7 +10,6 @@
 
 using std::make_unique;
 using std::ostream;
-using std::thread;
 using std::unique_ptr;
 
 namespace dreal {

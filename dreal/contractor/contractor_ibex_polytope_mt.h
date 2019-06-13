@@ -14,6 +14,11 @@
 
 namespace dreal {
 
+/// Multi-thread version of ContractorIbexFwdbwd contractor.
+///
+/// The base ContractorIbexPolytope is not thread-safe. When there are N jobs,
+/// it creates N ContractorIbexPolytope instances internally and make sure that
+/// each thread calls a designated instance.
 class ContractorIbexPolytopeMt : public ContractorCell {
  public:
   /// Constructs IbexPolytopeMt contractor using @p f and @p vars.
@@ -48,6 +53,7 @@ class ContractorIbexPolytopeMt : public ContractorCell {
   const std::vector<Formula> formulas_;
   const Config config_;
 
+  // ctc_ready_[i] is 1 indicates that ctcs_[i] is ready to be used.
   mutable std::vector<int> ctc_ready_;
   mutable std::vector<std::unique_ptr<ContractorIbexPolytope>> ctcs_;
 };

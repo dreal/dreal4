@@ -13,6 +13,10 @@
 namespace dreal {
 
 /// Multi-thread version of ContractorIbexFwdbwd contractor.
+///
+/// The base ContractorIbexFwdbwd is not thread-safe. When there are N jobs, it
+/// creates N ContractorIbexFwdbwd instances internally and make sure that each
+/// thread calls a designated instance.
 class ContractorIbexFwdbwdMt : public ContractorCell {
  public:
   /// Deleted default constructor.
@@ -49,6 +53,7 @@ class ContractorIbexFwdbwdMt : public ContractorCell {
   bool is_dummy_{false};
   const Config config_;
 
+  // ctc_ready_[i] is 1 indicates that ctcs_[i] is ready to be used.
   mutable std::vector<int> ctc_ready_;
   mutable std::vector<std::unique_ptr<ContractorIbexFwdbwd>> ctcs_;
 };
