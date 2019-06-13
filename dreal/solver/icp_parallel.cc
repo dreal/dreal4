@@ -20,8 +20,7 @@ namespace dreal {
 namespace {
 
 bool ParallelBranch(const ibex::BitSet& bitset, const bool stack_left_box_first,
-                    const int number_of_jobs, Box* const box,
-                    Stack<Box>* const global_stack,
+                    Box* const box, Stack<Box>* const global_stack,
                     atomic<int>* const number_of_boxes) {
   const pair<double, int> max_diam_and_idx{FindMaxDiam(*box, bitset)};
   const int branching_point{max_diam_and_idx.second};
@@ -130,9 +129,8 @@ void Worker(const Contractor& contractor, const Config& config,
 
     // 3.2.3. This box is bigger than delta. Need branching.
     branch_timer_guard.resume();
-    if (!ParallelBranch(*evaluation_result, stack_left_box_first,
-                        config.number_of_jobs(), &current_box, global_stack,
-                        number_of_boxes)) {
+    if (!ParallelBranch(*evaluation_result, stack_left_box_first, &current_box,
+                        global_stack, number_of_boxes)) {
       DREAL_LOG_DEBUG(
           "IcpParallel::Worker() Found that the current box is not "
           "satisfying "
