@@ -13,7 +13,7 @@
 
 namespace dreal {
 
-/// Class for ICP (Interval Constraint Propagation) algorithm.
+/// Class for Parallel ICP (Interval Constraint Propagation) algorithm.
 class IcpParallel : public Icp {
  public:
   /// Constructs an IcpParallel based on @p config.

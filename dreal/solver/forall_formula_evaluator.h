@@ -37,6 +37,8 @@ namespace dreal {
 ///
 class ForallFormulaEvaluator : public FormulaEvaluatorCell {
  public:
+  // To use this class in multi multiple threads, it is required to provide the
+  // number of jobs.
   ForallFormulaEvaluator(Formula f, double epsilon, double delta,
                          int number_of_jobs);
 
@@ -65,6 +67,9 @@ class ForallFormulaEvaluator : public FormulaEvaluatorCell {
   Context& GetContext() const;
 
   std::vector<RelationalFormulaEvaluator> evaluators_;
+
+  // To make this class thread-safe, it includes a vector of Contexts and each
+  // thread owns a unique Context instance.
   mutable std::vector<Context> contexts_;
 };
 

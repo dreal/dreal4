@@ -83,7 +83,7 @@ IbexConverter::~IbexConverter() {
 const ExprCtr* IbexConverter::Convert(const Formula& f) {
   DREAL_LOG_DEBUG("IbexConverter::Convert({})", f);
   thread_local IbexConverterStat stat{DREAL_LOG_INFO_ENABLED};
-  TimerGuard timer_guard(&stat.timer_convert_, DREAL_LOG_INFO_ENABLED);
+  TimerGuard timer_guard(&stat.timer_convert_, stat.enabled());
   stat.increase_convert();
 
   const ExprCtr* expr_ctr{Visit(f, true)};

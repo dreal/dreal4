@@ -288,7 +288,7 @@ class ContractorForallMt : public ContractorCell {
 
  private:
   ContractorForall<ContextType>* GetCtcOrCreate(const Box& box) const {
-    const int tid{ThreadPool::get_thread_id()};
+    thread_local const int tid{ThreadPool::get_thread_id()};
     DREAL_ASSERT(tid == ThreadPool::get_thread_id());
     DREAL_ASSERT(0 <= tid && tid <= static_cast<int>(ctc_ready_.size()));
     if (ctc_ready_[tid]) {

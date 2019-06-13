@@ -79,7 +79,7 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
   DREAL_LOG_TRACE("ContractorIbexFwdbwd::Prune");
   DREAL_LOG_TRACE("CTC = {}", *num_ctr_);
   DREAL_LOG_TRACE("F = {}", f_);
-  Box::IntervalVector old_iv{iv};
+  const Box::IntervalVector old_iv{iv};
   stat.timer_pruning_.resume();
   const bool is_inner{num_ctr_->f.backward(num_ctr_->right_hand_side(),
                                            iv)};  // true if unchanged.
