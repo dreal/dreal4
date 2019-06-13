@@ -732,6 +732,7 @@ PYBIND11_MODULE(_dreal_py, m) {
   py::enum_<spdlog::level::level_enum>(m, "LogLevel")
       .value("TRACE", spdlog::level::trace)
       .value("DEBUG", spdlog::level::debug)
+      .value("INFO", spdlog::level::info)
       .value("WARNING", spdlog::level::warn)
       .value("ERROR", spdlog::level::err)
       .value("CRITICAL", spdlog::level::critical)
