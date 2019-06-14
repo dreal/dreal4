@@ -120,8 +120,8 @@ void Worker(const Contractor& contractor, const Config& config,
     }
     if (evaluation_result->empty()) {
       // 3.2.2. delta - SAT: We find a box which is smaller enough.
-      DREAL_LOG_CRITICAL("IcpParallel::Worker() Found a delta-box:\n{}",
-                         current_box);
+      DREAL_LOG_DEBUG("IcpParallel::Worker() Found a delta-box:\n{}",
+                      current_box);
       *found_delta_sat = id;
       return;
     }
