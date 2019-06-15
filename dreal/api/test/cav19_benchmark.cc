@@ -23,6 +23,9 @@ using std::string;
 using std::stringstream;
 
 namespace {
+
+int g_number_of_jobs = 1;
+
 Expression operator^(Variable const& x, unsigned const n) { return pow(x, n); }
 
 Expression sqr(Expression const& e) { return pow(e, 2); }
@@ -48,7 +51,7 @@ void check_eps_Lyapunov_stability(double const alpha, double const beta,
   timer t;
   Config config;
   config.mutable_precision() = delta;
-  config.mutable_use_local_optimization() = true;
+  config.mutable_number_of_jobs() = g_number_of_jobs;
 
   auto const cond1 = imply(eps2 * eps2 >= ball, V <= beta);
   auto const cond2 =
@@ -82,7 +85,7 @@ void check_eps_barrier_type_1(double const eps, double const gamma,
   timer t;
   Config config;
   config.mutable_precision() = delta;
-  config.mutable_use_local_optimization() = true;
+  config.mutable_number_of_jobs() = g_number_of_jobs;
 
   // We take `init` to be the set of values for which B(x)≤−ε hold. Therefore,
   // there is no need to prove that.
@@ -496,4 +499,9 @@ void DoMain() {
 }  // namespace
 }  // namespace dreal
 
-int main() { dreal::DoMain(); }
+int main(int argc, const char* argv[]) {
+  if (argc == 2) {
+    dreal::g_number_of_jobs = std::max(atoi(argv[1]), 1);
+  }
+  dreal::DoMain();
+}
