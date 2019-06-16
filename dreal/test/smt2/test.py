@@ -18,12 +18,15 @@ smt2 = sys.argv[2]
 
 # 3rd Argument: smt2 expected output
 expected_output_filename = sys.argv[3]
+
+options = sys.argv[4:]
+
 with open(expected_output_filename, "r") as myfile:
     expected_output = myfile.read().strip().splitlines()
 
 try:
     # 1. Run dReal with smt2 file
-    output = subprocess.check_output([dreal, smt2]).decode('UTF-8')
+    output = subprocess.check_output([dreal, smt2] + options).decode('UTF-8')
     output = output.splitlines()
     print(output)
     # 2. Compare the output with expected output
