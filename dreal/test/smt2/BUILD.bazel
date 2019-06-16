@@ -418,6 +418,13 @@ smt2_test(
 )
 
 smt2_test(
+    name = "int_03_parallel",
+    size = "small",
+    options = ["-j 4"],
+    smt2 = "int_03.smt2",
+)
+
+smt2_test(
     name = "ite_01",
     size = "small",
 )
@@ -535,6 +542,13 @@ smt2_test(
 smt2_test(
     name = "nikos_03",
     size = "small",
+)
+
+smt2_test(
+    name = "nikos_03_parallel",
+    size = "small",
+    options = ["-j 4"],
+    smt2 = "nikos_03.smt2",
 )
 
 smt2_test(
@@ -884,6 +898,13 @@ smt2_test(
 )
 
 smt2_test(
+    name = "hong/hong_18_parallel",
+    size = "small",
+    options = ["-j 4"],
+    smt2 = "hong/hong_18.smt2",
+)
+
+smt2_test(
     name = "hong/hong_19",
     size = "small",
     tags = ["manual"],
@@ -943,6 +964,13 @@ smt2_test(
 smt2_test(
     name = "powersystem/dreal_file_3_30",
     size = "small",
+)
+
+smt2_test(
+    name = "powersystem/dreal_file_3_30_parallel",
+    size = "small",
+    options = ["-j 4"],
+    smt2 = "powersystem/dreal_file_3_30.smt2",
 )
 
 smt2_test(
