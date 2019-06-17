@@ -221,6 +221,25 @@ def dreal_cc_test(
         **kwargs
     )
 
+def dreal_py_test(
+        name,
+        srcs,
+        main,
+        tags,
+        deps,
+        **kwargs):
+    """Creates a rule to declare a Python unit test."""
+    native.py_test(
+        name = name,
+        srcs = srcs,
+        main = main,
+        tags = tags,
+        deps = deps,
+        srcs_version = "PY2AND3",
+        python_version = "PY2",
+        **kwargs
+    )
+
 def dreal_cc_googletest(
         name,
         deps = None,
