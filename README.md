@@ -135,6 +135,7 @@ set up `CC` environment variable. For example, `CC=gcc-8.0 bazel build
 
 In CI, we test that dReal can be built using the following compilers:
  - Ubuntu:
+   [gcc-9](https://gcc.gnu.org/gcc-9), 
    [gcc-8](https://gcc.gnu.org/gcc-8),
    [gcc-7](https://gcc.gnu.org/gcc-7),
    [gcc-6](https://gcc.gnu.org/gcc-6),
