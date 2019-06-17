@@ -50,8 +50,8 @@ def dreal_workspace():
     github_archive(
         name = "pybind11",  # BSD
         repository = "pybind/pybind11",
-        commit = "v2.2.4",
-        sha256 = "b69e83658513215b8d1443544d0549b7d231b9f201f6fc787a2b2218b408181e",
+        commit = "v2.3.0",
+        sha256 = "0f34838f2c8024a6765168227ba587b3687729ebf03dc912f88ff75c7aa9cfe8",
         build_file = str(Label("//tools:pybind11.BUILD.bazel")),
     )
 
