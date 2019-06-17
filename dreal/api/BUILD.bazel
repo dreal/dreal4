@@ -5,6 +5,7 @@ load(
     "dreal_cc_binary",
     "dreal_cc_googletest",
     "dreal_cc_library",
+    "dreal_py_test",
 )
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
@@ -44,7 +45,7 @@ dreal_cc_googletest(
     ],
 )
 
-py_test(
+dreal_py_test(
     name = "cav18_benchmark",
     srcs = [
         "test/cav18_benchmark.py",
@@ -54,7 +55,6 @@ py_test(
         "--local-optimization",
     ],
     main = "test/cav18_benchmark.py",
-    srcs_version = "PY2AND3",
     tags = [
         "no_asan",
         "no_lsan",
