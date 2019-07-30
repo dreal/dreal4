@@ -728,6 +728,9 @@ PYBIND11_MODULE(_dreal_py, m) {
              return Minimize(objective, constraint, config, box);
            });
 
+  m.def("DeltaStrengthen", DeltaStrengthen);
+  m.def("DeltaWeaken", DeltaWeaken);
+
   // Exposes spdlog::level::level_enum.
   py::enum_<spdlog::level::level_enum>(m, "LogLevel")
       .value("TRACE", spdlog::level::trace)
