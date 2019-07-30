@@ -148,6 +148,106 @@ class DeltaStrengthenVisitor {
   }
 
  private:
+  Expression Visit(const Expression& e, const double delta) const {
+    return VisitExpression<Expression>(this, e, delta);
+  }
+  Expression VisitVariable(const Expression& e, const double) const {
+    return e;
+  }
+  Expression VisitConstant(const Expression& e, const double) const {
+    return e;
+  }
+  Expression VisitRealConstant(const Expression& e, const double) const {
+    return e;
+  }
+  Expression VisitAddition(const Expression& e, const double delta) const {
+    Expression ret{get_constant_in_addition(e)};
+    for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
+      const Expression& e_i{p.first};
+      const double coeff{p.second};
+      ret += coeff * Visit(e_i, delta);
+    }
+    return ret;
+  }
+  Expression VisitMultiplication(const Expression& e,
+                                 const double delta) const {
+    Expression ret{get_constant_in_multiplication(e)};
+    for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
+      const Expression& base{p.first};
+      const Expression& exponent{p.second};
+      ret *= pow(Visit(base, delta), Visit(exponent, delta));
+    }
+    return ret;
+  }
+  Expression VisitDivision(const Expression& e, const double delta) const {
+    return Visit(get_first_argument(e), delta) /
+           Visit(get_second_argument(e), delta);
+  }
+  Expression VisitLog(const Expression& e, const double delta) const {
+    return log(Visit(get_argument(e), delta));
+  }
+  Expression VisitAbs(const Expression& e, const double delta) const {
+    return abs(Visit(get_argument(e), delta));
+  }
+  Expression VisitExp(const Expression& e, const double delta) const {
+    return exp(Visit(get_argument(e), delta));
+  }
+  Expression VisitSqrt(const Expression& e, const double delta) const {
+    return sqrt(Visit(get_argument(e), delta));
+  }
+  Expression VisitPow(const Expression& e, const double delta) const {
+    return pow(Visit(get_first_argument(e), delta),
+               Visit(get_second_argument(e), delta));
+  }
+  Expression VisitSin(const Expression& e, const double delta) const {
+    return sin(Visit(get_argument(e), delta));
+  }
+  Expression VisitCos(const Expression& e, const double delta) const {
+    return cos(Visit(get_argument(e), delta));
+  }
+  Expression VisitTan(const Expression& e, const double delta) const {
+    return tan(Visit(get_argument(e), delta));
+  }
+  Expression VisitAsin(const Expression& e, const double delta) const {
+    return asin(Visit(get_argument(e), delta));
+  }
+  Expression VisitAcos(const Expression& e, const double delta) const {
+    return acos(Visit(get_argument(e), delta));
+  }
+  Expression VisitAtan(const Expression& e, const double delta) const {
+    return atan(Visit(get_argument(e), delta));
+  }
+  Expression VisitAtan2(const Expression& e, const double delta) const {
+    return atan2(Visit(get_first_argument(e), delta),
+                 Visit(get_second_argument(e), delta));
+  }
+  Expression VisitSinh(const Expression& e, const double delta) const {
+    return sinh(Visit(get_argument(e), delta));
+  }
+  Expression VisitCosh(const Expression& e, const double delta) const {
+    return cosh(Visit(get_argument(e), delta));
+  }
+  Expression VisitTanh(const Expression& e, const double delta) const {
+    return tanh(Visit(get_argument(e), delta));
+  }
+  Expression VisitMin(const Expression& e, const double delta) const {
+    return min(Visit(get_first_argument(e), delta),
+               Visit(get_second_argument(e), delta));
+  }
+  Expression VisitMax(const Expression& e, const double delta) const {
+    return max(Visit(get_first_argument(e), delta),
+               Visit(get_second_argument(e), delta));
+  }
+  Expression VisitIfThenElse(const Expression& e, const double delta) const {
+    return if_then_else(Visit(get_conditional_formula(e), delta),
+                        Visit(get_then_expression(e), delta),
+                        Visit(get_else_expression(e), delta));
+  }
+  Expression VisitUninterpretedFunction(const Expression& e,
+                                        const double) const {
+    return e;
+  }
+
   Formula Visit(const Formula& f, const double delta) const {
     return VisitFormula<Formula>(this, f, delta);
   }
@@ -163,8 +263,8 @@ class DeltaStrengthenVisitor {
     } else {
       //     lhs = rhs
       // -> (lhs >= rhs) ∧ (lhs <= rhs)
-      const Expression& lhs{get_lhs_expression(f)};
-      const Expression& rhs{get_rhs_expression(f)};
+      const Expression lhs{Visit(get_lhs_expression(f), delta)};
+      const Expression rhs{Visit(get_rhs_expression(f), delta)};
       return VisitGreaterThanOrEqualTo(lhs >= rhs, delta) &&
              VisitLessThanOrEqualTo(lhs <= rhs, delta);
     }
@@ -173,8 +273,8 @@ class DeltaStrengthenVisitor {
     if (delta > 0) {
       //     lhs ≠ rhs
       // -> (lhs > rhs) ∨ (lhs < rhs)
-      const Expression& lhs{get_lhs_expression(f)};
-      const Expression& rhs{get_rhs_expression(f)};
+      const Expression lhs{Visit(get_lhs_expression(f), delta)};
+      const Expression rhs{Visit(get_rhs_expression(f), delta)};
       return VisitGreaterThan(lhs > rhs, delta) ||
              VisitLessThan(lhs < rhs, delta);
     } else {
@@ -186,8 +286,8 @@ class DeltaStrengthenVisitor {
     //
     // After strengthening, we have:
     //     (lhs > rhs + delta)
-    const Expression& lhs{get_lhs_expression(f)};
-    const Expression& rhs{get_rhs_expression(f)};
+    const Expression lhs{Visit(get_lhs_expression(f), delta)};
+    const Expression rhs{Visit(get_rhs_expression(f), delta)};
     if (is_variable(rhs)) {
       // We return the following so that possibly we can keep the
       // bounded constraint form (c relop. v) where c is a constant.
@@ -204,8 +304,8 @@ class DeltaStrengthenVisitor {
     //
     // After strengthening, we have:
     //     (lhs >= rhs + delta)
-    const Expression& lhs{get_lhs_expression(f)};
-    const Expression& rhs{get_rhs_expression(f)};
+    const Expression lhs{Visit(get_lhs_expression(f), delta)};
+    const Expression rhs{Visit(get_rhs_expression(f), delta)};
     if (is_variable(rhs)) {
       // We return the following so that possibly we can keep the
       // bounded constraint form (c relop. v) where c is a constant.
@@ -221,8 +321,8 @@ class DeltaStrengthenVisitor {
     //
     // After strengthening, we have:
     //     (lhs + delta < rhs)
-    const Expression& lhs{get_lhs_expression(f)};
-    const Expression& rhs{get_rhs_expression(f)};
+    const Expression lhs{Visit(get_lhs_expression(f), delta)};
+    const Expression rhs{Visit(get_rhs_expression(f), delta)};
     if (is_variable(lhs)) {
       // We return the following so that possibly we can keep the
       // bounded constraint form (v relop. c) where c is a constant.
@@ -238,8 +338,8 @@ class DeltaStrengthenVisitor {
     //
     // After strengthening, we have:
     //     (lhs + delta <= rhs)
-    const Expression& lhs{get_lhs_expression(f)};
-    const Expression& rhs{get_rhs_expression(f)};
+    const Expression lhs{Visit(get_lhs_expression(f), delta)};
+    const Expression rhs{Visit(get_rhs_expression(f), delta)};
     if (is_variable(lhs)) {
       // We return the following so that possibly we can keep the
       // bounded constraint form (v relop. c) where c is a constant.
@@ -271,6 +371,11 @@ class DeltaStrengthenVisitor {
     throw DREAL_RUNTIME_ERROR(
         "DeltaStrengthenVisitor: forall formula is not supported.");
   }
+
+  // Makes VisitExpression a friend of this class so that it can use private
+  // operator()s.
+  friend Expression drake::symbolic::VisitExpression<Expression>(
+      const DeltaStrengthenVisitor*, const Expression&, const double&);
 
   // Makes VisitFormula a friend of this class so that it can use private
   // operator()s.
