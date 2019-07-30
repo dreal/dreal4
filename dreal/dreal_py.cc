@@ -16,6 +16,7 @@
 #include "dreal/symbolic/prefix_printer.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/if_then_else_eliminator.h"
 #include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/optional.h"
@@ -730,6 +731,8 @@ PYBIND11_MODULE(_dreal_py, m) {
 
   m.def("DeltaStrengthen", DeltaStrengthen);
   m.def("DeltaWeaken", DeltaWeaken);
+  m.def("EliminateIfThenElse",
+        [](const Formula& f) { return IfThenElseEliminator{}.Process(f); });
 
   // Exposes spdlog::level::level_enum.
   py::enum_<spdlog::level::level_enum>(m, "LogLevel")

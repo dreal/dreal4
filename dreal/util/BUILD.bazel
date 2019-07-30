@@ -503,6 +503,7 @@ filegroup(
     srcs = [
         "assert.h",
         "box.h",
+        "if_then_else_eliminator.h",
         "option_value.h",
         "optional.h",
         "scoped_vector.h",
