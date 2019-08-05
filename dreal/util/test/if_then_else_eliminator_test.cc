@@ -17,9 +17,11 @@ class IfThenElseEliminatorTest : public ::testing::Test {
   const Variable x_{"x", Variable::Type::CONTINUOUS};
   const Variable y_{"y", Variable::Type::CONTINUOUS};
   const Variable z_{"z", Variable::Type::CONTINUOUS};
+  const Variable w_{"w", Variable::Type::CONTINUOUS};
 
   const Variable b1_{"b1", Variable::Type::BOOLEAN};
-  const Variable b2_{"b1", Variable::Type::BOOLEAN};
+  const Variable b2_{"b2", Variable::Type::BOOLEAN};
+  const Variable b3_{"b3", Variable::Type::BOOLEAN};
 
   // The following formulas do not include if-then-else expressions
   // and as a result should not be changed in the process of ite-elim.
@@ -77,10 +79,25 @@ TEST_F(IfThenElseEliminatorTest, ITEs) {
   ASSERT_FALSE(ite_elim.variables().empty());
   ASSERT_EQ(ite_elim.variables().size(), 1);
   const Variable& ite_var{*(ite_elim.variables().begin())};
-  const Formula expected{ite_var == z_ && imply(x_ > y_, ite_var == x_ + 1.0) &&
-                         imply(!(x_ > y_), ite_var == y_ + 1.0)};
+  const Formula expected{ite_var == z_ &&
+                         ((x_ > y_ && ite_var == x_ + 1.0) ||
+                          (!(x_ > y_) && ite_var == y_ + 1.0))};
   EXPECT_PRED2(FormulaNotEqual, f, converted);
   EXPECT_PRED2(FormulaEqual, converted, expected);
+}
+
+TEST_F(IfThenElseEliminatorTest, NestedITEs) {
+  const Expression e1{if_then_else(Formula{b1_}, x_, y_)};
+  const Expression e2{if_then_else(Formula{b2_}, z_, w_)};
+  const Expression e{if_then_else(Formula{b3_}, e1, e2)};
+  const Formula f{e > 0};
+  IfThenElseEliminator ite_elim;
+  const Formula processed{ite_elim.Process(f)};
+  EXPECT_EQ(processed.to_string(),
+            "((ITE1 > 0) and ((b1 and b3 and (ITE2 == x)) or (b3 and (ITE2 == "
+            "y) and !(b1))) and ((b2 and (ITE3 == z) and !(b3)) or ((ITE3 == "
+            "w) and !(b2) and !(b3))) and ((b3 and (ITE1 == ITE2)) or ((ITE1 "
+            "== ITE3) and !(b3))))");
 }
 
 TEST_F(IfThenElseEliminatorTest, ITEsInForall) {
@@ -88,8 +105,8 @@ TEST_F(IfThenElseEliminatorTest, ITEsInForall) {
   IfThenElseEliminator ite_elim;
   const Formula processed{ite_elim.Process(f)};
   EXPECT_EQ(processed.to_string(),
-            "forall({y, ITE1}. ((ITE1 > 0) or ((x > y) and !((ITE1 == x))) or "
-            "(!((ITE1 == y)) and !((x > y)))))");
+            "forall({y, ITE4}. ((ITE4 > 0) or (((x > y) or !((ITE4 == y))) and "
+            "(!((ITE4 == x)) or !((x > y))))))");
 }
 
 }  // namespace

@@ -52,7 +52,7 @@ Formula IfThenElseEliminator::Process(const Formula& f) {
   TimerGuard timer_guard(&stat.timer_process_, stat.enabled());
   stat.increase_num_process();
 
-  Formula new_f{Visit(f)};
+  Formula new_f{Visit(f, Formula::True())};
   if (f.EqualTo(new_f) && added_formulas_.empty()) {
     return f;
   } else {
@@ -65,193 +65,246 @@ IfThenElseEliminator::variables() const {
   return ite_variables_;
 }
 
-Expression IfThenElseEliminator::Visit(const Expression& e) {
-  return VisitExpression<Expression>(this, e);
+Expression IfThenElseEliminator::Visit(const Expression& e,
+                                       const Formula& guard) {
+  return VisitExpression<Expression>(this, e, guard);
 }
 
-Expression IfThenElseEliminator::VisitVariable(const Expression& e) {
+Expression IfThenElseEliminator::VisitVariable(const Expression& e,
+                                               const Formula&) {
   return e;
 }
 
-Expression IfThenElseEliminator::VisitConstant(const Expression& e) {
+Expression IfThenElseEliminator::VisitConstant(const Expression& e,
+                                               const Formula&) {
   return e;
 }
 
-Expression IfThenElseEliminator::VisitRealConstant(const Expression& e) {
+Expression IfThenElseEliminator::VisitRealConstant(const Expression& e,
+                                                   const Formula&) {
   return e;
 }
 
-Expression IfThenElseEliminator::VisitAddition(const Expression& e) {
+Expression IfThenElseEliminator::VisitAddition(const Expression& e,
+                                               const Formula& guard) {
   // e = c₀ + ∑ᵢ cᵢ * eᵢ
   Expression ret{get_constant_in_addition(e)};
   for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
     const Expression& e_i{p.first};
     const double c_i{p.second};
-    ret += c_i * Visit(e_i);
+    ret += c_i * Visit(e_i, guard);
   }
   return ret;
 }
 
-Expression IfThenElseEliminator::VisitMultiplication(const Expression& e) {
+Expression IfThenElseEliminator::VisitMultiplication(const Expression& e,
+                                                     const Formula& guard) {
   // e = c₀ * ∏ᵢ pow(eᵢ₁, eᵢ₂)
   Expression ret{get_constant_in_multiplication(e)};
   for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
     const Expression& e_i1{p.first};
     const Expression& e_i2{p.second};
-    ret *= pow(Visit(e_i1), Visit(e_i2));
+    ret *= pow(Visit(e_i1, guard), Visit(e_i2, guard));
   }
   return ret;
 }
 
-Expression IfThenElseEliminator::VisitDivision(const Expression& e) {
-  return Visit(get_first_argument(e)) / Visit(get_second_argument(e));
+Expression IfThenElseEliminator::VisitDivision(const Expression& e,
+                                               const Formula& guard) {
+  return Visit(get_first_argument(e), guard) /
+         Visit(get_second_argument(e), guard);
 }
 
-Expression IfThenElseEliminator::VisitLog(const Expression& e) {
-  return log(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitLog(const Expression& e,
+                                          const Formula& guard) {
+  return log(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitAbs(const Expression& e) {
-  return abs(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitAbs(const Expression& e,
+                                          const Formula& guard) {
+  return abs(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitExp(const Expression& e) {
-  return exp(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitExp(const Expression& e,
+                                          const Formula& guard) {
+  return exp(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitSqrt(const Expression& e) {
-  return sqrt(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitSqrt(const Expression& e,
+                                           const Formula& guard) {
+  return sqrt(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitPow(const Expression& e) {
-  return pow(Visit(get_first_argument(e)), Visit(get_second_argument(e)));
+Expression IfThenElseEliminator::VisitPow(const Expression& e,
+                                          const Formula& guard) {
+  return pow(Visit(get_first_argument(e), guard),
+             Visit(get_second_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitSin(const Expression& e) {
-  return sin(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitSin(const Expression& e,
+                                          const Formula& guard) {
+  return sin(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitCos(const Expression& e) {
-  return cos(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitCos(const Expression& e,
+                                          const Formula& guard) {
+  return cos(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitTan(const Expression& e) {
-  return tan(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitTan(const Expression& e,
+                                          const Formula& guard) {
+  return tan(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitAsin(const Expression& e) {
-  return asin(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitAsin(const Expression& e,
+                                           const Formula& guard) {
+  return asin(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitAcos(const Expression& e) {
-  return acos(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitAcos(const Expression& e,
+                                           const Formula& guard) {
+  return acos(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitAtan(const Expression& e) {
-  return atan(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitAtan(const Expression& e,
+                                           const Formula& guard) {
+  return atan(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitAtan2(const Expression& e) {
-  return atan2(Visit(get_first_argument(e)), Visit(get_second_argument(e)));
+Expression IfThenElseEliminator::VisitAtan2(const Expression& e,
+                                            const Formula& guard) {
+  return atan2(Visit(get_first_argument(e), guard),
+               Visit(get_second_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitSinh(const Expression& e) {
-  return sinh(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitSinh(const Expression& e,
+                                           const Formula& guard) {
+  return sinh(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitCosh(const Expression& e) {
-  return cosh(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitCosh(const Expression& e,
+                                           const Formula& guard) {
+  return cosh(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitTanh(const Expression& e) {
-  return tanh(Visit(get_argument(e)));
+Expression IfThenElseEliminator::VisitTanh(const Expression& e,
+                                           const Formula& guard) {
+  return tanh(Visit(get_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitMin(const Expression& e) {
-  return min(Visit(get_first_argument(e)), Visit(get_second_argument(e)));
+Expression IfThenElseEliminator::VisitMin(const Expression& e,
+                                          const Formula& guard) {
+  return min(Visit(get_first_argument(e), guard),
+             Visit(get_second_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitMax(const Expression& e) {
-  return max(Visit(get_first_argument(e)), Visit(get_second_argument(e)));
+Expression IfThenElseEliminator::VisitMax(const Expression& e,
+                                          const Formula& guard) {
+  return max(Visit(get_first_argument(e), guard),
+             Visit(get_second_argument(e), guard));
 }
 
-Expression IfThenElseEliminator::VisitIfThenElse(const Expression& e) {
+Expression IfThenElseEliminator::VisitIfThenElse(const Expression& e,
+                                                 const Formula& guard) {
   static int counter{0};
   const Variable new_var{"ITE" + to_string(counter++),
                          Variable::Type::CONTINUOUS};
   ite_variables_.insert(new_var);
-  const Formula c{Visit(get_conditional_formula(e))};
-  const Expression e1{Visit(get_then_expression(e))};
-  const Expression e2{Visit(get_else_expression(e))};
-  // c ⇒ (new_var = e1)
-  added_formulas_.push_back(!c || (new_var == e1));
-  // ¬c ⇒ (new_var = e2)
-  added_formulas_.push_back(c || (new_var == e2));
+  const Formula c{Visit(get_conditional_formula(e), guard)};
+  const Formula then_guard{guard && c};
+  const Formula else_guard{guard && !c};
+  const Expression e1{Visit(get_then_expression(e), then_guard)};
+  const Expression e2{Visit(get_else_expression(e), else_guard)};
+  // (then_guard ∧ (new_var = e1)) ∨ (else_guard ∧ (new_var = e2))
+  added_formulas_.push_back((then_guard && (new_var == e1)) ||
+                            (else_guard && (new_var == e2)));
   return new_var;
 }
 
-Expression IfThenElseEliminator::VisitUninterpretedFunction(
-    const Expression& e) {
+Expression IfThenElseEliminator::VisitUninterpretedFunction(const Expression& e,
+                                                            const Formula&) {
   return e;
 }
 
-Formula IfThenElseEliminator::Visit(const Formula& f) {
-  return VisitFormula<Formula>(this, f);
+Formula IfThenElseEliminator::Visit(const Formula& f, const Formula& guard) {
+  return VisitFormula<Formula>(this, f, guard);
 }
 
-Formula IfThenElseEliminator::VisitFalse(const Formula& f) { return f; }
-
-Formula IfThenElseEliminator::VisitTrue(const Formula& f) { return f; }
-
-Formula IfThenElseEliminator::VisitVariable(const Formula& f) { return f; }
-
-Formula IfThenElseEliminator::VisitEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) == Visit(get_rhs_expression(f));
+Formula IfThenElseEliminator::VisitFalse(const Formula& f, const Formula&) {
+  return f;
 }
 
-Formula IfThenElseEliminator::VisitNotEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) != Visit(get_rhs_expression(f));
+Formula IfThenElseEliminator::VisitTrue(const Formula& f, const Formula&) {
+  return f;
 }
 
-Formula IfThenElseEliminator::VisitGreaterThan(const Formula& f) {
-  return Visit(get_lhs_expression(f)) > Visit(get_rhs_expression(f));
+Formula IfThenElseEliminator::VisitVariable(const Formula& f, const Formula&) {
+  return f;
 }
 
-Formula IfThenElseEliminator::VisitGreaterThanOrEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) >= Visit(get_rhs_expression(f));
+Formula IfThenElseEliminator::VisitEqualTo(const Formula& f,
+                                           const Formula& guard) {
+  return Visit(get_lhs_expression(f), guard) ==
+         Visit(get_rhs_expression(f), guard);
 }
 
-Formula IfThenElseEliminator::VisitLessThan(const Formula& f) {
-  return Visit(get_lhs_expression(f)) < Visit(get_rhs_expression(f));
+Formula IfThenElseEliminator::VisitNotEqualTo(const Formula& f,
+                                              const Formula& guard) {
+  return Visit(get_lhs_expression(f), guard) !=
+         Visit(get_rhs_expression(f), guard);
 }
 
-Formula IfThenElseEliminator::VisitLessThanOrEqualTo(const Formula& f) {
-  return Visit(get_lhs_expression(f)) <= Visit(get_rhs_expression(f));
+Formula IfThenElseEliminator::VisitGreaterThan(const Formula& f,
+                                               const Formula& guard) {
+  return Visit(get_lhs_expression(f), guard) >
+         Visit(get_rhs_expression(f), guard);
 }
 
-Formula IfThenElseEliminator::VisitConjunction(const Formula& f) {
+Formula IfThenElseEliminator::VisitGreaterThanOrEqualTo(const Formula& f,
+                                                        const Formula& guard) {
+  return Visit(get_lhs_expression(f), guard) >=
+         Visit(get_rhs_expression(f), guard);
+}
+
+Formula IfThenElseEliminator::VisitLessThan(const Formula& f,
+                                            const Formula& guard) {
+  return Visit(get_lhs_expression(f), guard) <
+         Visit(get_rhs_expression(f), guard);
+}
+
+Formula IfThenElseEliminator::VisitLessThanOrEqualTo(const Formula& f,
+                                                     const Formula& guard) {
+  return Visit(get_lhs_expression(f), guard) <=
+         Visit(get_rhs_expression(f), guard);
+}
+
+Formula IfThenElseEliminator::VisitConjunction(const Formula& f,
+                                               const Formula& guard) {
   // f := f₁ ∧ ... ∧ fₙ
   set<Formula> new_conjuncts;
   for (const Formula& f_i : get_operands(f)) {
-    new_conjuncts.emplace(Visit(f_i));
+    new_conjuncts.emplace(Visit(f_i, guard));
   }
   return make_conjunction(new_conjuncts);
 }
 
-Formula IfThenElseEliminator::VisitDisjunction(const Formula& f) {
+Formula IfThenElseEliminator::VisitDisjunction(const Formula& f,
+                                               const Formula& guard) {
   // f := f₁ ∨ ... ∨ fₙ
   set<Formula> new_disjuncts;
   for (const Formula& f_i : get_operands(f)) {
-    new_disjuncts.emplace(Visit(f_i));
+    new_disjuncts.emplace(Visit(f_i, guard));
   }
   return make_disjunction(new_disjuncts);
 }
 
-Formula IfThenElseEliminator::VisitNegation(const Formula& f) {
-  return !Visit(get_operand(f));
+Formula IfThenElseEliminator::VisitNegation(const Formula& f,
+                                            const Formula& guard) {
+  return !Visit(get_operand(f), guard);
 }
 
-Formula IfThenElseEliminator::VisitForall(const Formula& f) {
+Formula IfThenElseEliminator::VisitForall(const Formula& f,
+                                          const Formula& guard) {
   //    ∃x. ∀y. ITE(f, e₁, e₂) > 0
   // => ∃x. ¬∃y. ¬(ITE(f, e₁, e₂) > 0)
   // => ∃x. ¬∃y. ∃v. ¬(v > 0) ∧ (f → (v = e₁)) ∧ (¬f → (v = e₂))
