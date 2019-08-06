@@ -48,7 +48,7 @@ using std::vector;
 namespace py = pybind11;
 
 namespace {
-void sigint_handler(int sig) { g_interrupted = true; }
+void sigint_handler(int) { g_interrupted = true; }
 }  // namespace
 
 PYBIND11_MODULE(_dreal_py, m) {
@@ -203,12 +203,12 @@ PYBIND11_MODULE(_dreal_py, m) {
            [](const Box& self) { return fmt::format("<Box \"{}\">", self); })
       .def("__len__", &Box::size)
       .def("__delitem__",
-           [](const Box& self, const Variable& var) {
+           [](const Box&, const Variable&) {
              throw std::runtime_error{
                  "Box class does not allow deleting an item"};
            })
       .def("clear",
-           [](const Box& self) {
+           [](const Box&) {
              throw std::runtime_error{
                  "Box class does not support the 'clear' operation"};
            })
