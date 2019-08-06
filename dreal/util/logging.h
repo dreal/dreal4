@@ -19,38 +19,38 @@ namespace dreal {
 /// Please check https://github.com/gabime/spdlog for more information.
 spdlog::logger* log();
 
-#define DREAL_LOG_TRACE(fmt, ...)                  \
+#define DREAL_LOG_TRACE(...)                       \
   do {                                             \
     if (log()->should_log(spdlog::level::trace)) { \
-      log()->trace(fmt, ##__VA_ARGS__);            \
+      log()->trace(__VA_ARGS__);                   \
     }                                              \
   } while (0)
 
-#define DREAL_LOG_DEBUG(fmt, ...)                  \
+#define DREAL_LOG_DEBUG(...)                       \
   do {                                             \
     if (log()->should_log(spdlog::level::debug)) { \
-      log()->debug(fmt, ##__VA_ARGS__);            \
+      log()->debug(__VA_ARGS__);                   \
     }                                              \
   } while (0)
 
-#define DREAL_LOG_INFO(fmt, ...)     \
-  do {                               \
-    log()->info(fmt, ##__VA_ARGS__); \
+#define DREAL_LOG_INFO(...)   \
+  do {                        \
+    log()->info(__VA_ARGS__); \
   } while (0)
 
-#define DREAL_LOG_WARN(fmt, ...)     \
-  do {                               \
-    log()->warn(fmt, ##__VA_ARGS__); \
+#define DREAL_LOG_WARN(...)   \
+  do {                        \
+    log()->warn(__VA_ARGS__); \
   } while (0)
 
-#define DREAL_LOG_ERROR(fmt, ...)     \
-  do {                                \
-    log()->error(fmt, ##__VA_ARGS__); \
+#define DREAL_LOG_ERROR(...)   \
+  do {                         \
+    log()->error(__VA_ARGS__); \
   } while (0)
 
-#define DREAL_LOG_CRITICAL(fmt, ...)     \
-  do {                                   \
-    log()->critical(fmt, ##__VA_ARGS__); \
+#define DREAL_LOG_CRITICAL(...)   \
+  do {                            \
+    log()->critical(__VA_ARGS__); \
   } while (0)
 
 #define DREAL_LOG_TRACE_ENABLED (log()->should_log(spdlog::level::trace))
