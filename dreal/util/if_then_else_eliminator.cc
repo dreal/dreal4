@@ -303,8 +303,7 @@ Formula IfThenElseEliminator::VisitNegation(const Formula& f,
   return !Visit(get_operand(f), guard);
 }
 
-Formula IfThenElseEliminator::VisitForall(const Formula& f,
-                                          const Formula& guard) {
+Formula IfThenElseEliminator::VisitForall(const Formula& f, const Formula&) {
   //    ∃x. ∀y. ITE(f, e₁, e₂) > 0
   // => ∃x. ¬∃y. ¬(ITE(f, e₁, e₂) > 0)
   // => ∃x. ¬∃y. ∃v. ¬(v > 0) ∧ (f → (v = e₁)) ∧ (¬f → (v = e₂))
