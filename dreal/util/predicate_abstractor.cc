@@ -21,8 +21,8 @@ namespace {
 class PredicateAbstractorStat : public Stat {
  public:
   explicit PredicateAbstractorStat(const bool enabled) : Stat{enabled} {}
-  PredicateAbstractorStat(const PredicateAbstractorStat&) = default;
-  PredicateAbstractorStat(PredicateAbstractorStat&&) = default;
+  PredicateAbstractorStat(const PredicateAbstractorStat&) = delete;
+  PredicateAbstractorStat(PredicateAbstractorStat&&) = delete;
   PredicateAbstractorStat& operator=(const PredicateAbstractorStat&) = delete;
   PredicateAbstractorStat& operator=(PredicateAbstractorStat&&) = delete;
   ~PredicateAbstractorStat() override {
