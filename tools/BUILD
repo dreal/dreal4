@@ -36,8 +36,10 @@ config_setting(
 )
 
 config_setting(
-    name = "clang",
-    constraint_values = ["@bazel_tools//tools/cpp:clang"],
+    name = "clang_build",
+    flag_values = {
+        "@bazel_tools//tools/cpp:compiler": "clang",
+    },
     visibility = ["//visibility:public"],
 )
 
@@ -47,8 +49,10 @@ config_setting(
 )
 
 config_setting(
-    name = "gcc",
-    constraint_values = ["@bazel_tools//tools/cpp:gcc"],
+    name = "gcc_build",
+    flag_values = {
+        "@bazel_tools//tools/cpp:compiler": "gcc",
+    },
     visibility = ["//visibility:public"],
 )
 

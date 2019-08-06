@@ -19,9 +19,11 @@ CXX_FLAGS = [
     "-Werror=attributes",
     "-Werror=deprecated",
     "-Werror=deprecated-declarations",
+    "-Werror=extra",
     "-Werror=ignored-qualifiers",
     "-Werror=old-style-cast",
     "-Werror=overloaded-virtual",
+    "-Werror=pedantic",
     "-Werror=shadow",
 ]
 
@@ -38,7 +40,6 @@ CLANG_FLAGS = CXX_FLAGS + [
 # The GCC_FLAGS will be enabled for all C++ rules in the project when
 # building with gcc.
 GCC_FLAGS = CXX_FLAGS + [
-    "-Werror=extra",
     "-Werror=logical-op",
     "-Werror=non-virtual-dtor",
     "-Werror=return-local-addr",
@@ -61,10 +62,10 @@ def _platform_copts(rule_copts, cc_test = 0):
     if cc_test:
         extra_gcc_flags = GCC_CC_TEST_FLAGS
     return select({
-        "//tools:gcc": GCC_FLAGS + extra_gcc_flags + rule_copts,
-        "//tools:clang": CLANG_FLAGS + rule_copts,
+        "//tools:gcc_build": GCC_FLAGS + extra_gcc_flags + rule_copts,
+        "//tools:clang_build": CLANG_FLAGS + rule_copts,
         "//tools:apple": CLANG_FLAGS + rule_copts,
-        "//conditions:default": rule_copts,
+        "//conditions:default": CXX_FLAGS + rule_copts,
     })
 
 def _check_library_deps_blacklist(name, deps):
