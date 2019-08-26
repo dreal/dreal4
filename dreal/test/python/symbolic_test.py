@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from dreal import *
-
-import unittest
 import math
+import unittest
+
+from dreal import (And, Expression, Formula, Iff, Implies, Not, Or, Variable,
+                   Variables, abs, acos, asin, atan, atan2, cos, cosh, exp,
+                   forall, if_then_else, intersect, log, logical_imply, sin,
+                   sinh, sqrt, tan, tanh, min, max)
 
 x = Variable("x")
 y = Variable("y")
@@ -124,6 +125,13 @@ class SymbolicVariableTest(unittest.TestCase):
                          "((y == 2) and (x >= 1) and (x <= 2))")
         self.assertEqual(str(Or(x >= 1, x <= 2, y == 2)),
                          "((y == 2) or (x >= 1) or (x <= 2))")
+
+    def test_logical2(self):
+        self.assertEqual(str(And(b1, b2, Implies(b1, b2))),
+                         "(b1 and b2 and (b2 or !(b1)))")
+        self.assertEqual(str(Or(b1, b2, Implies(b1, b2))),
+                         "(b1 or b2 or !(b1))")
+        self.assertEqual(str(Not(b1)), "!(b1)")
 
     def test_functions_with_variable(self):
         self.assertEqual(str(log(x)), "log(x)")
@@ -502,6 +510,12 @@ class TestSymbolicExpression(unittest.TestCase):
 
 
 class TestSymbolicFormula(unittest.TestCase):
+    def test_construct_formula_from_variable(self):
+        a = Variable("a", Variable.Bool)
+        b = Variable("a", Variable.Bool)
+        self.assertEqual(str(logical_imply(Formula(a), Formula(b))),
+                         "(a or !(a))")
+
     def test_get_free_variables(self):
         f = x > y
         self.assertEqual(f.GetFreeVariables(), Variables([x, y]))

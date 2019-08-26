@@ -529,6 +529,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("forall", &forall);
 
   py::class_<Formula>(m, "Formula")
+      .def(py::init<const Variable&>())
       .def("GetFreeVariables", &Formula::GetFreeVariables)
       .def("EqualTo", &Formula::EqualTo)
       .def("Evaluate", [](const Formula& self) { return self.Evaluate(); })
@@ -570,14 +571,36 @@ PYBIND11_MODULE(_dreal_py, m) {
   // in `__init__.py` to accept an arbitrary number of arguments.
   m.def("__logical_and",
         [](const Formula& a, const Formula& b) { return a && b; })
+      .def("__logical_and",
+           [](const Variable& a, const Formula& b) { return a && b; })
+      .def("__logical_and",
+           [](const Formula& a, const Variable& b) { return a && b; })
+      .def("__logical_and",
+           [](const Variable& a, const Variable& b) { return a && b; });
+
+  m.def("__logical_or",
+        [](const Formula& a, const Formula& b) { return a || b; })
       .def("__logical_or",
-           [](const Formula& a, const Formula& b) { return a || b; });
+           [](const Variable& a, const Formula& b) { return a || b; })
+      .def("__logical_or",
+           [](const Formula& a, const Variable& b) { return a || b; })
+      .def("__logical_or",
+           [](const Variable& a, const Variable& b) { return a || b; });
 
   m.def("logical_not", [](const Formula& a) { return !a; })
+      .def("logical_not", [](const Variable& a) { return !a; });
+
+  m.def("logical_imply",
+        [](const Formula& a, const Formula& b) { return imply(a, b); })
       .def("logical_imply",
-           [](const Formula& a, const Formula& b) { return imply(a, b); })
-      .def("logical_iff",
-           [](const Variable& a, const Variable& b) { return iff(a, b); })
+           [](const Variable& a, const Formula& b) { return imply(a, b); })
+      .def("logical_imply",
+           [](const Formula& a, const Variable& b) { return imply(a, b); })
+      .def("logical_imply",
+           [](const Variable& a, const Variable& b) { return imply(a, b); });
+
+  m.def("logical_iff",
+        [](const Variable& a, const Variable& b) { return iff(a, b); })
       .def("logical_iff",
            [](const Formula& a, const Variable& b) { return iff(a, b); })
       .def("logical_iff",
