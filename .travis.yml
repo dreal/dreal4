@@ -73,6 +73,18 @@ matrix:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+          - clang-9
+      env:
+        - COMPILER="clang-9" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-8 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
