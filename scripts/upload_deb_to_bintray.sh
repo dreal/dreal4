@@ -3,7 +3,7 @@
 set -euf -o pipefail
 
 # BUILD
-CC=gcc-5 bazel build //:package_debian --host_force_python=PY2
+CC=gcc-5 bazel build //:package_debian
 
 ID=$1
 PASSWORD=$2
