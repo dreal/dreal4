@@ -46,8 +46,10 @@ TEST_F(SymbolicTest, Expand) {
 }
 
 TEST_F(SymbolicTest, Imply) {
+  const Formula f1{b1_};
+  const Formula f2{b2_};
   // b₁ ⇒ b₂
-  const Formula f{imply(Formula{b1_}, Formula{b2_})};
+  const Formula f{imply(f1, f2)};
 
   // T ⇒ T  =  T
   EXPECT_PRED2(
@@ -69,6 +71,10 @@ TEST_F(SymbolicTest, Imply) {
       FormulaEqual,
       f.Substitute(b1_, Formula::False()).Substitute(b2_, Formula::False()),
       Formula::True());
+
+  EXPECT_PRED2(FormulaEqual, f, imply(b1_, b2_));
+  EXPECT_PRED2(FormulaEqual, f, imply(Formula{b1_}, b2_));
+  EXPECT_PRED2(FormulaEqual, f, imply(b1_, Formula{b2_}));
 }
 
 TEST_F(SymbolicTest, Iff) {

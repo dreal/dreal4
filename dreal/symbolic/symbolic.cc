@@ -20,6 +20,15 @@ using std::transform;
 using std::vector;
 
 Formula imply(const Formula& f1, const Formula& f2) { return !f1 || f2; }
+Formula imply(const Variable& v, const Formula& f) {
+  return imply(Formula{v}, f);
+}
+Formula imply(const Formula& f, const Variable& v) {
+  return imply(f, Formula{v});
+}
+Formula imply(const Variable& v1, const Variable& v2) {
+  return imply(Formula{v1}, Formula{v2});
+}
 
 Formula iff(const Formula& f1, const Formula& f2) {
   return imply(f1, f2) && imply(f2, f1);
