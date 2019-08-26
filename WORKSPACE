@@ -14,11 +14,11 @@ load("@bazel_skylib//lib:versions.bzl", "versions")
 versions.check(minimum_bazel_version = "0.22.0")
 
 github_archive(
-    name = "google_styleguide",  # GOOGLE
+    name = "google_styleguide",  # BSD-3
     build_file = "//tools:google_styleguide.BUILD.bazel",
-    commit = "bbea616e75aa60cd5a1b9ac7f80fafb244f69f28",  # 20190423
-    repository = "dreal-deps/styleguide",
-    sha256 = "0641ba2c32a0b9f9303af28f64c249efa88b84171517174d1ebe596ed844a9a5",
+    commit = "adb3500107f409ac5491188ae652ac3f4d03d9d3",  # 20190812
+    repository = "cpplint/cpplint",
+    sha256 = "d0accc39085ecf61fb81c1b9cce5df889444a6a47ed88dddcc48aa97a79ca6f1",
 )
 
 github_archive(
