@@ -2,6 +2,16 @@
 
 set -euf -o pipefail
 
+display_usage() {
+    echo "usage: $0 <id> <password>"
+}
+
+if [ $# -ne 2 ]
+then
+    display_usage
+    exit 1
+fi
+
 # BUILD
 CC=gcc-5 bazel build //:package_debian
 
