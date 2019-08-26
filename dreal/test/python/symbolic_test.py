@@ -6,9 +6,9 @@ import math
 import unittest
 
 from dreal import (And, Expression, Formula, Iff, Implies, Not, Or, Variable,
-                   Variables, abs, acos, asin, atan, atan2, cos, cosh, exp,
-                   forall, if_then_else, intersect, log, logical_imply, sin,
-                   sinh, sqrt, tan, tanh, min, max)
+                   Variables, acos, asin, atan, atan2, cos, cosh, exp, forall,
+                   if_then_else, intersect, log, logical_imply, max, min, sin,
+                   sinh, sqrt, tan, tanh)
 
 x = Variable("x")
 y = Variable("y")

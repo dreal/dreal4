@@ -58,6 +58,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def(py::init<>())
       .def(py::init<double, double>())
       .def(py::init<double>())
+      .def("__abs__", [](const Box::Interval& self) { return abs(self); })
       .def(py::self == py::self)
       .def(py::self != py::self)
       .def("__str__",
@@ -176,7 +177,6 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("acosh", [](const Box::Interval& i) { return acosh(i); })
       .def("asinh", [](const Box::Interval& i) { return asinh(i); })
       .def("atanh", [](const Box::Interval& i) { return atanh(i); })
-      .def("abs", [](const Box::Interval& i) { return abs(i); })
       .def("max", [](const Box::Interval& i1,
                      const Box::Interval& i2) { return max(i1, i2); })
       .def("min", [](const Box::Interval& i1,
@@ -253,6 +253,7 @@ PYBIND11_MODULE(_dreal_py, m) {
   py::class_<Variable> variable(m, "Variable");
   variable.def(py::init<const string&>())
       .def(py::init<const string&, Variable::Type>())
+      .def("__abs__", [](const Variable& self) { return abs(self); })
       .def("get_id", &Variable::get_id)
       .def("get_type", &Variable::get_type)
       .def("__str__", &Variable::to_string)
@@ -376,6 +377,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def(py::init<>())
       .def(py::init<double>())
       .def(py::init<const Variable&>())
+      .def("__abs__", [](const Expression& self) { return abs(self); })
       .def("__str__", &Expression::to_string)
       .def("__repr__",
            [](const Expression& self) {
@@ -484,7 +486,6 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("ToPrefix", [](const Expression& self) { return ToPrefix(self); });
 
   m.def("log", py::overload_cast<const Expression&>(&log))
-      .def("abs", &abs)
       .def("exp", &exp)
       .def("sqrt", &sqrt)
       .def("pow", py::overload_cast<const Expression&, const Expression&>(&pow))
