@@ -32,8 +32,7 @@ def _build_dreal():
     new_env["PYTHON_BIN_PATH"] = sys.executable
     if subprocess.call([
             'bazel', 'build', '//:libdreal.so', '//dreal:_dreal_py.so',
-            '--cxxopt=-DDREAL_CHECK_INTERRUPT',
-            '--python_path={}'.format(
+            '--cxxopt=-DDREAL_CHECK_INTERRUPT', '--python_path={}'.format(
                 sys.executable), '--python_version={}'.format(PYTHON_VERSION),
             '--incompatible_allow_python_version_transitions=false',
             '--incompatible_py3_is_default=false'
@@ -45,13 +44,11 @@ def _build_dreal():
 
 
 def _copy_bins():
-    shutil.copy(
-        os.path.join(SRC_DIR, 'bazel-bin', 'dreal', '_dreal_py.so'),
-        os.path.join(ROOT_DIR, 'dreal'))
+    shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'dreal', '_dreal_py.so'),
+                os.path.join(ROOT_DIR, 'dreal'))
     os.chmod(os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so'), 436)
-    shutil.copy(
-        os.path.join(SRC_DIR, 'bazel-bin', 'libdreal.so'),
-        os.path.join(ROOT_DIR, 'dreal'))
+    shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'libdreal.so'),
+                os.path.join(ROOT_DIR, 'dreal'))
     os.chmod(os.path.join(ROOT_DIR, 'dreal', 'libdreal.so'), 436)
     if sys.platform == 'darwin':
         if subprocess.call([
