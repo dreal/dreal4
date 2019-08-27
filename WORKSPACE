@@ -1,21 +1,14 @@
 workspace(name = "dreal")
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("//third_party/com_github_robotlocomotion_drake:tools/workspace/github.bzl", "github_archive")
 
-http_archive(
-    name = "rules_pkg",
-    sha256 = "02de387c5ef874379e784ac968bf6efffe5285a168cab5a3169e08cfc634fd22",
-    url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.2/rules_pkg-0.2.2.tar.gz",
+load(
+    "//third_party/com_github_robotlocomotion_drake:tools/workspace/github.bzl",
+    "github_archive",
 )
 
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-
-rules_pkg_dependencies()
-
 github_archive(
-    name = "bazel_skylib", # Apache-2.0
-    repository = "bazelbuild/bazel-skylib",
+    name = "bazel_skylib",  # Apache-2.0
     commit = "0.9.0",
+    repository = "bazelbuild/bazel-skylib",
     sha256 = "9245b0549e88e356cd6a25bf79f97aa19332083890b7ac6481a2affb6ada9752",
 )
 

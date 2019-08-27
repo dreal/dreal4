@@ -7,7 +7,7 @@ load(
     "dreal_cc_library",
     "dreal_py_test",
 )
-load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 package(default_visibility = ["//visibility:private"])
 
