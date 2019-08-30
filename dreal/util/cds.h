@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include <cds/container/mspriority_queue.h>
 #include <cds/container/treiber_stack.h>
 #include <cds/gc/hp.h>
 #include <cds/init.h>
@@ -12,6 +13,12 @@ using gc_type = cds::gc::HP;
 
 template <typename T>
 using Stack = cds::container::TreiberStack<gc_type, T>;
+
+template <typename T, typename Comparator>
+using PriorityQueue = cds::container::MSPriorityQueue<
+    T, typename cds::container::mspriority_queue::make_traits<
+           cds::opt::buffer<cds::opt::v::initialized_dynamic_buffer<char>>,
+           cds::opt::compare<Comparator>>::type>;
 
 class CdsScopeGuard {
  public:

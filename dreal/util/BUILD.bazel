@@ -379,6 +379,15 @@ dreal_cc_googletest(
 )
 
 dreal_cc_googletest(
+    name = "cds_test",
+    tags = ["unit"],
+    deps = [
+        ":box",
+        ":cds",
+    ],
+)
+
+dreal_cc_googletest(
     name = "filesystem_test",
     tags = ["unit"],
     deps = [
