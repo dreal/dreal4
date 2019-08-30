@@ -342,6 +342,9 @@ void MainProgram::ExtractOptions() {
 }
 
 int MainProgram::Run() {
+  if (opt_.isSet("--help")) {
+    return 0;
+  }
   if (!is_options_all_valid_) {
     return 1;
   }
