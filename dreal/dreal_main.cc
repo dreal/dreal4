@@ -14,9 +14,21 @@
 namespace dreal {
 
 using std::cerr;
+using std::cout;
 using std::endl;
 using std::string;
 using std::vector;
+
+namespace {
+string get_version_string() {
+#ifndef NDEBUG
+  const string build_type{"Debug"};
+#else
+  const string build_type{"Release"};
+#endif
+  return fmt::format("v{} ({} Build)", Context::version(), build_type);
+}
+}  // namespace
 
 MainProgram::MainProgram(int argc, const char* argv[]) {
   AddOptions();
@@ -31,14 +43,8 @@ void MainProgram::PrintUsage() {
 }
 
 void MainProgram::AddOptions() {
-#ifndef NDEBUG
-  const string build_type{"Debug"};
-#else
-  const string build_type{"Release"};
-#endif
   opt_.overview =
-      fmt::format("dReal v{} ({} Build) : delta-complete SMT solver",
-                  Context::version(), build_type);
+      fmt::format("dReal {} : delta-complete SMT solver", get_version_string());
   opt_.syntax = "dreal [OPTIONS] <input file> (.smt2 or .dr)";
 
   // NOTE: Make sure to match the default values specified here with the ones
@@ -47,6 +53,11 @@ void MainProgram::AddOptions() {
            0 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
            "Display usage instructions.", "-h", "-help", "--help", "--usage");
+
+  opt_.add("" /* Default */, false /* Required? */,
+           0 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "Print version number of dReal.", "-v", "--version");
 
   auto* const positive_double_option_validator =
       new ez::ezOptionValidator("d" /* double */, "gt", "0");
@@ -200,6 +211,9 @@ bool MainProgram::ValidateOptions() {
   args_.insert(args_.end(), opt_.firstArgs.begin() + 1, opt_.firstArgs.end());
   args_.insert(args_.end(), opt_.unknownArgs.begin(), opt_.unknownArgs.end());
   args_.insert(args_.end(), opt_.lastArgs.begin(), opt_.lastArgs.end());
+  if (opt_.isSet("--version")) {
+    return true;
+  }
   if (opt_.isSet("-h") || (args_.empty() && !opt_.isSet("--in")) ||
       args_.size() > 1) {
     PrintUsage();
@@ -342,6 +356,10 @@ void MainProgram::ExtractOptions() {
 }
 
 int MainProgram::Run() {
+  if (opt_.isSet("--version")) {
+    cout << "dReal " << get_version_string() << endl;
+    return 0;
+  }
   if (opt_.isSet("--help")) {
     return 0;
   }
