@@ -18,6 +18,8 @@ def dreal_workspace():
         modname = "ibex",
         pkg_config_paths = [
             # macOS
+            "/usr/local/opt/clp/lib/pkgconfig",
+            "/usr/local/opt/coinutils/lib/pkgconfig",
             "/usr/local/opt/ibex@2.7.4/share/pkgconfig",
             # Linux
             "/opt/libibex/2.7.4/share/pkgconfig",
