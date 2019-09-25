@@ -37,6 +37,7 @@ _cpp_extensions = [
     "cc",
     "cpp",
     "cxx",
+    "h",
 ]
 
 _cc_rules = [
