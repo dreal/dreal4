@@ -170,7 +170,7 @@ Database](https://clang.llvm.org/docs/JSONCompilationDatabase.html),
 run:
 
 ```bash
-./third_party/com_github_grailbio_bazel-compilation-database/generate.sh
+bazel build //:compdb
 ```
 
 
