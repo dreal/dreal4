@@ -7,8 +7,14 @@ exports_files([
     ".clang-format",
 ])
 
-load("@rules_pkg//:pkg.bzl", "pkg_deb", "pkg_tar")
-load("//tools:dreal.bzl", "DREAL_PREFIX", "DREAL_VERSION", "dreal_cc_library")
+compilation_database(
+    name = "compdb",
+    exec_root = "bazel-dreal4",
+    targets = [
+        ":dreal",
+        ":dreal_shared_library",
+    ],
+)
 
 cc_binary(
     name = "libdreal.so",
