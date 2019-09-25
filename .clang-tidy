@@ -1,11 +1,52 @@
 ---
-Checks: 'abseil-*,bugprone-*,clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,google-*,hicpp-*,llvm-*,misc-*,modernize-*,misperformance-*,readability-*,-clang-diagnostic-pragma-once-outside-header,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-pro-type-static-cast-downcast,-modernize-use-bool-literals,-modernize-use-transparent-functors,-modernize-use-using,-modernize-use-trailing-return-type,-readability-else-after-return,-readability-implicit-bool-cast,-readability-named-parameter,-readability-redundant-declaration,-llvm-header-guard,-hicpp-no-array-decay,-readability-implicit-bool-conversion'
+Checks: >
+  abseil-*,
+  bugprone-*,
+  clang-analyzer-*,
+  clang-diagnostic-*,
+  cppcoreguidelines-*,
+  google-*,
+  hicpp-*,
+  llvm-*,
+  misc-*,
+  misperformance-*,
+  modernize-*,
+  readability-*,
+  -clang-diagnostic-pragma-once-outside-header,
+  -cppcoreguidelines-avoid-goto,
+  -cppcoreguidelines-owning-memory,
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+  -cppcoreguidelines-pro-type-static-cast-downcast,
+  -hicpp-avoid-goto,
+  -hicpp-no-array-decay,
+  -llvm-header-guard,
+  -modernize-use-bool-literals,
+  -modernize-use-trailing-return-type,
+  -modernize-use-transparent-functors,
+  -modernize-use-using,
+  -readability-else-after-return,
+  -readability-implicit-bool-cast,
+  -readability-implicit-bool-conversion,
+  -readability-named-parameter,
+  -readability-redundant-declaration,
 
 CheckOptions:
-  - { key: readability-identifier-naming.ClassCase,           value: CamelCase  }
-  - { key: readability-identifier-naming.NamespaceCase,       value: lower_case }
-  - { key: readability-identifier-naming.PrivateMemberSuffix, value: '_'        }
-  - { key: readability-identifier-naming.StructCase,          value: CamelCase  }
-  - { key: readability-identifier-naming.VariableCase,        value: lower_case }
+  - { key: readability-identifier-naming.ClassCase,               value: CamelCase  }
+  - { key: readability-identifier-naming.ConstexprVariableCase,   value: CamelCase }
+  - { key: readability-identifier-naming.ConstexprVariablePrefix, value: k         }
+  - { key: readability-identifier-naming.GlobalConstantCase,      value: CamelCase }
+  - { key: readability-identifier-naming.GlobalConstantPrefix,    value: k         }
+  - { key: readability-identifier-naming.MacroDefinitionCase,     value: UPPER_CASE }
+  - { key: readability-identifier-naming.MemberConstantCase,      value: CamelCase }
+  - { key: readability-identifier-naming.MemberConstantPrefix,    value: k         }
+  - { key: readability-identifier-naming.NamespaceCase,           value: lower_case }
+  - { key: readability-identifier-naming.PrivateMemberSuffix,     value: _          }
+  - { key: readability-identifier-naming.ProtectedMemberSuffix,   value: _          }
+  - { key: readability-identifier-naming.StaticConstantCase,      value: CamelCase }
+  - { key: readability-identifier-naming.StaticConstantPrefix,    value: k         }
+  - { key: readability-identifier-naming.StructCase,              value: CamelCase  }
+  - { key: readability-identifier-naming.TemplateParameterCase,   value: CamelCase  }
+  - { key: readability-identifier-naming.VariableCase,            value: lower_case }
 
 ...
