@@ -35,9 +35,9 @@ github_archive(
 github_archive(
     name = "ezoptionparser",  # MIT
     build_file = "//tools:ezoptionparser.BUILD.bazel",
-    commit = "e6fb851748cf7a613f4dd125e2a1dc4da34ec760",
+    commit = "94bc81269eb500fb188727777e1ced9b15d97572",
     repository = "dreal-deps/ezoptionparser",
-    sha256 = "da2bda7b10c071478a19ac01167605c1efec1770defb3f5bbf4b801c8a0faf62",
+    sha256 = "81f36ac21d7a1c25711da3b9f82ee2cf9588d207328781d9db116a54ba1bf7fb",
 )
 
 github_archive(
