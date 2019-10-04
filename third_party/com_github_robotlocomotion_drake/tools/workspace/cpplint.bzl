@@ -1,5 +1,3 @@
-# -*- python -*-
-
 # From https://bazel.build/versions/master/docs/be/c-cpp.html#cc_library.srcs
 _SOURCE_EXTENSIONS = [source_ext for source_ext in """
 .c

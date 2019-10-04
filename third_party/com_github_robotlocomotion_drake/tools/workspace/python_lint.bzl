@@ -1,6 +1,3 @@
-# -*- mode: python -*-
-# vi: set ft=python :
-
 #------------------------------------------------------------------------------
 # Internal helper; set up test given name and list of files. Will do nothing
 # if no files given.
