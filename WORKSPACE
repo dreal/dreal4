@@ -7,9 +7,9 @@ load(
 
 github_archive(
     name = "bazel_skylib",  # Apache-2.0
-    commit = "0.9.0",
+    commit = "1.0.0",
     repository = "bazelbuild/bazel-skylib",
-    sha256 = "9245b0549e88e356cd6a25bf79f97aa19332083890b7ac6481a2affb6ada9752",
+    sha256 = "9a737999532daca978a158f94e77e9af6a6a169709c0cee274f0a4c3359519bd",
 )
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
