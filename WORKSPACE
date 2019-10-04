@@ -42,9 +42,9 @@ github_archive(
 
 github_archive(
     name = "com_google_googletest",  # GOOGLE
-    commit = "9a502a5b14b4a6160103c1f2c64331772878d86a",  # 20190108
+    commit = "703bd9caab50b139428cea1aaff9974ebee5742e",  # v1.10.0 / 2019/10/03
     repository = "google/googletest",
-    sha256 = "6b2df434f90104376713c4fb666f2c97a7375edc2e576bcb7dde4eccb291b959",
+    sha256 = "d17b1b83a57b3933565a6d0616fe261107326d47de20288d0949ed038e1c342d",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")
