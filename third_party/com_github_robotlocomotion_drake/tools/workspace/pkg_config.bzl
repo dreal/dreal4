@@ -82,15 +82,17 @@ def setup_pkg_config_repository(repository_ctx):
                         linkopt = "-l" + name
                         linkopts[i] = linkopt
                         break
+
+        os_name = repository_ctx.os.name
+
         # Add `-Wl,-rpath <path>` for `-L<path>`.
         # See https://github.com/RobotLocomotion/drake/issues/7387#issuecomment-359952616  # noqa
-        if linkopt.startswith("-L"):
+        if os_name == "linux" and linkopt.startswith("-L"):
             linkopts[i] = "-Wl,-rpath " + linkopt[2:] + " " + linkopt
             continue
 
         # On macOS, we need to pass `-undefined dynamic_lookup`
         # instead of `-lpython2.7` or `lpython3.x`.
-        os_name = repository_ctx.os.name
         if os_name == "mac os x" and linkopt.startswith("-lpython"):
             linkopts[i] = "-undefined dynamic_lookup"
             continue
