@@ -2,6 +2,7 @@ cc_library(
     name = "spdlog",
     hdrs = glob(["include/spdlog/**"]),
     defines = [
+        # Use dReal's @fmt external, not the bundled version inside spdlog.
         "SPDLOG_FMT_EXTERNAL",
     ],
     includes = ["include"],
