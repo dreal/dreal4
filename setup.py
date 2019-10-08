@@ -12,28 +12,18 @@ from distutils.util import get_platform
 from setuptools.command.bdist_egg import bdist_egg as _bdist_egg
 from setuptools.command.develop import develop as _develop
 
-# io.open is needed for projects that support Python 2.7
-# It ensures open() defaults to text mode with universal newlines,
-# and accepts an argument to specify the text encoding
-# Python 3 only projects can skip this import
-from io import open
-
 VERSION = '4.19.10.1'.replace(".0", ".")
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 SRC_DIR = os.path.join(ROOT_DIR)
 
 
 def _build_dreal():
-    if sys.version_info.major == 2:
-        PYTHON_VERSION = 'PY2'
-    else:
-        PYTHON_VERSION = 'PY3'
     new_env = os.environ.copy()
     new_env["PYTHON_BIN_PATH"] = sys.executable
     if subprocess.call([
             'bazel', 'build', '//:libdreal.so', '//dreal:_dreal_py.so',
             '--cxxopt=-DDREAL_CHECK_INTERRUPT', '--python_path={}'.format(
-                sys.executable), '--python_version={}'.format(PYTHON_VERSION),
+                sys.executable), '--python_version=PY3',
             '--incompatible_allow_python_version_transitions=false',
             '--incompatible_py3_is_default=false'
     ],
@@ -97,8 +87,8 @@ Precompiled Wheels
 
 We provide precompiled distributions (`.whl`) for the following environments:
 
- - macOS 10.14 / 10.13 + CPython 2.7 / 3.7
- - Linux + CPython 2.7 / 3.5 / 3.6 / 3.7
+ - macOS 10.14 / 10.13 + CPython 3.7
+ - Linux + CPython 3.5 / 3.6 / 3.7
 
 You still need to install dReal prerequisites such as IBEX and CLP in
 your system. To install them, please follow the instructions below:
@@ -151,7 +141,7 @@ if 'bdist_wheel' in sys.argv and '--plat-name' not in sys.argv:
         sys.argv.insert(idx + 1, name.replace('.', '_').replace('-', '_'))
 
     # Make a wheel which is specific to the minor version of Python
-    # For example, "cp35" or "cp27".
+    # For example, "cp35".
     if not any(arg.startswith('--python-tag') for arg in sys.argv):
         import wheel.pep425tags
         python_tag = "%s%d%d" % (wheel.pep425tags.get_abbr_impl(),
@@ -170,8 +160,6 @@ setuptools.setup(
     author_email='soonho.kong@gmail.com',  # Optional
     classifiers=[  # Optional
         'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',

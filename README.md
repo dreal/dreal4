@@ -36,10 +36,10 @@ Python Binding
 
 [![Open In Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/dreal/dreal4/blob/master/notebooks/dreal4-python3.ipynb)
 
-Some of the functionality of dReal is accessible via Python2/3. To
+Some of the functionality of dReal is accessible via Python3. To
 install the binding, run the following:
 ```bash
-pip install dreal
+pip3 install dreal
 ```
 
 Note that you still need to install dReal prerequisites such as IBEX
@@ -47,8 +47,8 @@ and CLP in your system. Please follow [the
 instructions](https://github.com/dreal/dreal4#install-prerequsites).
 
 
-To test the Python binding, run `python2` or `python3` in a terminal
-and type the followings:
+To test the Python binding, run `python3` in a terminal and type the
+followings:
 
 ```python
 from dreal import *
