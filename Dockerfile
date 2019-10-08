@@ -11,24 +11,21 @@ RUN cd /dreal4 \
 # Install prerequsites.
 RUN apt-get update \
       && yes "Y" | /dreal4/setup/ubuntu/18.04/install_prereqs.sh \
-      && apt-get install -y --no-install-recommends python3-dev \
+      && apt-get install -y --no-install-recommends python3-dev python3-wheel python3-setuptools python3-pip \
       && rm -rf /var/lib/apt/lists/* \
       && apt-get clean all \
-# Build dReal4 and install under /usr. Note that this installs
-# bindings for python2.7 under /usr/lib/python2.7/dist-packages/.
+# Build dReal4
       && cd /dreal4 \
-      && sed -i "s/site-packages/dist-packages/" tools/dreal.bzl \
       && bazel build //:archive \
-      && tar xfz bazel-bin/archive.tar.gz \
-      && cp -r opt/dreal/`cat /DREAL_VERSION`/* /usr \
-      && rm -rf opt/ \
-# Install python3.6, build bindings for python3 and install it under
-# /usr/lib/python3/dist-packages.
-      && bazel build //:archive --python_version=py3 --python_path=python3 \
-      && tar xfz bazel-bin/archive.tar.gz \
-      && cp -r opt/dreal/`cat /DREAL_VERSION`/lib/python3/dist-packages/dreal /usr/lib/python3/dist-packages/ \
-      && rm -rf opt/ \
+      && tar xfz bazel-bin/archive.tar.gz --strip-components 4 -C /usr \
+# Install Python3 Binding
+      && python3 setup.py bdist_wheel \
+      && pip3 install ./dist/dreal-`cat /DREAL_VERSION`-cp36-none-manylinux1_x86_64.whl \
+      && bazel clean --expunge \
 # Clean up
+      && cd / \
+      && rm -rf dreal4 \
       && rm -rf /root/.cache/bazel \
       && apt remove -y bazel bison flex g++ wget \
+      && apt autoclean -y \
       && apt autoremove -y
