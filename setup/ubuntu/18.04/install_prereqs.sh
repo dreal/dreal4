@@ -13,13 +13,12 @@ apt-get install -y --no-install-recommends $(tr '\n' ' ' <<EOF
 bison
 coinor-libclp-dev
 g++
-g++-5
 libfl-dev
 libibex-dev
 libnlopt-dev
 libpython2.7-dev
 pkg-config
-python-dev
+python2.7
 zlib1g-dev
 EOF
 )
