@@ -4,19 +4,21 @@ package(
 
 cc_library(
     name = "cds",
-    hdrs = glob([
-        "cds/**",
-    ]),
     srcs = glob([
         "src/*.cpp",
     ]),
-    includes = ["."],
+    hdrs = glob([
+        "cds/**",
+    ]),
     defines = select({
         "@dreal//tools:linux": [],
         "@//conditions:default": ["_DARWIN_C_SOURCE"],
     }),
+    includes = ["."],
     linkopts = select({
         "@dreal//tools:linux": ["-pthread"],
         "@//conditions:default": [],
     }),
 )
+
+exports_files(["LICENSE"])
