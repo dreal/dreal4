@@ -90,7 +90,7 @@ pkg_tar(
 
 pkg_tar(
     name = "package_license_file",
-    srcs = ["LICENSE.txt"],
+    srcs = ["LICENSE"],
     extension = "tar.gz",
     package_dir = "share/doc/dreal",
     tags = ["manual"],
