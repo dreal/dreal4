@@ -44,9 +44,11 @@ dreal_cc_binary(
     deps = [
         "//dreal/dr",
         "//dreal/smt2",
+        "//dreal/solver:config",
         "//dreal/util:filesystem",
         "//dreal/util:logging",
         "@ezoptionparser",
+        "@fmt",
     ],
 )
 

@@ -118,10 +118,16 @@ class Config {
 
   /// @}
 
+  static constexpr double kDefaultPrecision{0.001};
+  static constexpr double kDefaultNloptFtolRel{1e-6};
+  static constexpr double kDefaultNloptFtolAbs{1e-6};
+  static constexpr int kDefaultNloptMaxEval{100};
+  static constexpr double kDefaultNloptMaxTime{0.01};
+
  private:
   // NOTE: Make sure to match the default values specified here with the ones
-  // specified in dreal/dreal.cc.
-  OptionValue<double> precision_{0.001};
+  // specified in dreal/dreal_main.cc.
+  OptionValue<double> precision_{kDefaultPrecision};
   OptionValue<bool> produce_models_{false};
   OptionValue<bool> use_polytope_{false};
   OptionValue<bool> use_polytope_in_forall_{false};
@@ -145,26 +151,26 @@ class Config {
   // that your optimum function value is close to zero, you might want
   // to set an absolute tolerance with nlopt_set_ftol_abs as well.)
   // Criterion is disabled if tol is non-positive.
-  OptionValue<double> nlopt_ftol_rel_{1e-6};
+  OptionValue<double> nlopt_ftol_rel_{kDefaultNloptFtolRel};
 
   // Set absolute tolerance on function value: stop when an
   // optimization step (or an estimate of the optimum) changes the
   // function value by less than tol. Criterion is disabled if tol is
   // non-positive.
-  OptionValue<double> nlopt_ftol_abs_{1e-6};
+  OptionValue<double> nlopt_ftol_abs_{kDefaultNloptFtolAbs};
 
   // Stop when the number of function evaluations exceeds
   // maxeval. (This is not a strict maximum: the number of function
   // evaluations may exceed maxeval slightly, depending upon the
   // algorithm.) Criterion is disabled if maxeval is non-positive.
-  OptionValue<int> nlopt_maxeval_{100};
+  OptionValue<int> nlopt_maxeval_{kDefaultNloptMaxEval};
 
   // Stop when the optimization time (in seconds) exceeds
   // maxtime. (This is not a strict maximum: the time may exceed
   // maxtime slightly, depending upon the algorithm and on how slow
   // your function evaluation is.) Criterion is disabled if maxtime is
   // non-positive.
-  OptionValue<double> nlopt_maxtime_{0.01};
+  OptionValue<double> nlopt_maxtime_{kDefaultNloptMaxTime};
 
   // Default initial phase (for PICOSAT):
   //   0 = false

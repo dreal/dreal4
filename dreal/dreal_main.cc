@@ -4,8 +4,11 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <fmt/format.h>
+
 #include "dreal/dr/run.h"
 #include "dreal/smt2/run.h"
+#include "dreal/solver/config.h"
 #include "dreal/solver/context.h"
 #include "dreal/util/exception.h"
 #include "dreal/util/filesystem.h"
@@ -47,8 +50,6 @@ void MainProgram::AddOptions() {
       fmt::format("dReal {} : delta-complete SMT solver", get_version_string());
   opt_.syntax = "dreal [OPTIONS] <input file> (.smt2 or .dr)";
 
-  // NOTE: Make sure to match the default values specified here with the ones
-  // specified in dreal/solver/config.h.
   opt_.add("" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
@@ -65,11 +66,12 @@ void MainProgram::AddOptions() {
   auto* const positive_int_option_validator =
       new ez::ezOptionValidator("s4" /* 4byte integer */, "gt", "0");
 
-  opt_.add("0.001" /* Default */, false /* Required? */,
+  const string kDefaultPrecision{fmt::format("{}", Config::kDefaultPrecision)};
+  opt_.add(kDefaultPrecision.c_str() /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
-           "Precision (default = 0.001)\n", "--precision",
-           positive_double_option_validator);
+           fmt::format("Precision (default = {})\n", kDefaultPrecision).c_str(),
+           "--precision", positive_double_option_validator);
 
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
@@ -127,29 +129,50 @@ void MainProgram::AddOptions() {
            0 /* Delimiter if expecting multiple args. */, "Number of jobs.\n",
            "--jobs", "-j");
 
-  opt_.add("1e-6" /* Default */, false /* Required? */,
+  const string kDefaultNloptFtolRel{
+      fmt::format("{}", Config::kDefaultNloptFtolRel)};
+  opt_.add(kDefaultNloptFtolRel.c_str() /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
-           "[NLopt] Relative tolerance on function value (default = 1e-6)\n",
+           fmt::format(
+               "[NLopt] Relative tolerance on function value (default = {})\n",
+               kDefaultNloptFtolRel)
+               .c_str(),
            "--nlopt-ftol-rel", positive_double_option_validator);
 
-  opt_.add("1e-6" /* Default */, false /* Required? */,
+  const string kDefaultNloptFtolAbs{
+      fmt::format("{}", Config::kDefaultNloptFtolAbs)};
+  opt_.add(kDefaultNloptFtolAbs.c_str() /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
-           "[NLopt] Absolute tolerance on function value (default = 1e-6)\n",
+           fmt::format(
+               "[NLopt] Absolute tolerance on function value (default = {})\n",
+               kDefaultNloptFtolAbs)
+               .c_str(),
            "--nlopt-ftol-abs", positive_double_option_validator);
 
-  opt_.add("100" /* Default */, false /* Required? */,
-           1 /* Number of args expected. */,
-           0 /* Delimiter if expecting multiple args. */,
-           "[NLopt] Number of maximum function evaluations (default = 100)\n",
-           "--nlopt-maxeval", positive_int_option_validator);
-
+  const string kDefaultNloptMaxEval{
+      fmt::format("{}", Config::kDefaultNloptMaxEval)};
   opt_.add(
-      "0.1" /* Default */, false /* Required? */,
+      kDefaultNloptMaxEval.c_str() /* Default */, false /* Required? */,
       1 /* Number of args expected. */,
       0 /* Delimiter if expecting multiple args. */,
-      "[NLopt] Maximum optimization time (in second) (default = 0.01 sec)\n",
+      fmt::format(
+          "[NLopt] Number of maximum function evaluations (default = {})\n",
+          kDefaultNloptMaxEval)
+          .c_str(),
+      "--nlopt-maxeval", positive_int_option_validator);
+
+  const string kDefaultNloptMaxTime{
+      fmt::format("{}", Config::kDefaultNloptMaxTime)};
+  opt_.add(
+      kDefaultNloptMaxTime.c_str() /* Default */, false /* Required? */,
+      1 /* Number of args expected. */,
+      0 /* Delimiter if expecting multiple args. */,
+      fmt::format(
+          "[NLopt] Maximum optimization time (in second) (default = {} sec)\n",
+          kDefaultNloptMaxTime)
+          .c_str(),
       "--nlopt-maxtime", positive_double_option_validator);
 
   auto* const verbose_option_validator = new ez::ezOptionValidator(
