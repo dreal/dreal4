@@ -288,11 +288,12 @@ class ContractorForallMt : public ContractorCell {
 
  private:
   ContractorForall<ContextType>* GetCtcOrCreate(const Box& box) const {
-    thread_local const int tid{ThreadPool::get_thread_id()};
-    DREAL_ASSERT(tid == ThreadPool::get_thread_id());
-    DREAL_ASSERT(0 <= tid && tid <= static_cast<int>(ctc_ready_.size()));
-    if (ctc_ready_[tid]) {
-      return ctcs_[tid].get();
+    thread_local const int kThreadId{ThreadPool::get_thread_id()};
+    DREAL_ASSERT(kThreadId == ThreadPool::get_thread_id());
+    DREAL_ASSERT(0 <= kThreadId &&
+                 kThreadId <= static_cast<int>(ctc_ready_.size()));
+    if (ctc_ready_[kThreadId]) {
+      return ctcs_[kThreadId].get();
     }
     Config inner_config{config()};
     inner_config.mutable_number_of_jobs() = 1;  // FORCE SEQ ICP in INNER LOOP
@@ -300,8 +301,8 @@ class ContractorForallMt : public ContractorCell {
         f_, box, epsilon_, inner_delta_, inner_config);
     ContractorForall<ContextType>* ctc{ctc_unique_ptr.get()};
     DREAL_ASSERT(ctc);
-    ctcs_[tid] = std::move(ctc_unique_ptr);
-    ctc_ready_[tid] = 1;
+    ctcs_[kThreadId] = std::move(ctc_unique_ptr);
+    ctc_ready_[kThreadId] = 1;
     return ctc;
   }
 

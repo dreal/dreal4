@@ -6,11 +6,9 @@
 
 #include "dreal/util/assert.h"
 #include "dreal/util/logging.h"
-#include "dreal/util/timer.h"  // TODO(soonho): remove this
 
 using std::make_unique;
 using std::ostream;
-using std::unique_ptr;
 
 namespace dreal {
 
@@ -33,15 +31,15 @@ ContractorIbexFwdbwdMt::ContractorIbexFwdbwdMt(Formula f, const Box& box,
 
 ContractorIbexFwdbwd* ContractorIbexFwdbwdMt::GetCtcOrCreate(
     const Box& box) const {
-  thread_local const int tid{ThreadPool::get_thread_id()};
-  if (ctc_ready_[tid]) {
-    return ctcs_[tid].get();
+  thread_local const int kThreadId{ThreadPool::get_thread_id()};
+  if (ctc_ready_[kThreadId]) {
+    return ctcs_[kThreadId].get();
   }
   auto ctc_unique_ptr = make_unique<ContractorIbexFwdbwd>(f_, box, config_);
   ContractorIbexFwdbwd* ctc{ctc_unique_ptr.get()};
   DREAL_ASSERT(ctc);
-  ctcs_[tid] = std::move(ctc_unique_ptr);
-  ctc_ready_[tid] = 1;
+  ctcs_[kThreadId] = std::move(ctc_unique_ptr);
+  ctc_ready_[kThreadId] = 1;
   return ctc;
 }
 
