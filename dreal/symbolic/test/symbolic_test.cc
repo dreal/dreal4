@@ -7,8 +7,6 @@
 
 #include "dreal/symbolic/symbolic_test_util.h"
 
-using std::cout;
-using std::endl;
 using std::to_string;
 using std::vector;
 
@@ -425,7 +423,7 @@ TEST_F(SymbolicTest, DestructiveUpdateOr2) {
   }
 }
 
-GTEST_TEST(Symbolic, is_nothrow_move_constructible) {
+GTEST_TEST(Symbolic, IsNothrowMoveConstructible) {
   static_assert(std::is_nothrow_move_constructible<Variable>::value,
                 "Variable should be nothrow_move_constructible.");
   static_assert(std::is_nothrow_move_constructible<Expression>::value,

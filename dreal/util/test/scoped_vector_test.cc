@@ -8,8 +8,6 @@
 namespace dreal {
 namespace {
 
-using std::cout;
-using std::endl;
 using std::vector;
 
 // Push each element of vector<int> to scoped_vector<int> and check if
@@ -18,8 +16,8 @@ GTEST_TEST(ScopedVector, PushBack) {
   const vector<int> vec{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
   ScopedVector<int> scoped_vector{};
-  for (unsigned i = 0; i < vec.size(); ++i) {
-    scoped_vector.push_back(vec[i]);
+  for (const auto& item : vec) {
+    scoped_vector.push_back(item);
   }
 
   EXPECT_EQ(vec, scoped_vector.get_vector());
@@ -51,23 +49,23 @@ GTEST_TEST(ScopedVector, Push) {
   scoped_vector.push_back(9);
 
   // It should include {1,2,3,4,5,6,7,8,9}.
-  EXPECT_EQ(scoped_vector.size(), 9u);
+  EXPECT_EQ(scoped_vector.size(), 9U);
   EXPECT_EQ(scoped_vector.get_vector(),
             vector<int>({1, 2, 3, 4, 5, 6, 7, 8, 9}));
 
   // After pop, it should include {1,2,3,4,5,6}.
   scoped_vector.pop();
-  EXPECT_EQ(scoped_vector.size(), 6u);
+  EXPECT_EQ(scoped_vector.size(), 6U);
   EXPECT_EQ(scoped_vector.get_vector(), vector<int>({1, 2, 3, 4, 5, 6}));
 
   // After pop, it should still include {1,2,3,4,5,6}.
   scoped_vector.pop();
-  EXPECT_EQ(scoped_vector.size(), 6u);
+  EXPECT_EQ(scoped_vector.size(), 6U);
   EXPECT_EQ(scoped_vector.get_vector(), vector<int>({1, 2, 3, 4, 5, 6}));
 
   // After pop, it should include {1,2,3}.
   scoped_vector.pop();
-  EXPECT_EQ(scoped_vector.size(), 3u);
+  EXPECT_EQ(scoped_vector.size(), 3U);
   EXPECT_EQ(scoped_vector.get_vector(), vector<int>({1, 2, 3}));
 
   // There should be nothing to pop and it throws runtime_error.

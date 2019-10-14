@@ -91,12 +91,8 @@ GTEST_TEST(Test, Example) {
   // Add variables and assertions
   // ----------------------------
   Context ctx;
-  for (unsigned i = 0, e = assertions.size(); i < e; ++i) {
-    const Formula& f = assertions[i];
-    const Variables& vars = f.GetFreeVariables();
-    for (Variables::const_iterator it = vars.begin(), et = vars.end(); it != et;
-         ++it) {
-      const Variable& v = *it;
+  for (const Formula& f : assertions) {
+    for (const Variable& v : f.GetFreeVariables()) {
       ctx.DeclareVariable(v);
     }
     ctx.Assert(f);

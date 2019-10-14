@@ -9,8 +9,6 @@
 namespace dreal {
 namespace {
 
-using std::cerr;
-using std::endl;
 using std::sqrt;
 using std::vector;
 
