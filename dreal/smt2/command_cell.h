@@ -56,7 +56,7 @@ class CheckSatCommand : public CommandCell {
 class EchoCommand : public CommandCell {
  public:
   explicit EchoCommand(std::string message) : message_{std::move(message)} {}
-  const std::string get_message() const { return message_; }
+  std::string get_message() const { return message_; }
   std::ostream& Display(std::ostream& os) const override;
 
  private:
@@ -88,7 +88,7 @@ class GetAssignmentCommand : public CommandCell {
 class GetInfoCommand : public CommandCell {
  public:
   GetInfoCommand() = default;
-  const std::string get_key() const { return key_; }
+  std::string get_key() const { return key_; }
   std::ostream& Display(std::ostream& os) const override;
 
  private:
@@ -106,7 +106,7 @@ class GetModelCommand : public CommandCell {
 class GetOptionCommand : public CommandCell {
  public:
   explicit GetOptionCommand(std::string key) : key_{std::move(key)} {}
-  const std::string get_key() const { return key_; }
+  std::string get_key() const { return key_; }
   std::ostream& Display(std::ostream& os) const override;
 
  private:

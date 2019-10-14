@@ -54,7 +54,7 @@ class PrefixPrinter {
   std::ostream& VisitMin(const Expression& e);
   std::ostream& VisitMax(const Expression& e);
   std::ostream& VisitIfThenElse(const Expression& e);
-  std::ostream& VisitUninterpretedFunction(const Expression& e);
+  static std::ostream& VisitUninterpretedFunction(const Expression& e);
 
   std::ostream& VisitFalse(const Formula& f);
   std::ostream& VisitTrue(const Formula& f);
@@ -68,7 +68,7 @@ class PrefixPrinter {
   std::ostream& VisitConjunction(const Formula& f);
   std::ostream& VisitDisjunction(const Formula& f);
   std::ostream& VisitNegation(const Formula& f);
-  std::ostream& VisitForall(const Formula& f);
+  static std::ostream& VisitForall(const Formula& f);
 
   std::ostream& VisitUnaryFunction(const std::string& name,
                                    const Expression& e);

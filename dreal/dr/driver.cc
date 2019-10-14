@@ -103,7 +103,7 @@ void DrDriver::Solve() {
   } else {
     cout << "unsat" << endl;
   }
-  context_.Exit();
+  Context::Exit();
 }
 
 }  // namespace dreal

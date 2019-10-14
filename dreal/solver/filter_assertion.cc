@@ -136,20 +136,23 @@ class AssertionFilter {
                               const bool polarity) const {
     return VisitFormula<FilterAssertionResult>(this, f, box, polarity);
   }
-  FilterAssertionResult VisitFalse(const Formula&, Box* const,
-                                   const bool) const {
+  static FilterAssertionResult VisitFalse(const Formula& /* unused */,
+                                          Box* const /* unused */,
+                                          const bool /* unused */) {
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitTrue(const Formula&, Box* const,
-                                  const bool) const {
+  static FilterAssertionResult VisitTrue(const Formula& /* unused */,
+                                         Box* const /* unused */,
+                                         const bool /* unused */) {
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitVariable(const Formula&, Box* const,
-                                      const bool) const {
+  static FilterAssertionResult VisitVariable(const Formula& /* unused */,
+                                             Box* const /* unused */,
+                                             const bool /* unused */) {
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitEqualTo(const Formula& f, Box* const box,
-                                     const bool polarity) const {
+  static FilterAssertionResult VisitEqualTo(const Formula& f, Box* const box,
+                                            const bool polarity) {
     if (!polarity) {
       return FilterAssertionResult::NotFiltered;
     }
@@ -187,13 +190,14 @@ class AssertionFilter {
     }
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitNotEqualTo(const Formula& f, Box* const box,
-                                        const bool polarity) const {
+  static FilterAssertionResult VisitNotEqualTo(const Formula& f, Box* const box,
+                                               const bool polarity) {
     // Because (x != y) is !(x == y).
     return VisitEqualTo(f, box, !polarity);
   }
-  FilterAssertionResult VisitGreaterThan(const Formula& f, Box* const box,
-                                         const bool polarity) const {
+  static FilterAssertionResult VisitGreaterThan(const Formula& f,
+                                                Box* const box,
+                                                const bool polarity) {
     const Expression& lhs{get_lhs_expression(f)};
     const Expression& rhs{get_rhs_expression(f)};
     if (is_variable(lhs)) {
@@ -244,9 +248,9 @@ class AssertionFilter {
     }
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitGreaterThanOrEqualTo(const Formula& f,
-                                                  Box* const box,
-                                                  const bool polarity) const {
+  static FilterAssertionResult VisitGreaterThanOrEqualTo(const Formula& f,
+                                                         Box* const box,
+                                                         const bool polarity) {
     const Expression& lhs{get_lhs_expression(f)};
     const Expression& rhs{get_rhs_expression(f)};
     if (is_variable(lhs)) {
@@ -297,30 +301,34 @@ class AssertionFilter {
     }
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitLessThan(const Formula& f, Box* const box,
-                                      const bool polarity) const {
+  static FilterAssertionResult VisitLessThan(const Formula& f, Box* const box,
+                                             const bool polarity) {
     // Because x < y is !(x >= y).
     return VisitGreaterThanOrEqualTo(f, box, !polarity);
   }
-  FilterAssertionResult VisitLessThanOrEqualTo(const Formula& f, Box* const box,
-                                               const bool polarity) const {
+  static FilterAssertionResult VisitLessThanOrEqualTo(const Formula& f,
+                                                      Box* const box,
+                                                      const bool polarity) {
     // Because x <= y is !(x > y).
     return VisitGreaterThan(f, box, !polarity);
   }
-  FilterAssertionResult VisitConjunction(const Formula&, Box* const,
-                                         const bool) const {
+  static FilterAssertionResult VisitConjunction(const Formula& /* unused */,
+                                                Box* const /* unused */,
+                                                const bool /* unused */) {
     return FilterAssertionResult::NotFiltered;
   }
-  FilterAssertionResult VisitDisjunction(const Formula&, Box* const,
-                                         const bool) const {
+  static FilterAssertionResult VisitDisjunction(const Formula& /* unused */,
+                                                Box* const /* unused */,
+                                                const bool /* unused */) {
     return FilterAssertionResult::NotFiltered;
   }
   FilterAssertionResult VisitNegation(const Formula& f, Box* const box,
                                       const bool polarity) const {
     return Visit(get_operand(f), box, !polarity);
   }
-  FilterAssertionResult VisitForall(const Formula&, Box* const,
-                                    const bool) const {
+  static FilterAssertionResult VisitForall(const Formula& /* unused */,
+                                           Box* const /* unused */,
+                                           const bool /* unused */) {
     return FilterAssertionResult::NotFiltered;
   }
 

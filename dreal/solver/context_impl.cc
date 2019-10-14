@@ -9,6 +9,8 @@
 #include <unordered_set>
 #include <utility>
 
+#include <fmt/format.h>
+
 #include "dreal/solver/filter_assertion.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/exception.h"
@@ -20,7 +22,6 @@ namespace dreal {
 
 using std::find_if;
 using std::isfinite;
-using std::numeric_limits;
 using std::ostringstream;
 using std::pair;
 using std::set;
@@ -56,12 +57,6 @@ void Tighten(Box* box, const double delta) {
       }
     }
   }
-}
-
-string to_string(const double) {
-  ostringstream oss;
-  oss.precision(numeric_limits<double>::max_digits10 + 2);
-  return oss.str();
 }
 
 bool ParseBooleanOption(const string& key, const string& val) {
@@ -132,8 +127,8 @@ optional<Box> Context::Impl::CheckSatCore(const ScopedVector<Formula>& stack,
     return box;
   }
   while (true) {
-  // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
-  // when we build dReal python package.
+    // Note that 'DREAL_CHECK_INTERRUPT' is only defined in setup.py,
+    // when we build dReal python package.
 #ifdef DREAL_CHECK_INTERRUPT
     if (g_interrupted) {
       DREAL_LOG_DEBUG("KeyboardInterrupt(SIGINT) Detected.");
@@ -297,7 +292,7 @@ void Context::Impl::Minimize(const vector<Expression>& functions) {
   Formula new_z_block;  // This will have (z₁ = f₁(x) ∧ ... ∧ zₙ = fₙ(x)).
   static int counter{0};
   for (const Expression& f_i : functions) {
-    const Variable z_i{"Z" + std::to_string(counter++),
+    const Variable z_i{fmt::format("Z{}", counter++),
                        Variable::Type::CONTINUOUS};
     AddToBox(z_i);
     new_z_block = new_z_block && (z_i == f_i);
@@ -324,7 +319,7 @@ void Context::Impl::Push() {
 
 void Context::Impl::SetInfo(const string& key, const double val) {
   DREAL_LOG_DEBUG("ContextImpl::SetInfo({} ↦ {})", key, val);
-  info_[key] = to_string(val);
+  info_[key] = fmt::format("{}", val);
 }
 
 void Context::Impl::SetInfo(const string& key, const string& val) {
@@ -345,7 +340,8 @@ void Context::Impl::SetLogic(const Logic& logic) {
 
 void Context::Impl::SetOption(const string& key, const double val) {
   DREAL_LOG_DEBUG("ContextImpl::SetOption({} ↦ {})", key, val);
-  option_[key] = to_string(val);
+  option_[key] = fmt::format("{}", val);
+
   if (key == ":precision") {
     if (val <= 0.0) {
       throw DREAL_RUNTIME_ERROR("Precision has to be positive (input = {}).",
