@@ -7,9 +7,6 @@
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/symbolic/symbolic_test_util.h"
 
-using std::cout;
-using std::endl;
-
 namespace dreal {
 namespace {
 

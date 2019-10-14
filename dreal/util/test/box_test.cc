@@ -10,8 +10,6 @@
 
 #include "dreal/symbolic/symbolic.h"
 
-using std::cout;
-using std::endl;
 using std::is_nothrow_move_constructible;
 using std::numeric_limits;
 using std::pair;
@@ -263,7 +261,7 @@ TEST_F(BoxTest, Equality) {
 
 // Checks types in Box are nothrow move-constructible so that the
 // vectors including them can be processed efficiently.
-TEST_F(BoxTest, is_nothrow_move_constructible) {
+TEST_F(BoxTest, IsNothrowMoveConstructible) {
   static_assert(is_nothrow_move_constructible<Box::Interval>::value,
                 "Box::Interval should be nothrow_move_constructible.");
   static_assert(is_nothrow_move_constructible<Box::IntervalVector>::value,

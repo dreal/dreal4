@@ -6,10 +6,7 @@
 
 namespace dreal {
 
-using std::cerr;
-using std::endl;
-
-GTEST_TEST(Logging, DREAL_LOG_TRACE_SIDE_EFFECT) {
+GTEST_TEST(Logging, DrealLogTraceSideEffect) {
   int x = 0;
 
   log()->set_level(spdlog::level::off);
@@ -48,7 +45,7 @@ GTEST_TEST(Logging, DREAL_LOG_TRACE_SIDE_EFFECT) {
   EXPECT_EQ(x, 1);
 }
 
-GTEST_TEST(Logging, DREAL_LOG_DEBUG_SIDE_EFFECT) {
+GTEST_TEST(Logging, DrealLogDebugSideEffect) {
   int x = 0;
 
   log()->set_level(spdlog::level::off);

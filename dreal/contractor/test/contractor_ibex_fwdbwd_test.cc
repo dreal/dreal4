@@ -85,7 +85,7 @@ TEST_F(ContractorIbexFwdbwdTest, Unsat) {
   EXPECT_TRUE(cs.output()[2]);
 }
 
-TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20) {
+TEST_F(ContractorIbexFwdbwdTest, TestSmt2Problem20) {
   const Formula f{y_ + z_ == x_};
   ContractorStatus cs{box_};
   const ContractorIbexFwdbwd ctc{f, box_, Config{}};
@@ -100,7 +100,7 @@ TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20) {
   EXPECT_FALSE(cs.box().empty());
 }
 
-TEST_F(ContractorIbexFwdbwdTest, Test_Smt2_20_1_Lowlevel) {
+TEST_F(ContractorIbexFwdbwdTest, TestSmt2Problem20Lowlevel) {
   // Given a box,
   //     x = 0.2
   //     y = 0.5

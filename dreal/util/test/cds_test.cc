@@ -7,7 +7,7 @@
 namespace dreal {
 namespace {
 
-GTEST_TEST(CDS_TEST, PriorityQueueInt) {
+GTEST_TEST(CdsTest, PriorityQueueInt) {
   struct IntComparator {
     int operator()(const int& r1, const int& r2) {
       if (r1 < r2) {
@@ -33,7 +33,7 @@ GTEST_TEST(CDS_TEST, PriorityQueueInt) {
   cds::Terminate();
 }
 
-GTEST_TEST(CDS_TEST, PriorityQueueBox) {
+GTEST_TEST(CdsTest, PriorityQueueBox) {
   struct BoxComparator {
     int operator()(const Box& b1, const Box& b2) {
       const double diam1 = b1.MaxDiam().first;

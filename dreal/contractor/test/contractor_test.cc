@@ -11,7 +11,7 @@ GTEST_TEST(ContractorTest, Test) {
   // TODO(soonho): Add more tests.
 }
 
-GTEST_TEST(ContractorTest, is_nothrow_move_constructible) {
+GTEST_TEST(ContractorTest, IsNothrowMoveConstructible) {
   static_assert(std::is_nothrow_move_constructible<Contractor>::value,
                 "Contractor should be nothrow_move_constructible.");
 }

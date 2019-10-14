@@ -9,8 +9,6 @@
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/assert.h"
 
-using std::cout;
-using std::endl;
 using std::set;
 using std::vector;
 
@@ -79,7 +77,7 @@ class TseitinCnfizerTest : public ::testing::Test {
 
 TEST_F(TseitinCnfizerTest, Test) {
   vector<Formula> formulas;
-  formulas.push_back(Formula{b1_});
+  formulas.emplace_back(Formula{b1_});
   formulas.push_back(!b1_);
   formulas.push_back(b1_ || b2_);
   formulas.push_back(b1_ && b2_);

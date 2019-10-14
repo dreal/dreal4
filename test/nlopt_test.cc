@@ -8,10 +8,7 @@
 
 namespace {
 
-using std::cerr;
 using std::cos;
-using std::cout;
-using std::endl;
 using std::sin;
 using std::vector;
 
