@@ -2,7 +2,7 @@
 
 namespace dreal {
 template <typename... Args>
-void unused(const Args&...) {}
+void unused(const Args&... /* unused */) {}
 }  // namespace dreal
 
 #ifdef NDEBUG
