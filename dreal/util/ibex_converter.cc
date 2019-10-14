@@ -16,7 +16,6 @@ namespace dreal {
 
 using std::cout;
 using std::ostringstream;
-using std::pair;
 using std::vector;
 
 using ibex::ExprCtr;

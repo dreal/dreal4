@@ -197,7 +197,8 @@ pair<Box, Box> Box::bisect_continuous(const int i) const {
   Box b1{*this};
   Box b2{*this};
   const Interval intv_i{values_[i]};
-  pair<Interval, Interval> bisected_intervals{intv_i.bisect(0.5)};
+  constexpr double kHalf{0.5};
+  const pair<Interval, Interval> bisected_intervals{intv_i.bisect(kHalf)};
   b1[i] = bisected_intervals.first;
   b2[i] = bisected_intervals.second;
   return make_pair(b1, b2);
