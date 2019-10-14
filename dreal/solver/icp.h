@@ -16,6 +16,11 @@ class Icp {
  public:
   /// Constructs an Icp based on @p config.
   explicit Icp(const Config& config);
+  Icp(const Icp&) = default;
+  Icp(Icp&&) = default;
+  Icp& operator=(const Icp&) = delete;
+  Icp& operator=(Icp&&) = delete;
+
   virtual ~Icp() = default;
 
   /// Checks the delta-satisfiability of the current assertions.

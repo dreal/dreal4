@@ -25,30 +25,31 @@ class GenericContractorGenerator {
  private:
   Contractor Visit(const Formula& f, const Box& box,
                    const Config& config) const;
-  Contractor VisitFalse(const Formula&, const Box&, const Config& config) const;
-  Contractor VisitTrue(const Formula&, const Box&, const Config& config) const;
-  Contractor VisitVariable(const Formula&, const Box&,
-                           const Config& config) const;
-  Contractor VisitEqualTo(const Formula& f, const Box& box,
-                          const Config& config) const;
-  Contractor VisitNotEqualTo(const Formula& f, const Box& box,
-                             const Config& config) const;
-  Contractor VisitGreaterThan(const Formula& f, const Box& box,
-                              const Config& config) const;
-  Contractor VisitGreaterThanOrEqualTo(const Formula& f, const Box& box,
-                                       const Config& config) const;
-  Contractor VisitLessThan(const Formula& f, const Box& box,
-                           const Config& config) const;
-  Contractor VisitLessThanOrEqualTo(const Formula& f, const Box& box,
-                                    const Config& config) const;
+  static Contractor VisitFalse(const Formula&, const Box&,
+                               const Config& config);
+  static Contractor VisitTrue(const Formula&, const Box&, const Config& config);
+  static Contractor VisitVariable(const Formula&, const Box&,
+                                  const Config& config);
+  static Contractor VisitEqualTo(const Formula& f, const Box& box,
+                                 const Config& config);
+  static Contractor VisitNotEqualTo(const Formula& f, const Box& box,
+                                    const Config& config);
+  static Contractor VisitGreaterThan(const Formula& f, const Box& box,
+                                     const Config& config);
+  static Contractor VisitGreaterThanOrEqualTo(const Formula& f, const Box& box,
+                                              const Config& config);
+  static Contractor VisitLessThan(const Formula& f, const Box& box,
+                                  const Config& config);
+  static Contractor VisitLessThanOrEqualTo(const Formula& f, const Box& box,
+                                           const Config& config);
   Contractor VisitConjunction(const Formula& f, const Box& box,
                               const Config& config) const;
   Contractor VisitDisjunction(const Formula& f, const Box& box,
                               const Config& config) const;
-  Contractor VisitNegation(const Formula& f, const Box&,
-                           const Config& config) const;
-  Contractor VisitForall(const Formula&, const Box&,
-                         const Config& config) const;
+  static Contractor VisitNegation(const Formula& f, const Box&,
+                                  const Config& config);
+  static Contractor VisitForall(const Formula&, const Box&,
+                                const Config& config);
 
   // Makes VisitFormula a friend of this class so that it can use private
   // methods.

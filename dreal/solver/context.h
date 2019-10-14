@@ -62,7 +62,7 @@ class Context {
                        const Expression& ub, bool is_model_variable = true);
 
   /// Closes the context.
-  void Exit();
+  static void Exit();
 
   /// Asserts a formula minimizing a cost function @p f.
   void Minimize(const Expression& f);

@@ -26,19 +26,19 @@ Box::Interval ExpressionEvaluator::Visit(const Expression& e,
 }
 
 Box::Interval ExpressionEvaluator::VisitVariable(const Expression& e,
-                                                 const Box& box) const {
+                                                 const Box& box) {
   const Variable& var{get_variable(e)};
   return box[var];
 }
 
 Box::Interval ExpressionEvaluator::VisitConstant(const Expression& e,
-                                                 const Box&) const {
+                                                 const Box& /* unused */) {
   const double c{get_constant_value(e)};
   return Box::Interval{c};
 }
 
 Box::Interval ExpressionEvaluator::VisitRealConstant(const Expression& e,
-                                                     const Box&) const {
+                                                     const Box& /* unused */) {
   const double lb{get_lb_of_real_constant(e)};
   const double ub{get_ub_of_real_constant(e)};
   return Box::Interval{lb, ub};
@@ -185,13 +185,13 @@ Box::Interval ExpressionEvaluator::VisitMax(const Expression& e,
              Visit(get_second_argument(e), box));
 }
 
-Box::Interval ExpressionEvaluator::VisitIfThenElse(const Expression&,
-                                                   const Box&) const {
+Box::Interval ExpressionEvaluator::VisitIfThenElse(
+    const Expression& /* unused */, const Box& /* unused */) {
   throw DREAL_RUNTIME_ERROR("If-then-else expression is not supported yet.");
 }
 
 Box::Interval ExpressionEvaluator::VisitUninterpretedFunction(
-    const Expression&, const Box&) const {
+    const Expression& /* unused */, const Box& /* unused */) {
   throw DREAL_RUNTIME_ERROR("Uninterpreted function is not supported.");
 }
 

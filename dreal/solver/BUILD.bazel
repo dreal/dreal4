@@ -20,6 +20,7 @@ dreal_cc_library(
         "config.h",
     ],
     visibility = [
+        "//dreal:__pkg__",
         "//dreal/contractor:__pkg__",
         "//dreal/optimization:__pkg__",
     ],
@@ -118,6 +119,7 @@ dreal_cc_library(
         "//dreal/util:stat",
         "//dreal/util:timer",
         "//third_party/com_github_progschj_threadpool:thread_pool",
+        "@fmt",
     ],
 )
 

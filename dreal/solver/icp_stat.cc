@@ -16,12 +16,12 @@ IcpStat::~IcpStat() {
           "ICP level", thread_id_, num_branch_);
     print(cout, "{:<45} @ {:<16} T{:<2} = {:>15}\n", "Total # of Pruning",
           "ICP level", thread_id_, num_prune_);
-    if (num_branch_) {
+    if (num_branch_ > 0) {
       print(cout, "{:<45} @ {:<16} T{:<2} = {:>15f} sec\n",
             "Total time spent in Branching", "ICP level", thread_id_,
             timer_branch_.seconds());
     }
-    if (num_prune_) {
+    if (num_prune_ > 0) {
       print(cout, "{:<45} @ {:<16} T{:<2} = {:>15f} sec\n",
             "Total time spent in Pruning", "ICP level", thread_id_,
             timer_prune_.seconds());

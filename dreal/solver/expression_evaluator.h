@@ -20,9 +20,9 @@ class ExpressionEvaluator {
 
  private:
   Box::Interval Visit(const Expression& e, const Box& box) const;
-  Box::Interval VisitVariable(const Expression& e, const Box& box) const;
-  Box::Interval VisitConstant(const Expression& e, const Box& box) const;
-  Box::Interval VisitRealConstant(const Expression& e, const Box& box) const;
+  static Box::Interval VisitVariable(const Expression& e, const Box& box);
+  static Box::Interval VisitConstant(const Expression& e, const Box& box);
+  static Box::Interval VisitRealConstant(const Expression& e, const Box& box);
   Box::Interval VisitAddition(const Expression& e, const Box& box) const;
   Box::Interval VisitMultiplication(const Expression& e, const Box& box) const;
   Box::Interval VisitDivision(const Expression& e, const Box& box) const;
@@ -47,9 +47,9 @@ class ExpressionEvaluator {
   Box::Interval VisitTanh(const Expression& e, const Box& box) const;
   Box::Interval VisitMin(const Expression& e, const Box& box) const;
   Box::Interval VisitMax(const Expression& e, const Box& box) const;
-  Box::Interval VisitIfThenElse(const Expression& e, const Box& box) const;
-  Box::Interval VisitUninterpretedFunction(const Expression& e,
-                                           const Box& box) const;
+  static Box::Interval VisitIfThenElse(const Expression& e, const Box& box);
+  static Box::Interval VisitUninterpretedFunction(const Expression& e,
+                                                  const Box& box);
 
   // Makes VisitExpression a friend of this class so that it can use private
   // operator()s.

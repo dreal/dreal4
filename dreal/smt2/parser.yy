@@ -51,7 +51,7 @@
 %initial-action
 {
     // initialize the initial location object
-    @$.begin.filename = @$.end.filename = &driver.streamname_;
+    @$.begin.filename = @$.end.filename = &driver.mutable_streamname();
 };
 
 /* The driver is passed by reference to the parser and to the scanner. This
@@ -151,7 +151,7 @@ command:
         ;
 
 command_assert: '('TK_ASSERT term ')' {
-                    driver.context_.Assert($3->formula());
+                    driver.mutable_context().Assert($3->formula());
                     delete $3;
                 }
                 ;
@@ -187,7 +187,7 @@ command_declare_fun:
                 ;
 
 command_exit:   '('TK_EXIT ')' {
-                    driver.context_.Exit();
+                    driver.mutable_context().Exit();
                 }
                 ;
 
@@ -198,13 +198,13 @@ command_get_model:
                 ;
 
 command_maximize: '(' TK_MAXIMIZE term ')' {
-                      driver.context_.Maximize($3->expression());
+                      driver.mutable_context().Maximize($3->expression());
                       delete $3;
                 }
                 ;
 
 command_minimize: '(' TK_MINIMIZE term ')' {
-                      driver.context_.Minimize($3->expression());
+                      driver.mutable_context().Minimize($3->expression());
                       delete $3;
                 }
                 ;
@@ -212,21 +212,21 @@ command_minimize: '(' TK_MINIMIZE term ')' {
 command_set_info:
                 '(' TK_SET_INFO KEYWORD SYMBOL ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetInfo(*$3, *$4);
                     delete $3;
                     delete $4;
                 }
         |       '(' TK_SET_INFO KEYWORD STRING ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetInfo(*$3, *$4);
                     delete $3;
                     delete $4;
                 }
         |       '(' TK_SET_INFO KEYWORD DOUBLE ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetInfo(*$3, std::stod(*$4));
                     delete $3; delete $4;
                 }
@@ -234,7 +234,7 @@ command_set_info:
 command_set_logic:
                 '(' TK_SET_LOGIC SYMBOL ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetLogic(dreal::parse_logic(*$3));
                     delete $3;
                 }
@@ -242,26 +242,26 @@ command_set_logic:
 command_set_option:
                 '(' TK_SET_OPTION KEYWORD SYMBOL ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetOption(*$3, *$4);
                     delete $3;
                     delete $4;
                 }
         |       '('TK_SET_OPTION KEYWORD DOUBLE ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetOption(*$3, std::stod(*$4));
                     delete $3; delete $4;
                 }
         |       '('TK_SET_OPTION KEYWORD TK_TRUE ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetOption(*$3, "true");
                     delete $3;
                 }
         |       '('TK_SET_OPTION KEYWORD TK_FALSE ')' {
                     driver
-                        .context_
+                        .mutable_context()
                         .SetOption(*$3, "false");
                     delete $3;
                 }
@@ -269,12 +269,12 @@ command_set_option:
                 ;
 
 command_push:   '(' TK_PUSH INT ')' {
-                    driver.context_.Push(convert_int64_to_int($3));
+                    driver.mutable_context().Push(convert_int64_to_int($3));
                 }
                 ;
 
 command_pop:    '(' TK_POP INT ')' {
-                    driver.context_.Pop(convert_int64_to_int($3));
+                    driver.mutable_context().Pop(convert_int64_to_int($3));
                 }
                 ;
 
@@ -518,9 +518,9 @@ let_binding_list: '(' var_binding_list ')' {
                 if (is_formula) {
                     const Formula fv{v};
                     const Formula& ft{ term.formula() };
-                    driver.context_.Assert((fv && ft) || (!fv && !ft));
+                    driver.mutable_context().Assert((fv && ft) || (!fv && !ft));
                 } else {
-                    driver.context_.Assert(Expression{v} == term.expression());
+                    driver.mutable_context().Assert(Expression{v} == term.expression());
                 }
             }
             delete $2;

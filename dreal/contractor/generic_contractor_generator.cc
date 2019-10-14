@@ -25,23 +25,24 @@ Contractor GenericContractorGenerator::Visit(const Formula& f, const Box& box,
 }
 
 Contractor GenericContractorGenerator::VisitFalse(const Formula&, const Box&,
-                                                  const Config&) const {
+                                                  const Config&) {
   throw DREAL_RUNTIME_ERROR("GenericContractorGenerator: 'False' is detected.");
 }
 
 Contractor GenericContractorGenerator::VisitTrue(const Formula&, const Box&,
-                                                 const Config& config) const {
+                                                 const Config& config) {
   return make_contractor_id(config);
 }
 
 Contractor GenericContractorGenerator::VisitVariable(const Formula&, const Box&,
-                                                     const Config&) const {
+                                                     const Config&) {
   throw DREAL_RUNTIME_ERROR(
       "GenericContractorGenerator: Boolean variable is detected.");
 }
 
-Contractor GenericContractorGenerator::VisitEqualTo(
-    const Formula& f, const Box& box, const Config& config) const {
+Contractor GenericContractorGenerator::VisitEqualTo(const Formula& f,
+                                                    const Box& box,
+                                                    const Config& config) {
   if (config.use_polytope()) {
     return make_contractor_ibex_polytope({f}, box, config);
   } else {
@@ -49,8 +50,9 @@ Contractor GenericContractorGenerator::VisitEqualTo(
   }
 }
 
-Contractor GenericContractorGenerator::VisitNotEqualTo(
-    const Formula& f, const Box& box, const Config& config) const {
+Contractor GenericContractorGenerator::VisitNotEqualTo(const Formula& f,
+                                                       const Box& box,
+                                                       const Config& config) {
   if (config.use_polytope()) {
     return make_contractor_ibex_polytope({f}, box, config);
   } else {
@@ -58,8 +60,9 @@ Contractor GenericContractorGenerator::VisitNotEqualTo(
   }
 }
 
-Contractor GenericContractorGenerator::VisitGreaterThan(
-    const Formula& f, const Box& box, const Config& config) const {
+Contractor GenericContractorGenerator::VisitGreaterThan(const Formula& f,
+                                                        const Box& box,
+                                                        const Config& config) {
   if (config.use_polytope()) {
     return make_contractor_ibex_polytope({f}, box, config);
   } else {
@@ -68,7 +71,7 @@ Contractor GenericContractorGenerator::VisitGreaterThan(
 }
 
 Contractor GenericContractorGenerator::VisitGreaterThanOrEqualTo(
-    const Formula& f, const Box& box, const Config& config) const {
+    const Formula& f, const Box& box, const Config& config) {
   if (config.use_polytope()) {
     return make_contractor_ibex_polytope({f}, box, config);
   } else {
@@ -76,8 +79,9 @@ Contractor GenericContractorGenerator::VisitGreaterThanOrEqualTo(
   }
 }
 
-Contractor GenericContractorGenerator::VisitLessThan(
-    const Formula& f, const Box& box, const Config& config) const {
+Contractor GenericContractorGenerator::VisitLessThan(const Formula& f,
+                                                     const Box& box,
+                                                     const Config& config) {
   if (config.use_polytope()) {
     return make_contractor_ibex_polytope({f}, box, config);
   } else {
@@ -86,7 +90,7 @@ Contractor GenericContractorGenerator::VisitLessThan(
 }
 
 Contractor GenericContractorGenerator::VisitLessThanOrEqualTo(
-    const Formula& f, const Box& box, const Config& config) const {
+    const Formula& f, const Box& box, const Config& config) {
   if (config.use_polytope()) {
     return make_contractor_ibex_polytope({f}, box, config);
   } else {
@@ -125,14 +129,14 @@ Contractor GenericContractorGenerator::VisitDisjunction(
 
 Contractor GenericContractorGenerator::VisitNegation(const Formula& f,
                                                      const Box&,
-                                                     const Config&) const {
+                                                     const Config&) {
   DREAL_LOG_DEBUG("GenericContractorGenerator::{}", f);
   throw DREAL_RUNTIME_ERROR(
       "GenericContractorGenerator: Negation is detected.");
 }
 
 Contractor GenericContractorGenerator::VisitForall(const Formula&, const Box&,
-                                                   const Config&) const {
+                                                   const Config&) {
   throw DREAL_RUNTIME_ERROR("GenericContractorGenerator: Forall is detected.");
 }
 

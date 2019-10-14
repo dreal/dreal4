@@ -682,7 +682,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("DeclareVariable",
            [](Context& self, const Variable& v, const Expression& lb,
               const Expression& ub) { return self.DeclareVariable(v, lb, ub); })
-      .def("Exit", &Context::Exit)
+      .def_static("Exit", &Context::Exit)
       .def("Minimize",
            [](Context& self, const Expression& f) { return self.Minimize(f); })
       .def("Maximize",

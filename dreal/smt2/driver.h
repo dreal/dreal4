@@ -51,11 +51,11 @@ class Smt2Driver {
 
   /** Error handling with associated line number. This can be modified to
    * output the error e.g. to a dialog box. */
-  void error(const location& l, const std::string& m);
+  static void error(const location& l, const std::string& m);
 
   /** General error handling. This can be modified to output the error
    * e.g. to a dialog box. */
-  void error(const std::string& m);
+  static void error(const std::string& m);
 
   /// Calls context_.CheckSat() and print proper output messages to cout.
   void CheckSat();
@@ -89,36 +89,42 @@ class Smt2Driver {
 
   void PopScope() { scope_.pop(); }
 
-  Variable ParseVariableSort(const std::string& name, Sort s);
+  static Variable ParseVariableSort(const std::string& name, Sort s);
 
   std::string MakeUniqueName(const std::string& name);
 
-  //-----------------
-  // (public) Members
-  //-----------------
+  bool trace_scanning() const { return trace_scanning_; }
+  void set_trace_scanning(bool b) { trace_scanning_ = b; }
 
+  bool trace_parsing() const { return trace_parsing_; }
+  void set_trace_parsing(bool b) { trace_parsing_ = b; }
+
+  Context& mutable_context() { return context_; }
+
+  std::string& mutable_streamname() { return streamname_; }
+
+  /** Pointer to the current scanenr instance, this is used to connect the
+   * parser to the scanner. It is used in the yylex macro. */
+  Smt2Scanner* scanner_{nullptr};
+
+ private:
   /// enable debug output in the flex scanner
   bool trace_scanning_{false};
 
   /// enable debug output in the bison parser
   bool trace_parsing_{false};
 
-  /// stream name (file or input stream) used for error messages.
-  std::string streamname_;
-
-  /** Pointer to the current scanenr instance, this is used to connect the
-   * parser to the scanner. It is used in the yylex macro. */
-  Smt2Scanner* scanner_{nullptr};
-
-  /** The context filled during parsing of the expressions. */
-  Context context_;
-
- private:
   /** Scoped map from a string to a corresponding Variable. */
   ScopedUnorderedMap<std::string, Variable> scope_;
 
   /// Sequential value concatenated to names to make them unique.
   int64_t nextUniqueId_{};
+
+  /// stream name (file or input stream) used for error messages.
+  std::string streamname_;
+
+  /** The context filled during parsing of the expressions. */
+  Context context_;
 };
 
 }  // namespace dreal

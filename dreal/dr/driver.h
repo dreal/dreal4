@@ -51,11 +51,11 @@ class DrDriver {
 
   /** Error handling with associated line number. This can be modified to
    * output the error e.g. to a dialog box. */
-  void error(const location& l, const std::string& m);
+  static void error(const location& l, const std::string& m);
 
   /** General error handling. This can be modified to output the error
    * e.g. to a dialog box. */
-  void error(const std::string& m);
+  static void error(const std::string& m);
 
   /// Returns a variable associated with a name @p name.
   ///
