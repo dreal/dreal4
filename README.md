@@ -26,7 +26,7 @@ sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
 
 # Test the installation.
-DREAL_VERSION=4.19.10.2
+DREAL_VERSION=4.19.10.3
 /opt/dreal/${DREAL_VERSION}/bin/dreal
 ```
 
@@ -196,7 +196,7 @@ export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.4/share/pkgconfig:${PKG_CONFIG_PA
 Ubuntu 18.04 / 16.04:
 
 ```bash
-export PKG_CONFIG_PATH=/opt/dreal/4.19.10.2/lib/pkgconfig:/opt/libibex/2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
+export PKG_CONFIG_PATH=/opt/dreal/4.19.10.3/lib/pkgconfig:/opt/libibex/2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
 Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
