@@ -34,16 +34,16 @@ ContractorIbexPolytopeMt::ContractorIbexPolytopeMt(vector<Formula> formulas,
 
 ContractorIbexPolytope* ContractorIbexPolytopeMt::GetCtcOrCreate(
     const Box& box) const {
-  thread_local const int tid{ThreadPool::get_thread_id()};
-  if (ctc_ready_[tid]) {
-    return ctcs_[tid].get();
+  thread_local const int kThreadId{ThreadPool::get_thread_id()};
+  if (ctc_ready_[kThreadId]) {
+    return ctcs_[kThreadId].get();
   }
   auto ctc_unique_ptr =
       make_unique<ContractorIbexPolytope>(formulas_, box, config_);
   ContractorIbexPolytope* ctc = ctc_unique_ptr.get();
   DREAL_ASSERT(ctc);
-  ctcs_[tid] = std::move(ctc_unique_ptr);
-  ctc_ready_[tid] = 1;
+  ctcs_[kThreadId] = std::move(ctc_unique_ptr);
+  ctc_ready_[kThreadId] = 1;
   return ctc;
 }
 

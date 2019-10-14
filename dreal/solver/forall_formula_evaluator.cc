@@ -50,9 +50,10 @@ vector<RelationalFormulaEvaluator> BuildFormulaEvaluators(const Formula& f) {
 }  // namespace
 
 Context& ForallFormulaEvaluator::GetContext() const {
-  thread_local const int tid{ThreadPool::get_thread_id()};
-  DREAL_ASSERT(0 <= tid && tid <= static_cast<int>(contexts_.size()));
-  return contexts_[tid];
+  thread_local const int kThreadId{ThreadPool::get_thread_id()};
+  DREAL_ASSERT(0 <= kThreadId &&
+               kThreadId <= static_cast<int>(contexts_.size()));
+  return contexts_[kThreadId];
 }
 
 ForallFormulaEvaluator::ForallFormulaEvaluator(Formula f, const double epsilon,
