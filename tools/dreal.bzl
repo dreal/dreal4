@@ -87,6 +87,8 @@ def dreal_cc_library(
         srcs = None,
         deps = None,
         copts = [],
+        linkstatic = 1,
+        alwayslink = 1,
         **kwargs):
     """Creates a rule to declare a C++ library.
     """
@@ -96,6 +98,8 @@ def dreal_cc_library(
         hdrs = hdrs,
         srcs = srcs,
         deps = deps,
+        linkstatic = linkstatic,
+        alwayslink = alwayslink,
         copts = _platform_copts(copts),
         **kwargs
     )
@@ -125,12 +129,6 @@ def dreal_pybind_library(
     dreal_cc_binary(
         name = cc_so_name,
         srcs = cc_srcs,
-        linkshared = 1,
-        linkstatic = 1,
-        deps = cc_deps + [
-            "//:dreal_shared_library",
-            "@pybind11",
-        ],
         copts = [
             "-fvisibility=hidden",
         ],
@@ -140,6 +138,12 @@ def dreal_pybind_library(
             ],
             "@//conditions:default": [],
         }),
+        linkshared = 1,
+        linkstatic = 1,
+        deps = cc_deps + [
+            "//:dreal_shared_library",
+            "@pybind11",
+        ],
     )
     native.py_library(
         name = name,
