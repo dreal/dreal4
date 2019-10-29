@@ -1,10 +1,6 @@
 # Import any user defined rules.
 try-import %workspace%/user.bazelrc
 
-# Continue to use --whole-archive for cc_binary rules that have linkshared = 1
-# and either linkstatic = 1 or -static in linkopts in Bazel 1.0 and above.
-build --incompatible_remove_legacy_whole_archive=false
-
 # Add C++14 compiler flags.
 build --cxxopt=-std=c++14
 build --host_cxxopt=-std=c++14
