@@ -1,6 +1,13 @@
 cc_library(
     name = "spdlog",
-    hdrs = glob(["include/spdlog/**"]),
+    hdrs = glob(
+        [
+            "include/spdlog/*.h",
+            "include/spdlog/fmt/*.h",
+            "include/spdlog/details/*.h",
+            "include/spdlog/sinks/*.h",
+        ],
+    ),
     defines = [
         # Use dReal's @fmt external, not the bundled version inside spdlog.
         "SPDLOG_FMT_EXTERNAL",
