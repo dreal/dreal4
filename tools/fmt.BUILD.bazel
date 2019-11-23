@@ -4,10 +4,16 @@ package(
 
 cc_library(
     name = "fmt",
-    hdrs = glob([
-        "src/*.cc",
-        "include/fmt/*.h",
-    ]),
-    defines = ["FMT_HEADER_ONLY=1"],
+    hdrs = glob(
+        ["include/fmt/*.h"],
+        exclude = [
+            # The POSIX bindings are not header-only.
+            "include/fmt/posix.h",
+        ],
+    ),
+    defines = [
+        "FMT_HEADER_ONLY=1",
+        "FMT_NO_FMT_STRING_ALIAS=1",
+    ],
     includes = ["include"],
 )
