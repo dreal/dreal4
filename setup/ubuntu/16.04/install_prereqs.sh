@@ -24,10 +24,10 @@ EOF
 )
 
 # Install bazel
-BAZEL_VERSION=1.0.0
+BAZEL_VERSION=1.2.1
 BAZEL_DEBNAME=bazel_${BAZEL_VERSION}-linux-x86_64.deb
 BAZEL_URL=https://github.com/bazelbuild/bazel/releases/download/${BAZEL_VERSION}/${BAZEL_DEBNAME}
-BAZEL_SHA256=4333d15cce4201646501fd1e895bc176995668384fb7b3a5053027269c9f3bdd
+BAZEL_SHA256=4bbb2718d451db5922223fda3aed3810c4ca50f431481e86a7fec4c585f18b1f
 apt-get install -y --no-install-recommends wget
 wget ${BAZEL_URL}
 if echo "${BAZEL_SHA256}  ${BAZEL_DEBNAME}" | sha256sum -c; then
