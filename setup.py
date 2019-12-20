@@ -23,9 +23,7 @@ def _build_dreal():
     if subprocess.call([
             'bazel', 'build', '//:libdreal.so', '//dreal:_dreal_py.so',
             '--cxxopt=-DDREAL_CHECK_INTERRUPT', '--python_path={}'.format(
-                sys.executable), '--python_version=PY3',
-            '--incompatible_allow_python_version_transitions=false',
-            '--incompatible_py3_is_default=false'
+                sys.executable),
     ],
                        env=new_env) != 0:
         raise LibError("Unable to build dReal.\n" +
