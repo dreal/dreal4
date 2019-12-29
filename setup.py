@@ -86,7 +86,7 @@ Precompiled Wheels
 We provide precompiled distributions (`.whl`) for the following environments:
 
  - macOS 10.15 / 10.14 / 10.13 + CPython 3.7
- - Linux + CPython 3.5 / 3.6 / 3.7
+ - Linux + CPython 3.5 / 3.6 / 3.7 / 3.8
 
 You still need to install dReal prerequisites such as IBEX and CLP in
 your system. To install them, please follow the instructions below:
@@ -162,6 +162,7 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Operating System :: POSIX :: Linux',
         'Operating System :: MacOS',
     ],
