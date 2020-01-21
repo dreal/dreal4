@@ -6,7 +6,7 @@ if [[ "${EUID}" -ne 0 ]]; then
   exit 1
 fi
 apt-get update
-apt-get install -y software-properties-common
+apt-get install -y --no-install-recommends software-properties-common
 add-apt-repository ppa:dreal/dreal -y  # For libibex-dev
 apt-get update
 apt-get install -y --no-install-recommends $(tr '\n' ' ' <<EOF
@@ -31,7 +31,7 @@ BAZEL_SHA256=575c77b96bc6202f83c7ff233cd44541aa30ff1b2bc211eaf8c99a8987272c68
 apt-get install -y --no-install-recommends wget
 wget ${BAZEL_URL}
 if echo "${BAZEL_SHA256}  ${BAZEL_DEBNAME}" | sha256sum -c; then
-    apt-get install -y ./${BAZEL_DEBNAME}
+    apt-get install --no-install-recommends -y ./${BAZEL_DEBNAME}
     rm ${BAZEL_DEBNAME}
 else
     echo "SHA256 does not match ${BAZEL_DEBNAME}:"
