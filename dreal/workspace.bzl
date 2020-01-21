@@ -61,8 +61,7 @@ def dreal_workspace():
         build_file = str(Label("//tools:picosat.BUILD.bazel")),
         commit = "4ee7aa1d1c645df8fa9daa07f2be17c6d03b35fc",  # v965
         repository = "dreal-deps/picosat",
-        sha256 =
-            "1be461d3659d4e3dc957a718ed295941c38dc822fd22a67f4cb5d180f0b6a7a3",
+        sha256 = "1be461d3659d4e3dc957a718ed295941c38dc822fd22a67f4cb5d180f0b6a7a3",
     )
 
     github_archive(
@@ -77,8 +76,7 @@ def dreal_workspace():
         name = "com_google_absl",  # BSD
         commit = "d78310fe5a82f2e0e6e16509ef8079c8d7e4674e",  # 20190131
         repository = "abseil/abseil-cpp",
-        sha256 =
-            "4c2e4194bbddcb5162933e45fe574d2c4e77a2ef00818b8dac0392459707bfff",
+        sha256 = "4c2e4194bbddcb5162933e45fe574d2c4e77a2ef00818b8dac0392459707bfff",
     )
 
     github_archive(
@@ -86,6 +84,5 @@ def dreal_workspace():
         build_file = str(Label("//tools:cds.BUILD.bazel")),
         commit = "v2.3.3",
         repository = "khizmax/libcds",
-        sha256 =
-            "f090380ecd6b63a3c2b2f0bdb27260de2ccb22486ef7f47cc1175b70c6e4e388",
+        sha256 = "f090380ecd6b63a3c2b2f0bdb27260de2ccb22486ef7f47cc1175b70c6e4e388",
     )
