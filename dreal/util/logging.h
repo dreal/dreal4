@@ -19,45 +19,48 @@ namespace dreal {
 /// Please check https://github.com/gabime/spdlog for more information.
 spdlog::logger* log();
 
-#define DREAL_LOG_TRACE(...)                       \
-  do {                                             \
-    if (log()->should_log(spdlog::level::trace)) { \
-      log()->trace(__VA_ARGS__);                   \
-    }                                              \
-  } while (0)
-
-#define DREAL_LOG_DEBUG(...)                       \
-  do {                                             \
-    if (log()->should_log(spdlog::level::debug)) { \
-      log()->debug(__VA_ARGS__);                   \
-    }                                              \
-  } while (0)
-
-#define DREAL_LOG_INFO(...)   \
-  do {                        \
-    log()->info(__VA_ARGS__); \
-  } while (0)
-
-#define DREAL_LOG_WARN(...)   \
-  do {                        \
-    log()->warn(__VA_ARGS__); \
-  } while (0)
-
-#define DREAL_LOG_ERROR(...)   \
-  do {                         \
-    log()->error(__VA_ARGS__); \
-  } while (0)
-
-#define DREAL_LOG_CRITICAL(...)   \
-  do {                            \
-    log()->critical(__VA_ARGS__); \
-  } while (0)
-
-#define DREAL_LOG_TRACE_ENABLED (log()->should_log(spdlog::level::trace))
-#define DREAL_LOG_DEBUG_ENABLED (log()->should_log(spdlog::level::debug))
-#define DREAL_LOG_INFO_ENABLED (log()->should_log(spdlog::level::info))
-#define DREAL_LOG_WARN_ENABLED (log()->should_log(spdlog::level::warn))
-#define DREAL_LOG_ERROR_ENABLED (log()->should_log(spdlog::level::err))
-#define DREAL_LOG_CRITICAL_ENABLED (log()->should_log(spdlog::level::critical))
-
 }  // namespace dreal
+
+#define DREAL_LOG_TRACE(...)                                \
+  do {                                                      \
+    if (::dreal::log()->should_log(spdlog::level::trace)) { \
+      ::dreal::log()->trace(__VA_ARGS__);                   \
+    }                                                       \
+  } while (0)
+
+#define DREAL_LOG_DEBUG(...)                                \
+  do {                                                      \
+    if (::dreal::log()->should_log(spdlog::level::debug)) { \
+      ::dreal::log()->debug(__VA_ARGS__);                   \
+    }                                                       \
+  } while (0)
+
+#define DREAL_LOG_INFO(...)            \
+  do {                                 \
+    ::dreal::log()->info(__VA_ARGS__); \
+  } while (0)
+
+#define DREAL_LOG_WARN(...)            \
+  do {                                 \
+    ::dreal::log()->warn(__VA_ARGS__); \
+  } while (0)
+
+#define DREAL_LOG_ERROR(...)            \
+  do {                                  \
+    ::dreal::log()->error(__VA_ARGS__); \
+  } while (0)
+
+#define DREAL_LOG_CRITICAL(...)            \
+  do {                                     \
+    ::dreal::log()->critical(__VA_ARGS__); \
+  } while (0)
+
+#define DREAL_LOG_TRACE_ENABLED \
+  (::dreal::log()->should_log(spdlog::level::trace))
+#define DREAL_LOG_DEBUG_ENABLED \
+  (::dreal::log()->should_log(spdlog::level::debug))
+#define DREAL_LOG_INFO_ENABLED (::dreal::log()->should_log(spdlog::level::info))
+#define DREAL_LOG_WARN_ENABLED (::dreal::log()->should_log(spdlog::level::warn))
+#define DREAL_LOG_ERROR_ENABLED (::dreal::log()->should_log(spdlog::level::err))
+#define DREAL_LOG_CRITICAL_ENABLED \
+  (::dreal::log()->should_log(spdlog::level::critical))
