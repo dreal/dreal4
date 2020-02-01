@@ -2,10 +2,6 @@ sudo: required
 dist: bionic
 language: cpp
 
-env:
-  global:
-    - /usr/local/bin:$PATH
-
 # CODECOV_TOKEN
 # Created by running `travis encrypt -r dreal/dreal4 CODECOV_TOKEN="SECURE_TOKEN_VALUE"`
 secure: "K4HzcNOd9Kzp5OhHc/bBldhaYLado14f/FT0kCUXYJBfyRt94tDMVhs1fHMwSg1PFqCFrR/DWXpDK4LDUg+fHPUuSBmx7pkrbS8Ou6y+CkeavRefX6TiOsdOseO7I9EOS5Lu5lwFX5Dik7vktLBRsFmubQ4E2kDTIGwCQ8xQzXlsv5nWUNoMTrtoG75p362EpKmLq/2IbdGQ3btQ5vjM3uT+L9CQfWJ6/IrWNzilY4KBciuZSD1PCkQ4AoxjeRH+MnRqu7IpvPEcMHcKzfN7HamIIihaWM8Xf+A2wHVypMN/jr9ONMoHSZzosMzBK38NOTyxaxAqpO0/RO0CrpjGqDjRCpT6cejndeEP4Zr1J2mnjnrsiFVZXJfQRVzvhcWa/1V0b4lK5wjPFeF/l2fwYqkwu+IMGmzVupXJ8s9L7XSZtocLeZ3dYWpUqHDI84zhb3Sts1FSfp7G8a6GshL8Mj8V795YnfVE9Y7WTlpedZ9/6aeUlgaKwbAuq1Bav2PJd435QO4thWi4ODVF9vbNjPm4ocNFQZ6YiEqbvoc2hT6E92Y309DLVGzyTLCmDm3Vkk6VVjhrvttOGXVmHFIcDvgJwvLZQ4nkw46kd8PafaEDoG4KP730qCF9CbE/SllmimTACb9cGkkCZj5O4pQEivlqc5jaoradRxht/0E0KQw="
