@@ -129,28 +129,6 @@ matrix:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          - sourceline: "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-4.0 main"
-            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
-          packages:
-          - clang-4.0
-      env:
-        - COMPILER="clang-4.0" BUILD_TYPE="-c dbg"
-    - compiler: clang
-      addons:
-        apt:
-          update: true
-          sources:
-          - sourceline: 'ppa:ubuntu-toolchain-r/test'
-          packages:
-          - clang-3.9
-      env:
-        - COMPILER="clang-3.9" BUILD_TYPE="-c dbg"
-    - compiler: clang
-      addons:
-        apt:
-          update: true
-          sources:
-          - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-6.0 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
