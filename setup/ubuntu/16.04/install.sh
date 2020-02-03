@@ -17,13 +17,13 @@ DREAL_DEBNAME=dreal_${DREAL_VERSION}_amd64.deb
 DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
 DREAL_SHA256=006c8c70b0ade8819f9292681ebdda4bbafb25dbdfa126e2f7b916add12ea354
 apt-get install --no-install-recommends wget -y
-wget ${DREAL_URL}
+wget "${DREAL_URL}"
 if echo "${DREAL_SHA256}  ${DREAL_DEBNAME}" | sha256sum -c; then
-    apt-get install -y ./${DREAL_DEBNAME}
-    rm ${DREAL_DEBNAME}
+    apt-get install -y ./"${DREAL_DEBNAME}"
+    rm "${DREAL_DEBNAME}"
 else
     echo "SHA256 does not match ${DREAL_DEBNAME}:"
     echo "    expected: ${DREAL_SHA256}"
-    echo "    actual  : `sha256sum ${DREAL_DEBNAME}`"
+    echo "    actual  : $(sha256sum "${DREAL_DEBNAME}")"
     exit 1
 fi

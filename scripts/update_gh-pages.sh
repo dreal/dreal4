@@ -5,8 +5,8 @@ set -euo pipefail
 doxygen
 
 # Move the contents to a temp dir
-TMP_DIR=`mktemp -d`
-mv doxygen_cxx/html/* ${TMP_DIR}
+TMP_DIR=$(mktemp -d)
+mv doxygen_cxx/html/* "${TMP_DIR}"
 rm -rf doxygen_cxx
 
 # Remove the existing 'gh-pages' branch 
@@ -15,12 +15,12 @@ git branch -D gh-pages
 # Create a brand-new branch gh-pages and copy the contents
 git checkout --orphan gh-pages
 git rm -rf .
-mv ${TMP_DIR}/* .
-rm -rf ${TMP_DIR}
+mv "${TMP_DIR}"/* .
+rm -rf "${TMP_DIR}"
 
 # Add/Commit/Push
-git add *.css *.html *.js *.png search
-git commit -m "Update doxygen `date`"
+git add -- *.css *.html *.js *.png search
+git commit -m "Update doxygen $(date)"
 git push blessed HEAD:gh-pages -f
 
 # Checkout back to master
