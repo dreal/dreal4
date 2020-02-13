@@ -1,12 +1,10 @@
 FROM       ubuntu:18.04
-MAINTAINER soonho.kong@gmail.com
 
 RUN mkdir /dreal4
 COPY . /dreal4
-
+WORKDIR /dreal4
 # Extract version and save it at /DREAL_VERSION.
-RUN cd /dreal4 \
-    && echo `grep "DREAL_VERSION = " tools/dreal.bzl | cut -d '"' -f 2` > /DREAL_VERSION
+RUN echo `grep "DREAL_VERSION = " tools/dreal.bzl | cut -d '"' -f 2` > /DREAL_VERSION
 
 # Install prerequsites.
 ARG DEBIAN_FRONTEND=noninteractive
