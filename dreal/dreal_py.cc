@@ -9,6 +9,8 @@
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
 
+#include "./ibex.h"
+
 #include "dreal/api/api.h"
 #include "dreal/smt2/logic.h"
 #include "dreal/solver/config.h"
@@ -49,10 +51,55 @@ namespace py = pybind11;
 
 namespace {
 void sigint_handler(int) { g_interrupted = true; }
+
+struct IbexBitSetIterator {
+  IbexBitSetIterator(const ibex::BitSet& bitset, py::object ref)
+      : it_{bitset.begin()}, end_{bitset.end()}, ref_{ref} {}
+
+  int next() {
+    if (it_ == end_) {
+      throw py::stop_iteration();
+    }
+    return (it_++).el;
+  }
+
+ private:
+  ibex::BitSet::iterator it_;
+  const ibex::BitSet::iterator end_;
+  py::object ref_;  // keep a reference
+};
+
 }  // namespace
 
 PYBIND11_MODULE(_dreal_py, m) {
   m.doc() = "dReal Python Module";
+
+  py::class_<IbexBitSetIterator>(m, "ibex::BitSet::iterator")
+      .def("__iter__",
+           [](IbexBitSetIterator& it) -> IbexBitSetIterator& { return it; })
+      .def("__next__", &IbexBitSetIterator::next);
+
+  py::class_<ibex::BitSet>(m, "Bitset")
+      .def(py::init<>())
+      .def(py::init<int>())
+      .def(py::init<const ibex::BitSet&>())
+      .def(py::init<const int, const int*>())
+      .def("resize", &ibex::BitSet::resize)
+      .def("compose", &ibex::BitSet::compose)
+      .def("min", &ibex::BitSet::min)
+      .def("max", &ibex::BitSet::max)
+      .def("remove", &ibex::BitSet::remove)
+      .def("next", &ibex::BitSet::next)
+      .def("size", &ibex::BitSet::size)
+      .def("add", &ibex::BitSet::add)
+      .def("empty", [](const ibex::BitSet& self) { return self.empty(); })
+      .def("fill", &ibex::BitSet::fill)
+      .def("clear", &ibex::BitSet::clear)
+      .def("__getitem__",
+           [](const ibex::BitSet& self, const int idx) { return self[idx]; })
+      .def("__iter__", [](py::object s) {
+        return IbexBitSetIterator(s.cast<const ibex::BitSet&>(), s);
+      });
 
   py::class_<Box::Interval>(m, "Interval")
       .def(py::init<>())
