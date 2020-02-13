@@ -101,8 +101,6 @@ class ContextTest(unittest.TestCase):
         config1 = ctx.config
         self.assertEqual(config1.precision, 0.001)
         config1.precision = 0.0001
-        self.assertEqual(ctx.config.precision, 0.001)
-        ctx.config = config1
         self.assertEqual(ctx.config.precision, 0.0001)
 
     def test_version(self):

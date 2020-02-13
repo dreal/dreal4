@@ -700,7 +700,7 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("SetOption",
            py::overload_cast<const std::string&, const std::string&>(
                &Context::SetOption))
-      .def_property("config", [](const Context& self) { return self.config(); },
+      .def_property("config", &Context::config,
                     [](Context& self, const Config& config) {
                       self.mutable_config() = config;
                     })
