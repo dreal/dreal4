@@ -319,8 +319,8 @@ void MainProgram::ExtractOptions() {
   }
 
   // --nlopt-ftol-rel
-  double nlopt_ftol_rel{0.0};
   if (opt_.isSet("--nlopt-ftol-rel")) {
+    double nlopt_ftol_rel{0.0};
     opt_.get("--nlopt-ftol-rel")->getDouble(nlopt_ftol_rel);
     config_.mutable_nlopt_ftol_rel().set_from_command_line(nlopt_ftol_rel);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --nlopt-ftol-rel = {}",

@@ -115,8 +115,6 @@ optional<SatSolver::Model> SatSolver::CheckSat() {
   check_sat_timer_guard.pause();
 
   Model model;
-  auto& boolean_model = model.first;
-  auto& theory_model = model.second;
   if (ret == PICOSAT_SATISFIABLE) {
     // SAT Case.
     const auto& var_to_formula_map = predicate_abstractor_.var_to_formula_map();
@@ -138,11 +136,13 @@ optional<SatSolver::Model> SatSolver::CheckSat() {
       if (it != var_to_formula_map.end()) {
         DREAL_LOG_TRACE("SatSolver::CheckSat: Add theory literal {}{} to Model",
                         model_i ? "" : "¬", var);
+        auto& theory_model = model.second;
         theory_model.emplace_back(var, model_i == 1);
       } else if (tseitin_variables_.count(var.get_id()) == 0) {
         DREAL_LOG_TRACE(
             "SatSolver::CheckSat: Add Boolean literal {}{} to Model ",
             model_i ? "" : "¬", var);
+        auto& boolean_model = model.first;
         boolean_model.emplace_back(var, model_i == 1);
       } else {
         DREAL_LOG_TRACE(
