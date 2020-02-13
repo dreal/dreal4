@@ -157,115 +157,115 @@ class SymbolicVariableTest(unittest.TestCase):
 
 class TestSymbolicVariables(unittest.TestCase):
     def test_default_constructor(self):
-        vars = Variables()
-        self.assertEqual(vars.size(), 0)
-        self.assertTrue(vars.empty())
+        variables = Variables()
+        self.assertEqual(variables.size(), 0)
+        self.assertTrue(variables.empty())
 
     def test_constructor_list(self):
-        vars = Variables([x, y, z])
-        self.assertEqual(vars.size(), 3)
-        self.assertEqual(len(vars), 3)
+        variables = Variables([x, y, z])
+        self.assertEqual(variables.size(), 3)
+        self.assertEqual(len(variables), 3)
 
     def test_to_string(self):
-        vars = Variables([x, y, z])
-        self.assertEqual(vars.to_string(), "{x, y, z}")
-        self.assertEqual("{}".format(vars), "{x, y, z}")
+        variables = Variables([x, y, z])
+        self.assertEqual(variables.to_string(), "{x, y, z}")
+        self.assertEqual("{}".format(variables), "{x, y, z}")
 
     def test_repr(self):
-        vars = Variables([x, y, z])
-        self.assertEqual(repr(vars), '<Variables "{x, y, z}">')
+        variables = Variables([x, y, z])
+        self.assertEqual(repr(variables), '<Variables "{x, y, z}">')
 
     def test_insert1(self):
-        vars = Variables()
-        vars.insert(x)
-        self.assertEqual(vars.size(), 1)
+        variables = Variables()
+        variables.insert(x)
+        self.assertEqual(variables.size(), 1)
 
     def test_insert2(self):
-        vars = Variables([x])
-        vars.insert(Variables([y, z]))
-        self.assertEqual(vars.size(), 3)
+        variables = Variables([x])
+        variables.insert(Variables([y, z]))
+        self.assertEqual(variables.size(), 3)
 
     def test_erase1(self):
-        vars = Variables([x, y, z])
-        count = vars.erase(x)
+        variables = Variables([x, y, z])
+        count = variables.erase(x)
         self.assertEqual(count, 1)
 
     def test_erase2(self):
-        vars1 = Variables([x, y, z])
-        vars2 = Variables([w, z])
-        count = vars1.erase(vars2)
+        variables1 = Variables([x, y, z])
+        variables2 = Variables([w, z])
+        count = variables1.erase(variables2)
         self.assertEqual(count, 1)
-        self.assertEqual(vars1.size(), 2)
+        self.assertEqual(variables1.size(), 2)
 
     def test_include(self):
-        vars = Variables([x, y, z])
-        self.assertTrue(vars.include(y))
-        self.assertTrue(y in vars)
-        self.assertFalse(w in vars)
+        variables = Variables([x, y, z])
+        self.assertTrue(variables.include(y))
+        self.assertTrue(y in variables)
+        self.assertFalse(w in variables)
 
     def test_subset_properties(self):
-        vars1 = Variables([x, y, z])
-        vars2 = Variables([x, y])
-        self.assertFalse(vars1.IsSubsetOf(vars2))
-        self.assertFalse(vars1.IsStrictSubsetOf(vars2))
-        self.assertTrue(vars1.IsSupersetOf(vars2))
-        self.assertTrue(vars1.IsStrictSupersetOf(vars2))
+        variables1 = Variables([x, y, z])
+        variables2 = Variables([x, y])
+        self.assertFalse(variables1.IsSubsetOf(variables2))
+        self.assertFalse(variables1.IsStrictSubsetOf(variables2))
+        self.assertTrue(variables1.IsSupersetOf(variables2))
+        self.assertTrue(variables1.IsStrictSupersetOf(variables2))
 
     def test_eq(self):
-        vars1 = Variables([x, y, z])
-        vars2 = Variables([x, y])
-        self.assertFalse(vars1 == vars2)
+        variables1 = Variables([x, y, z])
+        variables2 = Variables([x, y])
+        self.assertFalse(variables1 == variables2)
 
     def test_lt(self):
-        vars1 = Variables([x, y])
-        vars2 = Variables([x, y, z])
-        self.assertTrue(vars1 < vars2)
+        variables1 = Variables([x, y])
+        variables2 = Variables([x, y, z])
+        self.assertTrue(variables1 < variables2)
 
     def test_add(self):
-        vars1 = Variables([x, y])
-        vars2 = Variables([y, z])
-        vars3 = vars1 + vars2  # [x, y, z]
-        self.assertEqual(vars3.size(), 3)
-        vars4 = vars1 + z  # [x, y, z]
-        self.assertEqual(vars4.size(), 3)
-        vars5 = x + vars1  # [x, y]
-        self.assertEqual(vars5.size(), 2)
+        variables1 = Variables([x, y])
+        variables2 = Variables([y, z])
+        variables3 = variables1 + variables2  # [x, y, z]
+        self.assertEqual(variables3.size(), 3)
+        variables4 = variables1 + z  # [x, y, z]
+        self.assertEqual(variables4.size(), 3)
+        variables5 = x + variables1  # [x, y]
+        self.assertEqual(variables5.size(), 2)
 
     def test_add_assignment(self):
-        vars = Variables([x])
-        vars += y
-        self.assertEqual(vars.size(), 2)
-        vars += Variables([x, z])
-        self.assertEqual(vars.size(), 3)
+        variables = Variables([x])
+        variables += y
+        self.assertEqual(variables.size(), 2)
+        variables += Variables([x, z])
+        self.assertEqual(variables.size(), 3)
 
     def test_sub(self):
-        vars1 = Variables([x, y])
-        vars2 = Variables([y, z])
-        vars3 = vars1 - vars2  # [x]
-        self.assertEqual(vars3, Variables([x]))
-        vars4 = vars1 - y  # [x]
-        self.assertEqual(vars4, Variables([x]))
+        variables1 = Variables([x, y])
+        variables2 = Variables([y, z])
+        variables3 = variables1 - variables2  # [x]
+        self.assertEqual(variables3, Variables([x]))
+        variables4 = variables1 - y  # [x]
+        self.assertEqual(variables4, Variables([x]))
 
     def test_sub_assignment(self):
-        vars = Variables([x, y, z])
-        vars -= y  # = [x, z]
-        self.assertEqual(vars, Variables([x, z]))
-        vars -= Variables([x])  # = [z]
-        self.assertEqual(vars, Variables([z]))
+        variables = Variables([x, y, z])
+        variables -= y  # = [x, z]
+        self.assertEqual(variables, Variables([x, z]))
+        variables -= Variables([x])  # = [z]
+        self.assertEqual(variables, Variables([z]))
 
     def test_intersect(self):
-        vars1 = Variables([x, y, z])
-        vars2 = Variables([y, w])
-        vars3 = intersect(vars1, vars2)  # = [y]
-        self.assertEqual(vars3, Variables([y]))
+        variables1 = Variables([x, y, z])
+        variables2 = Variables([y, w])
+        variables3 = intersect(variables1, variables2)  # = [y]
+        self.assertEqual(variables3, Variables([y]))
 
     def test_iter(self):
-        vars = Variables([x, y, z])
+        variables = Variables([x, y, z])
         count = 0
-        for var in vars:
-            self.assertTrue(var in vars)
+        for var in variables:
+            self.assertTrue(var in variables)
             count = count + 1
-        self.assertEqual(count, len(vars))
+        self.assertEqual(count, len(variables))
 
 
 class TestSymbolicExpression(unittest.TestCase):

@@ -7,7 +7,6 @@ from __future__ import print_function
 import sys
 import subprocess
 import difflib
-import os
 
 # 1st Argument: dreal path
 #               need to check if it exists
