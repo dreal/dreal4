@@ -248,7 +248,8 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("InplaceUnion", &Box::InplaceUnion)
       .def(py::self == py::self)
       .def(py::self != py::self)
-      .def("__str__", [](const Box& self) { return fmt::format("{}", self); });
+      .def("__str__", [](const Box& self) { return fmt::format("{}", self); })
+      .def("set", [](Box& self, const Box& b) { return self = b; });
 
   py::class_<Variable> variable(m, "Variable");
   variable.def(py::init<const string&>())

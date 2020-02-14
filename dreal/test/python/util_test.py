@@ -326,6 +326,20 @@ class BoxTest(unittest.TestCase):
                                      (y, Interval(-inf, inf)),
                                      (z, Interval(2, 5))])
 
+    def test_inplace_union(self):
+        b1 = Box([x, y])
+        b1[x] = Interval(1, 3)
+        b1[y] = Interval(1, 2)
+
+        b2 = Box([x, y])
+        b2[x] = Interval(2, 4)
+        b2[y] = Interval(3, 5)
+
+        b1.set(b2)
+
+        self.assertEqual(b1[x], b2[x])
+        self.assertEqual(b1[y], b2[y])
+
     def to_dictionary(self):
         b = Box([x])
         b.Add(y)
