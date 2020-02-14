@@ -94,8 +94,8 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
       changed = true;
       cs->mutable_output().fill(0, cs->box().size() - 1);
     } else {
-      for (int i{0}, idx = input().min(); i < input().size();
-           ++i, idx = input().next(idx)) {
+      for (auto it = input().begin(); it != input().end(); ++it) {
+        const int idx = it.el;
         if (old_iv[idx] != iv[idx]) {
           cs->mutable_output().add(idx);
           changed = true;

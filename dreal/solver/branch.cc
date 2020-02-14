@@ -13,8 +13,8 @@ pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& bitset) {
   DREAL_ASSERT(!bitset.empty());
   double max_diam{0.0};
   int max_diam_idx{-1};
-  for (int i = 0, idx = bitset.min(); i < bitset.size();
-       ++i, idx = bitset.next(idx)) {
+  for (auto it = bitset.begin(); it != bitset.end(); ++it) {
+    const int idx = it.el;
     const Box::Interval& iv_i{box[idx]};
     const double diam_i{iv_i.diam()};
     if (diam_i > max_diam && iv_i.is_bisectable()) {

@@ -17,9 +17,8 @@ namespace {
 void UpdateWorklist(const ibex::BitSet& output,
                     const vector<ibex::BitSet>& input_to_contractors,
                     ibex::BitSet* const worklist) {
-  for (int j = 0, changed_dim = output.min(); j < output.size();
-       ++j, changed_dim = output.next(changed_dim)) {
-    *worklist |= input_to_contractors[changed_dim];
+  for (auto it = output.begin(); it != output.end(); ++it) {
+    *worklist |= input_to_contractors[it.el];
   }
 }
 }  // namespace
@@ -100,11 +99,10 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
   } else {
     const ibex::BitSet& contractors_to_check{
         input_to_contractors_[branching_point]};
-    for (int i = 0, ctc_idx = contractors_to_check.min();
-         i < contractors_to_check.size();
-         ++i, ctc_idx = contractors_to_check.next(ctc_idx)) {
+    for (auto it = contractors_to_check.begin();
+         it != contractors_to_check.end(); ++it) {
       cs->mutable_output().clear();
-      contractors_[ctc_idx].Prune(cs);
+      contractors_[it.el].Prune(cs);
       if (cs->box().empty()) {
         return;
       }
