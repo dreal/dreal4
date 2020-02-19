@@ -23,6 +23,18 @@ dreal_cc_library(
 )
 
 dreal_cc_binary(
+    name = "verify_nn",
+    srcs = [
+        "verify_nn.cc",
+    ],
+    deps = [
+        "//dreal/api",
+        "//dreal/solver",
+        "//dreal/util:assert",
+    ],
+)
+
+dreal_cc_binary(
     name = "check_lyapunov",
     srcs = [
         "check_lyapunov.cc",
