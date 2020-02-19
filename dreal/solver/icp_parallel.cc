@@ -4,7 +4,7 @@
 #include <tuple>
 #include <utility>
 
-#include "dreal/solver/branch.h"
+#include "dreal/solver/brancher.h"
 #include "dreal/solver/icp_stat.h"
 #include "dreal/util/assert.h"
 #include "dreal/util/cds.h"

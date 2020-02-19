@@ -24,16 +24,20 @@ dreal_cc_library(
         "//dreal/contractor:__pkg__",
         "//dreal/optimization:__pkg__",
     ],
-    deps = ["//dreal/util:option_value"],
+    deps = [
+        ":brancher",
+        "//dreal/util:box",
+        "//dreal/util:option_value",
+    ],
 )
 
 dreal_cc_library(
-    name = "branch",
+    name = "brancher",
     srcs = [
-        "branch.cc",
+        "brancher.cc",
     ],
     hdrs = [
-        "branch.h",
+        "brancher.h",
     ],
     deps = [
         "//dreal/util:assert",
@@ -95,7 +99,7 @@ dreal_cc_library(
         "//dreal/smt2:__pkg__",
     ],
     deps = [
-        ":branch",
+        ":brancher",
         ":config",
         ":filter_assertion",
         ":icp_stat",
@@ -167,6 +171,18 @@ dreal_cc_library(
 # -----
 # Tests
 # -----
+
+dreal_cc_googletest(
+    name = "config_test",
+    tags = ["unit"],
+    deps = [
+        ":config",
+        ":solver",
+        "//dreal/api",
+        "//dreal/util:logging",
+    ],
+)
+
 dreal_cc_googletest(
     name = "context_test",
     tags = ["unit"],
@@ -239,6 +255,7 @@ dreal_cc_googletest(
 filegroup(
     name = "headers",
     srcs = [
+        "brancher.h",
         "config.h",
         "context.h",
     ],

@@ -3,7 +3,7 @@
 #include <tuple>
 #include <utility>
 
-#include "dreal/solver/branch.h"
+#include "dreal/solver/brancher.h"
 #include "dreal/solver/icp_stat.h"
 #include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
@@ -97,8 +97,19 @@ bool IcpSeq::CheckSat(const Contractor& contractor,
 
     // 3.2.3. This box is bigger than delta. Need branching.
     branch_timer_guard.resume();
-    if (!Branch(current_box, *evaluation_result, stack_left_box_first_,
-                &stack)) {
+    Box box_left;
+    Box box_right;
+    const int branching_dim = config().brancher()(
+        current_box, *evaluation_result, &box_left, &box_right);
+    if (branching_dim >= 0) {
+      if (stack_left_box_first_) {
+        stack.emplace_back(box_left, branching_dim);
+        stack.emplace_back(box_right, branching_dim);
+      } else {
+        stack.emplace_back(box_right, branching_dim);
+        stack.emplace_back(box_left, branching_dim);
+      }
+    } else {
       DREAL_LOG_DEBUG(
           "IcpSeq::CheckSat() Found that the current box is not satisfying "
           "delta-condition but it's not bisectable.:\n{}",
