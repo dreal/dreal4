@@ -5,6 +5,7 @@
 
 #include "fmt/format.h"
 #include "fmt/ostream.h"
+#include "pybind11/functional.h"
 #include "pybind11/operators.h"
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
@@ -705,6 +706,10 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def_property("number_of_jobs", &Config::number_of_jobs,
                     [](Config& self, const int number_of_jobs) {
                       self.mutable_number_of_jobs() = number_of_jobs;
+                    })
+      .def_property("brancher", &Config::brancher,
+                    [](Config& self, const Config::Brancher& brancher) {
+                      self.mutable_brancher() = brancher;
                     })
       .def("__str__",
            [](const Config& self) { return fmt::format("{}", self); });

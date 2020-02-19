@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from dreal import *
+from dreal import (Config, Variable, Context, Logic, cos, sin)
 
 import unittest
 
@@ -48,6 +48,7 @@ class ConfigTest(unittest.TestCase):
 
 x = Variable("x")
 y = Variable("y")
+z = Variable("z")
 
 
 class ContextTest(unittest.TestCase):
@@ -103,8 +104,43 @@ class ContextTest(unittest.TestCase):
         config1.precision = 0.0001
         self.assertEqual(ctx.config.precision, 0.0001)
 
-    def test_version(self):
+    def test_brancher(self):
+        self.branch_variables = []
+
+        def MyBrancher(box, active_set, left, right):
+            def FindMaxDiam(box, active_set):
+                """Returns the dimension with the largest diameter"""
+                max_diam = 0.0
+                max_diam_idx = -1
+                for var_i in active_set:
+                    iv_i = box[var_i]
+                    diam_i = iv_i.diam()
+                    if diam_i > max_diam and iv_i.is_bisectable():
+                        max_diam = diam_i
+                        max_diam_idx = var_i
+                return max_diam_idx
+
+            branching_dim = FindMaxDiam(box, active_set)
+            if branching_dim >= 0:
+                (b1, b2) = box.bisect(branching_dim)
+                left.set(b1)
+                right.set(b2)
+                self.branch_variables.append(box.variable(branching_dim))
+                return branching_dim
+            return -1
+
         ctx = Context()
+        ctx.config.brancher = MyBrancher
+        ctx.SetLogic(Logic.QF_NRA)
+        ctx.DeclareVariable(x, -10, 10)
+        ctx.DeclareVariable(y, -10, 10)
+        ctx.Assert(cos(x) < sin(y))
+        result = ctx.CheckSat()
+        self.assertTrue(result)
+        self.assertEqual(self.branch_variables, [x, y, x, y, x, y, x])
+        ctx.Exit()
+
+    def test_version(self):
         # Simply check if we can do this without checking the version
         # string.
         self.assertTrue(Context.version)
