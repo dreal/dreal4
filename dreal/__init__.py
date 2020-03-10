@@ -21,7 +21,7 @@ def logical_or(*formulas):
     return reduce(__logical_or, formulas)
 
 
-__version__ = "4.19.10.3".replace(".0", ".")
+__version__ = "4.20.03.2".replace(".0", ".")
 
 # Add aliases
 And = logical_and
