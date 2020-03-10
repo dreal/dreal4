@@ -67,7 +67,11 @@ IfThenElseEliminator::variables() const {
 
 Expression IfThenElseEliminator::Visit(const Expression& e,
                                        const Formula& guard) {
-  return VisitExpression<Expression>(this, e, guard);
+  if (e.include_ite()) {
+    return VisitExpression<Expression>(this, e, guard);
+  } else {
+    return e;
+  }
 }
 
 Expression IfThenElseEliminator::VisitVariable(const Expression& e,
