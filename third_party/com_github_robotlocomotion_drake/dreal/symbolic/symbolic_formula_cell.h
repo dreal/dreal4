@@ -67,9 +67,14 @@ class FormulaCell {
     return atomic_load_explicit(&rc_, std::memory_order_acquire);
   }
 
+  /// Returns true if this symbolic formula includes an ITE (If-Then-Else)
+  /// expression.
+  bool include_ite() const;
+
  protected:
   /** Construct FormulaCell of kind @p k with @p hash. */
-  FormulaCell(FormulaKind k, size_t hash, Variables variables);
+  FormulaCell(FormulaKind k, size_t hash, bool include_ite,
+              Variables variables);
   /** Default destructor. */
   virtual ~FormulaCell() = default;
   /** Returns a Formula pointing to this FormulaCell. */
@@ -78,6 +83,7 @@ class FormulaCell {
  private:
   const FormulaKind kind_{};
   const size_t hash_{};
+  const bool include_ite_{false};
   const Variables variables_;
 
   // Reference counter.
@@ -326,7 +332,7 @@ class FormulaNot : public FormulaCell {
 class FormulaForall : public FormulaCell {
  public:
   /** Constructs from @p vars and @p f. */
-  FormulaForall(const Variables& vars, const Formula& f);
+  FormulaForall(const Variables& vars, Formula f);
   bool EqualTo(const FormulaCell& f) const override;
   bool Less(const FormulaCell& f) const override;
   bool Evaluate(const Environment& env) const override;

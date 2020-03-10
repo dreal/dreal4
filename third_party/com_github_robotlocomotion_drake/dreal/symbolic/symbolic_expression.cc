@@ -216,6 +216,11 @@ bool Expression::is_polynomial() const {
   return ptr_->is_polynomial();
 }
 
+bool Expression::include_ite() const {
+  assert(ptr_ != nullptr);
+  return ptr_->include_ite();
+}
+
 double Expression::Evaluate(const Environment& env) const {
   assert(ptr_ != nullptr);
   return ptr_->Evaluate(env);

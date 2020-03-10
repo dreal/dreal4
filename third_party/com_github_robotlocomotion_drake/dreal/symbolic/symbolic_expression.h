@@ -224,6 +224,10 @@ class Expression {
   /** Checks if this symbolic expression is convertible to Polynomial. */
   bool is_polynomial() const;
 
+  /// Returns true if this symbolic expression includes an ITE (If-Then-Else)
+  /// expression.
+  bool include_ite() const;
+
   /** Evaluates under a given environment (by default, an empty environment).
    *  @throws std::runtime_error if NaN is detected during evaluation.
    */

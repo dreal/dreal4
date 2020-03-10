@@ -43,6 +43,10 @@ class ExpressionCell {
   /** Checks if this symbolic expression is convertible to Polynomial. */
   bool is_polynomial() const { return is_polynomial_; }
 
+  /// Returns true if this symbolic expression includes an ITE (If-Then-Else)
+  /// expression.
+  bool include_ite() const { return include_ite_; }
+
   /** Evaluates under a given environment (by default, an empty environment).
    *  @throws std::runtime_error if NaN is detected during evaluation.
    */
@@ -90,8 +94,9 @@ class ExpressionCell {
  protected:
   /** Default constructor. */
   ExpressionCell() = default;
-  /** Constructs ExpressionCell of kind @p k with @p hash and @p is_poly . */
-  ExpressionCell(ExpressionKind k, size_t hash, bool is_poly,
+  /** Constructs ExpressionCell of kind @p k with @p hash, @p is_poly, and @p
+   * include_ite. */
+  ExpressionCell(ExpressionKind k, size_t hash, bool is_poly, bool include_ite,
                  Variables variables);
   /** Default destructor. */
   virtual ~ExpressionCell() = default;
@@ -102,6 +107,7 @@ class ExpressionCell {
   const ExpressionKind kind_{};
   const size_t hash_{};
   const bool is_polynomial_{false};
+  const bool include_ite_{false};
   const Variables variables_;
 
   // Reference counter.
@@ -147,7 +153,7 @@ class UnaryExpressionCell : public ExpressionCell {
   ~UnaryExpressionCell() override = default;
 
  protected:
-  /** Constructs UnaryExpressionCell of kind @p k with @p hash, @p e, and @p
+  /** Constructs UnaryExpressionCell of kind @p k with @p hash, @p e, @p
    * is_poly. */
   UnaryExpressionCell(ExpressionKind k, const Expression& e, bool is_poly);
   /** Returns the evaluation result f(@p v ). */

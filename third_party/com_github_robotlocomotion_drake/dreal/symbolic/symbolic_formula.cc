@@ -35,7 +35,8 @@ Formula::Formula(const Formula& f) : ptr_{f.ptr_} {
 }
 
 Formula& Formula::operator=(const Formula& f) {
-  return *this = Formula{f};  // move-assign
+  *this = Formula{f};  // move-assign
+  return *this;
 }
 
 Formula::Formula(Formula&& f) noexcept : ptr_{f.ptr_} {
@@ -162,6 +163,11 @@ Formula Formula::True() {
 Formula Formula::False() {
   static const Formula ff{new FormulaFalse()};
   return ff;
+}
+
+bool Formula::include_ite() const {
+  assert(ptr_ != nullptr);
+  return ptr_->include_ite();
 }
 
 Formula forall(const Variables& vars, const Formula& f) {
