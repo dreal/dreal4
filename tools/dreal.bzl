@@ -15,35 +15,35 @@ PYTHON_PACKAGE_DIR = "lib/python" + PYTHON_VERSION_STRING + "/site-packages"
 # The CXX_FLAGS will be enabled for all C++ rules in the project
 # building with any compiler.
 CXX_FLAGS = [
-    "-Werror=all",
-    "-Werror=attributes",
-    "-Werror=deprecated",
-    "-Werror=deprecated-declarations",
-    "-Werror=extra",
-    "-Werror=ignored-qualifiers",
-    "-Werror=old-style-cast",
-    "-Werror=overloaded-virtual",
-    "-Werror=pedantic",
-    "-Werror=shadow",
+    "-Wall",
+    "-Wattributes",
+    "-Wdeprecated",
+    "-Wdeprecated-declarations",
+    "-Wextra",
+    "-Wignored-qualifiers",
+    "-Wold-style-cast",
+    "-Woverloaded-virtual",
+    "-Wpedantic",
+    "-Wshadow",
 ]
 
 # The CLANG_FLAGS will be enabled for all C++ rules in the project when
 # building with clang.
 CLANG_FLAGS = CXX_FLAGS + [
-    "-Werror=absolute-value",
-    "-Werror=inconsistent-missing-override",
-    "-Werror=non-virtual-dtor",
-    "-Werror=return-stack-address",
-    "-Werror=sign-compare",
+    "-Wabsolute-value",
+    "-Winconsistent-missing-override",
+    "-Wnon-virtual-dtor",
+    "-Wreturn-stack-address",
+    "-Wsign-compare",
 ]
 
 # The GCC_FLAGS will be enabled for all C++ rules in the project when
 # building with gcc.
 GCC_FLAGS = CXX_FLAGS + [
-    "-Werror=logical-op",
-    "-Werror=non-virtual-dtor",
-    "-Werror=return-local-addr",
-    "-Werror=unused-but-set-parameter",
+    "-Wlogical-op",
+    "-Wnon-virtual-dtor",
+    "-Wreturn-local-addr",
+    "-Wunused-but-set-parameter",
 ]
 
 # The GCC_CC_TEST_FLAGS will be enabled for all cc_test rules in the project

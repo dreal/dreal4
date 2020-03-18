@@ -102,3 +102,15 @@ test:kcov --local_test_jobs=1
 test:kcov --test_tag_filters=-cpplint,-pycodestyle,-no_kcov
 test:kcov --nocache_test_results
 test:kcov --test_timeout=120,600,1800,7200
+
+# When compiling with dReal as the main WORKSPACE (i.e., if and only if this
+# rcfile is loaded), we enable -Werror by default for dReal's *own* targets,
+# but not for our externals.
+#
+# Developers may still disable errors locally by passing --copt=-w on the
+# command line, or promote *any* warnings even from externals to errors via
+# --copt=-Werror.
+#
+# When compiilng dReal as an external package, this rcfile is not loaded and we
+# won't promote warnings to errors by default.
+build --copt=-Werror
