@@ -9,11 +9,13 @@ namespace dreal {
 
 using std::ostream;
 
+#if __cplusplus < 201703L
 constexpr double Config::kDefaultPrecision;
 constexpr double Config::kDefaultNloptFtolRel;
 constexpr double Config::kDefaultNloptFtolAbs;
 constexpr int Config::kDefaultNloptMaxEval;
 constexpr double Config::kDefaultNloptMaxTime;
+#endif
 
 double Config::precision() const { return precision_.get(); }
 OptionValue<double>& Config::mutable_precision() { return precision_; }
