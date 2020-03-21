@@ -112,7 +112,10 @@
 %type <forallVariableVal>    variable_sort
 %type <letBindsVal>   var_binding_list
 %type <letBindVal>    var_binding
-                        
+
+%destructor { delete $$; } DOUBLE SYMBOL KEYWORD STRING
+%destructor { delete $$; } term term_list variable_sort_list variable_sort var_binding_list var_binding
+
 %{
 
 #include "dreal/smt2/driver.h"

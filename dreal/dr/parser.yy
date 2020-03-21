@@ -79,6 +79,9 @@
 %type <exprVal>        expr
 %type <formulaVal>     formula
 
+%destructor { delete $$; } ID
+%destructor { delete $$; } expr formula
+
 %nonassoc TK_EQ TK_NEQ TK_LT TK_LEQ TK_GT TK_GEQ
 %left TK_PLUS TK_MINUS
 %left TK_TIMES TK_DIV
