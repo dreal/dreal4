@@ -241,14 +241,14 @@ public:
 		 *
 		 * @complexity Constant.
 		 */
-		[[nodiscard]] constexpr bool operator~() const;
+		constexpr bool operator~() const;
 
 		/**
 		 * @brief      bool conversion operator.
 		 *
 		 * @complexity Constant.
 		 */
-		[[nodiscard]] constexpr operator bool() const;
+		constexpr operator bool() const;
 
 		/**
 		 * @brief      Deleted to avoid taking the address of a temporary proxy object.
@@ -675,7 +675,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr dynamic_bitset<Block, Allocator> operator<<(size_type shift) const;
+	constexpr dynamic_bitset<Block, Allocator> operator<<(size_type shift) const;
 
 	/**
 	 * @brief      Performs binary shift left of @p shift bits.
@@ -693,7 +693,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr dynamic_bitset<Block, Allocator> operator>>(size_type shift) const;
+	constexpr dynamic_bitset<Block, Allocator> operator>>(size_type shift) const;
 
 	/**
 	 * @brief      Performs a unary NOT on all bits.
@@ -708,7 +708,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr dynamic_bitset<Block, Allocator> operator~() const;
+	constexpr dynamic_bitset<Block, Allocator> operator~() const;
 
 	/**
 	 * @brief      Set the bits of the range \[@p pos, @p pos + @p len\[ to value @p value.
@@ -847,7 +847,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr bool test(size_type pos) const;
+	constexpr bool test(size_type pos) const;
 
 	/**
 	 * @brief      Test the value of the bit at position @p pos and set it to @a true or value @p
@@ -864,7 +864,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr bool test_set(size_type pos, bool value = true);
+	constexpr bool test_set(size_type pos, bool value = true);
 
 	/**
 	 * @brief      Checks if all bits are set to @a true.
@@ -877,7 +877,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr bool all() const;
+	constexpr bool all() const;
 
 	/**
 	 * @brief      Checks if any bits are set to @a true.
@@ -890,7 +890,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr bool any() const;
+	constexpr bool any() const;
 
 	/**
 	 * @brief      Checks if none of the bits are set to @a true.
@@ -903,7 +903,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr bool none() const;
+	constexpr bool none() const;
 
 	/**
 	 * @brief      Count the number of bits set to @a true.
@@ -914,7 +914,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr size_type count() const noexcept;
+	constexpr size_type count() const noexcept;
 
 	/**
 	 * @brief      Accesses the bit at position @p pos.
@@ -929,7 +929,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr reference operator[](size_type pos);
+	constexpr reference operator[](size_type pos);
 
 	/**
 	 * @brief      Accesses the bit at position @p pos.
@@ -944,7 +944,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr const_reference operator[](size_type pos) const;
+	constexpr const_reference operator[](size_type pos) const;
 
 	/**
 	 * @brief      Give the number of bits of the @ref dynamic_bitset.
@@ -953,7 +953,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr size_type size() const noexcept;
+	constexpr size_type size() const noexcept;
 
 	/**
 	 * @brief      Give the number of blocks used by the @ref dynamic_bitset.
@@ -962,7 +962,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr size_type num_blocks() const noexcept;
+	constexpr size_type num_blocks() const noexcept;
 
 	/**
 	 * @brief      Checks if the @ref dynamic_bitset is empty.
@@ -976,7 +976,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr bool empty() const noexcept;
+	constexpr bool empty() const noexcept;
 
 	/**
 	 * @brief      Give the number of bits that the @ref dynamic_bitset has currently allocated
@@ -986,7 +986,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr size_type capacity() const noexcept;
+	constexpr size_type capacity() const noexcept;
 
 	/**
 	 * @brief      Increase the capacity of the @ref dynamic_bitset to a value that's greater or
@@ -1038,7 +1038,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr bool is_subset_of(const dynamic_bitset<Block, Allocator>& bitset) const;
+	constexpr bool is_subset_of(const dynamic_bitset<Block, Allocator>& bitset) const;
 
 	/**
 	 * @brief      Determines if this @ref dynamic_bitset is a proper subset of @p bitset.
@@ -1066,7 +1066,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr bool is_proper_subset_of(
+	constexpr bool is_proper_subset_of(
 	  const dynamic_bitset<Block, Allocator>& bitset) const;
 
 	/**
@@ -1091,7 +1091,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr bool intersects(const dynamic_bitset<Block, Allocator>& bitset) const;
+	constexpr bool intersects(const dynamic_bitset<Block, Allocator>& bitset) const;
 
 	/**
 	 * @brief      Find the position of the first bit set in the @ref dynamic_bitset starting from
@@ -1104,7 +1104,7 @@ public:
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
 	 */
-	[[nodiscard]] constexpr size_type find_first() const;
+	constexpr size_type find_first() const;
 
 	/**
 	 * @brief      Find the position of the first bit set in the range \[@p prev + 1, @ref size()\[
@@ -1121,7 +1121,7 @@ public:
 	 *
 	 * @complexity Linear in @ref size() - @p prev.
 	 */
-	[[nodiscard]] constexpr size_type find_next(size_type prev) const;
+	constexpr size_type find_next(size_type prev) const;
 
 	/**
 	 * @brief      Exchanges the bits of this @ref dynamic_bitset with those of @p other.
@@ -1141,7 +1141,7 @@ public:
 	 *
 	 * @complexity Constant.
 	 */
-	[[nodiscard]] constexpr allocator_type get_allocator() const;
+	constexpr allocator_type get_allocator() const;
 
 	/**
 	 * @brief      Generate a string representation of the @ref dynamic_bitset.
@@ -1166,7 +1166,7 @@ public:
 	template<typename _CharT = char,
 	         typename _Traits = std::char_traits<_CharT>,
 	         typename _Alloc = std::allocator<_CharT>>
-	[[nodiscard]] constexpr std::basic_string<_CharT, _Traits, _Alloc> to_string(
+	constexpr std::basic_string<_CharT, _Traits, _Alloc> to_string(
 	  _CharT zero = _CharT('0'),
 	  _CharT one = _CharT('1')) const;
 
@@ -2644,14 +2644,14 @@ constexpr void dynamic_bitset<Block, Allocator>::iterate_bits_on(Function&& func
 }
 
 template<typename Block_, typename Allocator_>
-[[nodiscard]] constexpr bool operator==(const dynamic_bitset<Block_, Allocator_>& lhs,
+constexpr bool operator==(const dynamic_bitset<Block_, Allocator_>& lhs,
                                         const dynamic_bitset<Block_, Allocator_>& rhs)
 {
 	return (lhs.m_bits_number == rhs.m_bits_number) && (lhs.m_blocks == rhs.m_blocks);
 }
 
 template<typename Block_, typename Allocator_>
-[[nodiscard]] constexpr bool operator<(const dynamic_bitset<Block_, Allocator_>& lhs,
+constexpr bool operator<(const dynamic_bitset<Block_, Allocator_>& lhs,
                                        const dynamic_bitset<Block_, Allocator_>& rhs)
 {
 	using size_type = typename dynamic_bitset<Block_, Allocator_>::size_type;
