@@ -1957,9 +1957,9 @@ constexpr void dynamic_bitset<Block, Allocator>::append(BlockInputIterator first
 	}
 
 	// if random access iterators, std::distance complexity is constant
-	if constexpr(std::is_same_v<
+	if constexpr(std::is_same<
 	               typename std::iterator_traits<BlockInputIterator>::iterator_category,
-	               std::random_access_iterator_tag>)
+                       std::random_access_iterator_tag>::value)
 	{
 		assert(std::distance(first, last) > 0);
 		m_blocks.reserve(m_blocks.size() + static_cast<size_type>(std::distance(first, last)));
@@ -2728,11 +2728,11 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 
 #if defined(DYNAMIC_BITSET_GCC) \
   || (defined(DYNAMIC_BITSET_CLANG) && defined(DYNAMIC_BITSET_CLANG_builtin_popcount))
-	if constexpr(std::is_same_v<block_type, unsigned long long>)
+	if constexpr(std::is_same<block_type, unsigned long long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountll(block));
 	}
-	if constexpr(std::is_same_v<block_type, unsigned long>)
+	if constexpr(std::is_same<block_type, unsigned long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountl(block));
 	}
@@ -2765,11 +2765,11 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 #if defined(DYNAMIC_BITSET_GCC) \
   || (defined(DYNAMIC_BITSET_CLANG) && defined(DYNAMIC_BITSET_CLANG_builtin_popcount))
 	const block_type shifted_block = block_type(block << (bits_per_block - nbits));
-	if constexpr(std::is_same_v<block_type, unsigned long long>)
+	if constexpr(std::is_same<block_type, unsigned long long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountll(shifted_block));
 	}
-	if constexpr(std::is_same_v<block_type, unsigned long>)
+	if constexpr(std::is_same<block_type, unsigned long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountl(shifted_block));
 	}
@@ -2798,11 +2798,11 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 
 #if defined(DYNAMIC_BITSET_GCC) \
   || (defined(DYNAMIC_BITSET_CLANG) && defined(DYNAMIC_BITSET_CLANG_builtin_ctz))
-	if constexpr(std::is_same_v<block_type, unsigned long long>)
+	if constexpr(std::is_same<block_type, unsigned long long>::value)
 	{
 		return static_cast<size_type>(__builtin_ctzll(block));
 	}
-	if constexpr(std::is_same_v<block_type, unsigned long>)
+	if constexpr(std::is_same<block_type, unsigned long>::value)
 	{
 		return static_cast<size_type>(__builtin_ctzl(block));
 	}
@@ -2812,14 +2812,14 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 	}
 #elif defined(DYNAMIC_BITSET_MSVC)
 #	if defined(DYNAMIC_BITSET_MSVC_64)
-	if constexpr(std::is_same_v<block_type, unsigned __int64>)
+	if constexpr(std::is_same<block_type, unsigned __int64>::value)
 	{
 		unsigned long index = std::numeric_limits<unsigned long>::max();
 		_BitScanForward64(&index, block);
 		return static_cast<size_type>(index);
 	}
 #	endif
-	if constexpr(std::is_same_v<block_type, unsigned long>)
+	if constexpr(std::is_same<block_type, unsigned long>::value)
 	{
 		unsigned long index = std::numeric_limits<unsigned long>::max();
 		_BitScanForward(&index, block);
