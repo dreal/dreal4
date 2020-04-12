@@ -39,8 +39,7 @@ int BranchLargestFirst(const Box& box, const ibex::BitSet& active_set,
         "on {}\n"
         "Box1=\n{}\n"
         "Box2=\n{}",
-        box, box.variable(branching_dim), bisected_boxes.first,
-        bisected_boxes.second);
+        box, box.variable(branching_dim), *left, *right);
     return branching_dim;
   }
   return -1;
