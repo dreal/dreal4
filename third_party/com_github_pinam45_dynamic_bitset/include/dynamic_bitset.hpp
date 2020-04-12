@@ -1768,7 +1768,7 @@ constexpr dynamic_bitset<Block, Allocator>::dynamic_bitset(size_type nbits,
 	}
 
 	constexpr size_type init_val_required_blocks = sizeof(unsigned long long) / sizeof(block_type);
-	if constexpr(init_val_required_blocks == 1)
+	if(init_val_required_blocks == 1)
 	{
 		m_blocks[0] = init_val;
 	}
@@ -1957,7 +1957,7 @@ constexpr void dynamic_bitset<Block, Allocator>::append(BlockInputIterator first
 	}
 
 	// if random access iterators, std::distance complexity is constant
-	if constexpr(std::is_same<
+	if(std::is_same<
 	               typename std::iterator_traits<BlockInputIterator>::iterator_category,
                        std::random_access_iterator_tag>::value)
 	{
@@ -2728,15 +2728,15 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 
 #if defined(DYNAMIC_BITSET_GCC) \
   || (defined(DYNAMIC_BITSET_CLANG) && defined(DYNAMIC_BITSET_CLANG_builtin_popcount))
-	if constexpr(std::is_same<block_type, unsigned long long>::value)
+	if(std::is_same<block_type, unsigned long long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountll(block));
 	}
-	if constexpr(std::is_same<block_type, unsigned long>::value)
+	if(std::is_same<block_type, unsigned long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountl(block));
 	}
-	if constexpr(sizeof(block_type) <= sizeof(unsigned int))
+	if(sizeof(block_type) <= sizeof(unsigned int))
 	{
 		return static_cast<size_type>(__builtin_popcount(static_cast<unsigned int>(block)));
 	}
@@ -2765,15 +2765,15 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 #if defined(DYNAMIC_BITSET_GCC) \
   || (defined(DYNAMIC_BITSET_CLANG) && defined(DYNAMIC_BITSET_CLANG_builtin_popcount))
 	const block_type shifted_block = block_type(block << (bits_per_block - nbits));
-	if constexpr(std::is_same<block_type, unsigned long long>::value)
+	if(std::is_same<block_type, unsigned long long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountll(shifted_block));
 	}
-	if constexpr(std::is_same<block_type, unsigned long>::value)
+	if(std::is_same<block_type, unsigned long>::value)
 	{
 		return static_cast<size_type>(__builtin_popcountl(shifted_block));
 	}
-	if constexpr(sizeof(block_type) <= sizeof(unsigned int))
+	if(sizeof(block_type) <= sizeof(unsigned int))
 	{
 		return static_cast<size_type>(__builtin_popcount(static_cast<unsigned int>(shifted_block)));
 	}
@@ -2798,34 +2798,34 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 
 #if defined(DYNAMIC_BITSET_GCC) \
   || (defined(DYNAMIC_BITSET_CLANG) && defined(DYNAMIC_BITSET_CLANG_builtin_ctz))
-	if constexpr(std::is_same<block_type, unsigned long long>::value)
+	if(std::is_same<block_type, unsigned long long>::value)
 	{
 		return static_cast<size_type>(__builtin_ctzll(block));
 	}
-	if constexpr(std::is_same<block_type, unsigned long>::value)
+	if(std::is_same<block_type, unsigned long>::value)
 	{
 		return static_cast<size_type>(__builtin_ctzl(block));
 	}
-	if constexpr(sizeof(block_type) <= sizeof(unsigned int))
+	if(sizeof(block_type) <= sizeof(unsigned int))
 	{
 		return static_cast<size_type>(__builtin_ctz(static_cast<unsigned int>(block)));
 	}
 #elif defined(DYNAMIC_BITSET_MSVC)
 #	if defined(DYNAMIC_BITSET_MSVC_64)
-	if constexpr(std::is_same<block_type, unsigned __int64>::value)
+	if(std::is_same<block_type, unsigned __int64>::value)
 	{
 		unsigned long index = std::numeric_limits<unsigned long>::max();
 		_BitScanForward64(&index, block);
 		return static_cast<size_type>(index);
 	}
 #	endif
-	if constexpr(std::is_same<block_type, unsigned long>::value)
+	if(std::is_same<block_type, unsigned long>::value)
 	{
 		unsigned long index = std::numeric_limits<unsigned long>::max();
 		_BitScanForward(&index, block);
 		return static_cast<size_type>(index);
 	}
-	if constexpr(sizeof(block_type) <= sizeof(unsigned long))
+	if(sizeof(block_type) <= sizeof(unsigned long))
 	{
 		unsigned long index = std::numeric_limits<unsigned long>::max();
 		_BitScanForward(&index, static_cast<unsigned long>(block));
