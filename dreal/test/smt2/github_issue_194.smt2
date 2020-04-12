@@ -1,0 +1,7 @@
+(set-logic QF_NRA)
+(declare-fun _substvar_261_ () Bool)
+(declare-const v13 Bool)
+(declare-const r6 Real)
+(declare-const r9 Real)
+(assert (or (and v13 (or v13 (= r6 r9))) _substvar_261_))
+(check-sat)
