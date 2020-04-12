@@ -60,7 +60,7 @@ class ContractorForall : public ContractorCell {
   ContractorForall(Formula f, const Box& box, double epsilon,
                    double inner_delta, const Config& config)
       : ContractorCell{Contractor::Kind::FORALL,
-                       ibex::BitSet::empty(box.size()), config},
+                       DynamicBitset(box.size()), config},
         f_{std::move(f)},
         quantified_variables_{get_quantified_variables(f_)},
         strengthend_negated_nested_f_{Nnfizer{}.Convert(
@@ -103,9 +103,9 @@ class ContractorForall : public ContractorCell {
     }
 
     // Build input.
-    ibex::BitSet& input{mutable_input()};
+    DynamicBitset& input{mutable_input()};
     for (const Variable& v : f_.GetFreeVariables()) {
-      input.add(box.index(v));
+      input.set(box.index(v));
     }
     if (this->config().use_local_optimization()) {
       refiner_ = std::make_unique<CounterexampleRefiner>(
@@ -145,7 +145,7 @@ class ContractorForall : public ContractorCell {
     if (contractor_status.box().empty()) {
       // If the pruning result is empty, there is nothing more to do. Exit
       // the loop.
-      cs->mutable_output().fill(0, cs->box().size() - 1);
+      cs->mutable_output().set();
       current_box->set_empty();
       return true;
     } else {
@@ -153,7 +153,7 @@ class ContractorForall : public ContractorCell {
       bool changed = false;
       for (int i = 0; i < cs->box().size(); ++i) {
         if (cs->box()[i] != contractor_status.box()[i]) {
-          cs->mutable_output().add(i);
+          cs->mutable_output().set(i);
           (*current_box)[i] = contractor_status.box()[i];
           changed = true;
         }
@@ -250,7 +250,7 @@ class ContractorForallMt : public ContractorCell {
   ContractorForallMt(Formula f, const Box& box, double epsilon,
                      double inner_delta, const Config& config)
       : ContractorCell{Contractor::Kind::FORALL,
-                       ibex::BitSet::empty(box.size()), config},
+                       DynamicBitset(box.size()), config},
         f_{std::move(f)},
         epsilon_{epsilon},
         inner_delta_{inner_delta},

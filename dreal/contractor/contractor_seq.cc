@@ -12,11 +12,11 @@ namespace dreal {
 ContractorSeq::ContractorSeq(vector<Contractor> contractors,
                              const Config& config)
     : ContractorCell{Contractor::Kind::SEQ,
-                     ibex::BitSet::empty(ComputeInputSize(contractors)),
+                     DynamicBitset(ComputeInputSize(contractors)),
                      config},
       contractors_{std::move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());
-  ibex::BitSet& input{mutable_input()};
+  DynamicBitset& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
     if (c.include_forall()) {

@@ -15,7 +15,7 @@ namespace dreal {
 ContractorIbexFwdbwdMt::ContractorIbexFwdbwdMt(Formula f, const Box& box,
                                                const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
-                     ibex::BitSet::empty(box.size()), config},
+                     DynamicBitset(box.size()), config},
       f_{std::move(f)},
       config_{config},
       ctc_ready_(config_.number_of_jobs(), 0),

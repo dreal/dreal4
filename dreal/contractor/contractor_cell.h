@@ -29,7 +29,7 @@ class ContractorForall;
 class ContractorCell {
  public:
   /// Constructs a cell with @p kind and @p input.
-  ContractorCell(Contractor::Kind kind, const ibex::BitSet& input,
+  ContractorCell(Contractor::Kind kind, const DynamicBitset& input,
                  const Config& config);
 
   /// Deleted default constructor.
@@ -54,10 +54,10 @@ class ContractorCell {
   Contractor::Kind kind() const;
 
   /// Returns its input.
-  const ibex::BitSet& input() const;
+  const DynamicBitset& input() const;
 
   /// Returns its input.
-  ibex::BitSet& mutable_input();
+  DynamicBitset& mutable_input();
 
   /// Returns config.
   const Config& config() const;
@@ -76,16 +76,16 @@ class ContractorCell {
 
  private:
   const Contractor::Kind kind_;
-  ibex::BitSet input_;
+  DynamicBitset input_;
   const Config config_;
   bool include_forall_{false};
 };
 
-/// Returns max(c₁.input().max(), ..., cₙ.input().max()).
-///
-/// This is used in ContractorSeq, ContractorFixpoint, and
-/// ContractorWorklistFixpoint to find the size of its input BitSet.
-int ComputeInputSize(const std::vector<Contractor>& contractors);
+// Returns max(c₁.input().size(), ..., cₙ.input().size()).
+// This is used in ContractorSeq, ContractorFixpoint, and
+// ContractorWorklistFixpoint to find the size of its input DynamicBitset.
+DynamicBitset::size_type ComputeInputSize(
+    const std::vector<Contractor>& contractors);
 
 std::ostream& operator<<(std::ostream& os, const ContractorCell& c);
 

@@ -83,7 +83,7 @@ Contractor::Contractor(const Config& config)
 Contractor::Contractor(std::shared_ptr<ContractorCell> ptr)
     : ptr_{std::move(ptr)} {}
 
-const ibex::BitSet& Contractor::input() const { return ptr_->input(); }
+const DynamicBitset& Contractor::input() const { return ptr_->input(); }
 
 void Contractor::Prune(ContractorStatus* cs) const {
   static ContractorStat stat{DREAL_LOG_INFO_ENABLED};

@@ -52,8 +52,8 @@ class ContractorIbexFwdbwdStat : public Stat {
 //---------------------------------------
 ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
                                            const Config& config)
-    : ContractorCell{Contractor::Kind::IBEX_FWDBWD,
-                     ibex::BitSet::empty(box.size()), config},
+    : ContractorCell{Contractor::Kind::IBEX_FWDBWD, DynamicBitset(box.size()),
+                     config},
       f_{std::move(f)},
       ibex_converter_{box} {
   // Build num_ctr and ctc_.
@@ -62,9 +62,9 @@ ContractorIbexFwdbwd::ContractorIbexFwdbwd(Formula f, const Box& box,
     num_ctr_ = make_unique<ibex::NumConstraint>(ibex_converter_.variables(),
                                                 *expr_ctr_);
     // Build input.
-    ibex::BitSet& input{mutable_input()};
+    DynamicBitset& input{mutable_input()};
     for (const Variable& var : f_.GetFreeVariables()) {
-      input.add(box.index(var));
+      input.set(box.index(var));
     }
   } else {
     is_dummy_ = true;
@@ -92,14 +92,15 @@ void ContractorIbexFwdbwd::Prune(ContractorStatus* cs) const {
   if (!is_inner) {
     if (iv.is_empty()) {
       changed = true;
-      cs->mutable_output().fill(0, cs->box().size() - 1);
+      cs->mutable_output().set();
     } else {
-      for (auto it = input().begin(); it != input().end(); ++it) {
-        const int idx = it.el;
-        if (old_iv[idx] != iv[idx]) {
-          cs->mutable_output().add(idx);
+      DynamicBitset::size_type i_bit = input().find_first();
+      while (i_bit != DynamicBitset::npos) {
+        if (old_iv[i_bit] != iv[i_bit]) {
+          cs->mutable_output().set(i_bit);
           changed = true;
         }
+        i_bit = input().find_next(i_bit);
       }
     }
   }

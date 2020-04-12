@@ -55,7 +55,7 @@ class ContractorStatusStat : public Stat {
 ContractorStatus::ContractorStatus(Box box, const int branching_point)
     : box_{std::move(box)},
       branching_point_{branching_point},
-      output_{ibex::BitSet::empty(box_.size())} {
+      output_{DynamicBitset(box_.size())} {
   DREAL_ASSERT(!box_.empty());
   DREAL_ASSERT(branching_point_ >= -1 && branching_point_ < box_.size());
 }
@@ -68,9 +68,9 @@ int ContractorStatus::branching_point() const { return branching_point_; }
 
 int& ContractorStatus::mutable_branching_point() { return branching_point_; }
 
-const ibex::BitSet& ContractorStatus::output() const { return output_; }
+const DynamicBitset& ContractorStatus::output() const { return output_; }
 
-ibex::BitSet& ContractorStatus::mutable_output() { return output_; }
+DynamicBitset& ContractorStatus::mutable_output() { return output_; }
 
 void ContractorStatus::AddUsedConstraint(const Formula& f) {
   DREAL_LOG_DEBUG("ContractorStatus::AddUsedConstraint({}) box is empty? {}", f,

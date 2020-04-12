@@ -16,12 +16,12 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
                                        vector<Contractor> contractors,
                                        const Config& config)
     : ContractorCell{Contractor::Kind::FIXPOINT,
-                     ibex::BitSet::empty(ComputeInputSize(contractors)),
+                     DynamicBitset(ComputeInputSize(contractors)),
                      config},
       term_cond_{std::move(term_cond)},
       contractors_{std::move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());
-  ibex::BitSet& input{mutable_input()};
+  DynamicBitset& input{mutable_input()};
   for (const Contractor& c : contractors_) {
     input |= c.input();
     if (c.include_forall()) {
