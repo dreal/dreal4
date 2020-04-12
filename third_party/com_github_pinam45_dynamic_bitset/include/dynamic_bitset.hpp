@@ -24,7 +24,6 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <string_view>
 #include <functional>
 #include <type_traits>
 #include <limits>
@@ -368,39 +367,6 @@ public:
 	 */
 	constexpr dynamic_bitset(std::initializer_list<block_type> init_vals,
 	                         const allocator_type& allocator = allocator_type());
-
-	/**
-	 * @brief      Constructs a @ref dynamic_bitset from a string or a part of a string.
-	 *
-	 * @details    Construct the @ref dynamic_bitset using the characters from @p str in the range
-	 *             \[@p pos, std\::min(@p pos + @p n, @p str.size())\[.
-	 *
-	 * @param[in]  str        String containing the part to use
-	 * @param[in]  pos        Starting position of the string part to use in @p str
-	 * @param[in]  n          Number of characters of @p str to use from the starting position
-	 * @param[in]  zero       Character used to represent @a false bits in @p str
-	 * @param[in]  one        Character used to represent @a true bits in @p str
-	 * @param[in]  allocator  Allocator to use for memory management
-	 *
-	 * @tparam     _CharT     Character type of the string
-	 * @tparam     _Traits    Traits class specifying the operations on the character type of the
-	 *                        string
-	 *
-	 * @pre        @code
-	 *             pos < str.size()
-	 *             @endcode
-	 *
-	 * @complexity Linear in std\::min(@p n, @p str.size() - @p pos).
-	 */
-	template<typename _CharT, typename _Traits>
-	constexpr explicit dynamic_bitset(
-	  std::basic_string_view<_CharT, _Traits> str,
-	  typename std::basic_string_view<_CharT, _Traits>::size_type pos = 0,
-	  typename std::basic_string_view<_CharT, _Traits>::size_type n =
-	    std::basic_string_view<_CharT, _Traits>::npos,
-	  _CharT zero = _CharT('0'),
-	  _CharT one = _CharT('1'),
-	  const allocator_type& allocator = allocator_type());
 
 	/**
 	 * @brief      Constructs a @ref dynamic_bitset from a string or a part of a string.
@@ -1268,13 +1234,6 @@ private:
 
 	static constexpr size_type first_on(const block_type& block) noexcept;
 
-	template<typename _CharT, typename _Traits>
-	constexpr void init_from_string(std::basic_string_view<_CharT, _Traits> str,
-	                                typename std::basic_string_view<_CharT, _Traits>::size_type pos,
-	                                typename std::basic_string_view<_CharT, _Traits>::size_type n,
-	                                _CharT zero,
-	                                _CharT one);
-
 	constexpr block_type& get_block(size_type pos);
 	constexpr const block_type& get_block(size_type pos) const;
 	constexpr block_type& last_block();
@@ -1803,50 +1762,6 @@ constexpr dynamic_bitset<Block, Allocator>::dynamic_bitset(
   : m_blocks(allocator), m_bits_number(0)
 {
 	append(init_vals);
-}
-
-template<typename Block, typename Allocator>
-template<typename _CharT, typename _Traits>
-constexpr dynamic_bitset<Block, Allocator>::dynamic_bitset(
-  std::basic_string_view<_CharT, _Traits> str,
-  typename std::basic_string_view<_CharT, _Traits>::size_type pos,
-  typename std::basic_string_view<_CharT, _Traits>::size_type n,
-  _CharT zero,
-  _CharT one,
-  const allocator_type& allocator)
-  : m_blocks(allocator), m_bits_number(0)
-{
-	assert(pos < str.size());
-	init_from_string(str, pos, n, zero, one);
-}
-
-template<typename Block, typename Allocator>
-template<typename _CharT, typename _Traits, typename _Alloc>
-constexpr dynamic_bitset<Block, Allocator>::dynamic_bitset(
-  const std::basic_string<_CharT, _Traits, _Alloc>& str,
-  typename std::basic_string<_CharT, _Traits, _Alloc>::size_type pos,
-  typename std::basic_string<_CharT, _Traits, _Alloc>::size_type n,
-  _CharT zero,
-  _CharT one,
-  const allocator_type& allocator)
-  : m_blocks(allocator), m_bits_number(0)
-{
-	assert(pos < str.size());
-	init_from_string(std::basic_string_view<_CharT, _Traits>(str), pos, n, zero, one);
-}
-
-template<typename Block, typename Allocator>
-template<typename _CharT, typename _Traits>
-constexpr dynamic_bitset<Block, Allocator>::dynamic_bitset(
-  const _CharT* str,
-  typename std::basic_string<_CharT>::size_type pos,
-  typename std::basic_string<_CharT>::size_type n,
-  _CharT zero,
-  _CharT one,
-  const allocator_type& allocator)
-  : m_blocks(allocator), m_bits_number(0)
-{
-	init_from_string(std::basic_string_view<_CharT, _Traits>(str), pos, n, zero, one);
 }
 
 template<typename Block, typename Allocator>
@@ -2855,33 +2770,6 @@ constexpr typename dynamic_bitset<Block, Allocator>::size_type dynamic_bitset<Bl
 		mask <<= 1;
 	}
 	return npos;
-}
-
-template<typename Block, typename Allocator>
-template<typename _CharT, typename _Traits>
-constexpr void dynamic_bitset<Block, Allocator>::init_from_string(
-  std::basic_string_view<_CharT, _Traits> str,
-  typename std::basic_string_view<_CharT, _Traits>::size_type pos,
-  typename std::basic_string_view<_CharT, _Traits>::size_type n,
-  [[maybe_unused]] _CharT zero,
-  _CharT one)
-{
-	assert(pos < str.size());
-
-	const size_type size = std::min(n, str.size() - pos);
-	m_bits_number = size;
-
-	m_blocks.clear();
-	m_blocks.resize(blocks_required(size));
-	for(size_t i = 0; i < size; ++i)
-	{
-		const _CharT c = str[(pos + size - 1) - i];
-		assert(c == zero || c == one);
-		if(c == one)
-		{
-			set(i);
-		}
-	}
 }
 
 template<typename Block, typename Allocator>
