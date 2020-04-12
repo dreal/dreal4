@@ -1301,6 +1301,20 @@ private:
 	constexpr bool check_consistency() const noexcept;
 };
 
+#if __cplusplus < 201703L
+template <typename Block, typename Allocator>
+constexpr typename dynamic_bitset<Block, Allocator>::block_type
+    dynamic_bitset<Block, Allocator>::zero_block;
+
+template <typename Block, typename Allocator>
+constexpr typename dynamic_bitset<Block, Allocator>::block_type
+    dynamic_bitset<Block, Allocator>::one_block;
+
+template <typename Block, typename Allocator>
+constexpr typename dynamic_bitset<Block, Allocator>::size_type
+    dynamic_bitset<Block, Allocator>::block_last_bit_index;
+#endif
+
 #if __cplusplus >= 201703L
 // Deduction guideline for expressions like "dynamic_bitset a(32);" with an integral type as parameter
 // to use the constructor with the initial size instead of the constructor with the allocator.
