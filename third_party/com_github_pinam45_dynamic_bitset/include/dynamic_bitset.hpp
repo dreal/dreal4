@@ -586,7 +586,7 @@ public:
 	 * @return     A reference to the @ref dynamic_bitset *this
 	 *
 	 * @pre        @code
-	 *             size() == rhs.size()
+	 *             size() >= rhs.size()
 	 *             @endcode
 	 *
 	 * @complexity Linear in the size of the @ref dynamic_bitset.
@@ -1479,10 +1479,6 @@ constexpr dynamic_bitset<Block, Allocator> operator&(const dynamic_bitset<Block,
  * @return     A @ref dynamic_bitset with each bit being the result of a binary OR between the
  *             corresponding pair of bits of @p lhs and @p rhs
  *
- * @pre        @code
- *             lhs.size() == rhs.size()
- *             @endcode
- *
  * @complexity Linear in the size of the @ref dynamic_bitset.
  *
  * @relatesalso dynamic_bitset
@@ -2026,9 +2022,9 @@ template<typename Block, typename Allocator>
 constexpr dynamic_bitset<Block, Allocator>& dynamic_bitset<Block, Allocator>::operator|=(
   const dynamic_bitset<Block, Allocator>& rhs)
 {
-	assert(size() == rhs.size());
+	assert(size() >= rhs.size());
 	//apply(rhs, std::bit_or());
-	for(size_type i = 0; i < m_blocks.size(); ++i)
+	for(size_type i = 0; i < rhs.m_blocks.size(); ++i)
 	{
 		m_blocks[i] |= rhs.m_blocks[i];
 	}
@@ -3101,8 +3097,13 @@ template<typename Block, typename Allocator>
 constexpr dynamic_bitset<Block, Allocator> operator|(const dynamic_bitset<Block, Allocator>& lhs,
                                                      const dynamic_bitset<Block, Allocator>& rhs)
 {
-	dynamic_bitset<Block, Allocator> result(lhs);
-	return result |= rhs;
+        if (lhs.size() >= rhs.size()) {
+          dynamic_bitset<Block, Allocator> result(lhs);
+          return result |= rhs;
+        } else {
+          dynamic_bitset<Block, Allocator> result(rhs);
+          return result |= lhs;
+        }
 }
 
 template<typename Block, typename Allocator>
