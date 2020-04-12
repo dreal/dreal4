@@ -197,6 +197,9 @@ matrix:
         - BUILD_TYPE="-c opt" CONFIG="--config asan"
         - TEST_TAG_FILTERS="unit,-no_asan"
 
+before_install:
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then brew unlink python@2; fi
+
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
       sudo ./setup/ubuntu/update_expired_keys.sh;
