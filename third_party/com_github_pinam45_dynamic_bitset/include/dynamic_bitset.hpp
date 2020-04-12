@@ -1301,10 +1301,12 @@ private:
 	constexpr bool check_consistency() const noexcept;
 };
 
+#if __cplusplus >= 201703L
 // Deduction guideline for expressions like "dynamic_bitset a(32);" with an integral type as parameter
 // to use the constructor with the initial size instead of the constructor with the allocator.
 template<typename integral_type, typename = std::enable_if_t<std::is_integral_v<integral_type>>>
 dynamic_bitset(integral_type)->dynamic_bitset<>;
+#endif
 
 //=================================================================================================
 // dynamic_bitset external functions declarations
