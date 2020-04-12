@@ -1171,34 +1171,6 @@ public:
 	  _CharT one = _CharT('1')) const;
 
 	/**
-	 * @brief      Iterate on the @ref dynamic_bitset and call @p function with the position of the
-	 *             bits on.
-	 *
-	 * @details    For each set bit, @p function is called as follow:
-	 *             @code
-	 *             std::invoke(std::forward<Function>(function), bit_pos, std::forward<Parameters>(parameters)...))
-	 *             @endcode
-	 *             where @p bit_pos is the position of the current bit on. Thus @p function
-	 *             should take a size_t for the current set bit position as first argument, also @p
-	 *             parameters can be used to pass additional arguments to @p function when it is
-	 *             called by this method.\n\n @p function can return nothing or a bool, if it return
-	 *             a bool, the return value indicate if the iteration should continue, @a true to
-	 *             continue the iteration, @a false to stop, this make it easy to do an early exit.
-	 *
-	 * @param      function    Function to call on all bits on, take the current bit position as
-	 *                         first argument and @p parameters as next arguments
-	 * @param      parameters  Extra parameters for @p function
-	 *
-	 * @tparam     Function    Type of @p function, must take a size_t as first argument and @p
-	 *                         Parameters as next arguments
-	 * @tparam     Parameters  Type of @p parameters
-	 *
-	 * @complexity Linear in the size of the @ref dynamic_bitset.
-	 */
-	template<typename Function, typename... Parameters>
-	constexpr void iterate_bits_on(Function&& function, Parameters&&... parameters) const;
-
-	/**
 	 * @brief      Test if two @ref dynamic_bitset have the same content.
 	 *
 	 * @param[in]  lhs         The left hand side @ref dynamic_bitset of the operator
@@ -2599,48 +2571,6 @@ constexpr std::basic_string<_CharT, _Traits, _Alloc> dynamic_bitset<Block, Alloc
 		}
 	}
 	return str;
-}
-
-template<typename Block, typename Allocator>
-template<typename Function, typename... Parameters>
-constexpr void dynamic_bitset<Block, Allocator>::iterate_bits_on(Function&& function,
-                                                                 Parameters&&... parameters) const
-{
-	if constexpr(!std::is_invocable_v<Function, size_t, Parameters...>)
-	{
-		static_assert(dependent_false<Function>::value, "Function take invalid arguments");
-		// function should take (size_t, parameters...) as arguments
-	}
-
-	if constexpr(std::is_same_v<std::invoke_result_t<Function, size_t, Parameters...>, void>)
-	{
-		size_t i_bit = find_first();
-		while(i_bit != npos)
-		{
-			std::invoke(
-			  std::forward<Function>(function), i_bit, std::forward<Parameters>(parameters)...);
-			i_bit = find_next(i_bit);
-		}
-	}
-	else if constexpr(std::is_convertible_v<std::invoke_result_t<Function, size_t, Parameters...>,
-	                                        bool>)
-	{
-		size_t i_bit = find_first();
-		while(i_bit != npos)
-		{
-			if(!std::invoke(
-			     std::forward<Function>(function), i_bit, std::forward<Parameters>(parameters)...))
-			{
-				break;
-			}
-			i_bit = find_next(i_bit);
-		}
-	}
-	else
-	{
-		static_assert(dependent_false<Function>::value, "Function have invalid return type");
-		// return type should be void, or convertible to bool
-	}
 }
 
 template<typename Block_, typename Allocator_>
