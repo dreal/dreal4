@@ -53,11 +53,11 @@ class ContractorWorklistFixpoint : public ContractorCell {
   // changes in a pruning operation, we need to run contractors_[j]
   // because i ∈ contractors_[j].input(). This map is constructed in
   // the constructor.
-  std::vector<ibex::BitSet> input_to_contractors_;
+  std::vector<DynamicBitset> input_to_contractors_;
 
   // worklist_[i] means that i-th contractor in contractors_ needs to be
   // applied.
-  mutable ibex::BitSet worklist_;
+  mutable DynamicBitset worklist_;
 };
 
 }  // namespace dreal

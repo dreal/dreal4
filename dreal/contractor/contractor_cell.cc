@@ -21,14 +21,14 @@ using std::vector;
 namespace dreal {
 
 ContractorCell::ContractorCell(const Contractor::Kind kind,
-                               const ibex::BitSet& input, const Config& config)
+                               const DynamicBitset& input, const Config& config)
     : kind_{kind}, input_{input}, config_{config} {}
 
 Contractor::Kind ContractorCell::kind() const { return kind_; }
 
-const ibex::BitSet& ContractorCell::input() const { return input_; }
+const DynamicBitset& ContractorCell::input() const { return input_; }
 
-ibex::BitSet& ContractorCell::mutable_input() { return input_; }
+DynamicBitset& ContractorCell::mutable_input() { return input_; }
 
 const Config& ContractorCell::config() const { return config_; }
 
@@ -36,22 +36,16 @@ bool ContractorCell::include_forall() const { return include_forall_; }
 
 void ContractorCell::set_include_forall() { include_forall_ = true; }
 
-// Returns max(c₁.input().max(), ..., cₙ.input().max()).
-// This is used in ContractorSeq, ContractorFixpoint, and
-// ContractorWorklistFixpoint to find the size of its input BitSet.
-int ComputeInputSize(const vector<Contractor>& contractors) {
-  int ret = 0;
+DynamicBitset::size_type ComputeInputSize(
+    const vector<Contractor>& contractors) {
+  DynamicBitset::size_type ret = 0;
   for (const Contractor& c : contractors) {
-    // When c.input().empty(), c.input().max() has INT_MAX so we need to skip
-    // it.
-    if (!c.input().empty()) {
-      const int max_i = c.input().max();
-      if (max_i > ret) {
-        ret = max_i;
-      }
+    const DynamicBitset::size_type size_i = c.input().size();
+    if (size_i > ret) {
+      ret = size_i;
     }
   }
-  return ret + 1;
+  return ret;
 }
 
 ostream& operator<<(ostream& os, const ContractorCell& c) {

@@ -3,12 +3,14 @@
 #include <set>
 #include <vector>
 
-#include "./ibex.h"
+#include "./dynamic_bitset.hpp"
 
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 
 namespace dreal {
+
+using DynamicBitset = dynamic_bitset<size_t>;
 
 /// TODO(soonho): Add documentation.
 class ContractorStatus {
@@ -31,10 +33,10 @@ class ContractorStatus {
   int& mutable_branching_point();
 
   /// Returns a const reference of the output field.
-  const ibex::BitSet& output() const;
+  const DynamicBitset& output() const;
 
   /// Returns a mutable reference of the output field.
-  ibex::BitSet& mutable_output();
+  DynamicBitset& mutable_output();
 
   /// Returns explanation, a list of formula responsible for the unsat.
   std::set<Formula> Explanation() const;
@@ -68,7 +70,7 @@ class ContractorStatus {
 
   // "output_[i] == 1" means that the value of the i-th variable is
   // changed after running the contractor.
-  ibex::BitSet output_;
+  DynamicBitset output_;
 
   // A set of constraints used during pruning processes. This is an
   // over-approximation of an explanation.

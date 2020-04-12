@@ -18,7 +18,7 @@ ContractorIbexPolytopeMt::ContractorIbexPolytopeMt(vector<Formula> formulas,
                                                    const Box& box,
                                                    const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
-                     ibex::BitSet::empty(box.size()), config},
+                     DynamicBitset(box.size()), config},
       formulas_{std::move(formulas)},
       config_{config},
       ctc_ready_(config_.number_of_jobs(), 0),

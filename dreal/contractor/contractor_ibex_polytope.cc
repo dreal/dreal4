@@ -22,7 +22,7 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
                                                const Box& box,
                                                const Config& config)
     : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
-                     ibex::BitSet::empty(box.size()), config},
+                     DynamicBitset(box.size()), config},
       formulas_{std::move(formulas)},
       ibex_converter_{box} {
   DREAL_LOG_DEBUG("ContractorIbexPolytope::ContractorIbexPolytope");
@@ -57,10 +57,10 @@ ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
   ctc_ = make_unique<ibex::CtcPolytopeHull>(*linear_relax_combo_);
 
   // Build input.
-  ibex::BitSet& input{mutable_input()};
+  DynamicBitset& input{mutable_input()};
   for (const Formula& f : formulas_) {
     for (const Variable& var : f.GetFreeVariables()) {
-      input.add(box.index(var));
+      input.set(box.index(var));
     }
   }
 }
@@ -75,11 +75,11 @@ void ContractorIbexPolytope::Prune(ContractorStatus* cs) const {
   // Update output.
   if (iv.is_empty()) {
     changed = true;
-    cs->mutable_output().fill(0, cs->box().size() - 1);
+    cs->mutable_output().set();
   } else {
     for (int i = 0; i < old_iv.size(); ++i) {
       if (old_iv[i] != iv[i]) {
-        cs->mutable_output().add(i);
+        cs->mutable_output().set(i);
         changed = true;
       }
     }

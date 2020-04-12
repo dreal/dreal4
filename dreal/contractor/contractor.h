@@ -3,12 +3,11 @@
 #include <memory>
 #include <vector>
 
-#include "./ibex.h"
-
 #include "dreal/contractor/contractor_status.h"
 #include "dreal/solver/config.h"
 #include "dreal/util/box.h"
 #include "dreal/util/ibex_converter.h"
+
 
 namespace dreal {
 
@@ -62,7 +61,7 @@ class Contractor {
 
   /// Returns the input vector of this contractor. `input()[i] = true`
   /// means that this contractor depends on the value of `box[i]`.
-  const ibex::BitSet& input() const;
+  const DynamicBitset& input() const;
 
   /// Prunes @p cs.
   void Prune(ContractorStatus* cs) const;
