@@ -1,0 +1,19 @@
+licenses(["notice"])
+
+# Headers to expose.
+filegroup(
+    name = "headers",
+    srcs = [
+        "include/dynamic_bitset.hpp",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "dynamic_bitset",
+    hdrs = [
+        ":headers",
+    ],
+    includes = ["include"],
+    visibility = ["//visibility:public"],
+)
