@@ -1,4 +1,4 @@
-;; From https://github.com/dreal/dreal4/issues/188
+;; From https://github.com/dreal/dreal4/issues/190
 (set-logic QF_NRA)
 (set-option :worklist-fixpoint true)
 (declare-const v0 Bool)

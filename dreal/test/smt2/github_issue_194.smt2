@@ -1,4 +1,6 @@
+;; From https://github.com/dreal/dreal4/issues/194
 (set-logic QF_NRA)
+(set-option :worklist-fixpoint true)
 (declare-fun _substvar_261_ () Bool)
 (declare-const v13 Bool)
 (declare-const r6 Real)

@@ -1033,6 +1033,17 @@ smt2_test(
     size = "small",
 )
 
+smt2_test(
+    name = "github_issue_197",
+    size = "small",
+    options = ["-j 2"],
+)
+
+smt2_test(
+    name = "github_issue_198",
+    size = "small",
+)
+
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE"])
