@@ -59,6 +59,10 @@ const Variables& FormulaEvaluator::variables() const {
 
 const Formula& FormulaEvaluator::formula() const { return ptr_->formula(); }
 
+bool FormulaEvaluator::is_simple_relational() const {
+  return ptr_->is_simple_relational();
+}
+
 ostream& operator<<(ostream& os, const FormulaEvaluator& evaluator) {
   return evaluator.ptr_->Display(os);
 }

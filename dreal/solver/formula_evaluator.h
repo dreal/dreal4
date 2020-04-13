@@ -73,6 +73,10 @@ class FormulaEvaluator {
 
   const Formula& formula() const;
 
+  /// Returns true if the based formula is a simple relational formula which is
+  /// in form of `constant relop variable`.
+  bool is_simple_relational() const;
+
  private:
   // Constructs an FormulaEvaluator from `ptr`.
   explicit FormulaEvaluator(std::shared_ptr<FormulaEvaluatorCell> ptr);
