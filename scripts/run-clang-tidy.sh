@@ -32,6 +32,7 @@ clang-tidy "$@" -header-filter="$(realpath .)" -system-headers=0 -p ./ \
            -isystem "${BAZEL_THIRD_PARTY}/com_github_robotlocomotion_drake" \
            -isystem "${BAZEL_THIRD_PARTY}/com_github_tartanllama_optional" \
            -isystem "${BAZEL_THIRD_PARTY}/com_github_progschj_threadpool" \
+           -isystem "${BAZEL_THIRD_PARTY}/com_github_pinam45_dynamic_bitset" \
            -isystem /usr/local/include \
            -isystem /usr/local/opt/flex/include \
            -isystem /usr/local/opt/llvm/include/c++/v1 \
