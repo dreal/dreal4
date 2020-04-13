@@ -12,10 +12,10 @@ namespace dreal {
 
 Icp::Icp(const Config& config) : config_{config} {}
 
-optional<ibex::BitSet> EvaluateBox(
+optional<DynamicBitset> EvaluateBox(
     const vector<FormulaEvaluator>& formula_evaluators, const Box& box,
     const double precision, ContractorStatus* const cs) {
-  ibex::BitSet branching_candidates(box.size());  // This function returns this.
+  DynamicBitset branching_candidates(box.size());  // Return value.
   for (const FormulaEvaluator& formula_evaluator : formula_evaluators) {
     const FormulaEvaluationResult result{formula_evaluator(box)};
     switch (result.type()) {
@@ -43,8 +43,12 @@ optional<ibex::BitSet> EvaluateBox(
               "Icp::EvaluateBox() Found an interval >= precision({2}):\n"
               "{0} -> {1}",
               formula_evaluator, evaluation, precision);
-          for (const Variable& v : formula_evaluator.variables()) {
-            branching_candidates.add(box.index(v));
+          if (!formula_evaluator.is_simple_relational()) {
+            // Note: when the base formula is simple relational, we do not need
+            // to branch on the base variable.
+            for (const Variable& v : formula_evaluator.variables()) {
+              branching_candidates.set(box.index(v));
+            }
           }
         }
         break;

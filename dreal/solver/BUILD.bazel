@@ -27,6 +27,7 @@ dreal_cc_library(
     deps = [
         ":brancher",
         "//dreal/util:box",
+        "//dreal/util:dynamic_bitset",
         "//dreal/util:option_value",
     ],
 )
@@ -42,6 +43,7 @@ dreal_cc_library(
     deps = [
         "//dreal/util:assert",
         "//dreal/util:box",
+        "//dreal/util:dynamic_bitset",
         "//dreal/util:logging",
     ],
 )
@@ -112,6 +114,7 @@ dreal_cc_library(
         "//dreal/util:assert",
         "//dreal/util:box",
         "//dreal/util:cds",
+        "//dreal/util:dynamic_bitset",
         "//dreal/util:exception",
         "//dreal/util:ibex_converter",
         "//dreal/util:if_then_else_eliminator",

@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "dreal/util/box.h"
+#include "dreal/util/dynamic_bitset.h"
 
 namespace dreal {
 
@@ -11,7 +12,7 @@ namespace dreal {
 ///
 /// @returns a pair of (max dimension, variable index).
 std::pair<double, int> FindMaxDiam(const Box& box,
-                                   const ibex::BitSet& active_set);
+                                   const DynamicBitset& active_set);
 
 /// Finds the largest dimension in `active_set` and partitions `box`
 /// into two sub-boxes by branching on the chosen dimension. It
@@ -25,7 +26,7 @@ std::pair<double, int> FindMaxDiam(const Box& box,
 /// @param[out] right The right sub-box.
 ///
 /// @returns the branching dimension if found, otherwise returns -1.
-int BranchLargestFirst(const Box& box, const ibex::BitSet& active_set,
+int BranchLargestFirst(const Box& box, const DynamicBitset& active_set,
                        Box* left, Box* right);
 
 }  // namespace dreal

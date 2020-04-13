@@ -15,9 +15,9 @@ using std::pair;
 // To save the branch variables in MyBrancher function.
 std::vector<Variable> g_branch_variables;
 
-int MyBrancher(const Box& box, const ibex::BitSet& bitset, Box* left,
+int MyBrancher(const Box& box, const DynamicBitset& bitset, Box* left,
                Box* right) {
-  DREAL_ASSERT(!bitset.empty());
+  DREAL_ASSERT(!bitset.none());
 
   const pair<double, int> max_diam_and_idx{FindMaxDiam(box, bitset)};
   const int branching_dim{max_diam_and_idx.second};

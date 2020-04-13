@@ -7,6 +7,7 @@
 #include "dreal/solver/config.h"
 #include "dreal/solver/formula_evaluator.h"
 #include "dreal/util/box.h"
+#include "dreal/util/dynamic_bitset.h"
 #include "dreal/util/optional.h"
 
 namespace dreal {
@@ -67,13 +68,13 @@ class Icp {
 ///                             variables in the constraint into the
 ///                             set that it will return.
 ///
-/// If it returns an ibex::BitSet, it represents the dimensions on
+/// If it returns an DynamicBitset, it represents the dimensions on
 /// which the ICP algorithm needs to consider branching.
 ///
 /// It sets @p cs's box empty if it detects UNSAT. It also calls
 /// cs->AddUsedConstraint to store the constraint that is responsible
 /// for the UNSAT.
-optional<ibex::BitSet> EvaluateBox(
+optional<DynamicBitset> EvaluateBox(
     const std::vector<FormulaEvaluator>& formula_evaluators, const Box& box,
     double precision, ContractorStatus* cs);
 

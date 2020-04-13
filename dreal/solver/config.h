@@ -4,6 +4,7 @@
 
 #include "dreal/solver/brancher.h"
 #include "dreal/util/box.h"
+#include "dreal/util/dynamic_bitset.h"
 #include "dreal/util/option_value.h"
 
 namespace dreal {
@@ -17,8 +18,8 @@ class Config {
   Config& operator=(Config&&) = default;
   ~Config() = default;
 
-  using Brancher = std::function<int(const Box& box, const ibex::BitSet& bitset,
-                                     Box* left, Box* right)>;
+  using Brancher = std::function<int(
+      const Box& box, const DynamicBitset& bitset, Box* left, Box* right)>;
 
   /// Returns the precision option.
   double precision() const;

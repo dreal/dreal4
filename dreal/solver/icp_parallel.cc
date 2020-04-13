@@ -19,8 +19,9 @@ namespace dreal {
 
 namespace {
 
-bool ParallelBranch(const ibex::BitSet& bitset, const bool stack_left_box_first,
-                    Box* const box, Stack<Box>* const global_stack,
+bool ParallelBranch(const DynamicBitset& bitset,
+                    const bool stack_left_box_first, Box* const box,
+                    Stack<Box>* const global_stack,
                     atomic<int>* const number_of_boxes) {
   const pair<double, int> max_diam_and_idx{FindMaxDiam(*box, bitset)};
   const int branching_point{max_diam_and_idx.second};
@@ -107,7 +108,7 @@ void Worker(const Contractor& contractor, const Config& config,
     // 3.2. The box is non-empty. Check if the box is still feasible
     // under evaluation and it's small enough.
     eval_timer_guard.resume();
-    const optional<ibex::BitSet> evaluation_result{
+    const optional<DynamicBitset> evaluation_result{
         EvaluateBox(formula_evaluators, current_box, config.precision(), cs)};
     if (!evaluation_result) {
       // 3.2.1. We detect that the current box is not a feasible solution.
@@ -118,7 +119,7 @@ void Worker(const Contractor& contractor, const Config& config,
           current_box);
       continue;
     }
-    if (evaluation_result->empty()) {
+    if (evaluation_result->none()) {
       // 3.2.2. delta - SAT: We find a box which is smaller enough.
       DREAL_LOG_DEBUG("IcpParallel::Worker() Found a delta-box:\n{}",
                       current_box);

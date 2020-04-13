@@ -8,25 +8,26 @@ namespace dreal {
 using std::make_pair;
 using std::pair;
 
-pair<double, int> FindMaxDiam(const Box& box, const ibex::BitSet& active_set) {
-  DREAL_ASSERT(!active_set.empty());
+pair<double, int> FindMaxDiam(const Box& box, const DynamicBitset& active_set) {
+  DREAL_ASSERT(!active_set.none());
   double max_diam{0.0};
   int max_diam_idx{-1};
-  for (auto it = active_set.begin(); it != active_set.end(); ++it) {
-    const int idx = it.el;
+  DynamicBitset::size_type idx = active_set.find_first();
+  while (idx != DynamicBitset::npos) {
     const Box::Interval& iv_i{box[idx]};
     const double diam_i{iv_i.diam()};
     if (diam_i > max_diam && iv_i.is_bisectable()) {
       max_diam = diam_i;
       max_diam_idx = idx;
     }
+    idx = active_set.find_next(idx);
   }
   return make_pair(max_diam, max_diam_idx);
 }
 
-int BranchLargestFirst(const Box& box, const ibex::BitSet& active_set,
+int BranchLargestFirst(const Box& box, const DynamicBitset& active_set,
                        Box* const left, Box* const right) {
-  DREAL_ASSERT(!active_set.empty());
+  DREAL_ASSERT(!active_set.none());
 
   const pair<double, int> max_diam_and_idx{FindMaxDiam(box, active_set)};
   const int branching_dim{max_diam_and_idx.second};

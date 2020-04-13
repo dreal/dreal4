@@ -77,7 +77,7 @@ bool IcpSeq::CheckSat(const Contractor& contractor,
     // 3.2. The box is non-empty. Check if the box is still feasible
     // under evaluation and it's small enough.
     eval_timer_guard.resume();
-    const optional<ibex::BitSet> evaluation_result{
+    const optional<DynamicBitset> evaluation_result{
         EvaluateBox(formula_evaluators, current_box, config().precision(), cs)};
     if (!evaluation_result) {
       // 3.2.1. We detect that the current box is not a feasible solution.
@@ -88,7 +88,7 @@ bool IcpSeq::CheckSat(const Contractor& contractor,
       eval_timer_guard.pause();
       continue;
     }
-    if (evaluation_result->empty()) {
+    if (evaluation_result->none()) {
       // 3.2.2. delta-SAT : We find a box which is smaller enough.
       DREAL_LOG_DEBUG("IcpSeq::CheckSat() Found a delta-box:\n{}", current_box);
       return true;
