@@ -30,6 +30,8 @@
 #include <cmath>
 #include <cassert>
 
+namespace dreal {
+
 #ifndef DYNAMIC_BITSET_NO_LIBPOPCNT
 #	if __has_include(<libpopcnt.h>)
 #		include <libpopcnt.h>
@@ -3076,3 +3078,5 @@ constexpr void swap(dynamic_bitset<Block, Allocator>& bitset1,
 }
 
 #endif //DYNAMIC_BITSET_DYNAMIC_BITSET_HPP
+
+}  // namespace dreal

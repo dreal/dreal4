@@ -108,6 +108,17 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "dynamic_bitset",
+    hdrs = [
+        "dynamic_bitset.h",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//third_party/com_github_pinam45_dynamic_bitset:dynamic_bitset",
+    ],
+)
+
+dreal_cc_library(
     name = "signal_handler_guard",
     srcs = [
         "signal_handler_guard.cc",
@@ -512,10 +523,12 @@ filegroup(
     srcs = [
         "assert.h",
         "box.h",
+        "dynamic_bitset.h",
         "if_then_else_eliminator.h",
         "option_value.h",
         "optional.h",
         "scoped_vector.h",
+        "//third_party/com_github_pinam45_dynamic_bitset:headers",
         "//third_party/com_github_tartanllama_optional:headers",
     ],
     visibility = ["//:__pkg__"],

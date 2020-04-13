@@ -3,14 +3,11 @@
 #include <set>
 #include <vector>
 
-#include "./dynamic_bitset.hpp"
-
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/dynamic_bitset.h"
 
 namespace dreal {
-
-using DynamicBitset = dynamic_bitset<size_t>;
 
 /// TODO(soonho): Add documentation.
 class ContractorStatus {

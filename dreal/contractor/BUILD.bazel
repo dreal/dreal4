@@ -94,9 +94,9 @@ dreal_cc_library(
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:box",
+        "//dreal/util:dynamic_bitset",
         "//dreal/util:stat",
         "//dreal/util:timer",
-        "//third_party/com_github_pinam45_dynamic_bitset:dynamic_bitset",
         "@ibex",
     ],
 )
