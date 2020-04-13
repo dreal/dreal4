@@ -33,8 +33,7 @@ ContractorWorklistFixpoint::ContractorWorklistFixpoint(
       term_cond_{std::move(term_cond)},
       contractors_{std::move(contractors)},
       input_to_contractors_{static_cast<size_t>(ComputeInputSize(contractors_)),
-                            DynamicBitset(contractors_.size())},
-      worklist_{DynamicBitset(contractors_.size())} {
+                            DynamicBitset(contractors_.size())} {
   DREAL_ASSERT(!contractors_.empty());
   // Setup the input member.
   DynamicBitset& input{mutable_input()};
@@ -74,7 +73,9 @@ while ¬Q.empty() ∧ ¬TermCond(b, b'):
         Q.push({ctc ∣ ctc ∈ Ctc ∧ i ∈ ctc.input()})
 */
 void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
-  worklist_.reset();
+  // worklist[i] means that i-th contractor in contractors_ needs to be
+  // applied.
+  DynamicBitset worklist{contractors_.size()};
   const int branching_point = cs->branching_point();
 
   // DREAL_LOG_ERROR("ContractorWorklistFixpoint::Prune -- Fill the Queue");
@@ -93,10 +94,11 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
       if (cs->box().empty()) {
         return;
       }
-      UpdateWorklist(cs->output(), input_to_contractors_, &worklist_);
+      UpdateWorklist(cs->output(), input_to_contractors_, &worklist);
     }
   } else {
-    assert(static_cast<size_t>(branching_point) < input_to_contractors_.size());
+    DREAL_ASSERT(static_cast<size_t>(branching_point) <
+                 input_to_contractors_.size());
     const DynamicBitset& contractors_to_check{
         input_to_contractors_[branching_point]};
 
@@ -107,32 +109,32 @@ void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
       if (cs->box().empty()) {
         return;
       }
-      UpdateWorklist(cs->output(), input_to_contractors_, &worklist_);
+      UpdateWorklist(cs->output(), input_to_contractors_, &worklist);
       i_bit = contractors_to_check.find_next(i_bit);
     }
   }
-  if (worklist_.none() || term_cond_(old_iv, iv)) {
+  if (worklist.none() || term_cond_(old_iv, iv)) {
     return;
   }
 
   // 2. Run worklist algorithm
   do {
-    DynamicBitset::size_type ctc_idx = worklist_.find_first();
+    DynamicBitset::size_type ctc_idx = worklist.find_first();
     old_iv = iv;
     while (true) {
-      worklist_.set(ctc_idx, false);
+      worklist.set(ctc_idx, false);
       cs->mutable_output().reset();
       contractors_[ctc_idx].Prune(cs);
       if (cs->box().empty()) {
         return;
       }
-      UpdateWorklist(cs->output(), input_to_contractors_, &worklist_);
-      if (worklist_.none()) {
+      UpdateWorklist(cs->output(), input_to_contractors_, &worklist);
+      if (worklist.none()) {
         return;
       }
-      ctc_idx = worklist_.find_next(ctc_idx);
+      ctc_idx = worklist.find_next(ctc_idx);
       if (ctc_idx == DynamicBitset::npos) {
-        ctc_idx = worklist_.find_first();
+        ctc_idx = worklist.find_first();
       }
     }
   } while (!term_cond_(old_iv, iv));

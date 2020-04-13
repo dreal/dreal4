@@ -54,10 +54,6 @@ class ContractorWorklistFixpoint : public ContractorCell {
   // because i ∈ contractors_[j].input(). This map is constructed in
   // the constructor.
   std::vector<DynamicBitset> input_to_contractors_;
-
-  // worklist_[i] means that i-th contractor in contractors_ needs to be
-  // applied.
-  mutable DynamicBitset worklist_;
 };
 
 }  // namespace dreal
