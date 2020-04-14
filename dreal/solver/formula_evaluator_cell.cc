@@ -6,6 +6,9 @@ namespace dreal {
 
 namespace {
 bool IsSimpleRelational(const Formula& f) {
+  if (is_negation(f)) {
+    return IsSimpleRelational(get_operand(f));
+  }
   if (!is_relational(f)) {
     return false;
   }
