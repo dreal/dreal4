@@ -77,6 +77,10 @@ class FormulaEvaluator {
   /// in form of `constant relop variable`.
   bool is_simple_relational() const;
 
+  /// Returns true if the based formula is a not-equal formula which is
+  /// in form of `e1 != e2` or `!(e1 == e2)`.
+  bool is_neq() const;
+
  private:
   // Constructs an FormulaEvaluator from `ptr`.
   explicit FormulaEvaluator(std::shared_ptr<FormulaEvaluatorCell> ptr);

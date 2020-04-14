@@ -63,6 +63,8 @@ bool FormulaEvaluator::is_simple_relational() const {
   return ptr_->is_simple_relational();
 }
 
+bool FormulaEvaluator::is_neq() const { return ptr_->is_neq(); }
+
 ostream& operator<<(ostream& os, const FormulaEvaluator& evaluator) {
   return evaluator.ptr_->Display(os);
 }

@@ -32,8 +32,12 @@ class FormulaEvaluatorCell {
   const Formula& formula() const { return f_; }
 
   /// Returns true if the based formula is a simple relational formula which is
-  /// in form of `constant relop variable`.
+  /// in form of `constant relop variable` or `!(constant relop variable)`.
   bool is_simple_relational() const { return is_simple_relational_; }
+
+  /// Returns true if the based formula is a not-equal formula which is
+  /// in form of `e1 != e2` or `!(e1 == e2)`.
+  bool is_neq() const { return is_neq_; }
 
   /// Evaluates the constraint/formula with @p box.
   virtual FormulaEvaluationResult operator()(const Box& box) const = 0;
@@ -45,6 +49,7 @@ class FormulaEvaluatorCell {
  private:
   const Formula f_;
   const bool is_simple_relational_{false};
+  const bool is_neq_{false};
 };
 
 }  // namespace dreal

@@ -5,9 +5,9 @@
 namespace dreal {
 
 namespace {
-bool IsSimpleRelational(const Formula& f) {
+bool is_simple_relational(const Formula& f) {
   if (is_negation(f)) {
-    return IsSimpleRelational(get_operand(f));
+    return is_simple_relational(get_operand(f));
   }
   if (!is_relational(f)) {
     return false;
@@ -18,9 +18,21 @@ bool IsSimpleRelational(const Formula& f) {
          (is_variable(lhs) && (is_constant(rhs) || is_real_constant(rhs)));
 }
 
+bool is_neq(const Formula& f, const bool polarity = true) {
+  if (is_negation(f)) {
+    return is_neq(get_operand(f), !polarity);
+  }
+  if (!is_relational(f)) {
+    return false;
+  }
+  return (polarity && is_not_equal_to(f)) || (!polarity && is_equal_to(f));
+}
+
 }  // namespace
 
 FormulaEvaluatorCell::FormulaEvaluatorCell(Formula f)
-    : f_{std::move(f)}, is_simple_relational_{IsSimpleRelational(f_)} {}
+    : f_{std::move(f)},
+      is_simple_relational_{dreal::is_simple_relational(f_)},
+      is_neq_{dreal::is_neq(f_, true)} {}
 
 }  // namespace dreal
