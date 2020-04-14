@@ -204,13 +204,11 @@ install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
       sudo ./setup/ubuntu/update_expired_keys.sh;
       sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh;
-      BAZEL_LOCAL_RESOURCES=2048,1,1.0;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
       /usr/bin/yes | pip2 uninstall numpy;
       brew upgrade python;
       ./setup/mac/install_prereqs.sh;
-      BAZEL_LOCAL_RESOURCES=2048,2,1.0;
     fi
   - if [ "${COV}" == "ON" ]; then
       sudo apt install -y binutils-dev libcurl4-openssl-dev zlib1g-dev libdw-dev libiberty-dev;
@@ -232,7 +230,8 @@ script:
       --host_jvm_args=-Xmx500m \
       --host_jvm_args=-Xms500m \
       test \
-      --local_resources=${BAZEL_LOCAL_RESOURCES} \
+      --local_ram_resources=2048 \
+      --local_cpu_resources=2 \
       //... ${BUILD_TYPE} ${CONFIG} \
       ${COV_OPTION} \
       --test_output=errors \
