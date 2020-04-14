@@ -43,9 +43,11 @@ optional<DynamicBitset> EvaluateBox(
               "Icp::EvaluateBox() Found an interval >= precision({2}):\n"
               "{0} -> {1}",
               formula_evaluator, evaluation, precision);
-          if (!formula_evaluator.is_simple_relational()) {
-            // Note: when the base formula is simple relational, we do not need
-            // to branch on the base variable.
+          if (formula_evaluator.is_simple_relational() ||
+              formula_evaluator.is_neq()) {
+            // Note: when the base formula is simple relational or not-equal, we
+            // do not need to branch on the base variable.
+          } else {
             for (const Variable& v : formula_evaluator.variables()) {
               branching_candidates.set(box.index(v));
             }
