@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  macos_catalina:
+    name: macos catalina
+    runs-on: macos-10.15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: ./setup/mac/install_prereqs.sh
+        shell: zsh -efuo pipefail {0}
+      - name: build and test
+        run: bazel test //... -c dbg
+  ubuntu_bionic:
+    name: ubuntu bionic
+    runs-on: ubuntu-latest
+    container: ubuntu:bionic
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: ./setup/ubuntu/18.04/install_prereqs.sh
+        shell: bash
+      - name: build and test
+        run: bazel test //... -c dbg
