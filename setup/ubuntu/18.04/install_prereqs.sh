@@ -18,7 +18,7 @@ libibex-dev
 libnlopt-dev
 libpython2.7-dev
 pkg-config
-python2.7
+python-minimal
 zlib1g-dev
 EOF
 )
