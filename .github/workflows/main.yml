@@ -19,7 +19,7 @@ jobs:
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_bionic:
-    name: ubuntu bionic
+    name: ubuntu 18.04
     runs-on: ubuntu-18.04
     steps:
       - name: checkout
@@ -30,7 +30,7 @@ jobs:
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_trusty:
-    name: ubuntu trusty
+    name: ubuntu 16.04
     runs-on: ubuntu-16.04
     steps:
       - name: checkout
