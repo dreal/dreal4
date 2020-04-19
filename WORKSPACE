@@ -4,6 +4,7 @@ load(
     "//third_party/com_github_robotlocomotion_drake:tools/workspace/github.bzl",
     "github_archive",
 )
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 github_archive(
     name = "bazel_skylib",  # Apache-2.0
@@ -46,6 +47,16 @@ github_archive(
     repository = "google/googletest",
     sha256 = "d17b1b83a57b3933565a6d0616fe261107326d47de20288d0949ed038e1c342d",
 )
+
+http_archive(
+    name = "rules_python",
+    sha256 = "aa96a691d3a8177f3215b14b0edc9641787abaaa30363a080165d06ab65e1161",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.0.1/rules_python-0.0.1.tar.gz",
+)
+
+load("@rules_python//python:repositories.bzl", "py_repositories")
+
+py_repositories()
 
 load("//dreal:workspace.bzl", "dreal_workspace")
 
