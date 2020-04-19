@@ -134,6 +134,11 @@ Box CounterexampleRefiner::Refine(Box box) {
         for (const Variable& var : forall_vec_) {
           box[var] = init_[i++];
         }
+        break;
+      default:
+        DREAL_LOG_ERROR("LOCAL OPT FAILED: Unknown nlopt error-code {}",
+                        result);
+        break;
     }
     return box;
   } catch (std::exception& e) {
