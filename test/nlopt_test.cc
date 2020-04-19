@@ -4,7 +4,10 @@
 
 #include <gtest/gtest.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 #include <nlopt.hpp>
+#pragma GCC diagnostic pop
 
 namespace {
 

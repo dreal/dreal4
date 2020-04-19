@@ -5,7 +5,10 @@
 #include <unordered_map>
 #include <vector>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
 #include <nlopt.hpp>
+#pragma GCC diagnostic pop
 
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
