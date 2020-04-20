@@ -99,8 +99,6 @@ Install Prerequsites
 
 macOS 10.15 / 10.14 / 10.13:
 
-[Xcode](https://developer.apple.com/xcode/) is required.
-
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
