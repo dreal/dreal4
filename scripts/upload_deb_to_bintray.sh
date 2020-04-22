@@ -6,6 +6,13 @@ display_usage() {
     echo "usage: $0 <id> <password>"
 }
 
+if [ "$(lsb_release -r -s)" != "16.04" ]
+then
+    echo "Please run this script on Ubuntu 16.04"
+    exit 1
+fi
+
+
 if [ $# -ne 2 ]
 then
     display_usage
