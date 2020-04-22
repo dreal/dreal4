@@ -46,7 +46,7 @@ GTEST_TEST(NloptTest, Test) {
   // set objective function
   opt.set_min_objective(obj, nullptr);
 
-  // set tollerance
+  // set tolerance
   opt.set_ftol_rel(1e-4);
 
   // set initial point

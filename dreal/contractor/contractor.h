@@ -8,7 +8,6 @@
 #include "dreal/util/box.h"
 #include "dreal/util/ibex_converter.h"
 
-
 namespace dreal {
 
 // Forward declarations.

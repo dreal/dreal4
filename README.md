@@ -94,7 +94,7 @@ docker run --rm dreal/dreal4 dreal -h  # Run "dreal -h"
 How to Build
 ============
 
-Install Prerequsites
+Install Prerequisites
 --------------------
 
 macOS 10.15 / 10.14 / 10.13:

@@ -28,7 +28,7 @@ def _build_dreal():
                        env=new_env) != 0:
         raise LibError("Unable to build dReal.\n" +
                        "Please visit https://pypi.org/project/dreal and " +
-                       "follow the instructions to install the prerequsites.")
+                       "follow the instructions to install the prerequisites.")
 
 
 def _copy_bins():
@@ -103,7 +103,7 @@ Ubuntu 18.04 / 16.04
 Build from Source
 -----------------
 
-If `pip` fails to find a precompiled distribution, it fetchs dReal
+If `pip` fails to find a precompiled distribution, it fetches dReal
 source and build it from scratch. You need to install the required
 packages to do so. To install them, please follow the instructions
 below:

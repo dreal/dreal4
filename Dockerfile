@@ -6,7 +6,7 @@ WORKDIR /dreal4
 # Extract version and save it at /DREAL_VERSION.
 RUN echo `grep "DREAL_VERSION = " tools/dreal.bzl | cut -d '"' -f 2` > /DREAL_VERSION
 
-# Install prerequsites.
+# Install prerequisites.
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
       && yes "Y" | /dreal4/setup/ubuntu/18.04/install_prereqs.sh \
