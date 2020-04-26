@@ -12,7 +12,7 @@ from distutils.util import get_platform
 from setuptools.command.bdist_egg import bdist_egg as _bdist_egg
 from setuptools.command.develop import develop as _develop
 
-VERSION = '4.20.04.1'.replace(".0", ".")
+VERSION = '4.20.04.2'.replace(".0", ".")
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
 SRC_DIR = os.path.join(ROOT_DIR)
 
