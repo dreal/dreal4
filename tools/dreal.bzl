@@ -130,7 +130,12 @@ def dreal_pybind_library(
         name = cc_so_name,
         srcs = cc_srcs,
         copts = [
+            "-fexceptions",
             "-fvisibility=hidden",
+        ],
+        features = [
+            "-use_header_modules",
+            "-parse_headers",
         ],
         linkopts = select({
             "@dreal//tools:linux": [
@@ -139,7 +144,6 @@ def dreal_pybind_library(
             "@//conditions:default": [],
         }),
         linkshared = 1,
-        linkstatic = 1,
         deps = cc_deps + [
             "//:dreal_shared_library",
             "@pybind11",
