@@ -21,7 +21,7 @@ def _build_dreal():
     new_env = os.environ.copy()
     new_env["PYTHON_BIN_PATH"] = sys.executable
     if subprocess.call([
-            'bazel', 'build', '//:libdreal.so', '//dreal:_dreal_py.so',
+            'bazel', 'build', '//dreal:_dreal_py.so',
             '--cxxopt=-DDREAL_CHECK_INTERRUPT', '--python_path={}'.format(
                 sys.executable),
     ],
@@ -39,14 +39,27 @@ def _copy_bins():
                 os.path.join(ROOT_DIR, 'dreal'))
     os.chmod(os.path.join(ROOT_DIR, 'dreal', 'libdreal.so'), 436)
     if sys.platform == 'darwin':
-        if subprocess.call([
-                '/usr/bin/install_name_tool',
-                '-change',
-                '@rpath/libdreal.so',
-                '@loader_path/libdreal.so',
-                os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so'),
-        ]) != 0:
-            raise LibError("Unable to use install_name_tool.")
+        dst_full = os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so')
+        subprocess.check_call(
+            ["install_name_tool",
+             "-id",
+             os.path.join('@rpath', "_dreal_py.so"),
+             dst_full])
+        file_output = subprocess.check_output(["otool",
+                                               "-L",
+                                               dst_full]).decode("utf-8")
+        for line in file_output.splitlines():
+            # keep only file path, remove version information.
+            relative_path = line.split(' (')[0].strip()
+            # If path is relative, it needs to be replaced by absolute path.
+            if "@loader_path" not in relative_path:
+                continue
+            if "libdreal.so" in relative_path:
+                subprocess.check_call(
+                    ["install_name_tool",
+                     "-change", relative_path,
+                     os.path.join('@loader_path', "libdreal.so"),
+                     dst_full])
 
 
 class build(_build):
