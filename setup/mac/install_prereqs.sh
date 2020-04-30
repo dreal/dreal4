@@ -8,4 +8,5 @@ fi
 
 brew tap dreal/dreal
 brew update
+brew cask install homebrew/cask-versions/adoptopenjdk8
 brew install dreal --only-dependencies --build-from-source
