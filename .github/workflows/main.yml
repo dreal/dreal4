@@ -18,6 +18,19 @@ jobs:
         shell: zsh -efuo pipefail {0}
       - name: build and test
         run: bazel test //... -c dbg
+  ubuntu_focal:
+    name: ubuntu-20.04 (docker)
+    runs-on: ubuntu-18.04
+    container:
+      image: 'ubuntu:20.04'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: ./setup/ubuntu/20.04/install_prereqs.sh
+        shell: bash
+      - name: build and test
+        run: bazel test //... -c dbg
   ubuntu_bionic:
     name: ubuntu 18.04
     runs-on: ubuntu-18.04
