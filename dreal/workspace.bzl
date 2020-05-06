@@ -34,6 +34,8 @@ def dreal_workspace():
     )
     python_configure(name = "local_config_python")
 
+    native.register_toolchains("@local_config_python//:py_toolchain")
+
     http_archive(
         name = "rules_pkg",
         sha256 = "352c090cc3d3f9a6b4e676cf42a6047c16824959b438895a76c2989c6d7c246a",
