@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+      - name: uninstall bazelisk
+        run: npm -g uninstall @bazel/bazelisk || true
       - name: setup
         run: ./setup/mac/install_prereqs.sh
         shell: zsh -efuo pipefail {0}
