@@ -7,8 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  macos_catalina:
-    name: macos catalina
+  macos_catalina_build_and_test:
+    name: macos catalina build and test
     runs-on: macos-10.15
     steps:
       - name: checkout
@@ -20,8 +20,8 @@ jobs:
         shell: zsh -efuo pipefail {0}
       - name: build and test
         run: bazel test //... -c dbg
-  ubuntu_focal:
-    name: ubuntu-20.04 (docker)
+  ubuntu_focal_build_and_test:
+    name: ubuntu-20.04 (docker) build and test
     runs-on: ubuntu-18.04
     container:
       image: 'ubuntu:20.04'
@@ -33,8 +33,8 @@ jobs:
         shell: bash
       - name: build and test
         run: bazel test //... -c dbg
-  ubuntu_bionic:
-    name: ubuntu 18.04
+  ubuntu_bionic_build_and_test:
+    name: ubuntu 18.04 build and test
     runs-on: ubuntu-18.04
     steps:
       - name: checkout
@@ -44,8 +44,8 @@ jobs:
         shell: bash
       - name: build and test
         run: bazel test //... -c dbg
-  ubuntu_trusty:
-    name: ubuntu 16.04
+  ubuntu_trusty_build_and_test:
+    name: ubuntu 16.04 build and test
     runs-on: ubuntu-16.04
     steps:
       - name: checkout
@@ -55,3 +55,38 @@ jobs:
         shell: bash
       - name: build and test
         run: bazel test //... -c dbg
+  ubuntu_focal_install:
+    name: ubuntu-20.04 (docker) install
+    runs-on: ubuntu-18.04
+    container:
+      image: 'ubuntu:20.04'
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: ./setup/ubuntu/20.04/install.sh
+        shell: bash
+      - name: run dreal
+        run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
+  ubuntu_bionic_install:
+    name: ubuntu 18.04 install
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: sudo ./setup/ubuntu/18.04/install.sh
+        shell: bash
+      - name: run dreal
+        run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
+  ubuntu_trusty_install:
+    name: ubuntu 16.04 install
+    runs-on: ubuntu-16.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: sudo ./setup/ubuntu/16.04/install.sh
+        shell: bash
+      - name: run dreal
+        run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
