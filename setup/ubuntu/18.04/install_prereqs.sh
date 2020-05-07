@@ -36,7 +36,7 @@ if ! command_exists bazel; then
     apt-get install -y --no-install-recommends wget
     wget "${BAZEL_URL}"
     if echo "${BAZEL_SHA256}  ${BAZEL_DEBNAME}" | sha256sum -c; then
-	apt-get install -y ./"${BAZEL_DEBNAME}"
+	dpkg --install --skip-same-version ./"${BAZEL_DEBNAME}" || apt-get -f install -y
 	rm "${BAZEL_DEBNAME}"
     else
 	echo "SHA256 does not match ${BAZEL_DEBNAME}:"

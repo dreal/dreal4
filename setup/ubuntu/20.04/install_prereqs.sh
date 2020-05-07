@@ -36,7 +36,7 @@ BAZEL_SHA256=8fb2fe222c479a24e4d089f30bf30aea36fc8bfa117d81cce1ad9adf1f743bf0
 apt-get install -y --no-install-recommends wget
 wget "${BAZEL_URL}"
 if echo "${BAZEL_SHA256}  ${BAZEL_DEBNAME}" | sha256sum -c; then
-    apt-get install --no-install-recommends -y ./"${BAZEL_DEBNAME}"
+    dpkg --install --skip-same-version ./"${BAZEL_DEBNAME}" || apt-get -f install -y
     rm "${BAZEL_DEBNAME}"
 else
     echo "SHA256 does not match ${BAZEL_DEBNAME}:"

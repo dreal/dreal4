@@ -19,7 +19,7 @@ DREAL_SHA256=75e768d2bb7fef9225ea7ba4d319340ef3daef7793dadee4bfa1f67fa1bd6dbf
 apt-get install --no-install-recommends wget -y
 wget "${DREAL_URL}"
 if echo "${DREAL_SHA256}  ${DREAL_DEBNAME}" | sha256sum -c; then
-    apt-get install -y ./"${DREAL_DEBNAME}"
+    dpkg --install --skip-same-version ./"${DREAL_DEBNAME}" || apt-get -f install -y
     rm "${DREAL_DEBNAME}"
 else
     echo "SHA256 does not match ${DREAL_DEBNAME}:"
