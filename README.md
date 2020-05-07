@@ -14,9 +14,13 @@ macOS 10.15 / 10.14 / 10.13:
 dreal
 ```
 
-Ubuntu 18.04 / 16.04:
+Ubuntu 20.04 / 18.04 / 16.04:
 
 ```bash
+# 20.04
+sudo apt-get install curl
+curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/20.04/install.sh | sudo bash
+
 # 18.04
 sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/18.04/install.sh | sudo bash
@@ -104,7 +108,7 @@ git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 18.04 / 16.04
+Ubuntu 20.04 / 18.04 / 16.04
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
@@ -133,7 +137,8 @@ set up `CC` environment variable. For example, `CC=gcc-8.0 bazel build
 
 In CI, we test that dReal can be built using the following compilers:
  - Ubuntu:
-   [gcc-9](https://gcc.gnu.org/gcc-9), 
+   [gcc-10](https://gcc.gnu.org/gcc-10),
+   [gcc-9](https://gcc.gnu.org/gcc-9),
    [gcc-8](https://gcc.gnu.org/gcc-8),
    [gcc-7](https://gcc.gnu.org/gcc-7),
    [gcc-6](https://gcc.gnu.org/gcc-6),
@@ -190,7 +195,7 @@ macOS 10.15 / 10.14 / 10.13:
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
-Ubuntu 18.04 / 16.04:
+Ubuntu 20.04 / 18.04 / 16.04:
 
 ```bash
 export PKG_CONFIG_PATH=/opt/dreal/4.20.04.2/lib/pkgconfig:/opt/libibex/2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
