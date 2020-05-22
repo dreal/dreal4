@@ -1,0 +1,7 @@
+(declare-const x Real)
+(declare-const y Real)
+(assert (xor (>= x 10) (>= y -10)))
+(assert (= x 0))
+(assert (= y -20))
+(check-sat)
+(exit)

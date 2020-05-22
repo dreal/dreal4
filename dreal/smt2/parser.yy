@@ -94,7 +94,7 @@
 %token TK_EQ TK_LTE TK_GTE TK_LT TK_GT
 %token TK_EXP TK_LOG TK_ABS TK_SIN TK_COS TK_TAN TK_ASIN TK_ACOS TK_ATAN TK_ATAN2
 %token TK_SINH TK_COSH TK_TANH TK_MIN TK_MAX TK_SQRT TK_POW
-%token TK_TRUE TK_FALSE TK_AND TK_OR TK_IMPLIES TK_NOT TK_ITE
+%token TK_TRUE TK_FALSE TK_AND TK_OR TK_XOR TK_IMPLIES TK_NOT TK_ITE
 
 %token TK_MAXIMIZE TK_MINIMIZE
 
@@ -339,6 +339,14 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             Formula f = Formula::False();
             for (const Term& t : *$3) {
                 f = f || t.formula();
+            }
+            $$ = new Term(f);
+            delete $3;
+        }
+        |       '('TK_XOR term_list ')' {
+            Formula f = Formula::False();
+            for (const Term& t : *$3) {
+                f = (f && !t.formula()) || (!f && t.formula());
             }
             $$ = new Term(f);
             delete $3;

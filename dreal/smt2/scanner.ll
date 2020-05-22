@@ -168,6 +168,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 "false"                 { return Smt2Parser::token::TK_FALSE; }
 "and"                   { return Smt2Parser::token::TK_AND; }
 "or"                    { return Smt2Parser::token::TK_OR; }
+"xor"                   { return Smt2Parser::token::TK_XOR; }
 "not"                   { return Smt2Parser::token::TK_NOT; }
 "ite"                   { return Smt2Parser::token::TK_ITE; }
 "=>"                    { return Smt2Parser::token::TK_IMPLIES; }
