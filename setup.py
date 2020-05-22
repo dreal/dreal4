@@ -106,6 +106,8 @@ your system. To install them, please follow the instructions below:
 
 macOS 10.15 / 10.14 / 10.13
 
+    brew tap dreal-deps/ibex
+    brew tap dreal/dreal
     brew install dreal --only-dependencies
 
 Ubuntu 18.04 / 16.04
@@ -123,6 +125,8 @@ below:
 
 macOS 10.15 / 10.14 / 10.13
 
+    brew tap dreal-deps/ibex
+    brew tap dreal/dreal
     brew install dreal --only-dependencies --build-from-source
 
 Ubuntu 18.04 / 16.04

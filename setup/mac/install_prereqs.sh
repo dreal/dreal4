@@ -6,6 +6,7 @@ if [[ "${EUID}" -eq 0 ]]; then
   exit 1
 fi
 
+brew tap dreal-deps/ibex
 brew tap dreal/dreal
 brew update
 brew cask install homebrew/cask-versions/adoptopenjdk8
