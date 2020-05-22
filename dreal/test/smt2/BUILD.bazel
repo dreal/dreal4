@@ -1104,6 +1104,36 @@ smt2_test(
     size = "small",
 )
 
+smt2_test(
+    name = "xor_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "xor_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "xor_03",
+    size = "small",
+)
+
+smt2_test(
+    name = "xor_04",
+    size = "small",
+)
+
+smt2_test(
+    name = "xor_05",
+    size = "small",
+)
+
+smt2_test(
+    name = "xor_06",
+    size = "small",
+)
+
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE"])
