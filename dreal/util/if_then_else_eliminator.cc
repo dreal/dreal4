@@ -219,9 +219,10 @@ Expression IfThenElseEliminator::VisitIfThenElse(const Expression& e,
   const Formula else_guard{guard && !c};
   const Expression e1{Visit(get_then_expression(e), then_guard)};
   const Expression e2{Visit(get_else_expression(e), else_guard)};
-  // (then_guard ∧ (new_var = e1)) ∨ (else_guard ∧ (new_var = e2))
-  added_formulas_.push_back((then_guard && (new_var == e1)) ||
-                            (else_guard && (new_var == e2)));
+  // then_guard => (new_var = e1)
+  added_formulas_.push_back(!then_guard || (new_var == e1));
+  // else_guard => (new_var = e2)
+  added_formulas_.push_back(!else_guard || (new_var == e2));
   return new_var;
 }
 
