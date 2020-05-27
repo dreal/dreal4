@@ -197,7 +197,17 @@ command_declare_fun:
 
 command_define_fun:
                 '(' TK_DEFINE_FUN SYMBOL enter_scope '(' name_sort_list ')' sort term exit_scope ')' {
-                    driver.DefineFun(*$3, *$6, $8, *$9);
+                    if ($6->empty()) {
+                        // No parameters - treat as variable, just like declare-fun.
+                        const Variable v{driver.DeclareVariable(*$3, $8)};
+                        if ($9->type() == Term::Type::FORMULA) {
+                            driver.mutable_context().Assert(v == $9->formula());
+                        } else {
+                            driver.mutable_context().Assert(v == $9->expression());
+                        }
+                    } else {
+                        driver.DefineFun(*$3, *$6, $8, *$9);
+                    }
                     delete $3;
                     delete $6;
                     delete $9;

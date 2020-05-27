@@ -1,0 +1,4 @@
+delta-sat with delta = 0.001
+(model
+  (define-fun x () Real 5)
+)
