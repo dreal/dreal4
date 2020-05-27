@@ -160,9 +160,10 @@ Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {
   return v;
 }
 
-void Smt2Driver::DeclareVariable(const string& name, const Sort sort) {
-  const Variable v{RegisterVariable(name, sort)};
+Variable Smt2Driver::DeclareVariable(const string& name, const Sort sort) {
+  Variable v{RegisterVariable(name, sort)};
   context_.DeclareVariable(v);
+  return v;
 }
 
 void Smt2Driver::DeclareVariable(const string& name, const Sort sort,
