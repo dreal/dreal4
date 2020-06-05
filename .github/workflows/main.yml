@@ -19,15 +19,13 @@ jobs:
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_focal_build_and_test:
-    name: ubuntu-20.04 (docker) build and test
-    runs-on: ubuntu-18.04
-    container:
-      image: 'ubuntu:20.04'
+    name: ubuntu-20.04 build and test
+    runs-on: ubuntu-20.04
     steps:
       - name: checkout
         uses: actions/checkout@v2
       - name: setup
-        run: ./setup/ubuntu/20.04/install_prereqs.sh
+        run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
         shell: bash
       - name: build and test
         run: bazel test //... -c dbg
@@ -54,15 +52,13 @@ jobs:
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_focal_install:
-    name: ubuntu-20.04 (docker) install
-    runs-on: ubuntu-18.04
-    container:
-      image: 'ubuntu:20.04'
+    name: ubuntu-20.04 install
+    runs-on: ubuntu-20.04
     steps:
       - name: checkout
         uses: actions/checkout@v2
       - name: setup
-        run: ./setup/ubuntu/20.04/install.sh
+        run: sudo ./setup/ubuntu/20.04/install.sh
         shell: bash
       - name: run dreal
         run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
