@@ -45,9 +45,9 @@ def dreal_workspace():
     github_archive(
         name = "spdlog",  # MIT
         build_file = str(Label("//tools:spdlog.BUILD.bazel")),
-        commit = "v1.6.1",
+        commit = "v1.7.0",
         repository = "gabime/spdlog",
-        sha256 = "378a040d91f787aec96d269b0c39189f58a6b852e4cbf9150ccfacbe85ebbbfc",
+        sha256 = "f0114a4d3c88be9e696762f37a7c379619443ce9d668546c61b21d41affe5b62",
     )
 
     github_archive(
