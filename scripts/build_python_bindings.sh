@@ -27,9 +27,9 @@ fi
 
 # Install active python releases.
 PYTHON_35_VERSION=3.5.9   # End Of Life: 2020-09-13
-PYTHON_36_VERSION=3.6.10  # End Of Life: 2021-12-23
-PYTHON_37_VERSION=3.7.7   # End Of Life: 2023-06-27
-PYTHON_38_VERSION=3.8.2   # End Of Life: 2024-10
+PYTHON_36_VERSION=3.6.11  # End Of Life: 2021-12-23
+PYTHON_37_VERSION=3.7.8   # End Of Life: 2023-06-27
+PYTHON_38_VERSION=3.8.3   # End Of Life: 2024-10
 PYTHON_VERSIONS="${PYTHON_35_VERSION} ${PYTHON_36_VERSION} ${PYTHON_37_VERSION} ${PYTHON_38_VERSION}"
 pyenv install --skip-existing ${PYTHON_35_VERSION}
 pyenv install --skip-existing ${PYTHON_36_VERSION}
