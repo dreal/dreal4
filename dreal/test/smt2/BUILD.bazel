@@ -530,6 +530,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "maximize_int_01",
+    size = "small",
+)
+
+smt2_test(
     name = "minimize_01",
     size = "small",
 )

@@ -70,7 +70,8 @@ FilterAssertionResult UpdateLowerBound(const Variable& var, const double new_lb,
 //   If var is of CONTINUOUS type: `box[var].lb() >= v + ε`
 //                                 where `v + ε` is the smallest representable
 //                                 floating-point number bigger than `v`.
-//   Otherwise (INTEGER/BINARY)  : `box[var].lb() >= v + 1`
+//   Otherwise (INTEGER/BINARY)  : Handle it as `box[var].lb() >= v` but keep
+//                                 the constraint.
 FilterAssertionResult UpdateStrictLowerBound(const Variable& var,
                                              const double v, Box* const box) {
   switch (var.get_type()) {
@@ -79,7 +80,8 @@ FilterAssertionResult UpdateStrictLowerBound(const Variable& var,
                               box);
     case Variable::Type::INTEGER:
     case Variable::Type::BINARY:
-      return UpdateLowerBound(var, v + 1, box);
+      UpdateLowerBound(var, v, box);
+      return FilterAssertionResult::NotFiltered;
     case Variable::Type::BOOLEAN:
       DREAL_UNREACHABLE();
   }
@@ -109,7 +111,8 @@ FilterAssertionResult UpdateUpperBound(const Variable& var, const double new_ub,
 //   If var is of CONTINUOUS type: `box[var].ub() <= v - ε`
 //                                 where `v - ε` is the largest representable
 //                                 floating-point number smaller than `v`.
-//   Otherwise (INTEGER/BINARY)  : `box[var].ub() <= v - 1`
+//   Otherwise (INTEGER/BINARY)  : Handle it as `box[var].ub() <= v` but keep
+//                                 the constraint.
 FilterAssertionResult UpdateStrictUpperBound(const Variable& var,
                                              const double v, Box* const box) {
   switch (var.get_type()) {
@@ -118,7 +121,8 @@ FilterAssertionResult UpdateStrictUpperBound(const Variable& var,
                               box);
     case Variable::Type::INTEGER:
     case Variable::Type::BINARY:
-      return UpdateUpperBound(var, v - 1, box);
+      UpdateUpperBound(var, v, box);
+      return FilterAssertionResult::NotFiltered;
     case Variable::Type::BOOLEAN:
       DREAL_UNREACHABLE();
   }
@@ -131,7 +135,6 @@ class AssertionFilter {
     return Visit(f, box, true);
   }
 
- public:
   FilterAssertionResult Visit(const Formula& f, Box* const box,
                               const bool polarity) const {
     return VisitFormula<FilterAssertionResult>(this, f, box, polarity);
