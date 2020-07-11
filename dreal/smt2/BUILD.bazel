@@ -51,6 +51,7 @@ dreal_cc_library(
         "term.h",
     ],
     deps = [
+        ":sort",
         "//dreal/symbolic",
         "//dreal/util:exception",
     ],

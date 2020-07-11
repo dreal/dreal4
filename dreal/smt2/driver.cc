@@ -3,8 +3,11 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <utility>
+
+#include "fmt/format.h"
 
 #include "dreal/smt2/scanner.h"
 #include "dreal/util/optional.h"
@@ -20,16 +23,47 @@ using std::istream;
 using std::istringstream;
 using std::ostream;
 using std::ostringstream;
+using std::runtime_error;
 using std::string;
+using std::vector;
+
+namespace {}  // namespace
+
+FunctionDefinition::FunctionDefinition(vector<Variable> parameters,
+                                       Sort return_type, Term body)
+    : parameters_{std::move(parameters)},
+      return_type_{return_type},
+      body_{std::move(body)} {}
+
+Term FunctionDefinition::operator()(const vector<Term>& arguments) const {
+  if (parameters_.size() != arguments.size()) {
+    throw runtime_error{
+        fmt::format("This function definition expects {} arguments whereas the "
+                    "provided arguments are of length {}.",
+                    parameters_.size(), arguments.size())};
+  }
+
+  body_.Check(return_type_);
+  Term t = body_;
+  for (size_t i = 0; i < parameters_.size(); ++i) {
+    // TODO(soonho): check sort of param_i == sort of arg_i
+    const Variable& param_i{parameters_[i]};
+    const Term& arg_i{arguments[i]};
+    arg_i.Check(param_i.get_type());
+    t = t.Substitute(param_i, arg_i);
+  }
+
+  return t;
+}
 
 Smt2Driver::Smt2Driver(Context context) : context_{std::move(context)} {}
 
 bool Smt2Driver::parse_stream(istream& in, const string& sname) {
   streamname_ = sname;
 
-  Smt2Scanner scanner(&in);
-  scanner.set_debug(trace_scanning_);
-  this->scanner_ = &scanner;
+  Smt2Scanner new_scanner(&in);
+  new_scanner.set_debug(trace_scanning_);
+  this->scanner = &new_scanner;
 
   Smt2Parser parser(*this);
   parser.set_debug_level(trace_parsing_);
@@ -93,10 +127,18 @@ ostream& PrintModel(ostream& os, const Box& box) {
     }
     os << " ";
     const Box::Interval& iv{box[i]};
-    if (iv.is_degenerated()) {
-      os << iv.lb();
+    if (var.get_type() == Variable::Type::BOOLEAN) {
+      if (iv == iv.ONE) {
+        os << "true";
+      } else if (iv == iv.ZERO) {
+        os << "false";
+      }
     } else {
-      os << iv;
+      if (iv.is_degenerated()) {
+        os << iv.lb();
+      } else {
+        os << iv;
+      }
     }
     os << ")\n";
   }
@@ -130,11 +172,28 @@ void Smt2Driver::DeclareVariable(const string& name, const Sort sort,
   context_.DeclareVariable(v, lb.expression(), ub.expression());
 }
 
+void Smt2Driver::DefineFun(const string& name,
+                           const vector<Variable>& parameters, Sort return_type,
+                           const Term& body) {
+  FunctionDefinition func{parameters, return_type, body};
+  function_definition_map_.insert(name, func);
+}
+
 string Smt2Driver::MakeUniqueName(const string& name) {
   ostringstream oss;
   // The \ character ensures that the name cannot occur in an SMT-LIBv2 file.
   oss << "L" << nextUniqueId_++ << "\\" << name;
   return oss.str();
+}
+
+Term Smt2Driver::LookupFunction(const string& name,
+                                const vector<Term>& arguments) {
+  const auto it = function_definition_map_.find(name);
+  if (it != function_definition_map_.end()) {
+    return it->second(arguments);
+  } else {
+    throw runtime_error{fmt::format("No function definition for {}.", name)};
+  }
 }
 
 Variable Smt2Driver::DeclareLocalVariable(const string& name, const Sort sort) {

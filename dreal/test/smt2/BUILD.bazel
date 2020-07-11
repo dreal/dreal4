@@ -193,6 +193,21 @@ smt2_test(
 )
 
 smt2_test(
+    name = "define_fun_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "define_fun_02",
+    size = "small",
+)
+
+smt2_test(
+    name = "define_fun_03",
+    size = "small",
+)
+
+smt2_test(
     name = "dzufferey_01",
     size = "small",
 )

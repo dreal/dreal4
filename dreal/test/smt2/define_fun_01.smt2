@@ -1,0 +1,7 @@
+(set-logic QF_NRA)
+(set-option :produce-models true)
+(declare-const z Real)
+(define-fun plus_one ((y Real)) Real (+ y 1))
+(assert (= (plus_one 4) z))
+(check-sat)
+(get-model)

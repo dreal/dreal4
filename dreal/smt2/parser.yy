@@ -76,6 +76,8 @@
     std::pair<Variables, Formula>*        forallVariablesVal;
     std::pair<std::string, Term>*              letBindVal;
     std::vector<std::pair<std::string, Term>>* letBindsVal;
+    Variable*                 nameSortVal;
+    std::vector<Variable>*    nameSortListVal;
 }
 
 %token TK_EXCLAMATION TK_BINARY TK_DECIMAL TK_HEXADECIMAL TK_NUMERAL TK_STRING
@@ -113,6 +115,9 @@
 %type <letBindsVal>   var_binding_list
 %type <letBindVal>    var_binding
 
+%type <nameSortVal>     name_sort
+%type <nameSortListVal> name_sort_list
+
 %destructor { delete $$; } DOUBLE SYMBOL KEYWORD STRING
 %destructor { delete $$; } term term_list variable_sort_list variable_sort var_binding_list var_binding
 
@@ -125,7 +130,7 @@
  * object. it defines the yylex() function call to pull the next token from the
  * current lexer object of the driver context. */
 #undef yylex
-#define yylex driver.scanner_->lex
+#define yylex driver.scanner->lex
 
 %}
 
@@ -142,6 +147,7 @@ command:
                 command_assert
         |       command_check_sat
         |       command_declare_fun
+        |       command_define_fun
         |       command_exit
         |       command_get_model
         |       command_maximize
@@ -186,6 +192,15 @@ command_declare_fun:
                     delete $3;
                     delete $6;
                     delete $8;
+                }
+                ;
+
+command_define_fun:
+                '(' TK_DEFINE_FUN SYMBOL enter_scope '(' name_sort_list ')' sort term exit_scope ')' {
+                    driver.DefineFun(*$3, *$6, $8, *$9);
+                    delete $3;
+                    delete $6;
+                    delete $9;
                 }
                 ;
 
@@ -508,6 +523,13 @@ term:           TK_TRUE { $$ = new Term(Formula::True()); }
             delete $3;
             delete $4;
             }
+       |       '(' SYMBOL term_list ')' {
+            $$ = new Term{driver.LookupFunction(*$2, *$3)};
+            delete $2;
+            delete $3;
+
+        }
+
         ;
 
 let_binding_list: '(' var_binding_list ')' {
@@ -539,6 +561,22 @@ exit_scope: /* */ {
             driver.PopScope();
         }
         ;
+
+name_sort: '(' SYMBOL sort ')' {
+            $$ = new Variable{driver.DeclareLocalVariable(*$2, $3)};
+            delete $2;
+        }
+        ;
+
+name_sort_list: /* empty list */ { $$ = new std::vector<Variable>{}; }
+        |       name_sort name_sort_list {
+            const Variable& v = *$1;
+	    $2->push_back(v);
+            delete $1;
+	    $$ = $2;
+        }
+        ;
+
 
 variable_sort_list: /* empty list */ { $$ = new std::pair<Variables, Formula>(Variables{}, Formula::True()); }
         |       variable_sort variable_sort_list {

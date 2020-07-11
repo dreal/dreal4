@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "dreal/smt2/sort.h"
 #include "dreal/symbolic/symbolic.h"
 
 /// Sum type of symbolic::Expression and symbolic::Formula.
@@ -49,6 +50,18 @@ class Term {
   /// Returns the formula inside.
   /// @throw runtime_error if it does not include a formula.
   Formula& mutable_formula();
+
+  /// Creates a new term which substitutes the variable `v` in this term with
+  /// `t`.
+  Term Substitute(const Variable& v, const Term& t);
+
+  /// Checks if this term can be matched with `s`. Throws std::runtime_error if
+  /// `s` is mismatched.
+  void Check(Sort s) const;
+
+  /// Checks if this term can be matched with `t`. Throws std::runtime_error if
+  /// `t` is mismatched.
+  void Check(Variable::Type t) const;
 
  private:
   Type type_;

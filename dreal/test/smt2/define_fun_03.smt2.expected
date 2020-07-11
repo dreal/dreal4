@@ -1,0 +1,11 @@
+delta-sat with delta = 0.001
+r1 : True
+r2 : False
+r3 : False
+r4 : False
+(model
+  (define-fun r1 () Bool true)
+  (define-fun r2 () Bool false)
+  (define-fun r3 () Bool false)
+  (define-fun r4 () Bool false)
+)

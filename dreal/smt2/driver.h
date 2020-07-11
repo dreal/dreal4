@@ -4,10 +4,25 @@
 
 #include "dreal/smt2/location.hh"
 #include "dreal/smt2/scanner.h"
+#include "dreal/smt2/sort.h"
+#include "dreal/smt2/term.h"
 #include "dreal/solver/context.h"
 #include "dreal/util/scoped_unordered_map.h"
 
 namespace dreal {
+
+class FunctionDefinition {
+ public:
+  FunctionDefinition(std::vector<Variable> parameters, Sort return_type,
+                     Term body);
+
+  Term operator()(const std::vector<Term>& arguments) const;
+
+ private:
+  std::vector<Variable> parameters_;
+  Sort return_type_;
+  Term body_;
+};
 
 /** The Smt2Driver class brings together all components. It creates an
  * instance of the Parser and Scanner classes and connects them. Then
@@ -76,6 +91,11 @@ class Smt2Driver {
   /// cannot occur in an SMT-LIBv2 file.
   Variable DeclareLocalVariable(const std::string& name, Sort sort);
 
+  /// TODO
+  void DefineFun(const std::string& name,
+                 const std::vector<Variable>& parameters, Sort return_type,
+                 const Term& body);
+
   /// Returns a representation of a model computed by the solver in
   /// response to an invocation of the check-sat.
   void GetModel();
@@ -85,9 +105,18 @@ class Smt2Driver {
   /// @throws if no variable is associated with @p name.
   const Variable& lookup_variable(const std::string& name);
 
-  void PushScope() { scope_.push(); }
+  void PushScope() {
+    scope_.push();
+    function_definition_map_.push();
+  }
 
-  void PopScope() { scope_.pop(); }
+  void PopScope() {
+    function_definition_map_.pop();
+    scope_.pop();
+  }
+
+  Term LookupFunction(const std::string& name,
+                      const std::vector<Term>& arguments);
 
   static Variable ParseVariableSort(const std::string& name, Sort s);
 
@@ -105,7 +134,7 @@ class Smt2Driver {
 
   /** Pointer to the current scanenr instance, this is used to connect the
    * parser to the scanner. It is used in the yylex macro. */
-  Smt2Scanner* scanner_{nullptr};
+  Smt2Scanner* scanner{nullptr};
 
  private:
   /// enable debug output in the flex scanner
@@ -116,6 +145,9 @@ class Smt2Driver {
 
   /** Scoped map from a string to a corresponding Variable. */
   ScopedUnorderedMap<std::string, Variable> scope_;
+
+  /** Scoped map from a string to a corresponding Variable. */
+  ScopedUnorderedMap<std::string, FunctionDefinition> function_definition_map_;
 
   /// Sequential value concatenated to names to make them unique.
   int64_t nextUniqueId_{};
