@@ -91,7 +91,7 @@ class Smt2Driver {
   /// cannot occur in an SMT-LIBv2 file.
   Variable DeclareLocalVariable(const std::string& name, Sort sort);
 
-  /// TODO
+  /// Handles define-fun.
   void DefineFun(const std::string& name,
                  const std::vector<Variable>& parameters, Sort return_type,
                  const Term& body);

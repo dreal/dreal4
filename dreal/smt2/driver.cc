@@ -46,7 +46,6 @@ Term FunctionDefinition::operator()(const vector<Term>& arguments) const {
   body_.Check(return_type_);
   Term t = body_;
   for (size_t i = 0; i < parameters_.size(); ++i) {
-    // TODO(soonho): check sort of param_i == sort of arg_i
     const Variable& param_i{parameters_[i]};
     const Term& arg_i{arguments[i]};
     arg_i.Check(param_i.get_type());
