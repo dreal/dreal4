@@ -75,7 +75,7 @@ while ¬Q.empty() ∧ ¬TermCond(b, b'):
 void ContractorWorklistFixpoint::Prune(ContractorStatus* cs) const {
   // worklist[i] means that i-th contractor in contractors_ needs to be
   // applied.
-  DynamicBitset worklist{contractors_.size()};
+  DynamicBitset worklist(contractors_.size());
   const int branching_point = cs->branching_point();
 
   // DREAL_LOG_ERROR("ContractorWorklistFixpoint::Prune -- Fill the Queue");

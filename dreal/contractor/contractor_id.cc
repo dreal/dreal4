@@ -5,8 +5,7 @@ using std::ostream;
 namespace dreal {
 ContractorId::ContractorId(const Config& config)
     : ContractorCell{Contractor::Kind::ID,
-                     DynamicBitset{1} /* this is meaningless */, config} {
-}
+                     DynamicBitset(1) /* this is meaningless */, config} {}
 
 void ContractorId::Prune(ContractorStatus*) const {
   // No op.
