@@ -9,7 +9,7 @@
 
 namespace dreal {
 
-/// TODO(soonho): Add documentation.
+/// Contractor status
 class ContractorStatus {
  public:
   ContractorStatus() = delete;
