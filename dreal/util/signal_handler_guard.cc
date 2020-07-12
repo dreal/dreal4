@@ -5,11 +5,10 @@
 
 namespace dreal {
 
-using std::atomic_bool;
 using std::runtime_error;
 
 SignalHandlerGuard::SignalHandlerGuard(const int sig, handler_t handler,
-                                       volatile atomic_bool* flag)
+                                       volatile std::atomic_bool* flag)
     : sig_{sig}, flag_{flag}, old_action_{} {
   // Register the new handler and save the current one.
   sigaction_t new_action{};
