@@ -187,7 +187,7 @@ simple_symbol   {sym_begin}{sym_continue}*
     try {
         static_assert(sizeof(std::int64_t) == sizeof(long),
 	              "sizeof(std::int64_t) != sizeof(long).");
-        yylval->int64Val = std::stol(yytext);
+        yylval->build<int64_t>(std::stol(yytext));
         return token::INT;
     } catch(std::out_of_range& e) {
         std::cerr << "At line " << yylloc->begin.line
@@ -198,27 +198,27 @@ simple_symbol   {sym_begin}{sym_continue}*
 }
 
 [-+]?((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {
-    yylval->doubleVal = new std::string(yytext, yyleng);
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::DOUBLE;
 }
 
 [-+]?((([0-9]+)|([0-9]+\.)))                            {
-    yylval->doubleVal = new std::string(yytext, yyleng);
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::DOUBLE;
 }
 
 [-+]?0[xX]({hex}+\.?|{hex}*\.{hex}+)([pP][-+]?[0-9]+)? {
-    yylval->hexfloatVal = std::stod(yytext);
+    yylval->build<double>(std::stod(yytext));
     return token::HEXFLOAT;
 }
 
 {simple_symbol} {
-    yylval->stringVal = new std::string(yytext, yyleng);
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::SYMBOL;
 }
 
 ":"{simple_symbol} {
-    yylval->stringVal = new std::string(yytext, yyleng);;
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::KEYWORD;
 }
 
@@ -227,7 +227,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 <str>[\n\r]+            { yymore(); }
 <str>\"                 {
     BEGIN 0;
-    yylval->stringVal = new std::string(yytext, yyleng);;
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::STRING;
 }
 <str>.                  { yymore(); }
@@ -236,7 +236,7 @@ simple_symbol   {sym_begin}{sym_continue}*
 <quoted>[\n\r]+         { yymore(); }
 <quoted>\|              {
     BEGIN 0;
-    yylval->stringVal = new std::string(yytext, yyleng);;
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::SYMBOL;
 }
 <quoted>\\              { }
