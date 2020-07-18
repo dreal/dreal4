@@ -11,6 +11,9 @@ class Term {
  public:
   enum class Type { EXPRESSION, FORMULA };
 
+  /// Default Constructor. It constructs Term(false).
+  Term();
+
   /// Construct a term with @p e.
   explicit Term(Expression e);
 
