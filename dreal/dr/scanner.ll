@@ -133,22 +133,22 @@ dr_yycolumn += yyleng;
 }
 
 (0|[1-9][0-9]*) {
-    yylval->doubleVal = std::stod(yytext);
+    yylval->build<double>(std::stod(yytext));
     return token::DOUBLE;
 }
 
 ((([0-9]+)|([0-9]*\.?[0-9]+))([eE][-+]?[0-9]+)?)   {
-    yylval->doubleVal = std::stod(yytext);
+    yylval->build<double>(std::stod(yytext));
     return token::DOUBLE;
 }
 
 ((([0-9]+)|([0-9]+\.)))                            {
-    yylval->doubleVal = std::stod(yytext);
+    yylval->build<double>(std::stod(yytext));
     return token::DOUBLE;
 }
 
 [a-zA-Z]([a-zA-Z0-9_\.])* {
-    yylval->stringVal = new std::string(yytext, yyleng);
+    yylval->build<std::string>(std::string(yytext, yyleng));
     return token::ID;
 }
 

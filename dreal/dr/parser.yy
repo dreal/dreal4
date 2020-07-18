@@ -15,12 +15,10 @@
 
 /*** yacc/bison Declarations ***/
 
-/* Require bison 2.3 or later */
-%require "2.3"
+/* Require bison 3.0.4 or later */
+%require "3.0.4"
 
-/* add debug output code to generated parser. disable this for release
- * versions. */
-%debug
+%define parse.trace
 
 /* start symbol is named "script" */
 %start script
@@ -28,8 +26,7 @@
 /* write out a header file containing the token defines */
 %defines
 
-/* /\* use newer C++ skeleton file *\/ */
-%skeleton "lalr1.cc"
+%language "c++"
 
 /* namespace to enclose parser in */
 %define api.prefix {dreal}
@@ -53,14 +50,7 @@
 /* verbose error messages */
 %define parse.error verbose
 
-
-%union
-{
-    double                    doubleVal;
-    std::string*              stringVal;
-    Expression*               exprVal;
-    Formula*                  formulaVal;
-}
+%define api.value.type variant
 
 %token TK_VAR TK_COST TK_PREC TK_CTR
 
@@ -73,14 +63,11 @@
 %token TK_LB TK_RB TK_COLON TK_COMMA TK_SEMICOLON
 
 %token                 END          0        "end of file"
-%token <doubleVal>     DOUBLE                "double"
-%token <stringVal>     ID                    "identifier"
+%token <double>        DOUBLE                "double"
+%token <std::string>   ID                    "identifier"
 
-%type <exprVal>        expr
-%type <formulaVal>     formula
-
-%destructor { delete $$; } ID
-%destructor { delete $$; } expr formula
+%type <Expression>     expr
+%type <Formula>        formula
 
 %nonassoc TK_EQ TK_NEQ TK_LT TK_LEQ TK_GT TK_GEQ
 %left TK_PLUS TK_MINUS
@@ -127,15 +114,10 @@ var_decl_list:  var_decl
         ;
 
 var_decl:       TK_LB expr TK_COMMA expr TK_RB ID TK_SEMICOLON {
-                    driver.DeclareVariable(Variable{*$6, Variable::Type::CONTINUOUS}, $2->Evaluate(), $4->Evaluate());
-                    delete $2;
-                    delete $4;
-                    delete $6;
+                    driver.DeclareVariable(Variable{$6, Variable::Type::CONTINUOUS}, $2.Evaluate(), $4.Evaluate());
                 }
         |       expr ID TK_SEMICOLON {
-                    driver.DeclareVariable(Variable{*$2, Variable::Type::CONTINUOUS}, $1->Evaluate(), $1->Evaluate());
-                    delete $1;
-                    delete $2;
+                    driver.DeclareVariable(Variable{$2, Variable::Type::CONTINUOUS}, $1.Evaluate(), $1.Evaluate());
         }
         ;
 
@@ -154,8 +136,7 @@ ctr_decl_list:  ctr_decl
         ;
 
 ctr_decl:        formula TK_SEMICOLON {
-                     driver.Assert(*$1);
-                     delete $1;
+                     driver.Assert($1);
         }
         ;
 
@@ -171,8 +152,7 @@ cost_decl_list:  cost_decl
 	;
 
 cost_decl:     expr TK_SEMICOLON {
-                     driver.Minimize(*$1);
-                     delete $1;
+                     driver.Minimize($1);
         }
         ;
 
@@ -180,154 +160,55 @@ cost_decl:     expr TK_SEMICOLON {
 // Formula
 // =======
 formula:
-                expr TK_EQ expr { $$ = new Formula(*$1 == *$3); delete $1; delete $3; }
-        |       expr TK_LT expr { $$ = new Formula(*$1 < *$3); delete $1; delete $3; }
-        |       expr TK_LTE expr { $$ = new Formula(*$1 <= *$3); delete $1; delete $3; }
-        |       expr TK_GT expr { $$ = new Formula(*$1 > *$3); delete $1; delete $3; }
-        |       expr TK_GTE expr { $$ = new Formula(*$1 >= *$3); delete $1; delete $3; }
-        |       formula TK_AND formula {
-            $$ = new Formula(*$1 && *$3);
-            delete $1;
-            delete $3;
-        }
-        |       formula TK_OR formula {
-            $$ = new Formula(*$1 || *$3);
-            delete $1;
-            delete $3;
-        }
-        |       formula TK_IMPLIES formula {
-            $$ = new Formula(!*$1 || *$3);
-            delete $1;
-            delete $3;
-        }
-        |       TK_NOT formula {
-            $$ = new Formula(!*$2);
-            delete $2;
-        }
-        |       '(' formula ')' {
-            $$ = $2;
-        }
+                expr TK_EQ expr            { $$ = $1 == $3; }
+        |       expr TK_LT expr            { $$ = $1 < $3; }
+        |       expr TK_LTE expr           { $$ = $1 <= $3; }
+        |       expr TK_GT expr            { $$ = $1 > $3; }
+        |       expr TK_GTE expr           { $$ = $1 >= $3; }
+        |       formula TK_AND formula     { $$ = $1 && $3; }
+        |       formula TK_OR formula      { $$ = $1 || $3; }
+        |       formula TK_IMPLIES formula { $$ = !$1 || $3; }
+        |       TK_NOT formula             { $$ = !$2; }
+        |       '(' formula ')'            { $$ = $2; }
         ;
 
 // ==========
 // Expression
 // ==========
-expr:           DOUBLE { $$ = new Expression{$1}; }
+expr:           DOUBLE { $$ = $1; }
         |       ID {
 	    try {
-		const Variable& var = driver.lookup_variable(*$1);
-	        $$ = new Expression{var};
+		const Variable& var = driver.lookup_variable($1);
+	        $$ = var;
             } catch (std::runtime_error& e) {
 		std::cerr << @1 << " : " << e.what() << std::endl;
-		delete $1;		
 		YYABORT;
 	    }
-	    delete $1;		
 	}
-        |       expr TK_PLUS expr {
-            $$ = new Expression(*$1 + *$3);
-            delete $1;
-            delete $3;
-        }
-        |       TK_MINUS expr %prec UMINUS {
-            $$ = new Expression{-*$2};
-            delete $2;
-        }
-        |       expr TK_MINUS expr {
-            $$ = new Expression(*$1 - *$3);
-            delete $1;
-            delete $3;
-        }
-        |       expr TK_TIMES expr {
-            $$ = new Expression(*$1 * *$3);
-            delete $1;
-            delete $3;
-        }
-        |       expr TK_DIV expr {
-            $$ = new Expression(*$1 / *$3);
-            delete $1;
-            delete $3;
-        }
-        |       TK_EXP '(' expr ')' {
-            $$ = new Expression{exp(*$3)};
-            delete $3;
-        }
-        |       TK_LOG '(' expr ')' {
-            $$ = new Expression{log(*$3)};
-            delete $3;
-        }
-        |       TK_ABS '(' expr ')' {
-            $$ = new Expression{abs(*$3)};
-            delete $3;
-        }
-        |       TK_SIN '(' expr ')' {
-            $$ = new Expression{sin(*$3)};
-            delete $3;
-            }
-        |       TK_COS '(' expr ')' {
-            $$ = new Expression{cos(*$3)};
-            delete $3;
-            }
-        |       TK_TAN '(' expr ')' {
-            $$ = new Expression{tan(*$3)};
-            delete $3;
-            }
-        |       TK_ASIN '(' expr ')' {
-            $$ = new Expression{asin(*$3)};
-            delete $3;
-            }
-        |       TK_ACOS '(' expr ')' {
-            $$ = new Expression{acos(*$3)};
-            delete $3;
-            }
-        |       TK_ATAN '(' expr ')' {
-            $$ = new Expression{atan(*$3)};
-            delete $3;
-            }
-        |       TK_ATAN2 '(' expr TK_COMMA expr ')' {
-            $$ = new Expression{atan2(*$3, *$5)};
-            delete $3;
-            delete $5;
-            }
-        |       TK_SINH '(' expr ')' {
-            $$ = new Expression{sinh(*$3)};
-            delete $3;
-            }
-        |       TK_COSH '(' expr ')' {
-            $$ = new Expression{cosh(*$3)};
-            delete $3;
-            }
-        |       TK_TANH '(' expr ')' {
-            $$ = new Expression{tanh(*$3)};
-            delete $3;
-            }
-        |       TK_MIN '(' expr TK_COMMA expr ')' {
-            $$ = new Expression{min(*$3, *$5)};
-            delete $3;
-            delete $5;
-            }
-        |       TK_MAX '(' expr TK_COMMA expr ')' {
-            $$ = new Expression{max(*$3, *$5)};
-            delete $3;
-            delete $5;
-            }
-        |       TK_SQRT '(' expr ')' {
-            $$ = new Expression{sqrt(*$3)};
-            delete $3;
-            }
-        |       TK_POW '(' expr TK_COMMA expr ')' {
-            $$ = new Expression{pow(*$3, *$5)};
-            delete $3;
-            delete $5;
-            }
-        |       expr TK_CARET expr {
-            $$ = new Expression{pow(*$1, *$3)};
-            delete $1;
-            delete $3;
-            }
-        |       '(' expr ')' {
-            $$ = $2;
-        }
+        |       expr TK_PLUS expr                   { $$ = $1 + $3; }
+        |       TK_MINUS expr %prec UMINUS          { $$ = -$2; }
+        |       expr TK_MINUS expr                  { $$ = $1 - $3; }
+        |       expr TK_TIMES expr                  { $$ = $1 * $3; }
+        |       expr TK_DIV   expr                  { $$ = $1 / $3; }
+        |       TK_EXP '(' expr ')'                 { $$ = exp($3); }
+        |       TK_LOG '(' expr ')'                 { $$ = log($3); }
+        |       TK_ABS '(' expr ')'                 { $$ = abs($3); }
+        |       TK_SIN '(' expr ')'                 { $$ = sin($3); }
+        |       TK_COS '(' expr ')'                 { $$ = cos($3); }
+        |       TK_TAN '(' expr ')'                 { $$ = tan($3); }
+        |       TK_ASIN '(' expr ')'                { $$ = asin($3); }
+        |       TK_ACOS '(' expr ')'                { $$ = acos($3); }
+        |       TK_ATAN '(' expr ')'                { $$ = atan($3); }
+        |       TK_ATAN2 '(' expr TK_COMMA expr ')' { $$ = atan2($3, $5); }
+        |       TK_SINH '(' expr ')'                { $$ = sinh($3); }
+        |       TK_COSH '(' expr ')'                { $$ = cosh($3); }
+        |       TK_TANH '(' expr ')'                { $$ = tanh($3); }
+        |       TK_MIN '(' expr TK_COMMA expr ')'   { $$ = min($3, $5); }
+        |       TK_MAX '(' expr TK_COMMA expr ')'   { $$ = max($3, $5); }
+        |       TK_SQRT '(' expr ')'                { $$ = sqrt($3); }
+        |       TK_POW '(' expr TK_COMMA expr ')'   { $$ = pow($3, $5); }
+        |       expr TK_CARET expr                  { $$ = pow($1, $3); }
+        |       '(' expr ')'                        { $$ = $2; }
         ;
 
 %% /*** Additional Code ***/
