@@ -37,6 +37,10 @@ const Formula& Term::formula() const {
   return f_;
 }
 
+Term& Term::operator=(Expression e) { return *this = Term{std::move(e)}; }
+
+Term& Term::operator=(Formula f) { return *this = Term{std::move(f)}; }
+
 Formula& Term::mutable_formula() { return const_cast<Formula&>(formula()); }
 
 Term Term::Substitute(const Variable& v, const Term& t) {
