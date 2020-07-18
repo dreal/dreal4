@@ -35,6 +35,12 @@ class Term {
   /// Default destructor.
   ~Term() = default;
 
+  /// Assignment operator.
+  Term& operator=(Expression e);
+
+  /// Assignment operator.
+  Term& operator=(Formula f);
+
   /// Returns its type.
   Type type() const;
 
