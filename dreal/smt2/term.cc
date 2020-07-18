@@ -13,6 +13,7 @@ namespace dreal {
 using std::ostream;
 using std::runtime_error;
 
+Term::Term() : Term{Formula::False()} {}
 Term::Term(Expression e) : type_{Term::Type::EXPRESSION}, e_{std::move(e)} {}
 Term::Term(Formula f) : type_{Term::Type::FORMULA}, f_{std::move(f)} {}
 
