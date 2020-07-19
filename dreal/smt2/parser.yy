@@ -182,6 +182,7 @@ command_define_fun:
 
 command_exit:   '('TK_EXIT ')' {
                     driver.mutable_context().Exit();
+		    YYACCEPT;
                 }
                 ;
 
