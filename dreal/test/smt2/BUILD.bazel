@@ -1064,6 +1064,26 @@ smt2_test(
 )
 
 smt2_test(
+    name = "github_issue_180",
+    size = "small",
+)
+
+smt2_test(
+    name = "github_issue_181",
+    size = "small",
+)
+
+smt2_test(
+    name = "github_issue_182",
+    size = "small",
+)
+
+smt2_test(
+    name = "github_issue_183",
+    size = "small",
+)
+
+smt2_test(
     name = "github_issue_184",
     size = "small",
 )

@@ -347,9 +347,15 @@ term:           TK_TRUE { $$ = Formula::True(); }
             }
         }
         |       '(' TK_FORALL enter_scope '(' variable_sort_list ')' term exit_scope ')' {
-            const Variables& vars = $5.first;
+	    const Variables& vars = $5.first;
             const Formula& domain = $5.second;
-            $$ = forall(vars, imply(domain, $7.formula()));
+	    const Formula body = Smt2Driver::EliminateBooleanVariables(vars, $7.formula());
+	    const Variables quantified_variables = intersect(vars, body.GetFreeVariables());
+	    if (quantified_variables.empty()) {
+	        $$ = body;
+	    } else {
+                $$ = forall(quantified_variables, imply(domain, body));
+	    }
         }
         |       '(' TK_LET enter_scope let_binding_list term exit_scope ')' {
             $$ = $5;

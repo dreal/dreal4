@@ -259,4 +259,16 @@ Variable Smt2Driver::ParseVariableSort(const string& name, const Sort s) {
   return Variable{name, SortToType(s)};
 }
 
+Formula Smt2Driver::EliminateBooleanVariables(const Variables& vars,
+                                              const Formula& f) {
+  Formula ret{f};
+  for (const auto& b : vars) {
+    if (b.get_type() == Variable::Type::BOOLEAN) {
+      ret = ret.Substitute(b, Formula::True()) &&
+            ret.Substitute(b, Formula::False());
+    }
+  }
+  return ret;
+}
+
 }  // namespace dreal
