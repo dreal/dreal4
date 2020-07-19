@@ -38,9 +38,6 @@ typedef dreal::Smt2Parser::token_type token_type;
 /* change the name of the scanner class. results in "Smt2FlexLexer" */
 %option prefix="Smt2"
 
-/* the manual says "somewhat more optimized" */
-%option batch
-
 /* enable scanner to generate debug output. disable this for release
  * versions. */
 %option debug
