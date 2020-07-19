@@ -1,0 +1,5 @@
+(set-logic QF_NRA)
+(declare-const r2 Real)
+(assert (forall ((q0 Real) (q1 Bool) (q2 Real) (q3 Real)) (=> (= (/ 158251732.0 r2) (/ 158251732.0 r2)) q1)))
+(check-sat)
+(exit)
