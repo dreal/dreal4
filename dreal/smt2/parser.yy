@@ -128,6 +128,7 @@ command:
         |       command_define_fun
         |       command_exit
         |       command_get_model
+        |       command_get_value
         |       command_maximize
         |       command_minimize
         |       command_pop
@@ -189,6 +190,12 @@ command_exit:   '('TK_EXIT ')' {
 command_get_model:
                 '('TK_GET_MODEL ')' {
                     driver.GetModel();
+                }
+                ;
+
+command_get_value:
+                '(' TK_GET_VALUE '(' term_list ')' ')' {
+                    driver.GetValue($4);
                 }
                 ;
 

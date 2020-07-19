@@ -100,6 +100,10 @@ class Smt2Driver {
   /// response to an invocation of the check-sat.
   void GetModel();
 
+  /// `GetValue([t1, t2, ..., tn])` returns a list of values [v1, v2,
+  /// ..., vn] where v_i is equivalent to t_i in the current model.
+  void GetValue(const std::vector<Term>& term_list) const;
+
   /// Returns a variable associated with a name @p name.
   ///
   /// @throws if no variable is associated with @p name.

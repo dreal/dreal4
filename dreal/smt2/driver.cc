@@ -7,9 +7,12 @@
 #include <string>
 #include <utility>
 
-#include "fmt/format.h"
+#include <fmt/format.h>
+#include <fmt/ostream.h>
 
 #include "dreal/smt2/scanner.h"
+#include "dreal/solver/expression_evaluator.h"
+#include "dreal/symbolic/prefix_printer.h"
 #include "dreal/util/optional.h"
 
 namespace dreal {
@@ -25,6 +28,7 @@ using std::ostream;
 using std::ostringstream;
 using std::runtime_error;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 namespace {}  // namespace
@@ -152,6 +156,45 @@ void Smt2Driver::GetModel() {
   } else {
     PrintModel(cout, box) << endl;
   }
+}
+
+void Smt2Driver::GetValue(const vector<Term>& term_list) const {
+  const Box& box{context_.get_model()};
+  fmt::print("(\n");
+  for (const auto& term : term_list) {
+    string term_str;
+    string value_str;
+    stringstream ss;
+    PrefixPrinter pp{ss};
+
+    switch (term.type()) {
+      case Term::Type::EXPRESSION: {
+        const Expression& e{term.expression()};
+        const ExpressionEvaluator evaluator{e};
+        pp.Print(e);
+        term_str = ss.str();
+        value_str =
+            fmt::format("{}", ExpressionEvaluator(term.expression())(box));
+        break;
+      }
+      case Term::Type::FORMULA: {
+        const Formula& f{term.formula()};
+        pp.Print(f);
+        term_str = ss.str();
+        if (is_variable(f)) {
+          value_str =
+              box[get_variable(f)] == Box::Interval::ONE ? "true" : "false";
+        } else {
+          throw std::runtime_error(fmt::format(
+              "get-value does not handle a compound formula {}.", term_str));
+        }
+        break;
+      }
+    }
+
+    fmt::print("\t({} {})\n", term_str, value_str);
+  }
+  fmt::print(")\n");
 }
 
 Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {
