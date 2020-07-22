@@ -98,6 +98,9 @@ class Context {
   /// Sets an option @p key with a value @p val.
   void SetOption(const std::string& key, const std::string& val);
 
+  /// Gets the associated value for @p key.
+  optional<std::string> GetOption(const std::string& key) const;
+
   /// Returns a const reference of configuration.
   const Config& config() const;
 

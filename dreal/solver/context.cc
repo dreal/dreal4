@@ -91,6 +91,10 @@ void Context::SetOption(const string& key, const string& val) {
   impl_->SetOption(key, val);
 }
 
+optional<string> Context::GetOption(const string& key) const {
+  return impl_->GetOption(key);
+}
+
 const Config& Context::config() const { return impl_->config(); }
 Config& Context::mutable_config() { return impl_->mutable_config(); }
 

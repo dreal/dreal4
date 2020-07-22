@@ -104,6 +104,9 @@ class Smt2Driver {
   /// ..., vn] where v_i is equivalent to t_i in the current model.
   void GetValue(const std::vector<Term>& term_list) const;
 
+  /// Handles `(get-option key)`.
+  void GetOption(const std::string& key) const;
+
   /// Returns a variable associated with a name @p name.
   ///
   /// @throws if no variable is associated with @p name.

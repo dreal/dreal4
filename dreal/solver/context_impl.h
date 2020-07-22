@@ -1,14 +1,14 @@
 #pragma once
 
-#include "dreal/solver/context.h"
-
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
+#include "dreal/solver/context.h"
 #include "dreal/solver/sat_solver.h"
 #include "dreal/solver/theory_solver.h"
+#include "dreal/util/optional.h"
 #include "dreal/util/scoped_vector.h"
 
 namespace dreal {
@@ -37,6 +37,7 @@ class Context::Impl {
   void SetLogic(const Logic& logic);
   void SetOption(const std::string& key, double val);
   void SetOption(const std::string& key, const std::string& val);
+  optional<std::string> GetOption(const std::string& key) const;
   const Config& config() const { return config_; }
   Config& mutable_config() { return config_; }
   const ScopedVector<Formula>& assertions() const;

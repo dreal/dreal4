@@ -136,6 +136,7 @@ command:
         |       command_set_info
         |       command_set_logic
         |       command_set_option
+        |       command_get_option
         ;
 
 command_assert: '('TK_ASSERT term ')' {
@@ -255,6 +256,14 @@ command_set_option:
                         .SetOption($3, "false");
                 }
                 ;
+
+command_get_option:
+                '(' TK_GET_OPTION KEYWORD ')' {
+                    driver
+                        .GetOption($3);
+                }
+                ;
+
 
 command_push:   '(' TK_PUSH INT ')' {
                     driver.mutable_context().Push(convert_int64_to_int($3));
