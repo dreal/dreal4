@@ -44,9 +44,9 @@ def get_python_bin(repository_ctx):
     python_bin = get_host_environ(repository_ctx, PYTHON_BIN_PATH)
     if python_bin != None:
         return python_bin
-    python_bin_path = which(repository_ctx, "python")
+    python_bin_path = which(repository_ctx, "python3")
     if python_bin_path == None:
-        auto_config_fail("Cannot find python in PATH, please make sure " +
+        auto_config_fail("Cannot find python3 in PATH, please make sure " +
                          "python is installed and add its directory in PATH, or --define " +
                          "%s='/something/else'.\nPATH=%s" % (
                              PYTHON_BIN_PATH,
