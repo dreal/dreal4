@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------
 # Optimization Benchmark in the following paper
