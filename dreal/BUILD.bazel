@@ -5,7 +5,6 @@ load(
     "DREAL_VERSION",
     "dreal_cc_binary",
     "dreal_cc_library",
-    "dreal_py_test",
     "dreal_pybind_library",
 )
 load("@rules_pkg//:pkg.bzl", "pkg_tar")
@@ -61,113 +60,10 @@ dreal_pybind_library(
     py_srcs = ["__init__.py"],
 )
 
-dreal_py_test(
-    name = "api_test_py",
-    srcs = [
-        "test/python/api_test.py",
-    ],
-    main = "test/python/api_test.py",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_py",
-    ],
-)
-
 # To test ODR (one definition rule).
 dreal_pybind_library(
     name = "odr_test_module_py",
     cc_srcs = ["odr_test_module_py.cc"],
-)
-
-dreal_py_test(
-    name = "odr_test_py",
-    srcs = [
-        "test/python/odr_test.py",
-    ],
-    main = "test/python/odr_test.py",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_py",
-        ":odr_test_module_py",
-    ],
-)
-
-dreal_py_test(
-    name = "util_test_py",
-    srcs = [
-        "test/python/util_test.py",
-    ],
-    main = "test/python/util_test.py",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_py",
-    ],
-)
-
-dreal_py_test(
-    name = "symbolic_test_py",
-    srcs = [
-        "test/python/symbolic_test.py",
-    ],
-    main = "test/python/symbolic_test.py",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_py",
-    ],
-)
-
-dreal_py_test(
-    name = "solver_test_py",
-    srcs = [
-        "test/python/solver_test.py",
-    ],
-    main = "test/python/solver_test.py",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_py",
-    ],
-)
-
-dreal_py_test(
-    name = "smt2_test_py",
-    srcs = [
-        "test/python/smt2_test.py",
-    ],
-    main = "test/python/smt2_test.py",
-    tags = [
-        "no_asan",
-        "no_lsan",
-        "no_tsan",
-        "no_ubsan",
-    ],
-    deps = [
-        ":dreal_py",
-    ],
 )
 
 # ----------------------
