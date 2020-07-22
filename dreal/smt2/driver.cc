@@ -154,7 +154,7 @@ ostream& PrintModel(ostream& os, const Box& box) {
 }
 }  // namespace
 
-void Smt2Driver::GetModel() {
+void Smt2Driver::GetModel() const {
   const Box& box{context_.get_model()};
   if (box.empty()) {
     cout << "(error \"model is not available\")" << endl;
