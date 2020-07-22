@@ -104,9 +104,9 @@ void Smt2Driver::CheckSat() {
     } else {
       cout << "delta-sat with delta = " << context_.config().precision()
            << "\n";
-    }
-    if (context_.config().produce_models()) {
-      cout << *model << endl;
+      if (context_.config().produce_models()) {
+        cout << *model << endl;
+      }
     }
   } else {
     cout << "unsat" << endl;
@@ -200,6 +200,15 @@ void Smt2Driver::GetValue(const vector<Term>& term_list) const {
     fmt::print("\t({} {})\n", term_str, value_str);
   }
   fmt::print(")\n");
+}
+
+void Smt2Driver::GetOption(const string& key) const {
+  const optional<string> value{context_.GetOption(key)};
+  if (value) {
+    fmt::print("{}\n", *value);
+  } else {
+    fmt::print("unsupported\n");
+  }
 }
 
 Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {

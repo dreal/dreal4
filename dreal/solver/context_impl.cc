@@ -351,6 +351,19 @@ void Context::Impl::SetOption(const string& key, const double val) {
   }
 }
 
+optional<string> Context::Impl::GetOption(const string& key) const {
+  DREAL_LOG_DEBUG("ContextImpl::GetOption({})");
+  const auto it = option_.find(key);
+  if (it != option_.end()) {
+    return it->second;
+  }
+  // Handle :precision as a special case.
+  if (key == ":precision") {
+    return fmt::format("{}", config_.precision());
+  }
+  return nullopt;
+}
+
 void Context::Impl::SetOption(const string& key, const string& val) {
   DREAL_LOG_DEBUG("ContextImpl::SetOption({} ↦ {})", key, val);
   option_[key] = val;
@@ -358,24 +371,24 @@ void Context::Impl::SetOption(const string& key, const string& val) {
     return config_.mutable_use_polytope().set_from_file(
         ParseBooleanOption(key, val));
   }
-  if (key == ":forall-polytope") {
+  if (key == ":forall-polytope" || key == "forall_polytope") {
     return config_.mutable_use_polytope_in_forall().set_from_file(
         ParseBooleanOption(key, val));
   }
-  if (key == ":local-optimization") {
+  if (key == ":local-optimization" || key == "local_optimization") {
     return config_.mutable_use_local_optimization().set_from_file(
         ParseBooleanOption(key, val));
   }
-  if (key == ":worklist-fixpoint") {
+  if (key == ":worklist-fixpoint" || key == ":worklist_fixpoint") {
     return config_.mutable_use_worklist_fixpoint().set_from_file(
         ParseBooleanOption(key, val));
   }
-  if (key == ":produce-models") {
+  if (key == ":produce-models" || key == ":produce_models") {
     return config_.mutable_produce_models().set_from_file(
         ParseBooleanOption(key, val));
   }
-  if (key == ":smt2-compliant") {
-    return config_.mutable_smt2_compliant().set_from_file(
+  if (key == ":smtlib2-compliant" || key == ":smtlib2_compliant") {
+    return config_.mutable_smtlib2_compliant().set_from_file(
         ParseBooleanOption(key, val));
   }
 }
