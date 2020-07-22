@@ -81,7 +81,7 @@ void MainProgram::AddOptions() {
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */,
-           "Strictly follow the smt2lib standard.\n", "--smt2-compliant");
+           "Strictly follow the smtlib2 standard.\n", "--smtlib2-compliant");
 
   opt_.add("false" /* Default */, false /* Required? */,
            0 /* Number of args expected. */,
@@ -287,10 +287,10 @@ void MainProgram::ExtractOptions() {
   }
 
   // --smt2-compliant
-  if (opt_.isSet("--smt2-compliant")) {
-    config_.mutable_smt2_compliant().set_from_command_line(true);
-    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --smt2-compliant = {}",
-                    config_.smt2_compliant());
+  if (opt_.isSet("--smtlib2-compliant")) {
+    config_.mutable_smtlib2_compliant().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --smtlib2-compliant = {}",
+                    config_.smtlib2_compliant());
   }
 
   // --polytope
