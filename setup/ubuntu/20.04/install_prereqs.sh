@@ -16,23 +16,13 @@ g++
 libfl-dev
 libibex-dev
 libnlopt-cxx-dev
+libpython3-dev
 pkg-config
+python3-distutils
+python3-minimal
 zlib1g-dev
 EOF
 )
-
-if [[ ! -e /usr/bin/python ]]; then
-    apt-get install -y --no-install-recommends python-is-python3
-fi
-
-dpkg -s python-is-python3 >/dev/null 2>&1 && apt-get install -y --no-install-recommends \
-						     libpython3-dev \
-						     python3-distutils \
-						     python3-minimal
-
-dpkg -s python-is-python2 >/dev/null 2>&1 && apt-get install -y --no-install-recommends \
-						     libpython2.7-dev \
-						     python2.7-minimal
 
 # Install bazel
 BAZEL_VERSION=3.4.1

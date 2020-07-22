@@ -16,7 +16,7 @@ flex
 g++
 libibex-dev
 libnlopt-dev
-libpython2.7-dev
+libpython3-dev
 pkg-config
 python-dev
 zlib1g-dev

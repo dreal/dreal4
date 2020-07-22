@@ -16,7 +16,7 @@ g++
 libfl-dev
 libibex-dev
 libnlopt-dev
-libpython2.7-dev
+libpython3-dev
 pkg-config
 python-minimal
 zlib1g-dev

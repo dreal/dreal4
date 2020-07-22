@@ -115,7 +115,14 @@ git clone https://github.com/dreal/dreal4 && cd dreal4
 sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh
 ```
 
-The `install_prereqs.sh` installs the following packages: [bazel](https://bazel.build), [bison](https://www.gnu.org/software/bison), [coinor-clp](https://projects.coin-or.org/Clp), [flex](https://www.gnu.org/software/flex), [ibex](https://github.com/ibex-team/ibex-lib), [nlopt](http://nlopt.readthedocs.io), [python2.7](https://www.python.org/downloads/release/python-2714/).
+The `install_prereqs.sh` installs the following packages: 
+[bazel](https://bazel.build), 
+[bison](https://www.gnu.org/software/bison), 
+[coinor-clp](https://projects.coin-or.org/Clp), 
+[flex](https://www.gnu.org/software/flex), 
+[ibex](https://github.com/ibex-team/ibex-lib), 
+[nlopt](http://nlopt.readthedocs.io), 
+[python](https://www.python.org).
 
 
 Build and Test
