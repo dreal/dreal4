@@ -57,9 +57,11 @@ OptionValue<bool>& Config::mutable_stack_left_box_first() {
   return stack_left_box_first_;
 }
 
-bool Config::smt2_compliant() const { return smt2_compliant_.get(); }
+bool Config::smtlib2_compliant() const { return smtlib2_compliant_.get(); }
 
-OptionValue<bool>& Config::mutable_smt2_compliant() { return smt2_compliant_; }
+OptionValue<bool>& Config::mutable_smtlib2_compliant() {
+  return smtlib2_compliant_;
+}
 
 const Config::Brancher& Config::brancher() const { return brancher_.get(); }
 

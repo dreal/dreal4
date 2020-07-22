@@ -99,7 +99,7 @@ void Smt2Driver::error(const string& m) { cerr << m << endl; }
 void Smt2Driver::CheckSat() {
   const optional<Box> model{context_.CheckSat()};
   if (model) {
-    if (context_.config().smt2_compliant()) {
+    if (context_.config().smtlib2_compliant()) {
       cout << "delta-sat\n";
     } else {
       cout << "delta-sat with delta = " << context_.config().precision()
