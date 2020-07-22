@@ -617,6 +617,17 @@ smt2_test(
 )
 
 smt2_test(
+    name = "option_smt2_compliant_01",
+    size = "small",
+)
+
+smt2_test(
+    name = "option_smt2_compliant_02",
+    size = "small",
+    options = ["--smt2-compliant"],
+)
+
+smt2_test(
     name = "osmosis-backoff",
     size = "small",
 )

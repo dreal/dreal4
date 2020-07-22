@@ -128,6 +128,12 @@ class Config {
   /// Returns a mutable OptionValue for `random_seed`.
   OptionValue<uint32_t>& mutable_random_seed();
 
+  /// Returns if it's smt2_compliant mode.
+  bool smt2_compliant() const;
+
+  /// Returns a mutable OptionValue for `smt2_compliant`.
+  OptionValue<bool>& mutable_smt2_compliant();
+
   /// @}
 
   static constexpr double kDefaultPrecision{0.001};
@@ -147,6 +153,7 @@ class Config {
   OptionValue<bool> use_local_optimization_{false};
   OptionValue<int> number_of_jobs_{1};
   OptionValue<bool> stack_left_box_first_{false};
+  OptionValue<bool> smt2_compliant_{false};
 
   // --------------------------------------------------------------------------
   // NLopt options (stopping criteria)
