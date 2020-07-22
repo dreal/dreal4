@@ -1,0 +1,109 @@
+load(
+    "//tools:dreal.bzl",
+    "dreal_py_test",
+)
+
+package(default_visibility = ["//visibility:private"])
+
+dreal_py_test(
+    name = "api_test",
+    srcs = [
+        "api_test.py",
+    ],
+    main = "api_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
+
+dreal_py_test(
+    name = "odr_test",
+    srcs = [
+        "odr_test.py",
+    ],
+    main = "odr_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+        "//dreal:odr_test_module_py",
+    ],
+)
+
+dreal_py_test(
+    name = "util_test",
+    srcs = [
+        "util_test.py",
+    ],
+    main = "util_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
+
+dreal_py_test(
+    name = "symbolic_test",
+    srcs = [
+        "symbolic_test.py",
+    ],
+    main = "symbolic_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
+
+dreal_py_test(
+    name = "solver_test",
+    srcs = [
+        "solver_test.py",
+    ],
+    main = "solver_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
+
+dreal_py_test(
+    name = "smt2_test",
+    srcs = [
+        "smt2_test.py",
+    ],
+    main = "smt2_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
