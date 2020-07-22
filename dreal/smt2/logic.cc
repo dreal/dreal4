@@ -20,11 +20,16 @@ Logic parse_logic(const string& s) {
   if (s == "QF_RDL") {
     return Logic::QF_RDL;
   }
+  if (s == "ALL") {
+    return Logic::ALL;
+  }
   throw DREAL_RUNTIME_ERROR("set-logic({}) is not supported.", s);
 }
 
 ostream& operator<<(ostream& os, const Logic& logic) {
   switch (logic) {
+    case Logic::ALL:
+      return os << "ALL";
     case Logic::QF_NRA:
       return os << "QF_NRA";
     case Logic::QF_NRA_ODE:
