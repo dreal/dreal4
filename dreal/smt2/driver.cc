@@ -20,7 +20,6 @@ namespace dreal {
 using std::cerr;
 using std::cin;
 using std::cout;
-using std::endl;
 using std::ifstream;
 using std::istream;
 using std::istringstream;
@@ -91,10 +90,10 @@ bool Smt2Driver::parse_string(const string& input, const string& sname) {
 }
 
 void Smt2Driver::error(const location& l, const string& m) {
-  cerr << l << " : " << m << endl;
+  cerr << l << " : " << m << "\n";
 }
 
-void Smt2Driver::error(const string& m) { cerr << m << endl; }
+void Smt2Driver::error(const string& m) { cerr << m << "\n"; }
 
 void Smt2Driver::CheckSat() {
   const optional<Box> model{context_.CheckSat()};
@@ -105,12 +104,13 @@ void Smt2Driver::CheckSat() {
       cout << "delta-sat with delta = " << context_.config().precision()
            << "\n";
       if (context_.config().produce_models()) {
-        cout << *model << endl;
+        cout << *model << "\n";
       }
     }
   } else {
-    cout << "unsat" << endl;
+    cout << "unsat\n";
   }
+  cout.flush();
 }
 
 namespace {
@@ -157,10 +157,11 @@ ostream& PrintModel(ostream& os, const Box& box) {
 void Smt2Driver::GetModel() const {
   const Box& box{context_.get_model()};
   if (box.empty()) {
-    cout << "(error \"model is not available\")" << endl;
+    cout << "(error \"model is not available\")\n";
   } else {
-    PrintModel(cout, box) << endl;
+    PrintModel(cout, box) << "\n";
   }
+  cout.flush();
 }
 
 void Smt2Driver::GetValue(const vector<Term>& term_list) const {
@@ -196,10 +197,10 @@ void Smt2Driver::GetValue(const vector<Term>& term_list) const {
         break;
       }
     }
-
     fmt::print("\t({} {})\n", term_str, value_str);
   }
   fmt::print(")\n");
+  cout.flush();
 }
 
 void Smt2Driver::GetOption(const string& key) const {
@@ -209,6 +210,7 @@ void Smt2Driver::GetOption(const string& key) const {
   } else {
     fmt::print("unsupported\n");
   }
+  cout.flush();
 }
 
 Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {
