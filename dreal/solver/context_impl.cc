@@ -374,6 +374,10 @@ void Context::Impl::SetOption(const string& key, const string& val) {
     return config_.mutable_produce_models().set_from_file(
         ParseBooleanOption(key, val));
   }
+  if (key == ":smt2-compliant") {
+    return config_.mutable_smt2_compliant().set_from_file(
+        ParseBooleanOption(key, val));
+  }
 }
 
 Box Context::Impl::ExtractModel(const Box& box) const {

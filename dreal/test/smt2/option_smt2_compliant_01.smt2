@@ -1,0 +1,7 @@
+(set-logic QF_NRA)
+(set-option :smt2-compliant true)
+(declare-const z Real)
+(define-fun minus ((x Real) (y Real)) Real (- x y))
+(assert (= (minus 4 3) z))
+(check-sat)
+(exit)
