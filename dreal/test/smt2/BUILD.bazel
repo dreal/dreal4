@@ -727,6 +727,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "set_logic_all",
+    size = "small",
+)
+
+smt2_test(
     name = "scungao_01",
     size = "small",
 )
