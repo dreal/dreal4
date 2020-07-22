@@ -98,7 +98,7 @@ class Smt2Driver {
 
   /// Returns a representation of a model computed by the solver in
   /// response to an invocation of the check-sat.
-  void GetModel();
+  void GetModel() const;
 
   /// `GetValue([t1, t2, ..., tn])` returns a list of values [v1, v2,
   /// ..., vn] where v_i is equivalent to t_i in the current model.
