@@ -30,8 +30,6 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-namespace {}  // namespace
-
 FunctionDefinition::FunctionDefinition(vector<Variable> parameters,
                                        Sort return_type, Term body)
     : parameters_{std::move(parameters)},
@@ -152,6 +150,16 @@ ostream& PrintModel(ostream& os, const Box& box) {
   }
   return os << ")";
 }
+
+// Returns the string representation of @p interval.
+// It returns `(exact c)` or `(interval lb ub)`.
+string ToString(const Box::Interval& interval) {
+  if (interval.lb() == interval.ub()) {
+    return fmt::format("(exact {})", interval.lb());
+  } else {
+    return fmt::format("(interval {} {})", interval.lb(), interval.ub());
+  }
+}
 }  // namespace
 
 void Smt2Driver::GetModel() const {
@@ -179,8 +187,8 @@ void Smt2Driver::GetValue(const vector<Term>& term_list) const {
         const ExpressionEvaluator evaluator{e};
         pp.Print(e);
         term_str = ss.str();
-        value_str =
-            fmt::format("{}", ExpressionEvaluator(term.expression())(box));
+        const Box::Interval iv{ExpressionEvaluator(term.expression())(box)};
+        value_str = fmt::format("{}", ToString(iv));
         break;
       }
       case Term::Type::FORMULA: {
