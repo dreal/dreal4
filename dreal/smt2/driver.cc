@@ -9,6 +9,7 @@
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+#include <gmpxx.h>
 
 #include "dreal/smt2/scanner.h"
 #include "dreal/solver/expression_evaluator.h"
@@ -151,13 +152,23 @@ ostream& PrintModel(ostream& os, const Box& box) {
   return os << ")";
 }
 
+string ToRational(const double d) {
+  const mpq_class r{d};
+  if (r.get_den() == 1) {
+    return fmt::format("{}", r.get_num());
+  } else {
+    return fmt::format("({} / {})", r.get_num(), r.get_den());
+  }
+}
+
 // Returns the string representation of @p interval.
 // It returns `(exact c)` or `(interval lb ub)`.
 string ToString(const Box::Interval& interval) {
   if (interval.lb() == interval.ub()) {
-    return fmt::format("(exact {})", interval.lb());
+    return ToRational(interval.lb());
   } else {
-    return fmt::format("(interval {} {})", interval.lb(), interval.ub());
+    return fmt::format("(interval {} {})", ToRational(interval.lb()),
+                       ToRational(interval.ub()));
   }
 }
 }  // namespace
