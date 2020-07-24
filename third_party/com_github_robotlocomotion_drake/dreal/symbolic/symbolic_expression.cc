@@ -668,15 +668,7 @@ Expression real_constant(const double lb, const double ub,
       new ExpressionRealConstant(lb, ub, use_lb_as_representative)};
 }
 
-Expression log(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    const double v{get_constant_value(e)};
-    ExpressionLog::check_domain(v);
-    return Expression{std::log(v)};
-  }
-  return Expression{new ExpressionLog(e)};
-}
+Expression log(const Expression& e) { return Expression{new ExpressionLog(e)}; }
 
 Expression abs(const Expression& e) {
   // Simplification: constant folding.
@@ -686,21 +678,9 @@ Expression abs(const Expression& e) {
   return Expression{new ExpressionAbs(e)};
 }
 
-Expression exp(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::exp(get_constant_value(e))};
-  }
-  return Expression{new ExpressionExp(e)};
-}
+Expression exp(const Expression& e) { return Expression{new ExpressionExp(e)}; }
 
 Expression sqrt(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    const double v{get_constant_value(e)};
-    ExpressionSqrt::check_domain(v);
-    return Expression{std::sqrt(v)};
-  }
   // Simplification: sqrt(pow(x, 2)) => abs(x)
   if (is_pow(e)) {
     if (is_two(get_second_argument(e))) {
@@ -746,89 +726,37 @@ Expression pow(const Expression& e1, const Expression& e2) {
   return Expression{new ExpressionPow(e1, e2)};
 }
 
-Expression sin(const Expression& e) {
-  // simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::sin(get_constant_value(e))};
-  }
-  return Expression{new ExpressionSin(e)};
-}
+Expression sin(const Expression& e) { return Expression{new ExpressionSin(e)}; }
 
-Expression cos(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::cos(get_constant_value(e))};
-  }
+Expression cos(const Expression& e) { return Expression{new ExpressionCos(e)}; }
 
-  return Expression{new ExpressionCos(e)};
-}
-
-Expression tan(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::tan(get_constant_value(e))};
-  }
-  return Expression{new ExpressionTan(e)};
-}
+Expression tan(const Expression& e) { return Expression{new ExpressionTan(e)}; }
 
 Expression asin(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    const double v{get_constant_value(e)};
-    ExpressionAsin::check_domain(v);
-    return Expression{std::asin(v)};
-  }
   return Expression{new ExpressionAsin(e)};
 }
 
 Expression acos(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    const double v{get_constant_value(e)};
-    ExpressionAcos::check_domain(v);
-    return Expression{std::acos(v)};
-  }
   return Expression{new ExpressionAcos(e)};
 }
 
 Expression atan(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::atan(get_constant_value(e))};
-  }
   return Expression{new ExpressionAtan(e)};
 }
 
 Expression atan2(const Expression& e1, const Expression& e2) {
-  // Simplification: constant folding.
-  if (is_constant(e1) && is_constant(e2)) {
-    return Expression{
-        std::atan2(get_constant_value(e1), get_constant_value(e2))};
-  }
   return Expression{new ExpressionAtan2(e1, e2)};
 }
 
 Expression sinh(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::sinh(get_constant_value(e))};
-  }
   return Expression{new ExpressionSinh(e)};
 }
 
 Expression cosh(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::cosh(get_constant_value(e))};
-  }
   return Expression{new ExpressionCosh(e)};
 }
 
 Expression tanh(const Expression& e) {
-  // Simplification: constant folding.
-  if (is_constant(e)) {
-    return Expression{std::tanh(get_constant_value(e))};
-  }
   return Expression{new ExpressionTanh(e)};
 }
 
