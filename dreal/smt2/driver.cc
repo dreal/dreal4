@@ -188,7 +188,7 @@ void Smt2Driver::GetValue(const vector<Term>& term_list) const {
         pp.Print(e);
         term_str = ss.str();
         const Box::Interval iv{ExpressionEvaluator(term.expression())(box)};
-        value_str = fmt::format("{}", ToString(iv));
+        value_str = ToString(iv);
         break;
       }
       case Term::Type::FORMULA: {
