@@ -30,6 +30,18 @@ dreal_cc_googletest(
 )
 
 cc_test(
+    name = "gmp_test",
+    size = "small",
+    srcs = [
+        "gmp_test.cc",
+    ],
+    tags = ["extlib"],
+    deps = [
+        "@gmp",
+    ],
+)
+
+cc_test(
     name = "ibex_test",
     size = "small",
     srcs = ["ibex_test.cc"],

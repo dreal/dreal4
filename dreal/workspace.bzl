@@ -11,6 +11,7 @@ load(
     "python_configure",
 )
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("@dreal//third_party/org_gmplib:repository.bzl", "gmp_repository")
 
 def dreal_workspace():
     pkg_config_repository(
@@ -32,6 +33,9 @@ def dreal_workspace():
             "/usr/local/opt/nlopt/lib/pkgconfig",
         ],
     )
+
+    gmp_repository(name = "gmp")
+
     python_configure(name = "local_config_python")
 
     native.register_toolchains("@local_config_python//:py_toolchain")

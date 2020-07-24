@@ -14,6 +14,7 @@ bison
 coinor-libclp-dev
 flex
 g++
+libgmp-dev
 libibex-dev
 libnlopt-dev
 libpython3-dev

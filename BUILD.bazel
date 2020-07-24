@@ -119,17 +119,20 @@ pkg_tar(
 pkg_deb(
     name = "package_debian",
     architecture = "amd64",
-    built_using = "bazel (1.0.0)",
+    built_using = "bazel (3.4.1)",
     data = ":archive",
     depends = [
         "coinor-libclp-dev",
         "libbz2-dev",
+        "libgmp10",
+        "libgmpxx4ldbl",
         "libibex-dev",
         "libnlopt-dev",
         # The followings are Build-Depends:
         # "bison",
         # "flex",
         # "pkg-config",
+        # "libgmp-dev",
     ],
     description = "SMT solver for nonlinear theories",
     homepage = "http://dreal.github.io",

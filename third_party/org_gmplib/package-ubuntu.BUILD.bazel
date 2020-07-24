@@ -1,0 +1,18 @@
+licenses([
+    "restricted",  # LGPL-3
+])
+
+cc_library(
+    name = "gmp",
+    hdrs = [
+        "include/gmp.h",
+        "include/gmpxx.h",
+    ],
+    includes = ["include"],
+    linkopts = [
+        "-L/usr/lib/x86_64-linux-gnu",
+        "-lgmpxx",
+        "-lgmp",
+    ],
+    visibility = ["//visibility:public"],
+)

@@ -120,6 +120,7 @@ The `install_prereqs.sh` installs the following packages:
 [bison](https://www.gnu.org/software/bison), 
 [coinor-clp](https://projects.coin-or.org/Clp), 
 [flex](https://www.gnu.org/software/flex), 
+[gmp](https://gmplib.org),
 [ibex](https://github.com/ibex-team/ibex-lib), 
 [nlopt](http://nlopt.readthedocs.io), 
 [python](https://www.python.org).
