@@ -152,12 +152,20 @@ ostream& PrintModel(ostream& os, const Box& box) {
   return os << ")";
 }
 
+string ToString(const mpz_class& z) {
+  if (sgn(z) == -1) {
+    return fmt::format("(- {})", -z);
+  }
+  return fmt::format("{}", z);
+}
+
 string ToRational(const double d) {
   const mpq_class r{d};
   if (r.get_den() == 1) {
-    return fmt::format("{}", r.get_num());
+    return fmt::format("{}", ToString(r.get_num()));
   } else {
-    return fmt::format("(/ {} {})", r.get_num(), r.get_den());
+    return fmt::format("(/ {} {})", ToString(r.get_num()),
+                       ToString(r.get_den()));
   }
 }
 

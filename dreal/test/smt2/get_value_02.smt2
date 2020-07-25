@@ -4,7 +4,9 @@
 (declare-fun x () Real)
 (declare-fun y () Real)
 (declare-fun z () Real)
+(declare-fun w () Real)
 (declare-fun i () Int)
+(declare-fun j () Int)
 (declare-fun b1 () Bool)
 (declare-fun b2 () Bool)
 
@@ -13,13 +15,15 @@
 (assert (= (sin x) 0))
 (assert (= (sqrt 2) y))
 (assert (= z (/ (* 3 4) 2)))
+(assert (= w (- x)))
 (assert (= i (/ (* 3 4) 4)))
+(assert (= j (- i)))
 (assert (= b1 (and (> x y)
 		   (> y z))))
 (assert (= b2 (or (> x y)
 		  (> y z))))
 
 (check-sat)
-(get-value (x y z i b1 b2))
+(get-value (x y z w i j b1 b2))
 
 (exit)
