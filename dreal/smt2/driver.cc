@@ -157,7 +157,7 @@ string ToRational(const double d) {
   if (r.get_den() == 1) {
     return fmt::format("{}", r.get_num());
   } else {
-    return fmt::format("({} / {})", r.get_num(), r.get_den());
+    return fmt::format("(/ {} {})", r.get_num(), r.get_den());
   }
 }
 
