@@ -225,9 +225,11 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("acosh", [](const Box::Interval& i) { return acosh(i); })
       .def("asinh", [](const Box::Interval& i) { return asinh(i); })
       .def("atanh", [](const Box::Interval& i) { return atanh(i); })
-      .def("max", [](const Box::Interval& i1,
+      // "Max" not "max" to avoid conflcits with python built-in function, max.
+      .def("Max", [](const Box::Interval& i1,
                      const Box::Interval& i2) { return max(i1, i2); })
-      .def("min", [](const Box::Interval& i1,
+      // "Min" not "min" to avoid conflcits with python built-in function, min.
+      .def("Min", [](const Box::Interval& i1,
                      const Box::Interval& i2) { return min(i1, i2); })
       .def("sign", [](const Box::Interval& x) { return sign(x); })
       .def("integer", [](const Box::Interval& x) { return integer(x); });
@@ -548,8 +550,10 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("sinh", &sinh)
       .def("cosh", &cosh)
       .def("tanh", &tanh)
-      .def("min", &min)
-      .def("max", &max);
+      // "Min" not "min" to avoid conflcits with python built-in function, min.
+      .def("Min", &min)
+      // "Max" not "max" to avoid conflcits with python built-in function, max.
+      .def("Max", &max);
 
   m.def("if_then_else", &if_then_else)
       .def("if_then_else",

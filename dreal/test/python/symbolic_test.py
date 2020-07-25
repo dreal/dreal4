@@ -6,7 +6,7 @@ import unittest
 
 from dreal import (And, Expression, Formula, Iff, Implies, Not, Or, Variable,
                    Variables, acos, asin, atan, atan2, cos, cosh, exp, forall,
-                   if_then_else, intersect, log, logical_imply, max, min, sin,
+                   if_then_else, intersect, log, logical_imply, Max, Min, sin,
                    sinh, sqrt, tan, tanh)
 
 x = Variable("x")
@@ -148,8 +148,8 @@ class SymbolicVariableTest(unittest.TestCase):
         self.assertEqual(str(sinh(x)), "sinh(x)")
         self.assertEqual(str(cosh(x)), "cosh(x)")
         self.assertEqual(str(tanh(x)), "tanh(x)")
-        self.assertEqual(str(min(x, y)), "min(x, y)")
-        self.assertEqual(str(max(x, y)), "max(x, y)")
+        self.assertEqual(str(Min(x, y)), "min(x, y)")
+        self.assertEqual(str(Max(x, y)), "max(x, y)")
         self.assertEqual(str(if_then_else(x > y, x, y)),
                          "(if (x > y) then x else y)")
 
@@ -394,8 +394,8 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(sinh(v_x), math.sinh(v_x))
         self.assertEqual(cosh(v_x), math.cosh(v_x))
         self.assertEqual(tanh(v_x), math.tanh(v_x))
-        self.assertEqual(min(v_x, v_y), min(v_x, v_y))
-        self.assertEqual(max(v_x, v_y), max(v_x, v_y))
+        self.assertEqual(Min(v_x, v_y), Min(v_x, v_y))
+        self.assertEqual(Max(v_x, v_y), Max(v_x, v_y))
         self.assertEqual(
             if_then_else(Expression(v_x) > Expression(v_y), v_x, v_y),
             v_x if v_x > v_y else v_y)
@@ -415,8 +415,8 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(sinh(x)), "sinh(x)")
         self.assertEqual(str(cosh(x)), "cosh(x)")
         self.assertEqual(str(tanh(x)), "tanh(x)")
-        self.assertEqual(str(min(x, y)), "min(x, y)")
-        self.assertEqual(str(max(x, y)), "max(x, y)")
+        self.assertEqual(str(Min(x, y)), "min(x, y)")
+        self.assertEqual(str(Max(x, y)), "max(x, y)")
         self.assertEqual(str(if_then_else(x > y, x, y)),
                          "(if (x > y) then x else y)")
 
@@ -435,8 +435,8 @@ class TestSymbolicExpression(unittest.TestCase):
         self.assertEqual(str(sinh(e_x)), "sinh(x)")
         self.assertEqual(str(cosh(e_x)), "cosh(x)")
         self.assertEqual(str(tanh(e_x)), "tanh(x)")
-        self.assertEqual(str(min(e_x, e_y)), "min(x, y)")
-        self.assertEqual(str(max(e_x, e_y)), "max(x, y)")
+        self.assertEqual(str(Min(e_x, e_y)), "min(x, y)")
+        self.assertEqual(str(Max(e_x, e_y)), "max(x, y)")
         self.assertEqual(str(if_then_else(e_x > e_y, e_x, e_y)),
                          "(if (x > y) then x else y)")
 

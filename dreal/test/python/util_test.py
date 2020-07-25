@@ -98,8 +98,8 @@ class IntervalTest(unittest.TestCase):
         print(sinh(i1))
         print(tanh(i1))
         print(abs(i1))
-        print(max(i1, i2))
-        print(min(i1, i2))
+        print(Max(i1, i2))
+        print(Min(i1, i2))
         print(sign(i1))
         print(integer(i1))
 
