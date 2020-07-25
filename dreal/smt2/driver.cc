@@ -167,8 +167,8 @@ string ToString(const Box::Interval& interval) {
   if (interval.lb() == interval.ub()) {
     return ToRational(interval.lb());
   } else {
-    return fmt::format("(interval {} {})", ToRational(interval.lb()),
-                       ToRational(interval.ub()));
+    return fmt::format("(interval (closed {}) (closed {}))",
+                       ToRational(interval.lb()), ToRational(interval.ub()));
   }
 }
 }  // namespace

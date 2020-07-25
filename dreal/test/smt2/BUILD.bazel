@@ -423,6 +423,11 @@ smt2_test(
 )
 
 smt2_test(
+    name = "get_value_02",
+    size = "small",
+)
+
+smt2_test(
     name = "hansen_simple",
     size = "small",
 )
