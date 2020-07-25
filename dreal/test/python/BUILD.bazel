@@ -107,3 +107,20 @@ dreal_py_test(
         "//dreal:dreal_py",
     ],
 )
+
+dreal_py_test(
+    name = "github_issue_154",
+    srcs = [
+        "github_issue_154.py",
+    ],
+    main = "github_issue_154.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
