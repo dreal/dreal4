@@ -1,0 +1,40 @@
+name: Check Install
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+
+jobs:
+  ubuntu_focal_install:
+    name: ubuntu-20.04 install
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: sudo ./setup/ubuntu/20.04/install.sh
+        shell: bash
+      - name: run dreal
+        run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
+  ubuntu_bionic_install:
+    name: ubuntu 18.04 install
+    runs-on: ubuntu-18.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: sudo ./setup/ubuntu/18.04/install.sh
+        shell: bash
+      - name: run dreal
+        run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
+  ubuntu_trusty_install:
+    name: ubuntu 16.04 install
+    runs-on: ubuntu-16.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup
+        run: sudo ./setup/ubuntu/16.04/install.sh
+        shell: bash
+      - name: run dreal
+        run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
