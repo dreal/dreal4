@@ -18,6 +18,8 @@ jobs:
       - name: setup
         run: ./setup/mac/install_prereqs.sh
         shell: zsh -efuo pipefail {0}
+        env: 
+          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_focal_build_and_test:
