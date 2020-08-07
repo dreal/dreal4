@@ -16,7 +16,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: setup
-        run: ./setup/mac/install_prereqs.sh
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi; ./setup/mac/install_prereqs.sh
         shell: zsh -efuo pipefail {0}
         env: 
           HOMEBREW_NO_AUTO_UPDATE: "1"
