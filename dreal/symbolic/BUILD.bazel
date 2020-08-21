@@ -70,6 +70,7 @@ dreal_cc_googletest(
 
 dreal_cc_googletest(
     name = "symbolic_test",
+    size = "medium",
     tags = ["unit"],
     deps = [
         ":symbolic",

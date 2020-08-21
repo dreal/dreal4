@@ -459,7 +459,7 @@ smt2_test(
 
 smt2_test(
     name = "int_03",
-    size = "small",
+    size = "medium",
 )
 
 smt2_test(
@@ -845,7 +845,7 @@ smt2_test(
 
 smt2_test(
     name = "uav_x1000",
-    size = "small",
+    size = "medium",
 )
 
 smt2_test(
@@ -970,7 +970,7 @@ smt2_test(
 
 smt2_test(
     name = "hong/hong_18",
-    size = "small",
+    size = "medium",
 )
 
 smt2_test(
@@ -1039,7 +1039,7 @@ smt2_test(
 
 smt2_test(
     name = "powersystem/dreal_file_3_30",
-    size = "small",
+    size = "medium",
 )
 
 smt2_test(
