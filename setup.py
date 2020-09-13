@@ -157,10 +157,10 @@ if 'bdist_wheel' in sys.argv and '--plat-name' not in sys.argv:
 
     # Make a wheel which is specific to the minor version of Python
     # For example, "cp35".
+    #
+    # Note: We assume that it's using cpython.
     if not any(arg.startswith('--python-tag') for arg in sys.argv):
-        import wheel.pep425tags
-        python_tag = "%s%d%d" % (wheel.pep425tags.get_abbr_impl(),
-                                 sys.version_info.major,
+        python_tag = "cp%d%d" % (sys.version_info.major,
                                  sys.version_info.minor)
         sys.argv.extend(['--python-tag', python_tag])
 
