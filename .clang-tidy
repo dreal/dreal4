@@ -2,6 +2,7 @@
 Checks: >
   abseil-*,
   bugprone-*,
+  cert-*
   clang-analyzer-*,
   clang-diagnostic-*,
   cppcoreguidelines-*,
@@ -11,6 +12,8 @@ Checks: >
   misc-*,
   misperformance-*,
   modernize-*,
+  performance-*,
+  portability-*,
   readability-*,
   -clang-diagnostic-pragma-once-outside-header,
   -cppcoreguidelines-avoid-goto,
@@ -20,6 +23,8 @@ Checks: >
   -cppcoreguidelines-pro-type-static-cast-downcast,
   -hicpp-avoid-goto,
   -hicpp-no-array-decay,
+  -hicpp-named-parameter,
+  -llvm-else-after-return,
   -llvm-header-guard,
   -modernize-use-bool-literals,
   -modernize-use-trailing-return-type,
