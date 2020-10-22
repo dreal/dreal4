@@ -40,10 +40,7 @@ class Variable {
    *  It is allowed to construct a dummy variable but it should not be used to
    *  construct a symbolic expression.
    */
-  Variable()
-      : id_{0},
-        type_{Type::CONTINUOUS},
-        name_{std::make_shared<std::string>()} {}
+  Variable() : name_{std::make_shared<std::string>()} {}
 
   /** Default destructor. */
   ~Variable() = default;
@@ -52,9 +49,10 @@ class Variable {
    * type by default.*/
   explicit Variable(std::string name, Type type = Type::CONTINUOUS);
 
-  /** Constructs a variable with @p name and @p type. @p model_variable is ignored. */
-  [[deprecated("This is only for backward-compatibility.")]]
-  Variable(std::string name, Type type, bool model_variable);
+  /** Constructs a variable with @p name and @p type. @p model_variable is
+   * ignored. */
+  [[deprecated("This is only for backward-compatibility.")]] Variable(
+      std::string name, Type type, bool model_variable);
 
   /** Checks if this is a dummy variable (ID = 0) which is created by
    *  the default constructor. */

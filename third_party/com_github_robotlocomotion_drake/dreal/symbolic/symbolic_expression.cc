@@ -42,7 +42,7 @@ bool is_integer(const double v) {
         (v <= std::numeric_limits<int>::max()))) {
     return false;
   }
-  double intpart;  // dummy variable
+  double intpart{};  // dummy variable
   return modf(v, &intpart) == 0.0;
 }
 
@@ -431,7 +431,7 @@ Expression& Expression::operator--() {
 }
 
 Expression Expression::operator--(int) {
-  const Expression copy(*this);
+  Expression copy(*this);
   --*this;
   return copy;
 }

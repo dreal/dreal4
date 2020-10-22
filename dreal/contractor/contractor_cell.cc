@@ -20,9 +20,9 @@ using std::vector;
 
 namespace dreal {
 
-ContractorCell::ContractorCell(const Contractor::Kind kind,
-                               const DynamicBitset& input, const Config& config)
-    : kind_{kind}, input_{input}, config_{config} {}
+ContractorCell::ContractorCell(const Contractor::Kind kind, DynamicBitset input,
+                               Config config)
+    : kind_{kind}, input_{std::move(input)}, config_{std::move(config)} {}
 
 Contractor::Kind ContractorCell::kind() const { return kind_; }
 

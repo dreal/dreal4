@@ -21,7 +21,7 @@ class FormulaEvaluationResult {
   };
 
   /// Constructs an FormulaEvaluationResult with @p type and @p evaluation.
-  FormulaEvaluationResult(Type type, Box::Interval evaluation);
+  FormulaEvaluationResult(Type type, const Box::Interval& evaluation);
 
   /// Returns the type of this result.
   Type type() const;

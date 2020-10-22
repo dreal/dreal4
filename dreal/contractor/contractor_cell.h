@@ -29,8 +29,7 @@ class ContractorForall;
 class ContractorCell {
  public:
   /// Constructs a cell with @p kind and @p input.
-  ContractorCell(Contractor::Kind kind, const DynamicBitset& input,
-                 const Config& config);
+  ContractorCell(Contractor::Kind kind, DynamicBitset input, Config config);
 
   /// Deleted default constructor.
   ContractorCell() = delete;

@@ -19,6 +19,7 @@ namespace dreal {
 namespace drake {
 namespace symbolic {
 
+using std::all_of;
 using std::any_of;
 using std::equal;
 using std::hash;
@@ -423,12 +424,9 @@ FormulaAnd::FormulaAnd(const Formula& f1, const Formula& f2)
     : NaryFormulaCell{FormulaKind::And, set<Formula>{f1, f2}} {}
 
 bool FormulaAnd::Evaluate(const Environment& env) const {
-  for (const auto& f : get_operands()) {
-    if (!f.Evaluate(env)) {
-      return false;
-    }
-  }
-  return true;
+  const auto& operands = get_operands();
+  return all_of(operands.begin(), operands.end(),
+                [&env](const Formula& f) { return f.Evaluate(env); });
 }
 
 Formula FormulaAnd::Substitute(const ExpressionSubstitution& expr_subst,
@@ -468,12 +466,9 @@ FormulaOr::FormulaOr(const Formula& f1, const Formula& f2)
     : NaryFormulaCell{FormulaKind::Or, set<Formula>{f1, f2}} {}
 
 bool FormulaOr::Evaluate(const Environment& env) const {
-  for (const auto& f : get_operands()) {
-    if (f.Evaluate(env)) {
-      return true;
-    }
-  }
-  return false;
+  const auto& operands = get_operands();
+  return any_of(operands.begin(), operands.end(),
+                [&env](const Formula& f) { return f.Evaluate(env); });
 }
 
 Formula FormulaOr::Substitute(const ExpressionSubstitution& expr_subst,

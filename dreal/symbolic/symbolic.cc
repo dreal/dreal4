@@ -10,9 +10,11 @@
 
 namespace dreal {
 
+using std::all_of;
 using std::function;
 using std::inserter;
 using std::ostream;
+using std::pair;
 using std::set;
 using std::string;
 using std::to_string;
@@ -425,20 +427,14 @@ class IsDifferentiableVisitor {
     return Visit(get_lhs_expression(f)) && Visit(get_rhs_expression(f));
   }
   bool VisitConjunction(const Formula& f) const {
-    for (const Formula& formula : get_operands(f)) {
-      if (!Visit(formula)) {
-        return false;
-      }
-    }
-    return true;
+    const auto& operands = get_operands(f);
+    return all_of(operands.begin(), operands.end(),
+                  [this](const Formula& o) { return Visit(o); });
   }
   bool VisitDisjunction(const Formula& f) const {
-    for (const Formula& formula : get_operands(f)) {
-      if (!Visit(formula)) {
-        return false;
-      }
-    }
-    return true;
+    const auto& operands = get_operands(f);
+    return all_of(operands.begin(), operands.end(),
+                  [this](const Formula& o) { return Visit(o); });
   }
   bool VisitNegation(const Formula& f) const { return Visit(get_operand(f)); }
   bool VisitForall(const Formula&) const { return false; }
@@ -448,23 +444,22 @@ class IsDifferentiableVisitor {
   bool VisitConstant(const Expression&) const { return true; }
   bool VisitRealConstant(const Expression&) const { return true; }
   bool VisitAddition(const Expression& e) const {
-    for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
-      const Expression& e_i{p.first};
-      if (!Visit(e_i)) {
-        return false;
-      }
-    }
-    return true;
+    const auto& expr_to_coeff_map = get_expr_to_coeff_map_in_addition(e);
+    return all_of(expr_to_coeff_map.begin(), expr_to_coeff_map.end(),
+                  [this](const pair<const Expression, double>& p) {
+                    const Expression& e_i{p.first};
+                    return Visit(e_i);
+                  });
   }
   bool VisitMultiplication(const Expression& e) const {
-    for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
-      const Expression& base{p.first};
-      const Expression& exponent{p.second};
-      if (!Visit(base) || !Visit(exponent)) {
-        return false;
-      }
-    }
-    return true;
+    const auto& base_to_exponent_map =
+        get_base_to_exponent_map_in_multiplication(e);
+    return all_of(base_to_exponent_map.begin(), base_to_exponent_map.end(),
+                  [this](const pair<const Expression, Expression>& p) {
+                    const Expression& base{p.first};
+                    const Expression& exponent{p.second};
+                    return Visit(base) && Visit(exponent);
+                  });
   }
   bool VisitDivision(const Expression& e) const {
     return Visit(get_first_argument(e)) && Visit(get_second_argument(e));

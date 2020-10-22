@@ -17,7 +17,7 @@ bool is_integer(const double v) {
         (v <= numeric_limits<int>::max()))) {
     return false;
   }
-  double intpart;  // dummy variable
+  double intpart{};  // dummy variable
   return modf(v, &intpart) == 0.0;
 }
 

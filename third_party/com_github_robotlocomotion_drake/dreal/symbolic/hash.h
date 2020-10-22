@@ -72,7 +72,7 @@ struct hash_value<std::map<T1, T2>> {
  *  according to http://www.burtleburtle.net/bob/hash/doobs.html. */
 template <class T>
 inline size_t hash_combine(size_t seed, const T& v) {
-  seed ^= hash_value<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+  seed ^= hash_value<T>{}(v) + 0x9e3779b9 + (seed << 6U) + (seed >> 2U);
   return seed;
 }
 }  // namespace drake

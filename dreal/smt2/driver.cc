@@ -135,9 +135,9 @@ ostream& PrintModel(ostream& os, const Box& box) {
     os << " ";
     const Box::Interval& iv{box[i]};
     if (var.get_type() == Variable::Type::BOOLEAN) {
-      if (iv == iv.ONE) {
+      if (iv == Box::Interval::ONE) {
         os << "true";
-      } else if (iv == iv.ZERO) {
+      } else if (iv == Box::Interval::ZERO) {
         os << "false";
       }
     } else {
@@ -241,7 +241,7 @@ void Smt2Driver::GetOption(const string& key) const {
 }
 
 Variable Smt2Driver::RegisterVariable(const string& name, const Sort sort) {
-  const Variable v{ParseVariableSort(name, sort)};
+  Variable v{ParseVariableSort(name, sort)};
   scope_.insert(v.get_name(), v);
   return v;
 }
@@ -283,7 +283,7 @@ Term Smt2Driver::LookupFunction(const string& name,
 }
 
 Variable Smt2Driver::DeclareLocalVariable(const string& name, const Sort sort) {
-  const Variable v{ParseVariableSort(MakeUniqueName(name), sort)};
+  Variable v{ParseVariableSort(MakeUniqueName(name), sort)};
   scope_.insert(name, v);  // v is not inserted under its own name.
   context_.DeclareVariable(
       v, false /* This local variable is not a model variable. */);

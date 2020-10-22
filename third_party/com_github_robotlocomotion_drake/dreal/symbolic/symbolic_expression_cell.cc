@@ -49,7 +49,7 @@ bool is_integer(const double v) {
     return false;
   }
 
-  double intpart;  // dummy variable
+  double intpart{};  // dummy variable
   return modf(v, &intpart) == 0.0;
 }
 
@@ -632,7 +632,7 @@ ostream& ExpressionAdd::Display(ostream& os) const {
     os << setprecision(numeric_limits<double>::max_digits10) << constant_;
     print_plus = true;
   }
-  for (auto& p : expr_to_coeff_map_) {
+  for (const auto& p : expr_to_coeff_map_) {
     DisplayTerm(os, print_plus, p.second, p.first);
     print_plus = true;
   }
@@ -665,9 +665,7 @@ ostream& ExpressionAdd::DisplayTerm(ostream& os, const bool print_plus,
 
 ExpressionAddFactory::ExpressionAddFactory(
     const double constant, map<Expression, double> expr_to_coeff_map)
-    : get_expression_is_called_{false},
-      constant_{constant},
-      expr_to_coeff_map_{std::move(expr_to_coeff_map)} {}
+    : constant_{constant}, expr_to_coeff_map_{std::move(expr_to_coeff_map)} {}
 
 ExpressionAddFactory::ExpressionAddFactory(const ExpressionAdd* const ptr)
     : ExpressionAddFactory{ptr->get_constant(), ptr->get_expr_to_coeff_map()} {}
@@ -927,7 +925,7 @@ ostream& ExpressionMul::Display(ostream& os) const {
     os << setprecision(numeric_limits<double>::max_digits10) << constant_;
     print_mul = true;
   }
-  for (auto& p : base_to_exponent_map_) {
+  for (const auto& p : base_to_exponent_map_) {
     DisplayTerm(os, print_mul, p.first, p.second);
     print_mul = true;
   }
@@ -954,8 +952,7 @@ ostream& ExpressionMul::DisplayTerm(ostream& os, const bool print_mul,
 
 ExpressionMulFactory::ExpressionMulFactory(
     const double constant, map<Expression, Expression> base_to_exponent_map)
-    : get_expression_is_called_{false},
-      constant_{constant},
+    : constant_{constant},
       base_to_exponent_map_{std::move(base_to_exponent_map)} {}
 
 ExpressionMulFactory::ExpressionMulFactory(const ExpressionMul* const ptr)

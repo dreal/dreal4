@@ -16,8 +16,8 @@ using std::make_shared;
 using std::ostream;
 using std::shared_ptr;
 
-FormulaEvaluationResult::FormulaEvaluationResult(Type type,
-                                                 Box::Interval evaluation)
+FormulaEvaluationResult::FormulaEvaluationResult(
+    Type type, const Box::Interval& evaluation)
     : type_{type}, evaluation_{evaluation} {}
 
 FormulaEvaluationResult::Type FormulaEvaluationResult::type() const {

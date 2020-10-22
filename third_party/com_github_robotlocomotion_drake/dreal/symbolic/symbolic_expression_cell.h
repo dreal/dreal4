@@ -85,6 +85,9 @@ class ExpressionCell {
   /** Move-constructs an ExpressionCell from an rvalue. (DELETED) */
   ExpressionCell(ExpressionCell&& e) = delete;
 
+  /** Default constructor (DELETED). */
+  ExpressionCell() = delete;
+
   /** Move-assigns (DELETED). */
   ExpressionCell& operator=(ExpressionCell&& e) = delete;
 
@@ -92,8 +95,6 @@ class ExpressionCell {
   ExpressionCell& operator=(const ExpressionCell& e) = delete;
 
  protected:
-  /** Default constructor. */
-  ExpressionCell() = default;
   /** Constructs ExpressionCell of kind @p k with @p hash, @p is_poly, and @p
    * include_ite. */
   ExpressionCell(ExpressionKind k, size_t hash, bool is_poly, bool include_ite,
