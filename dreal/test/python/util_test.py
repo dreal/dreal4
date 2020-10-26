@@ -119,7 +119,7 @@ class IntervalTest(unittest.TestCase):
     def test_to_string(self):
         i = Interval(3, 4)
         self.assertEqual(str(i), "[3, 4]")
-        self.assertEqual(repr(i), "Interval(3.0, 4.0)")
+        self.assertEqual(repr(i), "Interval(3, 4)")
 
     def test_intersection(self):
         i1 = Interval(2, 5)

@@ -57,9 +57,9 @@ def dreal_workspace():
     github_archive(
         name = "fmt",  # MIT
         build_file = str(Label("//tools:fmt.BUILD.bazel")),
-        commit = "7.0.3",
+        commit = "7.1.1",
         repository = "fmtlib/fmt",
-        sha256 = "b4b51bc16288e2281cddc59c28f0b4f84fed58d016fb038273a09f05f8473297",
+        sha256 = "b3bc4dc01978b9a001fa1bc07900d6bd2a17e552a39a1c2dad9aad3bfdb868e3",
     )
 
     github_archive(
