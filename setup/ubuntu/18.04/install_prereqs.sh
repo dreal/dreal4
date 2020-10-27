@@ -19,6 +19,7 @@ libibex-dev
 libnlopt-dev
 libpython3-dev
 pkg-config
+python3-distutils
 python-minimal
 zlib1g-dev
 EOF
