@@ -122,8 +122,8 @@ optional<Contractor> TheorySolver::BuildContractor(
       if (is_forall(f)) {
         // We should have `inner_delta < epsilon < delta`.
         const double delta{config_.precision()};
-        const double epsilon{delta * 0.99};
-        const double inner_delta{epsilon * 0.99};
+        const double epsilon{delta * 0.5};
+        const double inner_delta{epsilon * 0.5};
         DREAL_ASSERT(inner_delta < epsilon && epsilon < delta);
         const Contractor ctc{make_contractor_forall<Context>(
             f, box, epsilon, inner_delta, config_)};
