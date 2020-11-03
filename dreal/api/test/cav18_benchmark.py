@@ -104,7 +104,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_02_Ackley_4D(self):
         (variables, domain) = make_domain([
@@ -128,7 +128,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_03_Aluffi_Pentini(self):
         (variables, domain) = make_domain([("x1", -10, 10), ("x2", -10, 10)])
@@ -142,7 +142,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_04_Beale(self):
         (variables, domain) = make_domain([("x", -4.5, 4.5), ("y", -4.5, 4.5)])
@@ -157,7 +157,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_05_Bohachevsky1(self):
         (variables, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
@@ -172,7 +172,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_06_Booth(self):
         (variables, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
@@ -186,7 +186,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_07_Brent(self):
         (variables, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
@@ -200,7 +200,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_08_Bukin6(self):
         (variables, domain) = make_domain([("x", -15, 15), ("y", -3, 3)])
@@ -214,7 +214,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_09_Cross_in_Tray(self):
         (variables, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
@@ -230,7 +230,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_10_Easom(self):
         (variables, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
@@ -245,7 +245,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_11_EggHolder(self):
         (variables, domain) = make_domain([("x", -512, 512), ("y", -512, 512)])
@@ -260,7 +260,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 5)
+                               delta=self.config.precision)
 
     # SLOW
     def test_12_Holder_Table2(self):
@@ -276,7 +276,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_13_Levi_N13(self):
         (variables, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
@@ -293,7 +293,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_14_Ripple1(self):
         (variables, domain) = make_domain([("x1", 0, 1.0), ("x2", 0, 1.0)])
@@ -311,7 +311,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_15_Schaffer_F6(self):
         (variables, domain) = make_domain([("x", -100, 100), ("y", -100, 100)])
@@ -326,7 +326,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_16_Testtube_Holder(self):
         (variables, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
@@ -341,7 +341,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_17_Trefethen(self):
         (variables, domain) = make_domain([("x", -10, 10), ("y", -10, 10)])
@@ -357,7 +357,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_18_W_Wavy(self):
         (variables, domain) = make_domain([("x", -3, 3), ("y", -3, 3)])
@@ -372,7 +372,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_19_Zettl(self):
         (variables, domain) = make_domain([("x", -5, 10), ("y", -5, 10)])
@@ -386,7 +386,7 @@ class UnconstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
 
 class ConstrainedOptimizationTest(CavTest):
@@ -405,7 +405,7 @@ class ConstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_02_Rosenbrock_Disk(self):
         (variables, domain) = make_domain([("x", -1.5, 1.5), ("y", -1.5, 1.5)])
@@ -422,7 +422,7 @@ class ConstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_03_Mishra_Bird(self):
         (variables, domain) = make_domain([("x", -10, 0.0), ("y", -6.5, 0.0)])
@@ -440,7 +440,7 @@ class ConstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_04_Townsend(self):
         (variables, domain) = make_domain([("x", -2.25, 2.5),
@@ -462,7 +462,7 @@ class ConstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 2)
+                               delta=self.config.precision)
 
     def test_05_Simionescu(self):
         (variables, domain) = make_domain([("x", -1.25, 1.25),
@@ -481,7 +481,7 @@ class ConstrainedOptimizationTest(CavTest):
         self.found_min = compute_min(objective, sol, variables)
         self.assertAlmostEqual(self.found_min,
                                self.global_min,
-                               delta=self.config.precision * 10)
+                               delta=self.config.precision)
 
 
 def main():
