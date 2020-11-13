@@ -212,6 +212,13 @@ matrix:
         - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"        
     - os: osx
+      osx_image: xcode12.2  # macOS-10.15
+      compiler: clang
+      env:
+        - COMPILER=clang
+        - BUILD_TYPE="-c opt"
+        - TEST_TAG_FILTERS="unit"
+    - os: osx
       osx_image: xcode10.2  # macOS-10.14
       compiler: clang
       env:
