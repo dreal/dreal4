@@ -98,13 +98,13 @@ Precompiled Wheels
 
 We provide precompiled distributions (`.whl`) for the following environments:
 
- - macOS 10.15 / 10.14 / 10.13 + CPython 3.7
+ - macOS 11.0 / 10.15 / 10.14 + CPython 3.7
  - Linux + CPython 3.6 / 3.7 / 3.8 / 3.9
 
 You still need to install dReal prerequisites such as IBEX and CLP in
 your system. To install them, please follow the instructions below:
 
-macOS 10.15 / 10.14 / 10.13
+macOS 11.0 / 10.15 / 10.14
 
     brew tap dreal-deps/ibex
     brew tap dreal/dreal
@@ -123,7 +123,7 @@ source and build it from scratch. You need to install the required
 packages to do so. To install them, please follow the instructions
 below:
 
-macOS 10.15 / 10.14 / 10.13
+macOS 11.0 / 10.15 / 10.14
 
     brew tap dreal-deps/ibex
     brew tap dreal/dreal
