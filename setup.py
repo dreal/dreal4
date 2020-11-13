@@ -110,7 +110,7 @@ macOS 10.15 / 10.14 / 10.13
     brew tap dreal/dreal
     brew install dreal --only-dependencies
 
-Ubuntu 18.04 / 16.04
+Ubuntu 20.04 / 18.04 / 16.04
 
     curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/`lsb_release -r -s`/install.sh | sudo bash
 
@@ -129,7 +129,7 @@ macOS 10.15 / 10.14 / 10.13
     brew tap dreal/dreal
     brew install dreal --only-dependencies --build-from-source
 
-Ubuntu 18.04 / 16.04
+Ubuntu 20.04 / 18.04 / 16.04
 
     curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh | sudo bash
 
