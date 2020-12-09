@@ -41,7 +41,7 @@ class Context {
   Context& operator=(Context&&) = delete;
 
   /// Constructs a context with @p config.
-  explicit Context(Config config);
+  explicit Context(const Config& config);
 
   /// Asserts a formula @p f.
   void Assert(const Formula& f);

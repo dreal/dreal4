@@ -156,13 +156,13 @@ string Formula::to_string() const {
 }
 
 Formula Formula::True() {
-  static const Formula tt{new FormulaTrue()};
-  return tt;
+  static const Formula kTt{new FormulaTrue()};
+  return kTt;
 }
 
 Formula Formula::False() {
-  static const Formula ff{new FormulaFalse()};
-  return ff;
+  static const Formula kFf{new FormulaFalse()};
+  return kFf;
 }
 
 bool Formula::include_ite() const {

@@ -20,7 +20,7 @@ Context::Context(Context&& context) noexcept
 
 Context::~Context() = default;
 
-Context::Context(Config config) : impl_{make_unique<Impl>(config)} {}
+Context::Context(const Config& config) : impl_{make_unique<Impl>(config)} {}
 
 void Context::Assert(const Formula& f) { impl_->Assert(f); }
 

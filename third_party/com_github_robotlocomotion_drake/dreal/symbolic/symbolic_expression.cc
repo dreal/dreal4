@@ -147,28 +147,28 @@ size_t Expression::get_hash() const {
 }
 
 Expression Expression::Zero() {
-  static const Expression zero{new ExpressionConstant{0.0}};
-  return zero;
+  static const Expression kZero{new ExpressionConstant{0.0}};
+  return kZero;
 }
 
 Expression Expression::One() {
-  static const Expression one{new ExpressionConstant{1.0}};
-  return one;
+  static const Expression kOne{new ExpressionConstant{1.0}};
+  return kOne;
 }
 
 Expression Expression::Pi() {
-  static const Expression pi{new ExpressionConstant{M_PI}};
-  return pi;
+  static const Expression kPi{new ExpressionConstant{M_PI}};
+  return kPi;
 }
 
 Expression Expression::E() {
-  static const Expression e{new ExpressionConstant{M_E}};
-  return e;
+  static const Expression kE{new ExpressionConstant{M_E}};
+  return kE;
 }
 
 Expression Expression::NaN() {
-  static const Expression nan{new ExpressionNaN()};
-  return nan;
+  static const Expression kNan{new ExpressionNaN()};
+  return kNan;
 }
 
 const Variables& Expression::GetVariables() const {
