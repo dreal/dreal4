@@ -24,8 +24,7 @@ def genyacc(name, src, header_out, source_out, extra_outs = []):
       source_out: The generated source file.
       extra_outs: Additional generated outputs.
     """
-    arg_adjust = "$$($(YACC) --version | grep -qE '^bison .* 3\..*' && echo -Wno-deprecated)"
-    cmd = "$(YACC) %s -o $(@D)/%s $(location %s)" % (arg_adjust, source_out, src)
+    cmd = "$(YACC) -Wno-deprecated -o $(@D)/%s $(location %s)" % (source_out, src)
     native.genrule(
         name = name,
         outs = [source_out, header_out] + extra_outs,
@@ -36,7 +35,10 @@ def genyacc(name, src, header_out, source_out, extra_outs = []):
 
 LexYaccInfo = provider(
     doc = "Paths to lex and yacc binaries.",
-    fields = ["lex", "yacc"],
+    fields = [
+        "lex",
+        "yacc",
+    ],
 )
 
 def _lexyacc_variables(ctx):
@@ -49,8 +51,8 @@ def _lexyacc_variables(ctx):
     ]
 
 lexyacc_variables = rule(
-    implementation = _lexyacc_variables,
     toolchains = ["@dreal//third_party/com_github_google_kythe/tools/build_rules:toolchain_type"],
+    implementation = _lexyacc_variables,
 )
 
 def _lexyacc_toolchain_impl(ctx):
@@ -64,7 +66,6 @@ def _lexyacc_toolchain_impl(ctx):
     ]
 
 _lexyacc_toolchain = rule(
-    implementation = _lexyacc_toolchain_impl,
     attrs = {
         "lex": attr.string(),
         "yacc": attr.string(),
@@ -72,6 +73,7 @@ _lexyacc_toolchain = rule(
     provides = [
         platform_common.ToolchainInfo,
     ],
+    implementation = _lexyacc_toolchain_impl,
 )
 
 def lexyacc_toolchain(name, lex, yacc):
@@ -108,9 +110,12 @@ def _local_lexyacc(repository_ctx):
     )
 
 local_lexyacc_repository = repository_rule(
-    implementation = _local_lexyacc,
+    environ = [
+        "PATH",
+        "BISON",
+    ],
     local = True,
-    environ = ["PATH", "BISON"],
+    implementation = _local_lexyacc,
 )
 
 def lexyacc_configure():
