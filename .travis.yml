@@ -7,6 +7,7 @@ language: cpp
 secure: "K4HzcNOd9Kzp5OhHc/bBldhaYLado14f/FT0kCUXYJBfyRt94tDMVhs1fHMwSg1PFqCFrR/DWXpDK4LDUg+fHPUuSBmx7pkrbS8Ou6y+CkeavRefX6TiOsdOseO7I9EOS5Lu5lwFX5Dik7vktLBRsFmubQ4E2kDTIGwCQ8xQzXlsv5nWUNoMTrtoG75p362EpKmLq/2IbdGQ3btQ5vjM3uT+L9CQfWJ6/IrWNzilY4KBciuZSD1PCkQ4AoxjeRH+MnRqu7IpvPEcMHcKzfN7HamIIihaWM8Xf+A2wHVypMN/jr9ONMoHSZzosMzBK38NOTyxaxAqpO0/RO0CrpjGqDjRCpT6cejndeEP4Zr1J2mnjnrsiFVZXJfQRVzvhcWa/1V0b4lK5wjPFeF/l2fwYqkwu+IMGmzVupXJ8s9L7XSZtocLeZ3dYWpUqHDI84zhb3Sts1FSfp7G8a6GshL8Mj8V795YnfVE9Y7WTlpedZ9/6aeUlgaKwbAuq1Bav2PJd435QO4thWi4ODVF9vbNjPm4ocNFQZ6YiEqbvoc2hT6E92Y309DLVGzyTLCmDm3Vkk6VVjhrvttOGXVmHFIcDvgJwvLZQ4nkw46kd8PafaEDoG4KP730qCF9CbE/SllmimTACb9cGkkCZj5O4pQEivlqc5jaoradRxht/0E0KQw="
 
 cache:
+  timeout: 6000
   directories:
     - $HOME/.bazel-output-base
     - $HOME/Library/Caches/Homebrew
@@ -198,14 +199,7 @@ matrix:
         - COV="ON" COV_OPTION="--config=kcov"
         - TEST_TAG_FILTERS="unit"
     - os: osx
-      osx_image: xcode9.4  # macOS-10.13
-      compiler: clang
-      env:
-        - COMPILER=clang
-        - BUILD_TYPE="-c opt"
-        - TEST_TAG_FILTERS="unit"
-    - os: osx
-      osx_image: xcode10.2  # macOS-10.14
+      osx_image: xcode11.3  # macOS-10.14
       compiler: clang
       env:
         - COMPILER=clang
@@ -219,7 +213,7 @@ matrix:
         - BUILD_TYPE="-c opt"
         - TEST_TAG_FILTERS="unit"
     - os: osx
-      osx_image: xcode10.2  # macOS-10.14
+      osx_image: xcode12.2  # macOS-10.15
       compiler: clang
       env:
         - COMPILER=clang
@@ -227,7 +221,14 @@ matrix:
         - TEST_TAG_FILTERS="unit,-no_asan"
 
 before_install:
-  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then brew unlink python@2; fi
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+      git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-core" fetch --unshallow;
+      git -C "/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask" fetch --unshallow;
+      brew unlink python@2;
+    fi
+
+before_cache:
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then brew cleanup; fi
 
 install:
   - if [ "${TRAVIS_OS_NAME}" == "linux" ]; then
@@ -235,8 +236,6 @@ install:
       sudo ./setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh;
     fi
   - if [ "${TRAVIS_OS_NAME}" == "osx" ]; then
-      /usr/bin/yes | pip2 uninstall numpy;
-      brew upgrade python;
       ./setup/mac/install_prereqs.sh;
     fi
   - if [ "${COV}" == "ON" ]; then
