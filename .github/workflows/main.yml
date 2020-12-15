@@ -15,15 +15,6 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: remove-openssl-python2
-        run: |
-         brew uninstall openssl@1.0.2t
-         brew untap local/openssl
-         brew uninstall python@2.7.17
-         brew untap local/python2 # https://github.com/actions/virtual-environments/issues/1811
-        shell: zsh -efuo pipefail {0}
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
         shell: zsh -efuo pipefail {0}
@@ -44,15 +35,6 @@ jobs:
         uses: actions/checkout@v2
       - name: switch to XCode 12.2
         run: sudo xcode-select -s "/Applications/Xcode_12.2.app"
-      - name: remove-openssl-python2
-        run: |
-         brew uninstall openssl@1.0.2t
-         brew untap local/openssl
-         brew uninstall python@2.7.17
-         brew untap local/python2 # https://github.com/actions/virtual-environments/issues/1811
-        shell: zsh -efuo pipefail {0}
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
         shell: zsh -efuo pipefail {0}
