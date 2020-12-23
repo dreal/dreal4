@@ -8,6 +8,9 @@ on:
   schedule:
     - cron: '0 7 * * *'
 
+env:
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+
 jobs:
   macos_catalina_build_and_test:
     name: macos catalina build and test
@@ -17,14 +20,8 @@ jobs:
         uses: actions/checkout@v2
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
-        shell: zsh -efuo pipefail {0}
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: setup
         run: ./setup/mac/install_prereqs.sh
-        shell: zsh -efuo pipefail {0}
-        env: 
-          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: build and test
         run: bazel test //... -c dbg
   macos_big_sur_build_and_test:
@@ -37,14 +34,8 @@ jobs:
         run: sudo xcode-select -s "/Applications/Xcode_12.2.app"
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
-        shell: zsh -efuo pipefail {0}
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: setup
         run: ./setup/mac/install_prereqs.sh
-        shell: zsh -efuo pipefail {0}
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: "1"
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_focal_build_and_test:
@@ -55,7 +46,6 @@ jobs:
         uses: actions/checkout@v2
       - name: setup
         run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
-        shell: bash
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_bionic_build_and_test:
@@ -66,7 +56,6 @@ jobs:
         uses: actions/checkout@v2
       - name: setup
         run: sudo ./setup/ubuntu/18.04/install_prereqs.sh
-        shell: bash
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_trusty_build_and_test:
@@ -77,7 +66,6 @@ jobs:
         uses: actions/checkout@v2
       - name: setup
         run: sudo ./setup/ubuntu/16.04/install_prereqs.sh
-        shell: bash
       - name: build and test
         run: bazel test //... -c dbg
   docker_build_test:
