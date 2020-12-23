@@ -21,7 +21,9 @@ jobs:
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
       - name: setup
-        run: ./setup/mac/install_prereqs.sh
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
       - name: build and test
         run: bazel test //... -c dbg
   macos_big_sur_build_and_test:
@@ -35,7 +37,9 @@ jobs:
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
       - name: setup
-        run: ./setup/mac/install_prereqs.sh
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
       - name: build and test
         run: bazel test //... -c dbg
   ubuntu_focal_build_and_test:
