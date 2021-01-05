@@ -8,5 +8,4 @@ fi
 
 brew tap dreal-deps/ibex
 brew tap dreal/dreal
-brew update
 brew install dreal
