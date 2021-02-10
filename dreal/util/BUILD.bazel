@@ -119,6 +119,19 @@ dreal_cc_library(
 )
 
 dreal_cc_library(
+    name = "precision_guard",
+    srcs = [
+        "precision_guard.cc",
+    ],
+    hdrs = [
+        "precision_guard.h",
+    ],
+    visibility = [
+        "//dreal:__subpackages__",
+    ],
+)
+
+dreal_cc_library(
     name = "signal_handler_guard",
     srcs = [
         "signal_handler_guard.cc",
@@ -463,6 +476,14 @@ dreal_cc_googletest(
     deps = [
         ":predicate_abstractor",
         "//dreal/symbolic:symbolic_test_util",
+    ],
+)
+
+dreal_cc_googletest(
+    name = "precision_guard_test",
+    tags = ["unit"],
+    deps = [
+        ":precision_guard",
     ],
 )
 
