@@ -10,6 +10,7 @@
 #include "dreal/util/exception.h"
 #include "dreal/util/logging.h"
 #include "dreal/util/math.h"
+#include "dreal/util/precision_guard.h"
 
 using std::ceil;
 using std::equal;
@@ -213,29 +214,8 @@ Box& Box::InplaceUnion(const Box& b) {
   return *this;
 }
 
-namespace {
-// RAII which preserves the FmtFlags of an ostream.
-class IosFmtFlagSaver {
- public:
-  explicit IosFmtFlagSaver(ostream& os) : os_(os), flags_(os.flags()) {}
-  ~IosFmtFlagSaver() { os_.flags(flags_); }
-
-  IosFmtFlagSaver(const IosFmtFlagSaver& rhs) = delete;
-  IosFmtFlagSaver(IosFmtFlagSaver&& rhs) = delete;
-  IosFmtFlagSaver& operator=(const IosFmtFlagSaver& rhs) = delete;
-  IosFmtFlagSaver& operator=(IosFmtFlagSaver&& rhs) = delete;
-
- private:
-  ostream& os_;
-  std::ios::fmtflags flags_;
-};
-}  // namespace
-
 ostream& operator<<(ostream& os, const Box& box) {
-  IosFmtFlagSaver saver{os};
-  // See
-  // https://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout#comment40126260_554134.
-  os.precision(numeric_limits<double>::max_digits10 + 2);
+  PrecisionGuard precision_guard(&os, numeric_limits<double>::max_digits10);
   int i{0};
   for (const Variable& var : *(box.variables_)) {
     const Box::Interval interval{box.values_[i++]};
@@ -282,10 +262,7 @@ bool operator!=(const Box& b1, const Box& b2) { return !(b1 == b2); }
 ostream& DisplayDiff(ostream& os, const vector<Variable>& variables,
                      const Box::IntervalVector& old_iv,
                      const Box::IntervalVector& new_iv) {
-  IosFmtFlagSaver saver{os};
-  // See
-  // https://stackoverflow.com/questions/554063/how-do-i-print-a-double-value-with-full-precision-using-cout#comment40126260_554134.
-  os.precision(numeric_limits<double>::max_digits10 + 2);
+  PrecisionGuard precision_guard(&os, numeric_limits<double>::max_digits10);
   for (size_t i = 0; i < variables.size(); ++i) {
     const Box::Interval& old_i{old_iv[i]};
     const Box::Interval& new_i{new_iv[i]};
