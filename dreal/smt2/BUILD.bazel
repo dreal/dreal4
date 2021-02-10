@@ -112,6 +112,7 @@ dreal_cc_library(
         "//dreal/symbolic",
         "//dreal/symbolic:prefix_printer",
         "//dreal/util:math",
+        "//dreal/util:precision_guard",
         "//dreal/util:scoped_unordered_map",
         "//dreal/util:string_to_interval",
         "//third_party/com_github_westes_flex:flex_lexer_h",

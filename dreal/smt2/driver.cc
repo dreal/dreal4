@@ -15,6 +15,7 @@
 #include "dreal/solver/expression_evaluator.h"
 #include "dreal/symbolic/prefix_printer.h"
 #include "dreal/util/optional.h"
+#include "dreal/util/precision_guard.h"
 
 namespace dreal {
 
@@ -103,6 +104,7 @@ void Smt2Driver::CheckSat() {
       cout << "delta-sat with delta = " << context_.config().precision()
            << "\n";
       if (context_.config().produce_models()) {
+        PrecisionGuard precision_guard(&cout);
         cout << *model << "\n";
       }
     }
@@ -114,6 +116,7 @@ void Smt2Driver::CheckSat() {
 
 namespace {
 ostream& PrintModel(ostream& os, const Box& box) {
+  PrecisionGuard precision_guard(&os);
   os << "(model\n";
   for (int i = 0; i < box.size(); ++i) {
     const Variable& var{box.variable(i)};
