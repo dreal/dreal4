@@ -1,14 +1,16 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 
 if [[ "${EUID}" -ne 0 ]]; then
   echo 'This script must be run as root' >&2
   exit 1
 fi
-apt-get update
-apt-get install -y software-properties-common
-add-apt-repository ppa:dreal/dreal -y  # For libibex-dev
-apt-get update
+
+apt-get install -y --no-install-recommends software-properties-common || \
+    ( (apt-get update || (sleep 30; apt-get update)) && \
+	  apt-get install -y --no-install-recommends software-properties-common)
+add-apt-repository ppa:dreal/dreal -y # For libibex-dev
+apt-get update || (sleep 30; apt-get update)
 apt-get install -y --no-install-recommends $(tr '\n' ' ' <<EOF
 bison
 coinor-libclp-dev
