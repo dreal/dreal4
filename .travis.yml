@@ -80,6 +80,18 @@ matrix:
           update: true
           sources:
           - sourceline: 'ppa:ubuntu-toolchain-r/test'
+          - sourceline: "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-12 main"
+            key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
+          packages:
+          - clang-12
+      env:
+        - COMPILER="clang-12" BUILD_TYPE="-c dbg"
+    - compiler: clang
+      addons:
+        apt:
+          update: true
+          sources:
+          - sourceline: 'ppa:ubuntu-toolchain-r/test'
           - sourceline: "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-11 main"
             key_url: "http://apt.llvm.org/llvm-snapshot.gpg.key"
           packages:
