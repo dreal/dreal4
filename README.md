@@ -14,7 +14,7 @@ macOS 11.0 / 10.15 / 10.14:
 dreal
 ```
 
-Ubuntu 20.04 / 18.04 / 16.04:
+Ubuntu 20.04 / 18.04:
 
 ```bash
 # 20.04
@@ -24,10 +24,6 @@ curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/20
 # 18.04
 sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/18.04/install.sh | sudo bash
-
-# 16.04
-sudo apt-get install curl
-curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/16.04/install.sh | sudo bash
 
 # Test the installation.
 DREAL_VERSION=4.20.12.1
@@ -108,7 +104,7 @@ git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 20.04 / 18.04 / 16.04
+Ubuntu 20.04 / 18.04
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
@@ -140,25 +136,17 @@ By default, it builds a release build. To build a debug-build, run
 allow lldb/gdb to show symbols.
 
 Bazel uses the system default compiler. To use a specific compiler,
-set up `CC` environment variable. For example, `CC=gcc-8.0 bazel build
+set up `CC` environment variable. For example, `CC=gcc-7 bazel build
 //...`.
 
 In CI, we test that dReal can be built using the following compilers:
  - Ubuntu:
-   [gcc-10](https://gcc.gnu.org/gcc-10),
-   [gcc-9](https://gcc.gnu.org/gcc-9),
-   [gcc-8](https://gcc.gnu.org/gcc-8),
-   [gcc-7](https://gcc.gnu.org/gcc-7),
-   [gcc-6](https://gcc.gnu.org/gcc-6),
-   [gcc-5](https://gcc.gnu.org/gcc-5),
-   [clang-12](https://releases.llvm.org/12.0.0/tools/clang/docs/),
-   [clang-11](https://releases.llvm.org/11.0.0/tools/clang/docs/),
-   [clang-10](https://releases.llvm.org/10.0.0/tools/clang/docs/),
    [clang-9](https://releases.llvm.org/9.0.0/tools/clang/docs/),
-   [clang-8](http://releases.llvm.org/8.0.0/tools/clang/docs),
-   [clang-7](http://releases.llvm.org/7.0.0/tools/clang/docs),
-   [clang-6.0](http://releases.llvm.org/6.0.0/tools/clang/docs),
-   [clang-5.0](http://releases.llvm.org/5.0.0/tools/clang/docs),
+   [clang-10](https://releases.llvm.org/10.0.0/tools/clang/docs/),
+   [clang-11](https://releases.llvm.org/11.0.0/tools/clang/docs/),
+   [gcc-7](https://gcc.gnu.org/gcc-7),
+   [gcc-9](https://gcc.gnu.org/gcc-9),
+   [gcc-10](https://gcc.gnu.org/gcc-10)
  - macOS: [Apple clang](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
 
 
@@ -205,7 +193,7 @@ macOS 11.0 / 10.15 / 10.14:
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
-Ubuntu 20.04 / 18.04 / 16.04:
+Ubuntu 20.04 / 18.04:
 
 ```bash
 export PKG_CONFIG_PATH=/opt/dreal/4.20.12.1/lib/pkgconfig:/opt/libibex/2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}

@@ -9,14 +9,14 @@ command -v pyenv >/dev/null 2>&1 || (echo "pyenv is not installed."; exit 1)
 
 # Check macOS / Ubuntu version to maintain backward compatibility
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    SUPPORTED_UBUNTU_VERSION=16.04
+    SUPPORTED_UBUNTU_VERSION=18.04
     CURRENT_UBUNTU_VERSION=$(grep "DISTRIB_RELEASE" /etc/lsb-release | cut -d "=" -f 2)
     if [[ "${CURRENT_UBUNTU_VERSION}" != "${SUPPORTED_UBUNTU_VERSION}" ]]; then
 	echo "Please use Ubuntu-${SUPPORTED_UBUNTU_VERSION}."
 	exit 1
     fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    SUPPORTED_MACOS_VERSION=10.13.6
+    SUPPORTED_MACOS_VERSION=10.14.6
     if [[ $(sw_vers -productVersion) != "${SUPPORTED_MACOS_VERSION}" ]]; then
 	echo "Please use macOS-${SUPPORTED_MACOS_VERSION}."
 	exit 1

@@ -6,9 +6,9 @@ display_usage() {
     echo "usage: $0 <id> <password>"
 }
 
-if [ "$(lsb_release -r -s)" != "16.04" ]
+if [ "$(lsb_release -r -s)" != "18.04" ]
 then
-    echo "Please run this script on Ubuntu 16.04"
+    echo "Please run this script on Ubuntu 18.04"
     exit 1
 fi
 
@@ -20,7 +20,7 @@ then
 fi
 
 # BUILD
-CC=gcc-5 bazel build //:package_debian
+CC=gcc-7 bazel build //:package_debian
 
 ID=$1
 PASSWORD=$2

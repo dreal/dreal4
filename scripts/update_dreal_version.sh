@@ -20,7 +20,6 @@ echo -n "Updating ${OLD_VERSION} => ${NEW_VERSION}... "
 sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" \
     "${ROOT_PATH}/README.md" \
     "${ROOT_PATH}/setup.py" \
-    "${ROOT_PATH}/setup/ubuntu/16.04/install.sh" \
     "${ROOT_PATH}/setup/ubuntu/18.04/install.sh" \
     "${ROOT_PATH}/setup/ubuntu/20.04/install.sh" \
     "${ROOT_PATH}/tools/dreal.bzl" \
@@ -28,7 +27,7 @@ sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" \
 echo "Done"
 
 DREAL_DEBNAME=dreal_${NEW_VERSION}_amd64.deb
-DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
+DREAL_URL=https://github.com/dreal/dreal4/releases/download/${NEW_VERSION}/${DREAL_DEBNAME}
 
 wget ${DREAL_URL} -O ${DREAL_DEBNAME}
 SHA256=`shasum -a 256 ${DREAL_DEBNAME} | cut -d ' ' -f 1`
