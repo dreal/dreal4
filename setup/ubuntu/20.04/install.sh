@@ -15,7 +15,7 @@ apt-get update || (sleep 30; apt-get update)
 # Install dReal
 DREAL_VERSION=4.20.12.1
 DREAL_DEBNAME=dreal_${DREAL_VERSION}_amd64.deb
-DREAL_URL=https://dl.bintray.com/dreal/dreal/${DREAL_DEBNAME}
+DREAL_URL=https://github.com/dreal/dreal4/releases/download/${DREAL_VERSION}/${DREAL_DEBNAME}
 DREAL_SHA256=8e1cc5b1d4be3fea534f1db27cfaddd5e0606e57d60bc95ce1a3d19597812938
 apt-get install --no-install-recommends wget -y
 wget "${DREAL_URL}"
