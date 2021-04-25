@@ -1,0 +1,91 @@
+name: MacOS_CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 7 * * *'
+
+env:
+  HOMEBREW_NO_AUTO_UPDATE: "1"
+
+jobs:
+  catalina_build_and_test:
+    runs-on: macos-10.15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: remove-bazelisk
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
+      - name: setup
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
+      - name: build and test
+        run: |
+          bazel test //... \
+            -c dbg \
+            --test_output=errors \
+            --verbose_failures
+
+  big_sur_build_and_test:
+    runs-on: macos-11.0
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: switch to XCode 12.2
+        run: sudo xcode-select -s "/Applications/Xcode_12.2.app"
+      - name: remove-bazelisk
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
+      - name: setup
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
+      - name: build and test
+        run: |
+          bazel test //... \
+            -c dbg \
+            --test_output=errors \
+            --verbose_failures
+
+  catalina_ubsan:
+    runs-on: macos-10.15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: remove-bazelisk
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
+      - name: setup
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
+      - name: build and test
+        run: |
+          bazel test //... \
+            -c dbg \
+            --test_output=errors \
+            --config ubsan \
+            --test_tag_filters=-no_ubsan \
+            --verbose_failures
+
+  catalina_asan:
+    runs-on: macos-10.15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: remove-bazelisk
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
+      - name: setup
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
+      - name: build and test
+        run: |
+          bazel test //... \
+            -c dbg \
+            --test_output=errors \
+            --config asan \
+            --test_tag_filters=-no_asan \
+            --verbose_failures

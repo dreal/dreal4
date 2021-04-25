@@ -1,0 +1,76 @@
+name: Ubuntu_CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 7 * * *'
+
+jobs:
+  build_test_focal:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        cc: [gcc-9, gcc-10, clang-9, clang-10, clang-11]
+    steps:
+     - name: checkout
+       uses: actions/checkout@v2
+     - name: setup
+       run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
+     - name: build and test
+       run: |
+         CC=${{ matrix.cc }} bazel test //... \
+         -c dbg \
+         --test_output=errors \
+         --verbose_failures
+
+  build_test_bionic:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        cc: [gcc-7, gcc-9, gcc-10, clang-9]
+    steps:
+     - name: checkout
+       uses: actions/checkout@v2
+     - name: setup
+       run: sudo ./setup/ubuntu/18.04/install_prereqs.sh
+     - name: build and test
+       run: |
+         CC=${{ matrix.cc }} bazel test //... \
+         -c dbg \
+         --test_output=errors \
+         --verbose_failures
+
+  ubsan_focal:
+    runs-on: ubuntu-20.04
+    steps:
+     - name: checkout
+       uses: actions/checkout@v2
+     - name: setup
+       run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
+     - name: build and test
+       run: |
+         CC=clang-9 bazel test //... \
+           -c dbg \
+           --config ubsan \
+           --test_output=errors \
+           --test_tag_filters=-no_ubsan \
+           --verbose_failures
+
+  asan_focal:
+    runs-on: ubuntu-20.04
+    steps:
+     - name: checkout
+       uses: actions/checkout@v2
+     - name: setup
+       run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
+     - name: build and test
+       run: |
+         CC=clang-9 bazel test //... \
+           -c dbg \
+           --config asan \
+           --test_output=errors \
+           --test_tag_filters=-no_asan \
+           --verbose_failures

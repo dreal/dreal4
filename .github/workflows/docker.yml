@@ -1,0 +1,29 @@
+name: Docker_CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 7 * * *'
+
+jobs:
+  docker_build_test:
+    name: Docker build test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: build
+        run: docker build -t dreal4_test .
+      - name: test
+        run: docker run -t dreal4_test dreal "-v"
+  docker_pull_test:
+    name: Docker pull test
+    runs-on: ubuntu-20.04
+    steps:
+      - name: pull
+        run: docker pull dreal/dreal4
+      - name: test
+        run: docker run -t dreal/dreal4 dreal "-v"
