@@ -43,9 +43,9 @@ github_archive(
 
 github_archive(
     name = "com_google_googletest",  # GOOGLE
-    commit = "cb44c86c1aaf31b26797728e93acc950c01dbd5b",  # 2020/06/02
+    commit = "662fe38e44900c007eccb65a5d2ea19df7bd520e",  # 2021/05/13
     repository = "google/googletest",
-    sha256 = "9a1427fc06bfe11dec4fa7489026a3d0983f64123805c4ac922896de92004a7f",
+    sha256 = "719342dbde45224fba61ccc0f5c1e9a6925074365a5101cadedc51fcca5a53a3",
 )
 
 http_archive(
