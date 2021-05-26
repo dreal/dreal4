@@ -522,10 +522,10 @@ name_sort: '(' SYMBOL sort ')' {
         ;
 
 name_sort_list: /* empty list */ { $$ = std::vector<Variable>{}; }
-        |       name_sort name_sort_list {
-            const Variable& v = $1;
-	    $2.push_back(v);
-	    $$ = $2;
+        |       name_sort_list name_sort {
+            const Variable& v = $2;
+	    $1.push_back(v);
+	    $$ = $1;
         }
         ;
 
