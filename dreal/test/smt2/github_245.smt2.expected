@@ -1,0 +1,6 @@
+delta-sat with delta = 0.001
+(model
+  (define-fun a () Real 12)
+  (define-fun b () Real [-0.78539816339744839, -0.78539816339744828])
+  (define-fun R () Real [8.4852813742385571, 8.4852813742385855])
+)

@@ -1,5 +1,5 @@
 delta-sat with delta = 0.001
-z : [-1, -1]
+z : [1, 1]
 (model
-  (define-fun z () Real -1)
+  (define-fun z () Real 1)
 )
