@@ -146,8 +146,7 @@ In CI, we test that dReal can be built using the following compilers:
    [clang-11](https://releases.llvm.org/11.0.0/tools/clang/docs/),
    [gcc-7](https://gcc.gnu.org/gcc-7),
    [gcc-9](https://gcc.gnu.org/gcc-9),
-   [gcc-10](https://gcc.gnu.org/gcc-10),
-   [gcc-11](https://gcc.gnu.org/gcc-11)
+   [gcc-10](https://gcc.gnu.org/gcc-10)
  - macOS: [Apple clang](https://developer.apple.com/library/content/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html)
 
 
