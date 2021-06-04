@@ -28,7 +28,7 @@ void ContractorInteger::Prune(ContractorStatus* contractor_status) const {
   Box& box{contractor_status->mutable_box()};
   for (const int idx : int_indexes_) {
     Box::Interval& iv{box[idx]};
-    if (iv.is_degenerated()) {
+    if (iv.is_empty()) {
       continue;
     }
     if (!is_integer(iv.lb()) || !is_integer(iv.ub())) {
