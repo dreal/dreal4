@@ -45,10 +45,28 @@ Formula& Term::mutable_formula() { return const_cast<Formula&>(formula()); }
 
 Term Term::Substitute(const Variable& v, const Term& t) {
   switch (type_) {
-    case Type::FORMULA:
-      return Term{f_.Substitute(v, t.f_)};
-    case Type::EXPRESSION:
-      return Term{e_.Substitute(v, t.e_)};
+    case Type::FORMULA: {
+      switch (v.get_type()) {
+        case Variable::Type::CONTINUOUS:
+        case Variable::Type::INTEGER:
+        case Variable::Type::BINARY:
+          return Term{f_.Substitute(v, t.e_)};
+        case Variable::Type::BOOLEAN:
+          return Term{f_.Substitute(v, t.f_)};
+      }
+      DREAL_UNREACHABLE();
+    }
+    case Type::EXPRESSION: {
+      switch (v.get_type()) {
+        case Variable::Type::CONTINUOUS:
+        case Variable::Type::INTEGER:
+        case Variable::Type::BINARY:
+          return Term{e_.Substitute(v, t.e_)};
+        case Variable::Type::BOOLEAN:
+          return Term{e_.Substitute({}, {{v, t.f_}})};
+      }
+      DREAL_UNREACHABLE();
+    }
   }
   DREAL_UNREACHABLE();
 }
