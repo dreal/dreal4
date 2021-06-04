@@ -16,7 +16,7 @@ apt-get update || (sleep 30; apt-get update)
 DREAL_VERSION=4.21.06.1
 DREAL_DEBNAME=dreal_${DREAL_VERSION}_amd64.deb
 DREAL_URL=https://github.com/dreal/dreal4/releases/download/${DREAL_VERSION}/${DREAL_DEBNAME}
-DREAL_SHA256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+DREAL_SHA256=c105906b92960fc675cd58751d735b3d465457822ceb6fabaf146c335d411f96
 apt-get install --no-install-recommends wget -y
 wget "${DREAL_URL}"
 if echo "${DREAL_SHA256}  ${DREAL_DEBNAME}" | sha256sum -c; then
