@@ -1,0 +1,14 @@
+delta-sat with delta = 0.001
+(model
+  (define-fun a () Real [8.7686852825712727, 8.7686852825712744])
+  (define-fun b () Real [29.761904761904763, 29.761904761904766])
+  (define-fun c () Real 5)
+  (define-fun d () Real 15)
+  (define-fun e () Real 0)
+  (define-fun f () Real 10)
+  (define-fun Y () Real 10)
+  (define-fun Joker () Real [12.831299999999999, 12.831300000000001])
+  (define-fun test_print1 () Bool true)
+  (define-fun test_print2 () Bool false)
+  (define-fun test_print3 () Bool false)
+)
