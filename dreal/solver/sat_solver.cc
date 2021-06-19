@@ -111,7 +111,7 @@ optional<SatSolver::Model> SatSolver::CheckSat() {
   // Call SAT solver.
   TimerGuard check_sat_timer_guard(&stat.timer_check_sat_,
                                    DREAL_LOG_INFO_ENABLED);
-  const int ret{picosat_sat(sat_, -1)};
+  const int ret{picosat_sat(sat_, -1 /* decision_limit == no limit */)};
   check_sat_timer_guard.pause();
 
   Model model;
@@ -135,19 +135,19 @@ optional<SatSolver::Model> SatSolver::CheckSat() {
       const auto it = var_to_formula_map.find(var);
       if (it != var_to_formula_map.end()) {
         DREAL_LOG_TRACE("SatSolver::CheckSat: Add theory literal {}{} to Model",
-                        model_i ? "" : "¬", var);
+                        model_i == 1 ? "" : "¬", var);
         auto& theory_model = model.second;
         theory_model.emplace_back(var, model_i == 1);
       } else if (tseitin_variables_.count(var.get_id()) == 0) {
         DREAL_LOG_TRACE(
             "SatSolver::CheckSat: Add Boolean literal {}{} to Model ",
-            model_i ? "" : "¬", var);
+            model_i == 1 ? "" : "¬", var);
         auto& boolean_model = model.first;
         boolean_model.emplace_back(var, model_i == 1);
       } else {
         DREAL_LOG_TRACE(
             "SatSolver::CheckSat: Skip {}{} which is a temporary variable.",
-            model_i ? "" : "¬", var);
+            model_i == 1 ? "" : "¬", var);
       }
     }
     DREAL_LOG_DEBUG("SatSolver::CheckSat() Found a model.");
