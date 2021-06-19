@@ -99,9 +99,6 @@ set<Formula> GenerateExplanation(const Variables& unsat_witness,
   static ContractorStatusStat stat(DREAL_LOG_INFO_ENABLED);
   stat.increase_num_explanation_generation();
   TimerGuard timer_guard(&stat.timer_explanation_generation_, stat.enabled());
-  if (unsat_witness.empty()) {
-    return set<Formula>();
-  }
 
   // Explanation:
   // = lfp. λE. E ∪ {fᵢ | fᵢ ∈ Used Constraints ∧ vars(fᵢ) ∩ unsat_witness ≠ ∅}
@@ -112,10 +109,24 @@ set<Formula> GenerateExplanation(const Variables& unsat_witness,
   // Set up the initial explanation based on variables.
   set<Formula> explanation;
   for (const Formula& f_i : used_constraints) {
+    if (f_i.GetFreeVariables().empty()) {
+      // It is possible that the constraint has no free variable but
+      // we can't decide its truth value. For example, in SMT2, (0.01
+      // < 1.0) will be translated into a formula with intervals and
+      // we don't do constant-folding over intervals yet, so it
+      // remains as it is.
+      explanation.insert(f_i);
+      continue;
+    }
     if (HaveIntersection(unsat_witness, f_i.GetFreeVariables())) {
       explanation.insert(f_i);
     }
   }
+
+  if (unsat_witness.empty()) {
+    return explanation;
+  }
+
   bool keep_going = true;
   while (keep_going) {
     keep_going = false;
