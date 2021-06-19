@@ -1181,6 +1181,16 @@ smt2_test(
 )
 
 smt2_test(
+    name = "github_issue_250_plus",
+    size = "small",
+)
+
+smt2_test(
+    name = "github_issue_250_minus",
+    size = "small",
+)
+
+smt2_test(
     name = "xor_01",
     size = "small",
 )
