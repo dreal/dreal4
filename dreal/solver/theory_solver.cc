@@ -109,6 +109,9 @@ optional<Contractor> TheorySolver::BuildContractor(
       case FilterAssertionResult::FilteredWithChange:
         contractor_status->AddUsedConstraint(f);
         if (box.empty()) {
+          for (const auto& v : f.GetFreeVariables()) {
+            contractor_status->AddUnsatWitness(v);
+          }
           return {};
         }
         continue;
