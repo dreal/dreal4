@@ -170,6 +170,14 @@ optional<Box> Context::Impl::CheckSatCore(const ScopedVector<Formula>& stack,
               "size = {}",
               explanation.size(), stack.get_vector().size());
           sat_solver->AddLearnedClause(explanation);
+          if (DREAL_LOG_TRACE_ENABLED) {
+            for (const auto& f_i : stack.get_vector()) {
+              DREAL_LOG_TRACE("ContextImpl::CheckSatCore: Stack {}", f_i);
+            }
+            for (const auto& f_i : explanation) {
+              DREAL_LOG_TRACE("ContextImpl::CheckSatCore: Explanation {}", f_i);
+            }
+          }
         }
       } else {
         return box;
