@@ -100,18 +100,32 @@ optional<Contractor> TheorySolver::BuildContractor(
   if (assertions.empty()) {
     return make_contractor_integer(box, config_);
   }
+  DREAL_LOG_TRACE("TheorySolver::BuildContractor: Filtering Assertions\n{}",
+                  box);
   vector<Contractor> ctcs;
+  Box old_box;
   for (const Formula& f : assertions) {
+    old_box = box;
     switch (FilterAssertion(f, &box)) {
       case FilterAssertionResult::NotFiltered:
-        /* No OP */
+        DREAL_LOG_TRACE("TheorySolver::BuildContractor: {} - Not Filtered.", f);
+        if (old_box != box) {
+          contractor_status->AddUsedConstraint(f);
+        }
         break;
       case FilterAssertionResult::FilteredWithChange:
+        DREAL_LOG_TRACE(
+            "TheorySolver::BuildContractor: {} - Filtered with Change.\n{}", f,
+            box);
         contractor_status->AddUsedConstraint(f);
         if (box.empty()) {
           for (const auto& v : f.GetFreeVariables()) {
             contractor_status->AddUnsatWitness(v);
           }
+          DREAL_LOG_TRACE(
+              "TheorySolver::BuildContractor: {} - Filtered with Change => "
+              "EMPTY BOX",
+              f);
           return {};
         }
         continue;
@@ -121,7 +135,8 @@ optional<Contractor> TheorySolver::BuildContractor(
     auto it = contractor_cache_.find(f);
     if (it == contractor_cache_.end()) {
       // There is no contractor for `f`, build one.
-      DREAL_LOG_DEBUG("TheorySolver::BuildContractor: {}", f);
+      DREAL_LOG_DEBUG(
+          "TheorySolver::BuildContractor: Turn {} into a contractor", f);
       if (is_forall(f)) {
         // We should have `inner_delta < epsilon < delta`.
         const double delta{config_.precision()};
@@ -148,6 +163,14 @@ optional<Contractor> TheorySolver::BuildContractor(
   if (config_.use_polytope()) {
     // Add polytope contractor.
     ctcs.push_back(make_contractor_ibex_polytope(assertions, box, config_));
+  }
+  if (DREAL_LOG_TRACE_ENABLED) {
+    for (const auto& ctc : ctcs) {
+      DREAL_LOG_TRACE("TheorySolver::BuildContractor: CTC = {}", ctc);
+    }
+    if (ctcs.empty()) {
+      DREAL_LOG_TRACE("TheorySolver::BuildContractor: CTCS = empty");
+    }
   }
   if (config_.use_worklist_fixpoint()) {
     return make_contractor_worklist_fixpoint(DefaultTerminationCondition, ctcs,
