@@ -31,12 +31,10 @@ jobs:
             --verbose_failures
 
   big_sur_build_and_test:
-    runs-on: macos-11.0
+    runs-on: macos-11
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: switch to XCode 12.2
-        run: sudo xcode-select -s "/Applications/Xcode_12.2.app"
       - name: remove-bazelisk
         run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
       - name: setup
