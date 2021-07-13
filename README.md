@@ -203,3 +203,62 @@ Then, `pkg-config dreal --cflags` and `pkg-config dreal --libs` should
 provide necessary information to use dReal. Note that setting up
 `PKG_CONFIG_PATH` is necessary to avoid possible conflicts (i.e. with
 `ibex` formula in Mac).
+
+Command-line Options
+====================
+
+```
+-h, -help, --help, --usage   Display usage instructions.
+
+-j, --jobs ARG               Number of jobs.
+
+-v, --version                Print version number of dReal.
+
+--debug-parsing              Debug parsing
+
+--debug-scanning             Debug scanning/lexing
+
+--forall-polytope            Use polytope contractor in forall contractor.
+
+--format ARG                 File format. Any one of these (default = auto):
+                             smt2, dr, auto (use file extension)
+
+--in                         Read from standard input. Uses smt2 by default.
+
+--local-optimization         Use local optimization algorithm for exist-forall
+                             problems.
+
+--model, --produce-models    Produce models if delta-sat
+
+--nlopt-ftol-abs ARG         [NLopt] Absolute tolerance on function value
+                             (default = 1e-06)
+
+--nlopt-ftol-rel ARG         [NLopt] Relative tolerance on function value
+                             (default = 1e-06)
+
+--nlopt-maxeval ARG          [NLopt] Number of maximum function evaluations
+                             (default = 100)
+
+--nlopt-maxtime ARG          [NLopt] Maximum optimization time (in second)
+                             (default = 0.01 sec)
+
+--polytope                   Use polytope contractor.
+
+--precision ARG              Precision (default = 0.001)
+
+--random-seed ARG            Set a seed for the random number generator.
+
+--sat-default-phase ARG      Set default initial phase for SAT solver.
+                               0 = false
+                               1 = true
+                               2 = Jeroslow-Wang (default)
+                               3 = random initial phase
+
+--smtlib2-compliant          Strictly follow the smtlib2 standard.
+
+--verbose ARG                Verbosity level. Either one of these (default =
+                             error):
+                             trace, debug, info, warning, error, critical, off
+
+--worklist-fixpoint          Use worklist fixpoint algorithm in ICP.
+```
