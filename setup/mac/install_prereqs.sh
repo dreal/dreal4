@@ -21,6 +21,6 @@ if [[ "${EUID}" -eq 0 ]]; then
   exit 1
 fi
 
-brew tap dreal-deps/ibex
+brew tap robotlocomotion/director
 brew tap dreal/dreal
 brew install dreal --only-dependencies --build-from-source

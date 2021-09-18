@@ -122,7 +122,7 @@ your system. To install them, please follow the instructions below:
 
 macOS 11.0 / 10.15 / 10.14
 
-    brew tap dreal-deps/ibex
+    brew tap robotlocomotion/director
     brew tap dreal/dreal
     brew install dreal --only-dependencies
 
@@ -141,7 +141,7 @@ below:
 
 macOS 11.0 / 10.15 / 10.14
 
-    brew tap dreal-deps/ibex
+    brew tap robotlocomotion/director
     brew tap dreal/dreal
     brew install dreal --only-dependencies --build-from-source
 
