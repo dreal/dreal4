@@ -10,7 +10,7 @@ def _impl(repository_ctx):
         )
         repository_ctx.symlink(
             Label(
-                "@dreal//third_party/org_gmplib:package-macos.BUILD.bazel",
+                "@dreal//tools:gmp_package_macos.BUILD.bazel",
             ),
             "BUILD.bazel",
         )
@@ -26,7 +26,7 @@ def _impl(repository_ctx):
         repository_ctx.symlink("/usr/include/gmpxx.h", "include/gmpxx.h")
         repository_ctx.symlink(
             Label(
-                ("@dreal//third_party/org_gmplib:package-ubuntu.BUILD.bazel"),
+                ("@dreal//tools:gmp_package_ubuntu.BUILD.bazel"),
             ),
             "BUILD.bazel",
         )

@@ -1,3 +1,0 @@
-licenses([
-    "restricted",  # LGPL-3
-])

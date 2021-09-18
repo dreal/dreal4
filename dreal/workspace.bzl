@@ -11,7 +11,7 @@ load(
     "python_configure",
 )
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@dreal//third_party/org_gmplib:repository.bzl", "gmp_repository")
+load("@dreal//tools:gmp_repository.bzl", "gmp_repository")
 
 def dreal_workspace():
     pkg_config_repository(

@@ -1,7 +1,3 @@
-licenses([
-    "restricted",  # LGPL-3
-])
-
 cc_library(
     name = "gmp",
     hdrs = [
@@ -10,7 +6,7 @@ cc_library(
     ],
     includes = ["include"],
     linkopts = [
-        "-L/usr/local/opt/gmp/lib",
+        "-L/usr/lib/x86_64-linux-gnu",
         "-lgmpxx",
         "-lgmp",
     ],
