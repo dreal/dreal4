@@ -596,7 +596,7 @@ smt2_test(
 
 smt2_test(
     name = "nikos_01",
-    size = "medium",
+    size = "large",
 )
 
 smt2_test(
