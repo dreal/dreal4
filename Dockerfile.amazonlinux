@@ -1,0 +1,37 @@
+FROM amazonlinux:2
+
+RUN mkdir /dreal4
+COPY . /dreal4
+WORKDIR /dreal4
+
+# Install prerequisites.
+RUN yum install -y autoconf automake bison file flex gcc-c++ gcc-gfortran git gmp-devel make patch pkgconfig python3 tar wget which \
+# Install COINOR-CLP
+    && wget https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew \
+    && chmod u+x coinbrew \
+    && ./coinbrew fetch build --prefix=/usr --tests=none Clp@1.17.7 \
+# Install IBEX
+    && cp /usr/lib/pkgconfig/*.pc /usr/share/pkgconfig/ \
+    && curl https://codeload.github.com/dreal-deps/ibex-lib/tar.gz/fde1b111a5439eb59b7260bb84189e1a0c9cffca | tar xz \
+    && cd ibex-lib-fde1b111a5439eb59b7260bb84189e1a0c9cffca/ \
+    && CXXFLAGS=-std=c++0x ./waf configure --enable-shared --with-optim --with-solver --with-affine-extended --interval-lib=filib --lp-lib=clp --prefix=/opt/libibex/2.7.4 \
+    && ./waf install \
+    && cd - \
+# Install NLOPT
+    && amazon-linux-extras install epel -y \
+    && yum install NLopt-devel -y \
+# Install Bazel
+    && wget https://copr.fedorainfracloud.org/coprs/vbatts/bazel/repo/epel-7/vbatts-bazel-epel-7.repo \
+    && mv vbatts-bazel-epel-7.repo /etc/yum.repos.d/ \
+    && amazon-linux-extras install -y java-openjdk11 \
+    && yum install bazel4 -y \
+# Build dReal
+    && cp /usr/include/FlexLexer.h ./third_party/com_github_westes_flex/FlexLexer.h \
+    && ls /opt/libibex/2.7.4/share/pkgconfig \
+    && PKG_CONFIG_PATH=/opt/libibex/2.7.4/share/pkgconfig pkg-config ibex --cflags \
+    && bazel build //dreal:dreal \
+    && mv bazel-bin/dreal/dreal /usr/bin/dreal \
+# Clean up
+    && cd / && rm -rf dreal4 \
+    && rm -rf /opt/libibex/2.7.4/{bin,include,share} \
+    && yum remove -y autoconf automake bazel4 bison file flex gcc-c++ gcc-gfortran git java-11-openjdk java-11-openjdk-devel java-11-openjdk-headless make patch pkgconfig python3 tar wget which
