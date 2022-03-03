@@ -21,7 +21,7 @@ compilation_database(
 )
 
 cc_binary(
-    name = "libdreal.so",
+    name = "libdreal_.so",
     linkshared = 1,
     visibility = [
         "//dreal:__subpackages__",
@@ -39,7 +39,7 @@ cc_binary(
 
 cc_library(
     name = "dreal_shared_library",
-    srcs = [":libdreal.so"],
+    srcs = [":libdreal_.so"],
     hdrs = [
         "//dreal:headers",
         "//dreal/api:headers",

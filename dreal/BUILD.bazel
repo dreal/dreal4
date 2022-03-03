@@ -104,7 +104,7 @@ pkg_tar(
 pkg_tar(
     name = "package_sharedlib",
     srcs = [
-        "//:libdreal.so",
+        "//:libdreal_.so",
     ],
     extension = "tar.gz",
     package_dir = "lib",

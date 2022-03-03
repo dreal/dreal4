@@ -51,9 +51,9 @@ def _copy_bins():
     shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'dreal', '_dreal_py.so'),
                 os.path.join(ROOT_DIR, 'dreal'))
     os.chmod(os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so'), 436)
-    shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'libdreal.so'),
+    shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'libdreal_.so'),
                 os.path.join(ROOT_DIR, 'dreal'))
-    os.chmod(os.path.join(ROOT_DIR, 'dreal', 'libdreal.so'), 436)
+    os.chmod(os.path.join(ROOT_DIR, 'dreal', 'libdreal_.so'), 436)
     if sys.platform == 'darwin':
         dst_full = os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so')
         subprocess.check_call(
@@ -70,11 +70,11 @@ def _copy_bins():
             # If path is relative, it needs to be replaced by absolute path.
             if "@loader_path" not in relative_path:
                 continue
-            if "libdreal.so" in relative_path:
+            if "libdreal_.so" in relative_path:
                 subprocess.check_call(
                     ["install_name_tool",
                      "-change", relative_path,
-                     os.path.join('@loader_path', "libdreal.so"),
+                     os.path.join('@loader_path', "libdreal_.so"),
                      dst_full])
 
 
@@ -203,7 +203,7 @@ setuptools.setup(
     packages=['dreal'],
     include_package_data=True,
     package_data={  # Optional
-        'dreal': ['_dreal_py.so', 'libdreal.so'],
+        'dreal': ['_dreal_py.so', 'libdreal_.so'],
     },
     project_urls={  # Optional
         'Bug Reports': 'https://github.com/dreal/dreal4/issues',
