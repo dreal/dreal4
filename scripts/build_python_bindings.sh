@@ -31,7 +31,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	exit 1
     fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    SUPPORTED_MACOS_VERSION=10.14.6
+    SUPPORTED_MACOS_VERSION=11.6.4
     if [[ $(sw_vers -productVersion) != "${SUPPORTED_MACOS_VERSION}" ]]; then
 	echo "Please use macOS-${SUPPORTED_MACOS_VERSION}."
 	exit 1
@@ -41,10 +41,10 @@ else
 fi
 
 # Install active python releases.
-PYTHON_VERSIONS="3.6.13"                    # End Of Life: 2021-12-23
-PYTHON_VERSIONS="${PYTHON_VERSIONS} 3.7.10"  # End Of Life: 2023-06-27
-PYTHON_VERSIONS="${PYTHON_VERSIONS} 3.8.10"  # End Of Life: 2024-10
-PYTHON_VERSIONS="${PYTHON_VERSIONS} 3.9.5"  # End Of Life: 2025-10
+PYTHON_VERSIONS="3.7.12"                     # End Of Life: 2023-06-27
+PYTHON_VERSIONS="${PYTHON_VERSIONS} 3.8.12"  # End Of Life: 2024-10
+PYTHON_VERSIONS="${PYTHON_VERSIONS} 3.9.10"  # End Of Life: 2025-10
+PYTHON_VERSIONS="${PYTHON_VERSIONS} 3.10.2"  # End Of Life: 2026-10
 
 for PYTHON_VERSION in ${PYTHON_VERSIONS}
 do
