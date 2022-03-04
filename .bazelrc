@@ -92,6 +92,7 @@ build:ubsan --copt -Wno-macro-redefined
 build:ubsan --copt -D_FORTIFY_SOURCE=0
 build:ubsan --copt -fno-sanitize=float-divide-by-zero,function,vptr
 build:ubsan --linkopt -fsanitize=undefined
+build:ubsan --linkopt -rtlib=compiler-rt
 build:ubsan --test_env=UBSAN_OPTIONS
 build:ubsan --test_tag_filters=-no_ubsan
 build:ubsan --test_timeout=120,600,1800,7200
