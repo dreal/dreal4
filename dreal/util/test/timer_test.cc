@@ -25,6 +25,7 @@ void DoSomeWork(const int n) {
   for (int i = 0; i < n; ++i) {
     dummy += i;
   }
+  (void)dummy;
 }
 
 GTEST_TEST(Timer, Test1) {
