@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        cc: [gcc-9, gcc-10, clang-10, clang-11]
+        cc: [gcc-9, gcc-10, clang-10, clang-11, clang-12]
     steps:
      - name: checkout
        uses: actions/checkout@v2
@@ -52,7 +52,7 @@ jobs:
        run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
      - name: build and test
        run: |
-         CC=clang-11 bazel test //... \
+         CC=clang-12 bazel test //... \
            -c dbg \
            --config ubsan \
            --test_output=errors \
