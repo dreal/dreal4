@@ -57,6 +57,7 @@ jobs:
            --config ubsan \
            --test_output=errors \
            --test_tag_filters=-no_ubsan \
+           --linkopt=-lgcc_s \
            --verbose_failures
 
   asan_focal:
