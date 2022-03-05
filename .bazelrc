@@ -91,8 +91,13 @@ build:ubsan --copt -fno-omit-frame-pointer
 build:ubsan --copt -Wno-macro-redefined
 build:ubsan --copt -D_FORTIFY_SOURCE=0
 build:ubsan --copt -fno-sanitize=float-divide-by-zero,function,vptr
+build:ubsan --copt -fsanitize-link-c++-runtime
 build:ubsan --linkopt -fsanitize=undefined
+build:ubsan --linkopt -fsanitize-link-c++-runtime
 build:ubsan --linkopt -rtlib=compiler-rt
+
+# We need the following in Ubuntu. For now, we pass this via --linkopt in CI.
+# build:ubsan --linkopt -lgcc_s
 build:ubsan --test_env=UBSAN_OPTIONS
 build:ubsan --test_tag_filters=-no_ubsan
 build:ubsan --test_timeout=120,600,1800,7200
