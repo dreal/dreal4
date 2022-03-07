@@ -1,3 +1,8 @@
+GMP_LDFLAGS = [
+    "-lgmpxx",
+    "-lgmp",
+]
+
 cc_library(
     name = "gmp",
     hdrs = [
@@ -5,10 +10,10 @@ cc_library(
         "include/gmpxx.h",
     ],
     includes = ["include"],
-    linkopts = [
-        "-L/usr/local/opt/gmp/lib",
-        "-lgmpxx",
-        "-lgmp",
-    ],
+    linkopts =
+        select({
+            "@dreal//tools:darwin": ["-L/usr/local/opt/gmp/lib"] + GMP_LDFLAGS,
+            "@dreal//tools:darwin_arm64": ["-L/opt/homebrew/opt/gmp/lib"] + GMP_LDFLAGS,
+        }),
     visibility = ["//visibility:public"],
 )
