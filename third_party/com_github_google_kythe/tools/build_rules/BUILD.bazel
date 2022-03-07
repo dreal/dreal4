@@ -14,10 +14,12 @@ lexyacc_toolchain(
     name = "lexyacc_remote",
     lex = select({
         "@dreal//tools:linux": "/usr/bin/flex",
-        "@//conditions:default": "/usr/local/opt/flex/bin/flex",
+        "@dreal//tools:darwin_x86_64": "/usr/local/opt/flex/bin/flex",
+        "@dreal//tools:darwin_arm64": "/opt/homebrew/opt/flex/bin/flex",
     }),
     yacc = select({
         "@dreal//tools:linux": "/usr/bin/bison",
-        "@//conditions:default": "/usr/local/opt/bison/bin/bison",
+        "@dreal//tools:darwin_x86_64": "/usr/local/opt/bison/bin/bison",
+        "@dreal//tools:darwin_arm64": "/opt/homebrew/opt/bison/bin/bison",
     }),
 )
