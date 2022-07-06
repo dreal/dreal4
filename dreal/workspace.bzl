@@ -69,9 +69,9 @@ def dreal_workspace():
     github_archive(
         name = "picosat",  # MIT
         build_file = str(Label("//tools:picosat.BUILD.bazel")),
-        commit = "4ee7aa1d1c645df8fa9daa07f2be17c6d03b35fc",  # v965
+        commit = "ee542566ca89717af1b4558b0b3f226eb3b6b42d",  # v965 + custom fix
         repository = "dreal-deps/picosat",
-        sha256 = "1be461d3659d4e3dc957a718ed295941c38dc822fd22a67f4cb5d180f0b6a7a3",
+        sha256 = "9a047b7ba3ac1075a2288d35045585e2e3c24961f078f30ad97a313b8e539eb2",
     )
 
     github_archive(
