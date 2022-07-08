@@ -24,6 +24,7 @@ def dreal_workspace():
             "/usr/local/opt/ibex@2.7.4/share/pkgconfig",
             "/opt/homebrew/opt/ibex@2.7.4/share/pkgconfig",
             # Linux
+	    "/usr/lib/pkgconfig",
             "/opt/libibex/2.7.4/share/pkgconfig",
         ],
     )
