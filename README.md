@@ -7,16 +7,20 @@ dReal: An SMT Solver for Nonlinear Theories of Reals
 How to Install
 ==============
 
-macOS 11.0 / 10.15:
+macOS 12 / 11 / 10.15:
 
 ```bash
 /usr/bin/curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/mac/install.sh | bash
 dreal
 ```
 
-Ubuntu 20.04 / 18.04:
+Ubuntu 22.04 / 20.04 / 18.04:
 
 ```bash
+# 22.04
+sudo apt-get install curl
+curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/22.04/install.sh | sudo bash
+
 # 20.04
 sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/20.04/install.sh | sudo bash
@@ -97,14 +101,14 @@ How to Build
 Install Prerequisites
 --------------------
 
-macOS 11.0 / 10.15:
+macOS 12 / 11 / 10.15:
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 20.04 / 18.04
+Ubuntu 22.04 / 20.04 / 18.04
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
@@ -188,13 +192,13 @@ If you want to use
 [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config),
 you need to set up `PKG_CONFIG_PATH` as follows:
 
-macOS 11.0 / 10.15:
+macOS 12 / 11 / 10.15:
 
 ```bash
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
-Ubuntu 20.04 / 18.04:
+Ubuntu 22.04 / 20.04 / 18.04:
 
 ```bash
 export PKG_CONFIG_PATH=/opt/dreal/4.21.06.2/lib/pkgconfig:/opt/libibex/2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
