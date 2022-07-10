@@ -8,29 +8,29 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 github_archive(
     name = "bazel_skylib",  # Apache-2.0
-    commit = "1.0.3",
+    commit = "1.2.1",
     repository = "bazelbuild/bazel-skylib",
-    sha256 = "7ac0fa88c0c4ad6f5b9ffb5e09ef81e235492c873659e6bb99efb89d11246bcb",
+    sha256 = "710c2ca4b4d46250cdce2bf8f5aa76ea1f0cba514ab368f2988f70e864cfaf51",
 )
 
 load("@bazel_skylib//lib:versions.bzl", "versions")
 
-versions.check(minimum_bazel_version = "3.0.0")
+versions.check(minimum_bazel_version = "4.2.1")
 
 github_archive(
     name = "google_styleguide",  # BSD-3
     build_file = "//tools:google_styleguide.BUILD.bazel",
-    commit = "1.5.3",
+    commit = "1.6.0",
     repository = "cpplint/cpplint",
-    sha256 = "447508de65fc221c2d17655bc0ac7083ce20bcc3d3d1ec46ff4fb3484f9028f3",
+    sha256 = "ddc50661b62103376675d6e4bcaa85745fa523343c3d93a1f774685005f9afb3",
 )
 
 github_archive(
     name = "pycodestyle",  # Expat
     build_file = "//tools:pycodestyle.BUILD.bazel",
-    commit = "2.6.0",
+    commit = "2.8.0",
     repository = "PyCQA/pycodestyle",
-    sha256 = "08347fbc48cc92afd33117c1e8af9b99b292a4e5889f6b776f402e062fc39c97",
+    sha256 = "9116bd3686beaa22be34be1e5259fb9eecbf246a3991849d33ff6ab07d52f86e",
 )
 
 github_archive(
@@ -43,20 +43,17 @@ github_archive(
 
 github_archive(
     name = "com_google_googletest",  # GOOGLE
-    commit = "662fe38e44900c007eccb65a5d2ea19df7bd520e",  # 2021/05/13
+    commit = "release-1.12.1",
     repository = "google/googletest",
-    sha256 = "719342dbde45224fba61ccc0f5c1e9a6925074365a5101cadedc51fcca5a53a3",
+    sha256 = "81964fe578e9bd7c94dfdb09c8e4d6e6759e19967e397dbea48d1c10e45d0df2",
 )
 
 http_archive(
     name = "rules_python",  # Apache-2.0
-    sha256 = "b6d46438523a3ec0f3cead544190ee13223a52f6a6765a29eae7b7cc24cc83a0",
-    url = "https://github.com/bazelbuild/rules_python/releases/download/0.1.0/rules_python-0.1.0.tar.gz",
+    sha256 = "56dc7569e5dd149e576941bdb67a57e19cd2a7a63cc352b62ac047732008d7e1",
+    strip_prefix = "rules_python-0.10.0",
+    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.10.0.tar.gz",
 )
-
-load("@rules_python//python:repositories.bzl", "py_repositories")
-
-py_repositories()
 
 load("//dreal:workspace.bzl", "dreal_workspace")
 
