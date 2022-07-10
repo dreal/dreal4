@@ -24,7 +24,7 @@ def dreal_workspace():
             "/usr/local/opt/ibex@2.7.4/share/pkgconfig",
             "/opt/homebrew/opt/ibex@2.7.4/share/pkgconfig",
             # Linux
-	    "/usr/lib/pkgconfig",
+            "/usr/lib/pkgconfig",
             "/opt/libibex/2.7.4/share/pkgconfig",
         ],
     )
@@ -43,20 +43,28 @@ def dreal_workspace():
     native.register_toolchains("@local_config_python//:py_toolchain")
 
     http_archive(
-        name = "rules_pkg",
-        sha256 = "62eeb544ff1ef41d786e329e1536c1d541bb9bcad27ae984d57f18f314018e66",
+        name = "rules_license",
+        sha256 = "4865059254da674e3d18ab242e21c17f7e3e8c6b1f1421fffa4c5070f82e98b5",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.6.0/rules_pkg-0.6.0.tar.gz",
-            "https://github.com/bazelbuild/rules_pkg/releases/download/0.6.0/rules_pkg-0.6.0.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/0.0.1/rules_license-0.0.1.tar.gz",
+        ],
+    )
+
+    http_archive(
+        name = "rules_pkg",
+        sha256 = "8a298e832762eda1830597d64fe7db58178aa84cd5926d76d5b744d6558941c2",
+        urls = [
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
+            "https://github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
         ],
     )
 
     github_archive(
         name = "spdlog",  # MIT
         build_file = str(Label("//tools:spdlog.BUILD.bazel")),
-        commit = "v1.9.2",
+        commit = "v1.10.0",
         repository = "gabime/spdlog",
-        sha256 = "6fff9215f5cb81760be4cc16d033526d1080427d236e86d70bb02994f85e3d38",
+        sha256 = "697f91700237dbae2326b90469be32b876b2b44888302afbc7aceb68bcfe8224",
     )
 
     github_archive(
@@ -78,16 +86,16 @@ def dreal_workspace():
     github_archive(
         name = "pybind11",  # BSD
         build_file = str(Label("//tools:pybind11.BUILD.bazel")),
-        commit = "v2.9.1",
+        commit = "v2.9.2",
         repository = "pybind/pybind11",
-        sha256 = "c6160321dc98e6e1184cc791fbeadd2907bb4a0ce0e447f2ea4ff8ab56550913",
+        sha256 = "6bd528c4dbe2276635dc787b6b1f2e5316cf6b49ee3e150264e455a0d68d19c1",
     )
 
     github_archive(
         name = "com_google_absl",  # BSD
-        commit = "20211102.0",
+        commit = "20220623.0",
         repository = "abseil/abseil-cpp",
-        sha256 = "dcf71b9cba8dc0ca9940c4b316a0c796be8fab42b070bb6b7cab62b48f0e66c4",
+        sha256 = "4208129b49006089ba1d6710845a45e31c59b0ab6bff9e5788a87f55c5abd602",
     )
 
     github_archive(
