@@ -14,7 +14,7 @@ RUN apt-get update \
 # Build dReal4
       && cd /dreal4 \
       && bazel build //:archive \
-      && tar xfz bazel-bin/archive.tar.gz --strip-components 4 -C /usr \
+      && tar xfz bazel-bin/archive.tar.gz --strip-components 3 -C /usr \
 # Install Python3 Binding
       && python3 setup.py bdist_wheel \
       && pip3 install ./dist/dreal-*-cp38-none-manylinux1_x86_64.whl \
