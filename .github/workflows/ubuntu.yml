@@ -9,6 +9,23 @@ on:
     - cron: '0 7 * * *'
 
 jobs:
+  build_test_jammy:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        cc: [gcc-9, gcc-10, gcc-11, clang-12, clang-13, clang-14]
+    steps:
+     - name: checkout
+       uses: actions/checkout@v2
+     - name: setup
+       run: sudo ./setup/ubuntu/22.04/install_prereqs.sh
+     - name: build and test
+       run: |
+         CC=${{ matrix.cc }} bazel test //... \
+         -c dbg \
+         --test_output=errors \
+         --verbose_failures
+
   build_test_focal:
     runs-on: ubuntu-20.04
     strategy:
