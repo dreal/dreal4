@@ -48,8 +48,26 @@ jobs:
             --test_output=errors \
             --verbose_failures
 
-  catalina_ubsan:
-    runs-on: macos-10.15
+  monterey_build_and_test:
+    runs-on: macos-12
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: remove-bazelisk
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
+      - name: setup
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
+      - name: build and test
+        run: |
+          bazel test //... \
+            -c dbg \
+            --test_output=errors \
+            --verbose_failures
+
+  big_sur_ubsan:
+    runs-on: macos-11
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -68,8 +86,8 @@ jobs:
             --test_tag_filters=-no_ubsan \
             --verbose_failures
 
-  catalina_asan:
-    runs-on: macos-10.15
+  big_sur_asan:
+    runs-on: macos-11
     steps:
       - name: checkout
         uses: actions/checkout@v2
