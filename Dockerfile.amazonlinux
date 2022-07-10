@@ -10,10 +10,10 @@ RUN yum install -y autoconf automake bison file flex gcc-c++ gcc-gfortran git gm
     && wget https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew \
     && chmod u+x coinbrew \
     && ./coinbrew fetch build --prefix=/usr --tests=none Clp@1.17.7 \
-# Install IBEX
     && cp /usr/lib/pkgconfig/*.pc /usr/share/pkgconfig/ \
-    && curl https://codeload.github.com/dreal-deps/ibex-lib/tar.gz/fde1b111a5439eb59b7260bb84189e1a0c9cffca | tar xz \
-    && cd ibex-lib-fde1b111a5439eb59b7260bb84189e1a0c9cffca/ \
+# Install IBEX
+    && curl https://codeload.github.com/dreal-deps/ibex-lib/tar.gz/352eeeb2345fb2b7a7ec248b44770d8cdc4a5d67 | tar xz \
+    && cd ibex-lib-352eeeb2345fb2b7a7ec248b44770d8cdc4a5d67/ \
     && CXXFLAGS=-std=c++0x ./waf configure --enable-shared --with-optim --with-solver --with-affine-extended --interval-lib=filib --lp-lib=clp --prefix=/opt/libibex/2.7.4 \
     && ./waf install \
     && cd - \
@@ -27,8 +27,6 @@ RUN yum install -y autoconf automake bison file flex gcc-c++ gcc-gfortran git gm
     && yum install bazel4 -y \
 # Build dReal
     && cp /usr/include/FlexLexer.h ./third_party/com_github_westes_flex/FlexLexer.h \
-    && ls /opt/libibex/2.7.4/share/pkgconfig \
-    && PKG_CONFIG_PATH=/opt/libibex/2.7.4/share/pkgconfig pkg-config ibex --cflags \
     && bazel build //dreal:dreal \
     && mv bazel-bin/dreal/dreal /usr/bin/dreal \
 # Clean up
