@@ -26,6 +26,18 @@ Logic parse_logic(const string& s) {
   if (s == "QF_NRA") {
     return Logic::QF_NRA;
   }
+  if (s == "QF_NIA") {
+    return Logic::QF_NIA;
+  }
+  if (s == "QF_NIRA") {
+    return Logic::QF_NIRA;
+  }
+  if (s == "QF_LIA") {
+    return Logic::QF_LIA;
+  }
+  if (s == "QF_LIRA") {
+    return Logic::QF_LIRA;
+  }
   if (s == "QF_NRA_ODE") {
     return Logic::QF_NRA_ODE;
   }
@@ -45,10 +57,18 @@ ostream& operator<<(ostream& os, const Logic& logic) {
   switch (logic) {
     case Logic::ALL:
       return os << "ALL";
+    case Logic::QF_NIA:
+      return os << "QF_NIA";
+    case Logic::QF_NIRA:
+      return os << "QF_NIRA";
     case Logic::QF_NRA:
       return os << "QF_NRA";
     case Logic::QF_NRA_ODE:
       return os << "QF_NRA_ODE";
+    case Logic::QF_LIA:
+      return os << "QF_LIA";
+    case Logic::QF_LIRA:
+      return os << "QF_LIRA";
     case Logic::QF_LRA:
       return os << "QF_LRA";
     case Logic::QF_RDL:
