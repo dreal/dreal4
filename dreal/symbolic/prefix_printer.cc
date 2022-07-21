@@ -26,6 +26,17 @@ using std::string;
 
 namespace dreal {
 
+namespace {
+ostream& print_constant(ostream& os, double c) {
+  if (c >= 0) {
+    return os << c;
+  } else {
+    return os << "(- " << (-c) << ")";
+  }
+}
+
+}  // namespace
+
 PrefixPrinter::PrefixPrinter(ostream& os)
     : os_{os}, old_precision_{os.precision()} {
   // See
@@ -48,13 +59,13 @@ ostream& PrefixPrinter::VisitVariable(const Expression& e) {
 }
 
 ostream& PrefixPrinter::VisitConstant(const Expression& e) {
-  return os_ << get_constant_value(e);
+  return print_constant(os_, get_constant_value(e));
 }
 
 ostream& PrefixPrinter::VisitRealConstant(const Expression& e) {
   const double mid{get_lb_of_real_constant(e) / 2.0 +
                    get_ub_of_real_constant(e) / 2.0};
-  return os_ << mid;
+  return print_constant(os_, mid);
 }
 
 ostream& PrefixPrinter::VisitUnaryFunction(const std::string& name,
@@ -77,7 +88,8 @@ ostream& PrefixPrinter::VisitAddition(const Expression& e) {
   const double constant{get_constant_in_addition(e)};
   os_ << "(+";
   if (constant != 0.0) {
-    os_ << " " << constant;
+    os_ << " ";
+    print_constant(os_, constant);
   }
   for (const auto& p : get_expr_to_coeff_map_in_addition(e)) {
     const Expression& e_i{p.first};
@@ -86,7 +98,9 @@ ostream& PrefixPrinter::VisitAddition(const Expression& e) {
     if (c_i == 1.0) {
       Print(e_i);
     } else {
-      os_ << "(* " << c_i << " ";
+      os_ << "(* ";
+      print_constant(os_, c_i);
+      os_ << " ";
       Print(e_i);
       os_ << ")";
     }
@@ -98,7 +112,8 @@ ostream& PrefixPrinter::VisitMultiplication(const Expression& e) {
   const double constant{get_constant_in_multiplication(e)};
   os_ << "(*";
   if (constant != 1.0) {
-    os_ << " " << constant;
+    os_ << " ";
+    print_constant(os_, constant);
   }
   for (const auto& p : get_base_to_exponent_map_in_multiplication(e)) {
     const Expression& b_i{p.first};
