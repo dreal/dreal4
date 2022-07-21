@@ -22,9 +22,13 @@ namespace dreal {
 
 enum class Logic {
   ALL,
+  QF_LIA,
+  QF_LIRA,
+  QF_LRA,
+  QF_NIA,
+  QF_NIRA,
   QF_NRA,
   QF_NRA_ODE,
-  QF_LRA,
   QF_RDL,
 };
 
