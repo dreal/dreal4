@@ -52,14 +52,24 @@ TEST_F(PrefixPrinterTest, Constant2) {
   EXPECT_EQ(ToPrefix(e), "3.141592653589793116");
 }
 
+TEST_F(PrefixPrinterTest, Constant3) {
+  const Expression e{-3.0};
+  EXPECT_EQ(ToPrefix(e), "(- 3)");
+}
+
+TEST_F(PrefixPrinterTest, Constant4) {
+  const Expression e{-M_PI};
+  EXPECT_EQ(ToPrefix(e), "(- 3.141592653589793116)");
+}
+
 TEST_F(PrefixPrinterTest, Addition) {
-  const Expression e{x_ + 2 * y_ + 3 * z_};
-  EXPECT_EQ(ToPrefix(e), "(+ x (* 2 y) (* 3 z))");
+  const Expression e{-3 + x_ - 2 * y_ + 3 * z_};
+  EXPECT_EQ(ToPrefix(e), "(+ (- 3) x (* (- 2) y) (* 3 z))");
 }
 
 TEST_F(PrefixPrinterTest, Multiplication) {
-  const Expression e{pow(x_, 2) * 2 * y_ * 3 * pow(z_, 5)};
-  EXPECT_EQ(ToPrefix(e), "(* 6 (^ x 2) y (^ z 5))");
+  const Expression e{-2 * pow(x_, -2) * 2 * y_ * 3 * pow(z_, 5)};
+  EXPECT_EQ(ToPrefix(e), "(* (- 12) (^ x (- 2)) y (^ z 5))");
 }
 
 TEST_F(PrefixPrinterTest, Division) {
