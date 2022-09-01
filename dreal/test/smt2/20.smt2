@@ -1,4 +1,4 @@
-(set-logic QF_NRA_ODE)
+(set-logic QF_NRA)
 (declare-fun x () Real)
 (declare-fun y () Real)
 (declare-fun z () Real)

@@ -1,4 +1,4 @@
-(set-logic QF_NRA_ODE)
+(set-logic QF_NRA)
 (declare-fun p0 () Real)
 (declare-fun pt () Real)
 (declare-fun t0 () Real)
