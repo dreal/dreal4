@@ -734,9 +734,16 @@ PYBIND11_MODULE(_dreal_py, m) {
            [](const Config& self) { return fmt::format("{}", self); });
 
   py::enum_<Logic>(m, "Logic")
-      .value("QF_NRA", Logic::QF_NRA)
-      .value("QF_NRA_ODE", Logic::QF_NRA_ODE)
+      .value("ALL", Logic::ALL)
+      .value("QF_LIA", Logic::QF_LIA)
+      .value("QF_LIRA", Logic::QF_LIRA)
       .value("QF_LRA", Logic::QF_LRA)
+      .value("QF_NIA", Logic::QF_NIA)
+      .value("QF_NIAT", Logic::QF_NIAT)
+      .value("QF_NIRA", Logic::QF_NIRA)
+      .value("QF_NIRAT", Logic::QF_NIRAT)
+      .value("QF_NRA", Logic::QF_NRA)
+      .value("QF_NRAT", Logic::QF_NRAT)
       .value("QF_RDL", Logic::QF_RDL);
 
   py::class_<Context>(m, "Context")

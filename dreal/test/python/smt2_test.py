@@ -25,9 +25,16 @@ import unittest
 
 class LogicTest(unittest.TestCase):
     def test_logic(self):
-        self.assertEqual(str(Logic.QF_NRA), "Logic.QF_NRA")
-        self.assertEqual(str(Logic.QF_NRA_ODE), "Logic.QF_NRA_ODE")
+        self.assertEqual(str(Logic.ALL), "Logic.ALL")
+        self.assertEqual(str(Logic.QF_LIA), "Logic.QF_LIA")
+        self.assertEqual(str(Logic.QF_LIRA), "Logic.QF_LIRA")
         self.assertEqual(str(Logic.QF_LRA), "Logic.QF_LRA")
+        self.assertEqual(str(Logic.QF_NIA), "Logic.QF_NIA")
+        self.assertEqual(str(Logic.QF_NIAT), "Logic.QF_NIAT")
+        self.assertEqual(str(Logic.QF_NIRA), "Logic.QF_NIRA")
+        self.assertEqual(str(Logic.QF_NIRAT), "Logic.QF_NIRAT")
+        self.assertEqual(str(Logic.QF_NRA), "Logic.QF_NRA")
+        self.assertEqual(str(Logic.QF_NRAT), "Logic.QF_NRAT")
         self.assertEqual(str(Logic.QF_RDL), "Logic.QF_RDL")
 
 

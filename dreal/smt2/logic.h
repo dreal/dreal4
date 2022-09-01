@@ -26,9 +26,11 @@ enum class Logic {
   QF_LIRA,
   QF_LRA,
   QF_NIA,
+  QF_NIAT,
   QF_NIRA,
+  QF_NIRAT,
   QF_NRA,
-  QF_NRA_ODE,
+  QF_NRAT,
   QF_RDL,
 };
 
