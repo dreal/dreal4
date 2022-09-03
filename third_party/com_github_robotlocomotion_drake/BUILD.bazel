@@ -38,11 +38,23 @@ cc_library(
     ],
     includes = ["."],
     visibility = ["//visibility:public"],
+    deps = [
+        "@fmt",
+    ],
 )
 
 cc_test(
     name = "symbolic_expression_test",
     srcs = ["dreal/symbolic/test/symbolic_expression_test.cc"],
+    deps = [
+        ":drake_symbolic",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "symbolic_substitution_test",
+    srcs = ["dreal/symbolic/test/symbolic_substitution_test.cc"],
     deps = [
         ":drake_symbolic",
         "@com_google_googletest//:gtest_main",
