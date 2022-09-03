@@ -242,10 +242,9 @@ Expression Expression::Expand() const {
   return ptr_->Expand();
 }
 
-Expression Expression::Substitute(const Variable& var,
-                                  const Expression& e) const {
+Expression Expression::Substitute(const Variable& var, Expression e) const {
   assert(ptr_ != nullptr);
-  return ptr_->Substitute({{var, e}}, FormulaSubstitution{});
+  return ptr_->Substitute({{var, std::move(e)}}, FormulaSubstitution{});
 }
 
 Expression Expression::Substitute(

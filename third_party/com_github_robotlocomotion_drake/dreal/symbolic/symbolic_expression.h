@@ -256,7 +256,7 @@ class Expression {
    * with @p e.
    * @throws std::runtime_error if NaN is detected during substitution.
    */
-  Expression Substitute(const Variable& var, const Expression& e) const;
+  Expression Substitute(const Variable& var, Expression e) const;
 
   /** Returns a copy of this expression replacing all occurrences of the
    * variables in @p expr_subst with corresponding expressions in @p expr_subst
