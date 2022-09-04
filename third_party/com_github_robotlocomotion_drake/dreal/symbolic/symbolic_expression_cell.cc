@@ -602,13 +602,13 @@ Expression ExpressionAdd::Expand() {
 
 Expression ExpressionAdd::Substitute(const ExpressionSubstitution& expr_subst,
                                      const FormulaSubstitution& formula_subst) {
-  Expression ret{constant_};
+  ExpressionAddFactory factory{constant_, {}};
   for (const auto& p : expr_to_coeff_map_) {
     const Expression& e_i{p.first};
     const double c_i{p.second};
-    ret += e_i.Substitute(expr_subst, formula_subst) * c_i;
+    factory.AddExpression(e_i.Substitute(expr_subst, formula_subst) * c_i);
   }
-  return ret;
+  return factory.GetExpression();
 }
 
 Expression ExpressionAdd::Differentiate(const Variable& x) const {
