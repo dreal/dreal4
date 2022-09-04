@@ -863,14 +863,14 @@ Expression ExpressionMul::Expand() {
 
 Expression ExpressionMul::Substitute(const ExpressionSubstitution& expr_subst,
                                      const FormulaSubstitution& formula_subst) {
-  Expression ret{constant_};
+  ExpressionMulFactory factory{constant_, {}};
   for (const auto& p : base_to_exponent_map_) {
     const Expression& b_i{p.first};
     const Expression& e_i{p.second};
-    ret *= pow(b_i.Substitute(expr_subst, formula_subst),
-               e_i.Substitute(expr_subst, formula_subst));
+    factory.AddExpression(pow(b_i.Substitute(expr_subst, formula_subst),
+                              e_i.Substitute(expr_subst, formula_subst)));
   }
-  return ret;
+  return factory.GetExpression();
 }
 
 // Computes ∂/∂x pow(f, g).
