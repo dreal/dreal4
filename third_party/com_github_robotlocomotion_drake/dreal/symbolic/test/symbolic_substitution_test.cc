@@ -6,14 +6,14 @@
 
 #include <gtest/gtest.h>
 
+#include "gtest/gtest.h"
+
 #include "dreal/symbolic/symbolic_expression.h"
 #include "dreal/symbolic/test/symbolic_test_util.h"
 
 using std::exception;
 using std::function;
-using std::is_same;
 using std::pair;
-using std::result_of;
 using std::vector;
 
 namespace dreal {
@@ -29,20 +29,44 @@ using test::FormulaEqual;
 //
 //     f(v).Substitute(v, e) = f(e)
 //
-void CheckHomomorphism(const function<Expression(const Expression&)>& f,
-                       const Variable& var, const Expression& expr) {
+::testing::AssertionResult CheckHomomorphism(
+    const function<Expression(const Expression&)>& f, const Variable& var,
+    const Expression& expr) {
   Expression apply_subst{0.0};
+  Expression subst_apply{0.0};
+  bool apply_subst_throws{false};
+  bool subst_apply_throws{false};
   try {
     apply_subst = f(Expression{var}).Substitute(var, expr);
   } catch (const exception&) {
     // If apply_subst throws an exception, then subst_apply should
     // throws an exception as well.
-    EXPECT_ANY_THROW(f(expr));
-    return;
+    apply_subst_throws = true;
+    try {
+      subst_apply = f(expr);
+    } catch (const exception&) {
+      subst_apply_throws = true;
+    }
+    if (!subst_apply_throws) {
+      return ::testing::AssertionFailure()
+             << "apply_subst throws an exception, but subst_apply does not.\n"
+             << "\t apply_subst: " << apply_subst << "\n"
+             << "\t subst_apply: " << subst_apply << "\n";
+    }
+  }
+  if (apply_subst_throws && subst_apply_throws) {
+    return ::testing::AssertionSuccess();
   }
   // Otherwise, we check if we have apply_subst = subst_apply.
-  const Expression subst_apply{f(expr)};
-  EXPECT_PRED2(ExprEqual, apply_subst, subst_apply);
+  subst_apply = f(expr);
+  if (!apply_subst.EqualTo(subst_apply)) {
+    if (!apply_subst.Expand().EqualTo(subst_apply.Expand())) {
+      return ::testing::AssertionFailure()
+             << "apply_subst is different from1 subst_apply.\n"
+             << "\t apply_subst: " << apply_subst << "\n"
+             << "\t subst_apply: " << subst_apply << "\n";
+    }
+  }
 
   // If the expression was a constant then the substitution is a partial
   // evaluation, so this is a convenient place to add unit tests for the
@@ -51,8 +75,12 @@ void CheckHomomorphism(const function<Expression(const Expression&)>& f,
     const Expression apply{f(Expression{expr})};
     const double value = get_constant_value(expr);
     const Expression eval_partial{apply.EvaluatePartial({{var, value}})};
-    EXPECT_PRED2(ExprEqual, eval_partial, f(expr));
+    if (!eval_partial.EqualTo(f(expr))) {
+      return ::testing::AssertionFailure()
+             << "eval_partial is different from f(expr).";
+    }
   }
+  return ::testing::AssertionSuccess();
 }
 
 // Checks if 'Expression::Substitute(const Substitution&)' is a homomorphism.
@@ -61,8 +89,9 @@ void CheckHomomorphism(const function<Expression(const Expression&)>& f,
 //     f({x_1, ..., x_n}).Substitute(s) = f({e_1, ..., e_n})
 //
 // where we have x_i.Substitute(s) = e_i by a given substitution s.
-void CheckHomomorphism(const function<Expression(const vector<Expression>&)>& f,
-                       const ExpressionSubstitution& s) {
+::testing::AssertionResult CheckHomomorphism(
+    const function<Expression(const vector<Expression>&)>& f,
+    const ExpressionSubstitution& s) {
   vector<Expression> args1;  // {x_1, ..., x_n}
   vector<Expression> args2;  // {e_1, ..., e_n}
   for (const pair<const Variable, Expression>& p : s) {
@@ -71,17 +100,40 @@ void CheckHomomorphism(const function<Expression(const vector<Expression>&)>& f,
   }
 
   Expression apply_subst{0.0};
+  Expression subst_apply{0.0};
+  bool apply_subst_throws{false};
+  bool subst_apply_throws{false};
   try {
     apply_subst = f(args1).Substitute(s);
   } catch (const exception&) {
     // If apply_subst throws an exception, then subst_apply should
     // throws an exception as well.
-    EXPECT_ANY_THROW(f(args2));
-    return;
+    apply_subst_throws = true;
+    try {
+      subst_apply = f(args2);
+    } catch (const exception&) {
+      subst_apply_throws = true;
+    }
+    if (!subst_apply_throws) {
+      return ::testing::AssertionFailure()
+             << "apply_subst throws an exception, but subst_apply does not.\n"
+             << "\t apply_subst: " << apply_subst << "\n"
+             << "\t subst_apply: " << subst_apply << "\n";
+    }
+  }
+  if (apply_subst_throws && subst_apply_throws) {
+    return ::testing::AssertionSuccess();
   }
   // Otherwise, we check if we have apply_subst = subst_apply.
-  const Expression subst_apply{f(args2)};
-  EXPECT_PRED2(ExprEqual, apply_subst, subst_apply);
+  subst_apply = f(args2);
+  if (!apply_subst.EqualTo(subst_apply)) {
+    if (!apply_subst.Expand().EqualTo(subst_apply.Expand())) {
+      return ::testing::AssertionFailure()
+             << "apply_subst is different from2 subst_apply.\n"
+             << "\t apply_subst: " << apply_subst << "\n"
+             << "\t subst_apply: " << subst_apply << "\n";
+    }
+  }
 
   // If every expression was a constant then the substitution is a partial
   // evaluation, so this is a convenient place to add unit tests for the
@@ -96,8 +148,12 @@ void CheckHomomorphism(const function<Expression(const vector<Expression>&)>& f,
       env.insert(subst_var, get_constant_value(subst_expr));
     }
     const Expression eval_partial{apply.EvaluatePartial(env)};
-    EXPECT_PRED2(ExprEqual, eval_partial, f(args2));
+    if (!eval_partial.EqualTo(f(args2))) {
+      return ::testing::AssertionFailure()
+             << "eval_partial is different from f(args2).";
+    }
   }
+  return ::testing::AssertionSuccess();
 }
 
 // Checks if 'Formula::Substitute(const Variable&, const Expression&)' is
@@ -107,20 +163,41 @@ void CheckHomomorphism(const function<Expression(const vector<Expression>&)>& f,
 //
 // Note that the above assertion holds only if f is a quantifier-free
 // formula. We have a separate tests which covers the quantified case.
-void CheckHomomorphism(const function<Formula(const Expression&)>& f,
-                       const Variable& var, const Expression& expr) {
+::testing::AssertionResult CheckHomomorphism(
+    const function<Formula(const Expression&)>& f, const Variable& var,
+    const Expression& expr) {
   Formula apply_subst{Formula::True()};
+  Formula subst_apply{Formula::True()};
+  bool apply_subst_throws{false};
+  bool subst_apply_throws{false};
   try {
     apply_subst = f(Expression{var}).Substitute(var, expr);
   } catch (const exception&) {
     // If apply_subst throws an exception, then subst_apply should
     // throws an exception as well.
-    EXPECT_ANY_THROW(f(expr));
-    return;
+    apply_subst_throws = true;
+    try {
+      subst_apply = f(expr);
+    } catch (const exception&) {
+      subst_apply_throws = true;
+    }
+    if (!subst_apply_throws) {
+      return ::testing::AssertionFailure()
+             << "apply_subst throws an exception, but subst_apply does not.";
+    }
+  }
+  if (apply_subst_throws && subst_apply_throws) {
+    return ::testing::AssertionSuccess();
   }
   // Otherwise, we check if we have apply_subst = subst_apply.
-  const Formula subst_apply{f(expr)};
-  EXPECT_PRED2(FormulaEqual, apply_subst, subst_apply);
+  subst_apply = f(expr);
+  if (!apply_subst.EqualTo(subst_apply)) {
+    return ::testing::AssertionFailure()
+           << "apply_subst is different from3 subst_apply.\n"
+           << "\t apply_subst: " << apply_subst << "\n"
+           << "\t subst_apply: " << subst_apply << "\n";
+  }
+  return ::testing::AssertionSuccess();
 }
 
 // Checks if 'Formula::Substitute(const Substitution&)' is a homomorphism.
@@ -132,8 +209,9 @@ void CheckHomomorphism(const function<Formula(const Expression&)>& f,
 //
 // Note that the above assertion holds only if f is a quantifier-free
 // formula. We have a separate tests which covers the quantified case.
-void CheckHomomorphism(const function<Formula(const vector<Expression>&)>& f,
-                       const ExpressionSubstitution& s) {
+::testing::AssertionResult CheckHomomorphism(
+    const function<Formula(const vector<Expression>&)>& f,
+    const ExpressionSubstitution& s) {
   vector<Expression> args1;  // {x_1, ..., x_n}
   vector<Expression> args2;  // {e_1, ..., e_n}
   for (const pair<const Variable, Expression>& p : s) {
@@ -142,17 +220,38 @@ void CheckHomomorphism(const function<Formula(const vector<Expression>&)>& f,
   }
 
   Formula apply_subst{Formula::True()};
+  Formula subst_apply{Formula::True()};
+  bool apply_subst_throws{false};
+  bool subst_apply_throws{false};
+
   try {
     apply_subst = f(args1).Substitute(s);
   } catch (const exception&) {
     // If apply_subst throws an exception, then subst_apply should
     // throws an exception as well.
-    EXPECT_ANY_THROW(f(args2));
-    return;
+    apply_subst_throws = true;
+    try {
+      subst_apply = f(args2);
+    } catch (const exception&) {
+      subst_apply_throws = true;
+    }
+    if (!subst_apply_throws) {
+      return ::testing::AssertionFailure()
+             << "apply_subst throws an exception, but subst_apply does not.";
+    }
+  }
+  if (apply_subst_throws && subst_apply_throws) {
+    return ::testing::AssertionSuccess();
   }
   // Otherwise, we check if we have apply_subst = subst_apply.
-  const Formula subst_apply{f(args2)};
-  EXPECT_PRED2(FormulaEqual, apply_subst, subst_apply);
+  subst_apply = f(args2);
+  if (!apply_subst.EqualTo(subst_apply)) {
+    return ::testing::AssertionFailure()
+           << "apply_subst is different from4 subst_apply.\n"
+           << "\t apply_subst: " << apply_subst << "\n"
+           << "\t subst_apply: " << subst_apply << "\n";
+  }
+  return ::testing::AssertionSuccess();
 }
 
 class SymbolicSubstitutionTest : public ::testing::Test {
@@ -170,44 +269,44 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismExpressionVarExpr) {
   using F = function<Expression(const Expression&)>;
 
   vector<F> fns;
-  fns.push_back([](const Expression&) { return 3.0; });
-  fns.push_back([](const Expression& x) { return x; });
-  fns.push_back([](const Expression& x) { return 2 * x; });
-  fns.push_back([](const Expression& x) { return -x; });
-  fns.push_back([](const Expression& x) { return -3 * x; });
-  fns.push_back([&](const Expression& x) { return 5.0 + x + y_; });
-  fns.push_back([&](const Expression& x) { return 5.0 + y_ + x; });
-  fns.push_back([&](const Expression& x) { return 7.0 - x - y_; });
-  fns.push_back([&](const Expression& x) { return 7.0 - y_ - x; });
-  fns.push_back([&](const Expression& x) { return 3.0 * x * z_; });
-  fns.push_back([&](const Expression& x) { return 3.0 * z_ * x; });
-  fns.push_back([&](const Expression& x) { return x / y_; });
-  fns.push_back([&](const Expression& x) { return y_ / x; });
-  fns.push_back([](const Expression& x) { return log(x); });
-  fns.push_back([](const Expression& x) { return abs(x); });
-  fns.push_back([](const Expression& x) { return exp(x); });
-  fns.push_back([](const Expression& x) { return sqrt(x); });
-  fns.push_back([&](const Expression& x) { return pow(x, y_); });
-  fns.push_back([&](const Expression& x) { return pow(y_, x); });
-  fns.push_back([](const Expression& x) { return sin(x); });
-  fns.push_back([](const Expression& x) { return cos(x); });
-  fns.push_back([](const Expression& x) { return tan(x); });
-  fns.push_back([](const Expression& x) { return asin(x); });
-  fns.push_back([](const Expression& x) { return acos(x); });
-  fns.push_back([](const Expression& x) { return atan(x); });
-  fns.push_back([&](const Expression& x) { return atan2(x, y_); });
-  fns.push_back([&](const Expression& x) { return atan2(y_, x); });
-  fns.push_back([](const Expression& x) { return sinh(x); });
-  fns.push_back([](const Expression& x) { return cosh(x); });
-  fns.push_back([](const Expression& x) { return tanh(x); });
-  fns.push_back([&](const Expression& x) { return min(x, y_); });
-  fns.push_back([&](const Expression& x) { return min(y_, x); });
-  fns.push_back([&](const Expression& x) { return max(x, z_); });
-  fns.push_back([&](const Expression& x) { return max(z_, x); });
-  fns.push_back([&](const Expression& x) {
+  fns.emplace_back([](const Expression&) { return 3.0; });
+  fns.emplace_back([](const Expression& x) { return x; });
+  fns.emplace_back([](const Expression& x) { return 2 * x; });
+  fns.emplace_back([](const Expression& x) { return -x; });
+  fns.emplace_back([](const Expression& x) { return -3 * x; });
+  fns.emplace_back([&](const Expression& x) { return 5.0 + x + y_; });
+  fns.emplace_back([&](const Expression& x) { return 5.0 + y_ + x; });
+  fns.emplace_back([&](const Expression& x) { return 7.0 - x - y_; });
+  fns.emplace_back([&](const Expression& x) { return 7.0 - y_ - x; });
+  fns.emplace_back([&](const Expression& x) { return 3.0 * x * z_; });
+  fns.emplace_back([&](const Expression& x) { return 3.0 * z_ * x; });
+  fns.emplace_back([&](const Expression& x) { return x / y_; });
+  fns.emplace_back([&](const Expression& x) { return y_ / x; });
+  fns.emplace_back([](const Expression& x) { return log(x); });
+  fns.emplace_back([](const Expression& x) { return abs(x); });
+  fns.emplace_back([](const Expression& x) { return exp(x); });
+  fns.emplace_back([](const Expression& x) { return sqrt(x); });
+  fns.emplace_back([&](const Expression& x) { return pow(x, y_); });
+  fns.emplace_back([&](const Expression& x) { return pow(y_, x); });
+  fns.emplace_back([](const Expression& x) { return sin(x); });
+  fns.emplace_back([](const Expression& x) { return cos(x); });
+  fns.emplace_back([](const Expression& x) { return tan(x); });
+  fns.emplace_back([](const Expression& x) { return asin(x); });
+  fns.emplace_back([](const Expression& x) { return acos(x); });
+  fns.emplace_back([](const Expression& x) { return atan(x); });
+  fns.emplace_back([&](const Expression& x) { return atan2(x, y_); });
+  fns.emplace_back([&](const Expression& x) { return atan2(y_, x); });
+  fns.emplace_back([](const Expression& x) { return sinh(x); });
+  fns.emplace_back([](const Expression& x) { return cosh(x); });
+  fns.emplace_back([](const Expression& x) { return tanh(x); });
+  fns.emplace_back([&](const Expression& x) { return min(x, y_); });
+  fns.emplace_back([&](const Expression& x) { return min(y_, x); });
+  fns.emplace_back([&](const Expression& x) { return max(x, z_); });
+  fns.emplace_back([&](const Expression& x) { return max(z_, x); });
+  fns.emplace_back([&](const Expression& x) {
     return if_then_else(x > y_ && x > z_, x * y_, x / z_);
   });
-  fns.push_back([&](const Expression& x) {
+  fns.emplace_back([&](const Expression& x) {
     return if_then_else(x > y_ || z_ > x, x * y_, x / z_);
   });
 
@@ -232,7 +331,7 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismExpressionVarExpr) {
     for (const pair<Variable, Expression>& s : substs) {
       const Variable& var{s.first};
       const Expression& expr{s.second};
-      CheckHomomorphism(f, var, expr);
+      EXPECT_TRUE(CheckHomomorphism(f, var, expr));
     }
   }
 }
@@ -241,39 +340,44 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismExpressionSubstitution) {
   using F = function<Expression(const vector<Expression>&)>;
 
   vector<F> fns;
-  fns.push_back([](const vector<Expression>&) { return 3.0; });
-  fns.push_back([](const vector<Expression>& v) { return v[0]; });
-  fns.push_back([](const vector<Expression>& v) { return 2 * v[0]; });
-  fns.push_back([](const vector<Expression>& v) { return -v[0]; });
-  fns.push_back([](const vector<Expression>& v) { return -3 * v[0]; });
-  fns.push_back([](const vector<Expression>& v) { return 3.0 + v[0] + v[1]; });
-  fns.push_back([](const vector<Expression>& v) { return -3.0 + v[1] - v[2]; });
-  fns.push_back([](const vector<Expression>& v) { return v[0] * v[2]; });
-  fns.push_back([](const vector<Expression>& v) { return v[0] / v[1]; });
-  fns.push_back([](const vector<Expression>& v) { return log(v[0]); });
-  fns.push_back([](const vector<Expression>& v) { return abs(v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return exp(v[2]); });
-  fns.push_back([](const vector<Expression>& v) { return sqrt(v[0]); });
-  fns.push_back([](const vector<Expression>& v) { return pow(v[0], v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return sin(v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return cos(v[2]); });
-  fns.push_back([](const vector<Expression>& v) { return tan(v[0]); });
-  fns.push_back([](const vector<Expression>& v) { return asin(v[0]); });
-  fns.push_back([](const vector<Expression>& v) { return acos(v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return atan(v[2]); });
-  fns.push_back([](const vector<Expression>& v) { return atan2(v[0], v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return sinh(v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return cosh(v[0]); });
-  fns.push_back([](const vector<Expression>& v) { return tanh(v[2]); });
-  fns.push_back([](const vector<Expression>& v) { return min(v[0], v[1]); });
-  fns.push_back([](const vector<Expression>& v) { return max(v[1], v[2]); });
-  fns.push_back([&](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>&) { return 3.0; });
+  fns.emplace_back([](const vector<Expression>& v) { return v[0]; });
+  fns.emplace_back([](const vector<Expression>& v) { return 2 * v[0]; });
+  fns.emplace_back([](const vector<Expression>& v) { return -v[0]; });
+  fns.emplace_back([](const vector<Expression>& v) { return -3 * v[0]; });
+  fns.emplace_back(
+      [](const vector<Expression>& v) { return 3.0 + v[0] + v[1]; });
+  fns.emplace_back(
+      [](const vector<Expression>& v) { return -3.0 + v[1] - v[2]; });
+  fns.emplace_back([](const vector<Expression>& v) { return v[0] * v[2]; });
+  fns.emplace_back([](const vector<Expression>& v) { return v[0] / v[1]; });
+  fns.emplace_back([](const vector<Expression>& v) { return log(v[0]); });
+  fns.emplace_back([](const vector<Expression>& v) { return abs(v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return exp(v[2]); });
+  fns.emplace_back([](const vector<Expression>& v) { return sqrt(v[0]); });
+  fns.emplace_back([](const vector<Expression>& v) { return pow(v[0], v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return sin(v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return cos(v[2]); });
+  fns.emplace_back(
+      [](const vector<Expression>& v) { return -v[2] + cos(v[2]); });
+  fns.emplace_back([](const vector<Expression>& v) { return tan(v[0]); });
+  fns.emplace_back([](const vector<Expression>& v) { return asin(v[0]); });
+  fns.emplace_back([](const vector<Expression>& v) { return acos(v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return atan(v[2]); });
+  fns.emplace_back(
+      [](const vector<Expression>& v) { return atan2(v[0], v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return sinh(v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return cosh(v[0]); });
+  fns.emplace_back([](const vector<Expression>& v) { return tanh(v[2]); });
+  fns.emplace_back([](const vector<Expression>& v) { return min(v[0], v[1]); });
+  fns.emplace_back([](const vector<Expression>& v) { return max(v[1], v[2]); });
+  fns.emplace_back([&](const vector<Expression>& v) {
     return fns[9](v) * fns[17](v) / fns[5](v) - fns[19](v);
   });
-  fns.push_back([&](const vector<Expression>& v) {
+  fns.emplace_back([&](const vector<Expression>& v) {
     return fns[6](v) * fns[20](v) / fns[2](v) + fns[12](v);
   });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>& v) {
     return if_then_else(v[0] > v[1], v[1] * v[2], v[0] - v[2]);
   });
 
@@ -293,7 +397,7 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismExpressionSubstitution) {
 
   for (const F& f : fns) {
     for (const auto& s : substs) {
-      CheckHomomorphism(f, s);
+      EXPECT_TRUE(CheckHomomorphism(f, s));
     }
   }
 }
@@ -302,24 +406,24 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismFormulaVarExpr) {
   using F = function<Formula(const Expression&)>;
 
   vector<F> fns;
-  fns.push_back([](const Expression&) { return Formula::True(); });
-  fns.push_back([](const Expression&) { return Formula::False(); });
-  fns.push_back([&](const Expression& x) { return (x + y_) == (y_ * z_); });
-  fns.push_back([&](const Expression& x) { return (y_ + z_) == (x * z_); });
-  fns.push_back([&](const Expression& x) { return (x + y_) != (y_ * z_); });
-  fns.push_back([&](const Expression& x) { return (y_ + z_) != (x * z_); });
-  fns.push_back([&](const Expression& x) { return (x + y_) > (y_ * z_); });
-  fns.push_back([&](const Expression& x) { return (y_ + z_) > (x * z_); });
-  fns.push_back([&](const Expression& x) { return (x + y_) >= (y_ * z_); });
-  fns.push_back([&](const Expression& x) { return (y_ + z_) >= (x * z_); });
-  fns.push_back([&](const Expression& x) { return (x + y_) < (y_ * z_); });
-  fns.push_back([&](const Expression& x) { return (y_ + z_) < (x * z_); });
-  fns.push_back([&](const Expression& x) { return (x + y_) <= (y_ * z_); });
-  fns.push_back([&](const Expression& x) { return (y_ + z_) <= (x * z_); });
-  fns.push_back([&](const Expression& x) { return fns[5](x) && fns[7](x); });
-  fns.push_back([&](const Expression& x) { return fns[2](x) || fns[6](x); });
-  fns.push_back([&](const Expression& x) { return !fns[14](x); });
-  fns.push_back([&](const Expression& x) { return !fns[15](x); });
+  fns.emplace_back([](const Expression&) { return Formula::True(); });
+  fns.emplace_back([](const Expression&) { return Formula::False(); });
+  fns.emplace_back([&](const Expression& x) { return (x + y_) == (y_ * z_); });
+  fns.emplace_back([&](const Expression& x) { return (y_ + z_) == (x * z_); });
+  fns.emplace_back([&](const Expression& x) { return (x + y_) != (y_ * z_); });
+  fns.emplace_back([&](const Expression& x) { return (y_ + z_) != (x * z_); });
+  fns.emplace_back([&](const Expression& x) { return (x + y_) > (y_ * z_); });
+  fns.emplace_back([&](const Expression& x) { return (y_ + z_) > (x * z_); });
+  fns.emplace_back([&](const Expression& x) { return (x + y_) >= (y_ * z_); });
+  fns.emplace_back([&](const Expression& x) { return (y_ + z_) >= (x * z_); });
+  fns.emplace_back([&](const Expression& x) { return (x + y_) < (y_ * z_); });
+  fns.emplace_back([&](const Expression& x) { return (y_ + z_) < (x * z_); });
+  fns.emplace_back([&](const Expression& x) { return (x + y_) <= (y_ * z_); });
+  fns.emplace_back([&](const Expression& x) { return (y_ + z_) <= (x * z_); });
+  fns.emplace_back([&](const Expression& x) { return fns[5](x) && fns[7](x); });
+  fns.emplace_back([&](const Expression& x) { return fns[2](x) || fns[6](x); });
+  fns.emplace_back([&](const Expression& x) { return !fns[14](x); });
+  fns.emplace_back([&](const Expression& x) { return !fns[15](x); });
 
   vector<pair<Variable, Expression>> substs;
   substs.emplace_back(var_x_, x_);
@@ -342,7 +446,7 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismFormulaVarExpr) {
     for (const pair<Variable, Expression>& s : substs) {
       const Variable& var{s.first};
       const Expression& expr{s.second};
-      CheckHomomorphism(f, var, expr);
+      EXPECT_TRUE(CheckHomomorphism(f, var, expr));
     }
   }
 }
@@ -351,32 +455,32 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismFormulaSubstitution) {
   using F = function<Formula(const vector<Expression>&)>;
 
   vector<F> fns;
-  fns.push_back([](const vector<Expression>&) { return Formula::True(); });
-  fns.push_back([](const vector<Expression>&) { return Formula::False(); });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>&) { return Formula::True(); });
+  fns.emplace_back([](const vector<Expression>&) { return Formula::False(); });
+  fns.emplace_back([](const vector<Expression>& v) {
     return (v[0] + v[1]) == (v[1] * v[2]);
   });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>& v) {
     return (v[0] + v[1]) != (v[1] * v[2]);
   });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>& v) {
     return (v[0] + v[1]) > (v[1] * v[2]);
   });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>& v) {
     return (v[0] + v[1]) >= (v[1] * v[2]);
   });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>& v) {
     return (v[0] + v[1]) < (v[1] * v[2]);
   });
-  fns.push_back([](const vector<Expression>& v) {
+  fns.emplace_back([](const vector<Expression>& v) {
     return (v[0] + v[1]) <= (v[1] * v[2]);
   });
-  fns.push_back(
+  fns.emplace_back(
       [&](const vector<Expression>& v) { return fns[5](v) && fns[7](v); });
-  fns.push_back(
+  fns.emplace_back(
       [&](const vector<Expression>& v) { return fns[2](v) || fns[4](v); });
-  fns.push_back([&](const vector<Expression>& v) { return !fns[8](v); });
-  fns.push_back([&](const vector<Expression>& v) { return !fns[9](v); });
+  fns.emplace_back([&](const vector<Expression>& v) { return !fns[8](v); });
+  fns.emplace_back([&](const vector<Expression>& v) { return !fns[9](v); });
 
   vector<ExpressionSubstitution> substs;
   substs.push_back({{var_x_, 1.0}, {var_y_, 1.0}, {var_z_, 2.0}});
@@ -394,7 +498,7 @@ TEST_F(SymbolicSubstitutionTest, CheckHomomorphismFormulaSubstitution) {
 
   for (const F& f : fns) {
     for (const auto& s : substs) {
-      CheckHomomorphism(f, s);
+      EXPECT_TRUE(CheckHomomorphism(f, s));
     }
   }
 }
@@ -552,6 +656,18 @@ TEST_F(ForallFormulaSubstitutionTest, VarExprSubstitution) {
   }
 }
 
+GTEST_TEST(SymbolicSubstitutionGTest, ExtraTest) {
+  const Variable x{"x"};
+  const Expression e1{-x * cos(x) - sin(x) * x * x * abs(x * x)};
+  EXPECT_PRED2(ExprEqual, e1.Substitute(x, x * 0.01),
+               -(x * 0.01) * cos(x * 0.01) -
+                   sin(x * 0.01) * pow(x * 0.01, 2) * abs(pow(x * 0.01, 2)));
+
+  EXPECT_PRED2(ExprEqual, e1.Substitute(x, x - 0.01).Expand(),
+               (-(x - 0.01) * cos(x - 0.01) -
+                sin(x - 0.01) * pow(x - 0.01, 2) * abs(pow(x - 0.01, 2)))
+                   .Expand());
+}
 }  // namespace
 }  // namespace symbolic
 }  // namespace drake
