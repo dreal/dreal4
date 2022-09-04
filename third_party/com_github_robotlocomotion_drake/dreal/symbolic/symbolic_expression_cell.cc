@@ -960,6 +960,14 @@ ExpressionMulFactory::ExpressionMulFactory(const ExpressionMul* const ptr)
                            ptr->get_base_to_exponent_map()} {}
 
 ExpressionMulFactory& ExpressionMulFactory::AddExpression(const Expression& e) {
+  if (constant_ == 0.0) {
+    return *this;
+  }
+  if (is_zero(e)) {
+    constant_ = 0.0;
+    base_to_exponent_map_.clear();
+    return *this;
+  }
   if (is_constant(e)) {
     return AddConstant(get_constant_value(e));
   }
@@ -976,6 +984,9 @@ ExpressionMulFactory& ExpressionMulFactory::AddExpression(const Expression& e) {
 
 ExpressionMulFactory& ExpressionMulFactory::Add(
     const ExpressionMul* const ptr) {
+  if (constant_ == 0.0) {
+    return *this;
+  }
   AddConstant(ptr->get_constant());
   return AddMap(ptr->get_base_to_exponent_map());
 }
@@ -999,6 +1010,9 @@ Expression ExpressionMulFactory::GetExpression() {
         "should not be invoked again.");
   }
   get_expression_is_called_ = true;
+  if (constant_ == 0.0) {
+    return Expression::Zero();
+  }
   if (base_to_exponent_map_.empty()) {
     return Expression{constant_};
   }
