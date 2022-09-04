@@ -55,10 +55,17 @@ Expression NegateAddition(const ExpressionAdd* e) {
 // Negates an addition expression.
 // - (E_1 + ... + E_n) => (-E_1 + ... + -E_n)
 Expression NegateAddition(ExpressionAdd* e) {
-  return ExpressionAddFactory{e->get_constant(),
-                              std::move(e->get_mutable_expr_to_coeff_map())}
-      .Negate()
-      .GetExpression();
+  // Only move expr_to_coeff_map if e->use_count() == 1.
+  if (e->use_count() > 1) {
+    return ExpressionAddFactory{e->get_constant(), e->get_expr_to_coeff_map()}
+        .Negate()
+        .GetExpression();
+  } else {
+    return ExpressionAddFactory{e->get_constant(),
+                                std::move(e->get_mutable_expr_to_coeff_map())}
+        .Negate()
+        .GetExpression();
+  }
 }
 
 // Negates a multiplication expression.
@@ -70,12 +77,19 @@ Expression NegateMultiplication(const ExpressionMul* e) {
 // Negates a multiplication expression.
 // - (c0 * E_1 * ... * E_n) => (-c0 * E_1 * ... * E_n)
 Expression NegateMultiplication(ExpressionMul* e) {
-  return ExpressionMulFactory{e->get_constant(),
-                              std::move(e->get_mutable_base_to_exponent_map())}
-      .Negate()
-      .GetExpression();
+  // Only move base_to_exponent_map if e->use_count() == 1.
+  if (e->use_count() > 1) {
+    return ExpressionMulFactory{e->get_constant(),
+                                e->get_base_to_exponent_map()}
+        .Negate()
+        .GetExpression();
+  } else {
+    return ExpressionMulFactory{
+        e->get_constant(), std::move(e->get_mutable_base_to_exponent_map())}
+        .Negate()
+        .GetExpression();
+  }
 }
-
 }  // namespace
 
 Expression::Expression(const Expression& e) : ptr_{e.ptr_} {
