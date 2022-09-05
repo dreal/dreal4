@@ -12,6 +12,7 @@ cc_library(
         ],
     ),
     defines = [
+        "FMT_DEPRECATED_OSTREAM=1",
         "FMT_HEADER_ONLY=1",
         "FMT_NO_FMT_STRING_ALIAS=1",
     ],
