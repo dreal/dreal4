@@ -35,7 +35,7 @@ Sort ParseSort(const string& s) {
   if (s == "Binary") {
     return Sort::Binary;
   }
-  throw DREAL_RUNTIME_ERROR("{} is not one of {Real, Int, Bool}.", s);
+  throw DREAL_RUNTIME_ERROR("{} is not one of {{Real, Int, Bool}}.", s);
 }
 
 ostream& operator<<(ostream& os, const Sort& sort) {
