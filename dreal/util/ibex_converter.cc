@@ -138,7 +138,7 @@ const ExprNode* IbexConverter::VisitVariable(const Expression& e) {
       oss << v << " ";
     }
     oss << ".";
-    throw DREAL_RUNTIME_ERROR(oss.str());
+    throw DREAL_RUNTIME_ERROR("{}", oss.str());
   }
   return it->second;
 }
