@@ -31,7 +31,7 @@ sh_binary(
 
 config_setting(
     name = "apple",
-    constraint_values = ["@bazel_tools//platforms:osx"],
+    constraint_values = ["@platforms//os:osx"],
     visibility = ["//visibility:public"],
 )
 
@@ -68,7 +68,7 @@ config_setting(
 
 config_setting(
     name = "linux",
-    constraint_values = ["@bazel_tools//platforms:linux"],
+    constraint_values = ["@platforms//os:linux"],
     visibility = ["//visibility:public"],
 )
 
