@@ -44,27 +44,27 @@ def dreal_workspace():
 
     http_archive(
         name = "rules_license",
-        sha256 = "00ccc0df21312c127ac4b12880ab0f9a26c1cff99442dc6c5a331750360de3c3",
+        sha256 = "6157e1e68378532d0241ecd15d3c45f6e5cfd98fc10846045509fb2a7cc9e381",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/0.0.3/rules_license-0.0.3.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_license/releases/download/0.0.4/rules_license-0.0.4.tar.gz",
         ],
     )
 
     http_archive(
         name = "rules_pkg",
-        sha256 = "8a298e832762eda1830597d64fe7db58178aa84cd5926d76d5b744d6558941c2",
+        sha256 = "eea0f59c28a9241156a47d7a8e32db9122f3d50b505fae0f33de6ce4d9b61834",
         urls = [
-            "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
-            "https://github.com/bazelbuild/rules_pkg/releases/download/0.7.0/rules_pkg-0.7.0.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_pkg/releases/download/0.8.0/rules_pkg-0.8.0.tar.gz",
+            "https://github.com/bazelbuild/rules_pkg/releases/download/0.8.0/rules_pkg-0.8.0.tar.gz",
         ],
     )
 
     github_archive(
         name = "spdlog",  # MIT
         build_file = str(Label("//tools:spdlog.BUILD.bazel")),
-        commit = "v1.10.0",
+        commit = "v1.11.0",
         repository = "gabime/spdlog",
-        sha256 = "697f91700237dbae2326b90469be32b876b2b44888302afbc7aceb68bcfe8224",
+        sha256 = "ca5cae8d6cac15dae0ec63b21d6ad3530070650f68076f3a4a862ca293a858bb",
     )
 
     github_archive(
@@ -86,9 +86,9 @@ def dreal_workspace():
     github_archive(
         name = "pybind11",  # BSD
         build_file = str(Label("//tools:pybind11.BUILD.bazel")),
-        commit = "v2.10.0",
+        commit = "v2.10.2",
         repository = "pybind/pybind11",
-        sha256 = "eacf582fa8f696227988d08cfc46121770823839fe9e301a20fbce67e7cd70ec",
+        sha256 = "93bd1e625e43e03028a3ea7389bba5d3f9f2596abc074b068e70f4ef9b1314ae",
     )
 
     github_archive(

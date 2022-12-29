@@ -28,9 +28,9 @@ github_archive(
 github_archive(
     name = "pycodestyle",  # Expat
     build_file = "//tools:pycodestyle.BUILD.bazel",
-    commit = "2.8.0",
+    commit = "2.10.0",
     repository = "PyCQA/pycodestyle",
-    sha256 = "9116bd3686beaa22be34be1e5259fb9eecbf246a3991849d33ff6ab07d52f86e",
+    sha256 = "a7306561f1ddf7bc00419b9f0d698d312a8eaa173b834e7c8e4ff32db5efd27f",
 )
 
 github_archive(
@@ -50,9 +50,9 @@ github_archive(
 
 http_archive(
     name = "rules_python",  # Apache-2.0
-    sha256 = "b593d13bb43c94ce94b483c2858e53a9b811f6f10e1e0eedc61073bd90e58d9c",
-    strip_prefix = "rules_python-0.12.0",
-    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.12.0.tar.gz",
+    sha256 = "497ca47374f48c8b067d786b512ac10a276211810f4a580178ee9b9ad139323a",
+    strip_prefix = "rules_python-0.16.1",
+    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.16.1.tar.gz",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")
