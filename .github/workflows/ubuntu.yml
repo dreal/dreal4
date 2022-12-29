@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        cc: [gcc-9, gcc-10, gcc-11, clang-12, clang-13, clang-14]
+        cc: [gcc-9, gcc-10, gcc-11, gcc-12, clang-12, clang-13, clang-14]
     steps:
      - name: checkout
        uses: actions/checkout@v2
