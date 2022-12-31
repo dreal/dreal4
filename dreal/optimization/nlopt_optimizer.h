@@ -16,8 +16,6 @@
 #pragma once
 
 #include <memory>
-#include <ostream>
-#include <unordered_map>
 #include <vector>
 
 #pragma GCC diagnostic push
@@ -25,35 +23,13 @@
 #include <nlopt.hpp>
 #pragma GCC diagnostic pop
 
+#include "dreal/optimization/cached_expression.h"
 #include "dreal/solver/config.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
 #include "dreal/util/nnfizer.h"
 
 namespace dreal {
-
-/// Cached expression class.
-class CachedExpression {
- public:
-  CachedExpression() = default;
-  CachedExpression(Expression e, const Box& box);
-  const Box& box() const;
-  Environment& mutable_environment();
-  const Environment& environment() const;
-  double Evaluate(const Environment& env) const;
-  const Expression& Differentiate(const Variable& x);
-
- private:
-  Expression expression_;
-  Environment environment_;
-  const Box* box_{nullptr};
-  std::unordered_map<Variable, Expression, hash_value<Variable>> gradient_;
-
-  friend std::ostream& operator<<(std::ostream& os,
-                                  const CachedExpression& expression);
-};
-
-std::ostream& operator<<(std::ostream& os, const CachedExpression& expression);
 
 /// Wrapper class for nlopt.
 class NloptOptimizer {
@@ -69,7 +45,7 @@ class NloptOptimizer {
   NloptOptimizer(const NloptOptimizer&) = delete;
 
   /// Deleted move-constructor.
-  NloptOptimizer(NloptOptimizer&&) = default;
+  NloptOptimizer(NloptOptimizer&&) = delete;
 
   /// Deleted copy-assignment operator.
   NloptOptimizer& operator=(const NloptOptimizer&) = delete;
