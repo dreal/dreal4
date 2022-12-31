@@ -19,14 +19,31 @@ dreal_cc_library(
     hdrs = [
         "nlopt_optimizer.h",
     ],
-    visibility = ["//dreal/contractor:__pkg__"],
+    visibility = ["//dreal:__subpackages__"],
     deps = [
+        ":cached_expression",
         "//dreal/solver:config",
         "//dreal/symbolic",
         "//dreal/util:assert",
         "//dreal/util:box",
         "//dreal/util:nnfizer",
         "@nlopt",
+    ],
+)
+
+dreal_cc_library(
+    name = "cached_expression",
+    srcs = [
+        "cached_expression.cc",
+    ],
+    hdrs = [
+        "cached_expression.h",
+    ],
+    visibility = ["//dreal:__subpackages__"],
+    deps = [
+        "//dreal/symbolic",
+        "//dreal/util:assert",
+        "//dreal/util:box",
     ],
 )
 

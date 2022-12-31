@@ -65,46 +65,6 @@ double NloptOptimizerEvaluate(const unsigned n, const double* x, double* grad,
 }
 }  // namespace
 
-// ----------------
-// CachedExpression
-// ----------------
-CachedExpression::CachedExpression(Expression e, const Box& box)
-    : expression_{std::move(e)}, box_{&box} {
-  DREAL_ASSERT(box_);
-}
-
-const Box& CachedExpression::box() const {
-  DREAL_ASSERT(box_);
-  return *box_;
-}
-
-Environment& CachedExpression::mutable_environment() { return environment_; }
-
-const Environment& CachedExpression::environment() const {
-  return environment_;
-}
-
-double CachedExpression::Evaluate(const Environment& env) const {
-  return expression_.Evaluate(env);
-}
-
-const Expression& CachedExpression::Differentiate(const Variable& x) {
-  auto it = gradient_.find(x);
-  if (it == gradient_.end()) {
-    // Not found.
-    return gradient_.emplace_hint(it, x, expression_.Differentiate(x))->second;
-  } else {
-    return it->second;
-  }
-}
-
-ostream& operator<<(ostream& os, const CachedExpression& expression) {
-  return os << expression.expression_;
-}
-
-// --------------
-// NloptOptimizer
-// --------------
 NloptOptimizer::NloptOptimizer(const nlopt::algorithm algorithm, Box bound,
                                const Config& config)
     : opt_{algorithm, static_cast<unsigned>(bound.size())},
