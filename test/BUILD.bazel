@@ -29,6 +29,18 @@ dreal_cc_googletest(
     ],
 )
 
+dreal_cc_googletest(
+    name = "cds_priority_queue_test",
+    size = "small",
+    srcs = [
+        "cds_priority_queue_test.cc",
+    ],
+    tags = ["extlib"],
+    deps = [
+        "@cds",
+    ],
+)
+
 cc_test(
     name = "gmp_test",
     size = "small",
