@@ -158,9 +158,9 @@ class Smt2Driver {
    * parser to the scanner. It is used in the yylex macro. */
   Smt2Scanner* scanner{nullptr};
 
-  /// Eliminate Boolean variables in @p vars, `[b_1, ... b_n]`, from
-  /// @p f by constructing `f[b ↦ true] ∧ f[b ↦ false]`. This is used
-  /// in handling `forall` terms.
+  /// Eliminate Boolean variables `[b_1, …, b_n]` in @p vars from @p f
+  /// by constructing `f[b ↦ true] ∧ f[b ↦ false]`. This is used in
+  /// handling `forall` terms.
   static Formula EliminateBooleanVariables(const Variables& vars,
                                            const Formula& f);
 
