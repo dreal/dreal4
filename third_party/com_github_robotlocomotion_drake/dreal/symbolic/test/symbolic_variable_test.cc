@@ -1,3 +1,5 @@
+#include "dreal/symbolic/symbolic_variable.h"
+
 #include <map>
 #include <sstream>
 #include <unordered_map>
@@ -7,7 +9,6 @@
 
 #include <gtest/gtest.h>
 
-#include "dreal/symbolic/symbolic_variable.h"
 #include "dreal/symbolic/test/symbolic_test_util.h"
 
 namespace dreal {
@@ -59,7 +60,7 @@ TEST_F(VariableTest, MoveCopyPreserveId) {
   const size_t x_id{x.get_id()};
   const size_t x_hash{x.get_hash()};
   const Variable x_copied{x};
-  const Variable x_moved{move(x)};
+  const Variable x_moved{std::move(x)};
   EXPECT_EQ(x_id, x_copied.get_id());
   EXPECT_EQ(x_hash, x_copied.get_hash());
   EXPECT_EQ(x_id, x_moved.get_id());
