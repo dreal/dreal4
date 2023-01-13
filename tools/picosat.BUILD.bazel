@@ -6,6 +6,10 @@ cc_library(
     hdrs = [
         "picosat.h",
     ],
+    copts = [
+        "-Wno-unused-but-set-variable",
+        "-Wno-unknown-warning-option",
+    ],
     visibility = ["//visibility:public"],
 )
 
