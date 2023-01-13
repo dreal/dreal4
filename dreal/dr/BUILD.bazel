@@ -36,6 +36,10 @@ dreal_cc_library(
         "run.h",
         "scanner.h",
     ],
+    copts = [
+        "-Wno-unused-but-set-variable",
+        "-Wno-unknown-warning-option",
+    ],
     visibility = ["//dreal:__pkg__"],
     deps = [
         "//dreal/solver",
