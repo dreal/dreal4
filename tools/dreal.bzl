@@ -64,7 +64,6 @@ def _platform_copts(rule_copts, cc_test = 0):
     return select({
         "//tools:gcc_build": GCC_FLAGS + extra_gcc_flags + rule_copts,
         "//tools:clang_build": CLANG_FLAGS + rule_copts,
-        "//tools:apple": CLANG_FLAGS + rule_copts,
         "//conditions:default": CXX_FLAGS + rule_copts,
     })
 
@@ -155,9 +154,9 @@ def dreal_pybind_library(
         data = [
             cc_so_name,
         ],
-        deps = py_deps,
         srcs_version = "PY2AND3",
         visibility = ["//dreal:__subpackages__"],
+        deps = py_deps,
     )
 
 def dreal_cc_binary(
@@ -337,7 +336,7 @@ def dr_test(
 
 # Generate a file with specified content
 def _generate_file_impl(ctx):
-    ctx.actions.write(output = ctx.outputs.out, content = ctx.attr.content)
+    ctx.actions.write(content = ctx.attr.content, output = ctx.outputs.out)
 
 dreal_generate_file = rule(
     attrs = {
