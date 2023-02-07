@@ -48,11 +48,12 @@ github_archive(
     sha256 = "81964fe578e9bd7c94dfdb09c8e4d6e6759e19967e397dbea48d1c10e45d0df2",
 )
 
+# Note: Dependency of rules_pkg in dreal/workspace.bzl
 http_archive(
     name = "rules_python",  # Apache-2.0
-    sha256 = "497ca47374f48c8b067d786b512ac10a276211810f4a580178ee9b9ad139323a",
-    strip_prefix = "rules_python-0.16.1",
-    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.16.1.tar.gz",
+    sha256 = "8c15896f6686beb5c631a4459a3aa8392daccaab805ea899c9d14215074b60ef",
+    strip_prefix = "rules_python-0.17.3",
+    url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.17.3.tar.gz",
 )
 
 load("//dreal:workspace.bzl", "dreal_workspace")
