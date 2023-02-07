@@ -261,6 +261,9 @@ filegroup(
         "brancher.h",
         "config.h",
         "context.h",
+        "formula_evaluator.h",
+        "icp.h",
+        "theory_solver.h",
     ],
     visibility = ["//:__pkg__"],
 )

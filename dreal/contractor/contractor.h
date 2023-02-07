@@ -21,7 +21,6 @@
 #include "dreal/contractor/contractor_status.h"
 #include "dreal/solver/config.h"
 #include "dreal/util/box.h"
-#include "dreal/util/ibex_converter.h"
 
 namespace dreal {
 
