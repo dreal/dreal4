@@ -41,6 +41,23 @@ dreal_py_test(
 )
 
 dreal_py_test(
+    name = "contractor_test",
+    srcs = [
+        "contractor_test.py",
+    ],
+    main = "contractor_test.py",
+    tags = [
+        "no_asan",
+        "no_lsan",
+        "no_tsan",
+        "no_ubsan",
+    ],
+    deps = [
+        "//dreal:dreal_py",
+    ],
+)
+
+dreal_py_test(
     name = "util_test",
     srcs = [
         "util_test.py",
