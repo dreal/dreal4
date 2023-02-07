@@ -346,11 +346,12 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def(py::self / double())
       .def(double() / py::self)
       // Pow.
-      .def("__pow__",
-           [](const Variable& self, const Expression& other) {
-             return pow(self, other);
-           },
-           py::is_operator())
+      .def(
+          "__pow__",
+          [](const Variable& self, const Expression& other) {
+            return pow(self, other);
+          },
+          py::is_operator())
       // Unary Plus.
       .def(+py::self)
       // Unary Minus.
@@ -421,12 +422,13 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("IsSupersetOf", &Variables::IsSupersetOf)
       .def("IsStrictSubsetOf", &Variables::IsStrictSubsetOf)
       .def("IsStrictSupersetOf", &Variables::IsStrictSupersetOf)
-      .def("__iter__",
-           [](const Variables& vars) {
-             return py::make_iterator(vars.begin(), vars.end());
-           },
-           py::keep_alive<
-               0, 1>() /* Essential: keep object alive while iterator exists */)
+      .def(
+          "__iter__",
+          [](const Variables& vars) {
+            return py::make_iterator(vars.begin(), vars.end());
+          },
+          py::keep_alive<
+              0, 1>() /* Essential: keep object alive while iterator exists */)
       .def(py::self == py::self)
       .def(py::self < py::self)
       .def(py::self + py::self)
@@ -589,13 +591,13 @@ PYBIND11_MODULE(_dreal_py, m) {
              return imply(f, f1) && imply(!f, f2);
            });
 
-  m.def("forall",
-        [](const std::vector<Variable>& vec, const Formula& f) {
-          Variables vars;
-          vars.insert(vec.begin(), vec.end());
-          return forall(vars, f);
-        })
-      .def("forall", &forall);
+  // clang-format off
+  m.def("forall", [](const std::vector<Variable>& vec, const Formula& f) {
+    Variables vars;
+    vars.insert(vec.begin(), vec.end());
+    return forall(vars, f);
+  }).def("forall", &forall);
+  // clang-format on
 
   py::class_<Formula>(m, "Formula")
       .def(py::init<const Variable&>())
@@ -656,8 +658,11 @@ PYBIND11_MODULE(_dreal_py, m) {
       .def("__logical_or",
            [](const Variable& a, const Variable& b) { return a || b; });
 
-  m.def("logical_not", [](const Formula& a) { return !a; })
-      .def("logical_not", [](const Variable& a) { return !a; });
+  // clang-format off
+  m.def("logical_not", [](const Formula& a) {
+    return !a;
+  }).def("logical_not", [](const Variable& a) { return !a; });
+  // clang-format on
 
   m.def("logical_imply",
         [](const Formula& a, const Formula& b) { return imply(a, b); })
