@@ -20,9 +20,9 @@ versions.check(minimum_bazel_version = "4.2.1")
 github_archive(
     name = "google_styleguide",  # BSD-3
     build_file = "//tools:google_styleguide.BUILD.bazel",
-    commit = "1.6.0",
+    commit = "1.6.1",
     repository = "cpplint/cpplint",
-    sha256 = "ddc50661b62103376675d6e4bcaa85745fa523343c3d93a1f774685005f9afb3",
+    sha256 = "7be47998c4bd590e229cf94f3312c46563d3ee35ea037b4ed389720f510029d6",
 )
 
 github_archive(
