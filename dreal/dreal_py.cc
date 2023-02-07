@@ -18,6 +18,7 @@
 #include <utility>
 #include <vector>
 
+#include "./ibex.h"
 #include "fmt/format.h"
 #include "fmt/ostream.h"
 #include "pybind11/functional.h"
@@ -25,15 +26,16 @@
 #include "pybind11/pybind11.h"
 #include "pybind11/stl.h"
 
-#include "./ibex.h"
-
 #include "dreal/api/api.h"
+#include "dreal/contractor/contractor_status.h"
 #include "dreal/smt2/logic.h"
 #include "dreal/solver/config.h"
 #include "dreal/solver/context.h"
+#include "dreal/solver/theory_solver.h"
 #include "dreal/symbolic/prefix_printer.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/dynamic_bitset.h"
 #include "dreal/util/if_then_else_eliminator.h"
 #include "dreal/util/interrupt.h"
 #include "dreal/util/logging.h"
@@ -854,6 +856,95 @@ PYBIND11_MODULE(_dreal_py, m) {
 
   m.def("set_log_level",
         [](const spdlog::level::level_enum l) { log()->set_level(l); });
+
+  m.def("BuildContractor", [](const std::vector<Formula>& assertions,
+                              ContractorStatus* cs, const Config& config) {
+    TheorySolver tsolver{config};
+    return *(tsolver.BuildContractor(assertions, cs));
+  });
+
+  py::class_<DynamicBitset>(m, "DynamicBitset")
+      .def(
+          py::init([](DynamicBitset::size_type n) { return DynamicBitset(n); }))
+      // Note: The resulting string contains size() characters with
+      // the first character corresponds to the last (size() - 1th)
+      // bit and the last character corresponding to the first bit.
+      .def("__str__",
+           [](const DynamicBitset& self) { return fmt::format("{}", self); })
+
+      .def("all", &DynamicBitset::all)
+      .def("any", &DynamicBitset::any)
+      .def("none", &DynamicBitset::none)
+
+      .def("get",
+           [](const DynamicBitset& self, int i) { return bool{self[i]}; })
+
+      // Set all the bits of the sul::dynamic_bitset to false.
+      .def("reset", py::overload_cast<>(&DynamicBitset::reset))
+      .def("size", &DynamicBitset::size)
+      // Set all the bits of the sul::dynamic_bitset to true.
+      .def("set", py::overload_cast<>(&DynamicBitset::set))
+      .def("set", py::overload_cast<DynamicBitset::size_type, bool>(
+                      &DynamicBitset::set))
+      // Test if two DynamicBitset have the same content.
+      .def("__eq__", [](const DynamicBitset& self,
+                        const DynamicBitset& other) { return self == other; })
+      // Test if two DynamicBitset do have the same content.
+      .def("__ne__", [](const DynamicBitset& self,
+                        const DynamicBitset& other) { return self != other; })
+
+      // Performs binary AND on corresponding pairs of bits of self and other.
+      .def("__and__", [](const DynamicBitset& self,
+                         const DynamicBitset& other) { return self & other; })
+      // Sets the bits to the result of binary AND on corresponding pairs of
+      // bits of self and other
+      .def("__iand__", [](DynamicBitset& self,
+                          const DynamicBitset& other) { return self &= other; })
+      // Performs binary OR on corresponding pairs of bits of self and other.
+      .def("__or__", [](const DynamicBitset& self,
+                        const DynamicBitset& other) { return self | other; })
+      // Sets the bits to the result of binary OR on corresponding pairs of
+      // bits of self and other.
+      .def("__ior__", [](DynamicBitset& self, const DynamicBitset& other) {
+        return self |= other;
+      });
+
+  py::class_<ContractorStatus>(m, "ContractorStatus")
+      .def(py::init<Box>())
+      .def("box",
+           [](const ContractorStatus& self) {
+             // Explicitly create a copy.
+             //
+             // TODO(soonho): Impose constness here and remove this redundant
+             // copy.
+             return Box(self.box());
+           })
+      .def("mutable_box", &ContractorStatus::mutable_box,
+           py::return_value_policy::reference_internal)
+      .def("output",
+           [](const ContractorStatus& self) {
+             // Explicitly create a copy.
+             //
+             // TODO(soonho): Impose constness here and remove this redundant
+             // copy.
+             return DynamicBitset(self.output());
+           })
+      .def("mutable_output", &ContractorStatus::mutable_output,
+           py::return_value_policy::reference_internal)
+      .def("explanation", &ContractorStatus::Explanation);
+
+  py::class_<Contractor>(m, "Contractor")
+      .def(py::init<const Config&>())
+      .def("__str__",
+           [](const Contractor& self) { return fmt::format("{}", self); })
+      .def("Prune", &Contractor::Prune)
+      .def("input", [](const Contractor& self) {
+        // Explicitly create a copy.
+        //
+        // TODO(soonho): Impose constness here and remove this redundant
+        // copy.
+        return DynamicBitset(self.input());
+      });
 
   // NOLINTNEXTLINE(readability/fn_size)
 }
