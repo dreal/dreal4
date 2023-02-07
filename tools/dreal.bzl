@@ -244,7 +244,6 @@ def dreal_py_test(
         tags = tags,
         deps = deps,
         srcs_version = "PY2AND3",
-        python_version = "PY2",
         **kwargs
     )
 
