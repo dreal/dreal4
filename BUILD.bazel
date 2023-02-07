@@ -43,6 +43,7 @@ cc_library(
     hdrs = [
         "//dreal:headers",
         "//dreal/api:headers",
+        "//dreal/contractor:headers",
         "//dreal/smt2:headers",
         "//dreal/solver:headers",
         "//dreal/symbolic:headers",

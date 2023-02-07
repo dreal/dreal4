@@ -25,6 +25,7 @@
 #include "dreal/contractor/contractor_cell.h"
 #include "dreal/symbolic/symbolic.h"
 #include "dreal/util/box.h"
+#include "dreal/util/ibex_converter.h"
 
 namespace dreal {
 

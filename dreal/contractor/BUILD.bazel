@@ -4,6 +4,7 @@ load(
     "dreal_cc_googletest",
     "dreal_cc_library",
 )
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 
 package(default_visibility = ["//visibility:private"])
 
@@ -152,6 +153,29 @@ dreal_cc_googletest(
     deps = [
         ":contractor",
     ],
+)
+
+# ----------------------
+# Header files to expose
+# ----------------------
+filegroup(
+    name = "headers",
+    srcs = [
+        "contractor.h",
+        "contractor_status.h",
+    ],
+    visibility = ["//:__pkg__"],
+)
+
+pkg_tar(
+    name = "package_headers",
+    srcs = [
+        ":headers",
+    ],
+    extension = "tar.gz",
+    package_dir = "include/dreal/contractor",
+    tags = ["manual"],
+    visibility = ["//:__pkg__"],
 )
 
 cpplint()
