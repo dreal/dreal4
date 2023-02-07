@@ -46,14 +46,15 @@ class TheorySolver {
   /// Gets a list of used constraints.
   const std::set<Formula>& GetExplanation() const;
 
+  optional<Contractor> BuildContractor(const std::vector<Formula>& assertions,
+                                       ContractorStatus* contractor_status);
+
  private:
   // Builds a contractor using @p box and @p assertions. It returns
   // nullopt if it detects an empty box while building a contractor.
   //
   // @note This method updates @p box as it calls FilterAssertion
   // function.
-  optional<Contractor> BuildContractor(const std::vector<Formula>& assertions,
-                                       ContractorStatus* contractor_status);
   std::vector<FormulaEvaluator> BuildFormulaEvaluator(
       const std::vector<Formula>& assertions);
 
