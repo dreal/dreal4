@@ -88,6 +88,18 @@ cc_test(
 )
 
 dreal_cc_googletest(
+    name = "json_test",
+    size = "small",
+    srcs = [
+        "json_test.cc",
+    ],
+    tags = ["extlib"],
+    deps = [
+        "@json",
+    ],
+)
+
+dreal_cc_googletest(
     name = "nlopt_test",
     srcs = ["nlopt_test.cc"],
     tags = ["extlib"],

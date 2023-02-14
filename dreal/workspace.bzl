@@ -105,3 +105,10 @@ def dreal_workspace():
         repository = "khizmax/libcds",
         sha256 = "f090380ecd6b63a3c2b2f0bdb27260de2ccb22486ef7f47cc1175b70c6e4e388",
     )
+
+    github_archive(
+        name = "json",  # MIT
+        commit = "b2306145e1789368e6f261680e8dc007e91cc986",  # 20230131
+        repository = "nlohmann/json",
+        sha256 = "dfb6ec5af1feeb9ce7efa1554676335ca9dde5f60424642c8ac2f9e0a66da909",
+    )
