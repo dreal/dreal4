@@ -127,6 +127,7 @@ dreal_cc_library(
         "//dreal/util:timer",
         "//third_party/com_github_progschj_threadpool:thread_pool",
         "@fmt",
+        "@json",
     ],
 )
 

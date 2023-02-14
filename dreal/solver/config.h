@@ -73,6 +73,13 @@ class Config {
   /// Returns a mutable OptionValue for 'use_local_optimization'.
   OptionValue<bool>& mutable_use_local_optimization();
 
+  /// Returns whether it uses local optimization algorithm in exist-forall
+  /// problems.
+  bool dump_theory_literals() const;
+
+  /// Returns a mutable OptionValue for 'dump_theory_literals'.
+  OptionValue<bool>& mutable_dump_theory_literals();
+
   /// Returns the number of parallel jobs.
   int number_of_jobs() const;
 
@@ -166,6 +173,7 @@ class Config {
   OptionValue<bool> use_polytope_in_forall_{false};
   OptionValue<bool> use_worklist_fixpoint_{false};
   OptionValue<bool> use_local_optimization_{false};
+  OptionValue<bool> dump_theory_literals_{false};
   OptionValue<int> number_of_jobs_{1};
   OptionValue<bool> stack_left_box_first_{false};
   OptionValue<bool> smtlib2_compliant_{false};

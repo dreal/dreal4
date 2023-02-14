@@ -21,6 +21,8 @@
 #include <memory>
 #include <utility>
 
+#include <nlohmann/json.hpp>
+
 #include "dreal/contractor/contractor_forall.h"
 #include "dreal/solver/context.h"
 #include "dreal/solver/filter_assertion.h"
@@ -104,6 +106,33 @@ class TheorySolverStat : public Stat {
 
  private:
   std::atomic<int> num_check_sat_{0};
+};
+
+/// Helper class to implement "--dump-theory-literals" option. It
+/// collects a list of theory literals for each round and print outs
+/// the information (list of list of literals) when an instance of
+/// this class is destructed.
+class DumpTheoryLiteralsHelper {
+ public:
+  /// Constructor.
+  ///
+  /// Its destructor only outputs the information when `enabled_` is true.
+  explicit DumpTheoryLiteralsHelper(bool enabled) : enabled_{enabled} {}
+  ~DumpTheoryLiteralsHelper() {
+    if (enabled_) {
+      std::cout << data_ << "\n";
+    }
+  }
+
+  /// Starts a new round of theory-solving.
+  void StartNewRound() { data_.push_back(nlohmann::json{}); }
+
+  /// Adds a literfal `f` to the data.
+  void AddLiteral(const Formula& f) { data_.back().push_back(f.to_string()); }
+
+ private:
+  bool enabled_{false};
+  nlohmann::json data_;
 };
 
 }  // namespace
@@ -224,9 +253,18 @@ vector<FormulaEvaluator> TheorySolver::BuildFormulaEvaluator(
 
 bool TheorySolver::CheckSat(const Box& box, const vector<Formula>& assertions) {
   static TheorySolverStat stat{DREAL_LOG_INFO_ENABLED};
+  static DumpTheoryLiteralsHelper dump_theory_literals{
+      config_.dump_theory_literals()};
   stat.increase_num_check_sat();
   TimerGuard check_sat_timer_guard(&stat.timer_check_sat_, stat.enabled(),
                                    true /* start_timer */);
+
+  if (config_.dump_theory_literals()) {
+    dump_theory_literals.StartNewRound();
+    for (const auto& f : assertions) {
+      dump_theory_literals.AddLiteral(f);
+    }
+  }
 
   DREAL_LOG_DEBUG("TheorySolver::CheckSat()");
   ContractorStatus contractor_status(box);

@@ -144,6 +144,11 @@ void MainProgram::AddOptions() {
            "Use local optimization algorithm for exist-forall problems.\n",
            "--local-optimization");
 
+  opt_.add("false" /* Default */, false /* Required? */,
+           0 /* Number of args expected. */,
+           0 /* Delimiter if expecting multiple args. */,
+           "Dump theory literals.\n", "--dump-theory-literals");
+
   opt_.add("1" /* Default */, false /* Required? */,
            1 /* Number of args expected. */,
            0 /* Delimiter if expecting multiple args. */, "Number of jobs.\n",
@@ -343,6 +348,13 @@ void MainProgram::ExtractOptions() {
     config_.mutable_use_local_optimization().set_from_command_line(true);
     DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --local-optimization = {}",
                     config_.use_local_optimization());
+  }
+
+  // --dump-theory-literals
+  if (opt_.isSet("--dump-theory-literals")) {
+    config_.mutable_dump_theory_literals().set_from_command_line(true);
+    DREAL_LOG_DEBUG("MainProgram::ExtractOptions() --dump-theory-literals = {}",
+                    config_.dump_theory_literals());
   }
 
   // --nlopt-ftol-rel
