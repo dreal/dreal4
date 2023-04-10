@@ -44,15 +44,15 @@ jobs:
          --verbose_failures
 
   ubsan_focal:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
      - name: checkout
        uses: actions/checkout@v3
      - name: setup
-       run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
+       run: sudo ./setup/ubuntu/22.04/install_prereqs.sh
      - name: build and test
        run: |
-         CC=clang-12 bazel test //... \
+         CC=clang-14 bazel test //... \
            -c dbg \
            --config ubsan \
            --test_output=errors \
@@ -61,15 +61,15 @@ jobs:
            --verbose_failures
 
   asan_focal:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
      - name: checkout
        uses: actions/checkout@v3
      - name: setup
-       run: sudo ./setup/ubuntu/20.04/install_prereqs.sh
+       run: sudo ./setup/ubuntu/22.04/install_prereqs.sh
      - name: build and test
        run: |
-         CC=clang-11 bazel test //... \
+         CC=clang-14 bazel test //... \
            -c dbg \
            --config asan \
            --test_output=errors \

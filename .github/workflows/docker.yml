@@ -9,9 +9,9 @@ on:
     - cron: '0 7 * * *'
 
 jobs:
-  docker_build_test_ubuntu_20_04:
+  docker_build_test_ubuntu_22_04:
     name: Docker build test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -20,9 +20,9 @@ jobs:
       - name: test
         run: docker run -t dreal4_test dreal "-v"
 
-  docker_pull_test_ubuntu_20_04:
+  docker_pull_test_ubuntu_22_04:
     name: Docker pull test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: pull
         run: docker pull dreal/dreal4
@@ -31,7 +31,7 @@ jobs:
 
   docker_build_test_amazonlinux2:
     name: Docker build test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -42,7 +42,7 @@ jobs:
 
   docker_pull_test_amazonlinux2:
     name: Docker pull test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - name: pull
         run: docker pull dreal/dreal4:amazonlinux

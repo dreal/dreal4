@@ -5,7 +5,7 @@ on:
     - cron: '0 6 * * *'
 
 jobs:
-  ubuntu_focal_install:
+  ubuntu_20_04_install:
     name: ubuntu-20.04 install
     runs-on: ubuntu-20.04
     steps:
@@ -16,14 +16,14 @@ jobs:
         shell: bash
       - name: run dreal
         run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2
-  ubuntu_bionic_install:
-    name: ubuntu 18.04 install
-    runs-on: ubuntu-18.04
+  ubuntu_22_04_install:
+    name: ubuntu 22.04 install
+    runs-on: ubuntu-22.04
     steps:
       - name: checkout
         uses: actions/checkout@v3
       - name: setup
-        run: sudo ./setup/ubuntu/18.04/install.sh
+        run: sudo ./setup/ubuntu/22.04/install.sh
         shell: bash
       - name: run dreal
         run: $(find /opt/dreal/ -name "dreal" -type f -executable) ./dreal/test/smt2/01.smt2

@@ -1,7 +1,8 @@
 dReal: An SMT Solver for Nonlinear Theories of Reals
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Build Status](https://travis-ci.org/dreal/dreal4.svg?branch=master)](https://travis-ci.org/dreal/dreal4)
+[![Ubuntu_CI](https://github.com/dreal/dreal4/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/dreal/dreal4/actions/workflows/ubuntu.yml)
+[![MacOS_CI](https://github.com/dreal/dreal4/actions/workflows/macos.yml/badge.svg)](https://github.com/dreal/dreal4/actions/workflows/macos.yml)
 [![codecov](https://codecov.io/gh/dreal/dreal4/branch/master/graph/badge.svg)](https://codecov.io/gh/dreal/dreal4)
 
 How to Install
@@ -14,7 +15,7 @@ macOS 12 / 11 / 10.15:
 dreal
 ```
 
-Ubuntu 22.04 / 20.04 / 18.04:
+Ubuntu 22.04 / 20.04:
 
 ```bash
 # 22.04
@@ -24,10 +25,6 @@ curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/22
 # 20.04
 sudo apt-get install curl
 curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/20.04/install.sh | sudo bash
-
-# 18.04
-sudo apt-get install curl
-curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/18.04/install.sh | sudo bash
 
 # Test the installation.
 DREAL_VERSION=4.21.06.2
@@ -108,7 +105,7 @@ git clone https://github.com/dreal/dreal4 && cd dreal4
 ./setup/mac/install_prereqs.sh
 ```
 
-Ubuntu 22.04 / 20.04 / 18.04
+Ubuntu 22.04 / 20.04
 
 ```bash
 git clone https://github.com/dreal/dreal4 && cd dreal4
@@ -200,7 +197,7 @@ macOS 12 / 11 / 10.15:
 export PKG_CONFIG_PATH=/usr/local/opt/ibex@2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
 ```
 
-Ubuntu 22.04 / 20.04 / 18.04:
+Ubuntu 22.04 / 20.04:
 
 ```bash
 export PKG_CONFIG_PATH=/opt/dreal/4.21.06.2/lib/pkgconfig:/opt/libibex/2.7.4/share/pkgconfig:${PKG_CONFIG_PATH}
