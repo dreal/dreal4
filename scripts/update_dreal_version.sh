@@ -37,6 +37,7 @@ sed -i "s/${OLD_VERSION}/${NEW_VERSION}/g" \
     "${ROOT_PATH}/setup.py" \
     "${ROOT_PATH}/setup/ubuntu/18.04/install.sh" \
     "${ROOT_PATH}/setup/ubuntu/20.04/install.sh" \
+    "${ROOT_PATH}/setup/ubuntu/22.04/install.sh" \
     "${ROOT_PATH}/tools/dreal.bzl" \
     "${ROOT_PATH}/dreal/__init__.py"
 echo "Done"
