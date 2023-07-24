@@ -114,13 +114,13 @@ Precompiled Wheels
 
 We provide precompiled distributions (`.whl`) for the following environments:
 
- - macOS 11.0 / 10.15 + CPython 3
+ - macOS 13 / 12 / 11 + CPython 3
  - Linux + CPython 3.7 / 3.8 / 3.9 / 3.10
 
 You still need to install dReal prerequisites such as IBEX and CLP in
 your system. To install them, please follow the instructions below:
 
-macOS 11.0 / 10.15
+macOS 13 / 12 / 11
 
     brew tap robotlocomotion/director
     brew tap dreal/dreal
@@ -139,7 +139,7 @@ source and build it from scratch. You need to install the required
 packages to do so. To install them, please follow the instructions
 below:
 
-macOS 11.0 / 10.15
+macOS 13 / 12 / 11
 
     brew tap robotlocomotion/director
     brew tap dreal/dreal

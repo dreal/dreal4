@@ -12,24 +12,6 @@ env:
   HOMEBREW_NO_AUTO_UPDATE: "1"
 
 jobs:
-  catalina_build_and_test:
-    runs-on: macos-10.15
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: remove-bazelisk
-        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
-      - name: setup
-        run: |
-          rm -f '/usr/local/bin/2to3'
-          ./setup/mac/install_prereqs.sh
-      - name: build and test
-        run: |
-          bazel test //... \
-            -c dbg \
-            --test_output=errors \
-            --verbose_failures
-
   big_sur_build_and_test:
     runs-on: macos-11
     steps:
@@ -50,6 +32,24 @@ jobs:
 
   monterey_build_and_test:
     runs-on: macos-12
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: remove-bazelisk
+        run: if [[ -e /usr/local/bin/bazelisk ]]; then brew rm bazelisk; fi
+      - name: setup
+        run: |
+          rm -f '/usr/local/bin/2to3'
+          ./setup/mac/install_prereqs.sh
+      - name: build and test
+        run: |
+          bazel test //... \
+            -c dbg \
+            --test_output=errors \
+            --verbose_failures
+
+  ventura_build_and_test:
+    runs-on: macos-13
     steps:
       - name: checkout
         uses: actions/checkout@v3
