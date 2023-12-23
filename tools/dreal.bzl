@@ -161,7 +161,6 @@ def dreal_pybind_library(
 
 def dreal_cc_binary(
         name,
-        hdrs = None,
         srcs = None,
         deps = None,
         copts = [],
@@ -180,7 +179,6 @@ def dreal_cc_binary(
     """
     native.cc_binary(
         name = name,
-        hdrs = hdrs,
         srcs = srcs,
         deps = deps,
         copts = _platform_copts(copts),
@@ -191,7 +189,6 @@ def dreal_cc_binary(
     if add_test_rule:
         dreal_cc_test(
             name = name + "_test",
-            hdrs = hdrs,
             srcs = srcs,
             deps = deps,
             copts = copts,
