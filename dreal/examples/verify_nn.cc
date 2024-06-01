@@ -13,13 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "dreal/api/api.h"
-
 #include <cassert>
 #include <ostream>
 #include <random>
 #include <string>
 #include <vector>
+
+#include "dreal/api/api.h"
 
 using dreal::Config;
 using dreal::Expression;

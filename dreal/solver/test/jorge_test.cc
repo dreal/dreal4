@@ -13,13 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "dreal/solver/context.h"
-
 #include <iostream>
 #include <vector>
 
 #include <gtest/gtest.h>
 
+#include "dreal/solver/context.h"
 #include "dreal/symbolic/symbolic.h"
 
 namespace dreal {

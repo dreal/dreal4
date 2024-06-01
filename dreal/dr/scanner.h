@@ -34,9 +34,8 @@
 
 // The following include should come first before parser.yy.hh.
 // Do not alpha-sort them.
-#include "dreal/symbolic/symbolic.h"
-
 #include "dreal/dr/parser.yy.hh"
+#include "dreal/symbolic/symbolic.h"
 
 namespace dreal {
 

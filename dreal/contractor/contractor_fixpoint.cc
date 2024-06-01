@@ -31,8 +31,7 @@ ContractorFixpoint::ContractorFixpoint(TerminationCondition term_cond,
                                        vector<Contractor> contractors,
                                        const Config& config)
     : ContractorCell{Contractor::Kind::FIXPOINT,
-                     DynamicBitset(ComputeInputSize(contractors)),
-                     config},
+                     DynamicBitset(ComputeInputSize(contractors)), config},
       term_cond_{std::move(term_cond)},
       contractors_{std::move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());

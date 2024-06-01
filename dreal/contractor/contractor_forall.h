@@ -74,8 +74,8 @@ class ContractorForall : public ContractorCell {
   /// @pre 0.0 < inner_delta < epsilon < config.precision().
   ContractorForall(Formula f, const Box& box, double epsilon,
                    double inner_delta, const Config& config)
-      : ContractorCell{Contractor::Kind::FORALL,
-                       DynamicBitset(box.size()), config},
+      : ContractorCell{Contractor::Kind::FORALL, DynamicBitset(box.size()),
+                       config},
         f_{std::move(f)},
         quantified_variables_{get_quantified_variables(f_)},
         strengthend_negated_nested_f_{Nnfizer{}.Convert(
@@ -264,8 +264,8 @@ class ContractorForallMt : public ContractorCell {
   /// Constructs ForallMt contractor using @p f and @p box.
   ContractorForallMt(Formula f, const Box& box, double epsilon,
                      double inner_delta, const Config& config)
-      : ContractorCell{Contractor::Kind::FORALL,
-                       DynamicBitset(box.size()), config},
+      : ContractorCell{Contractor::Kind::FORALL, DynamicBitset(box.size()),
+                       config},
         f_{std::move(f)},
         epsilon_{epsilon},
         inner_delta_{inner_delta},

@@ -13,11 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "./ibex.h"
-
 #include <iostream>
 
 #include <gtest/gtest.h>
+
+#include "./ibex.h"
 
 namespace {
 

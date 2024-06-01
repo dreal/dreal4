@@ -15,9 +15,9 @@
 */
 #pragma once
 
-#include <fmt/format.h>
-
 #include <stdexcept>
+
+#include <fmt/format.h>
 
 namespace dreal {
 

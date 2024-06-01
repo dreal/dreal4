@@ -27,8 +27,7 @@ namespace dreal {
 ContractorJoin::ContractorJoin(vector<Contractor> contractors,
                                const Config& config)
     : ContractorCell{Contractor::Kind::JOIN,
-                     DynamicBitset(ComputeInputSize(contractors)),
-                     config},
+                     DynamicBitset(ComputeInputSize(contractors)), config},
       contractors_{std::move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());
   DynamicBitset& input{mutable_input()};

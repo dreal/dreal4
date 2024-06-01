@@ -36,8 +36,8 @@ namespace dreal {
 ContractorIbexPolytope::ContractorIbexPolytope(vector<Formula> formulas,
                                                const Box& box,
                                                const Config& config)
-    : ContractorCell{Contractor::Kind::IBEX_POLYTOPE,
-                     DynamicBitset(box.size()), config},
+    : ContractorCell{Contractor::Kind::IBEX_POLYTOPE, DynamicBitset(box.size()),
+                     config},
       formulas_{std::move(formulas)},
       ibex_converter_{box} {
   DREAL_LOG_DEBUG("ContractorIbexPolytope::ContractorIbexPolytope");

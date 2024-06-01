@@ -13,11 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-#include "dreal/examples/control.h"
-
 #include <iostream>
 #include <vector>
 
+#include "dreal/examples/control.h"
 #include "dreal/util/logging.h"
 
 namespace dreal {

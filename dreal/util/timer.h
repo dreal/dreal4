@@ -79,7 +79,6 @@ class TimerGuard {
   TimerGuard& operator=(const TimerGuard&) = delete;
   TimerGuard& operator=(TimerGuard&&) = delete;
 
-
   /// Destructs the timer guard object. It pauses the embedded timer object.
   ~TimerGuard();
 

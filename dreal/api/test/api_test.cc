@@ -16,6 +16,7 @@
 #include "dreal/api/api.h"
 
 #include <cmath>
+
 #include <gtest/gtest.h>
 
 #include "dreal/solver/formula_evaluator.h"

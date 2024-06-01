@@ -94,8 +94,7 @@ TEST_F(IfThenElseEliminatorTest, ITEs) {
   ASSERT_FALSE(ite_elim.variables().empty());
   ASSERT_EQ(ite_elim.variables().size(), 1);
   const Variable& ite_var{*(ite_elim.variables().begin())};
-  const Formula expected{ite_var == z_ &&
-                         (!(x_ > y_) || ite_var == x_ + 1.0) &&
+  const Formula expected{ite_var == z_ && (!(x_ > y_) || ite_var == x_ + 1.0) &&
                          (x_ > y_ || ite_var == y_ + 1.0)};
   EXPECT_PRED2(FormulaNotEqual, f, converted);
   EXPECT_PRED2(FormulaEqual, converted, expected);

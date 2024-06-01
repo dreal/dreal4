@@ -18,11 +18,10 @@
 #include <thread>
 #include <vector>
 
-#include <gtest/gtest.h>
-
 #include <cds/container/treiber_stack.h>
 #include <cds/gc/hp.h>  // for cds::HP (Hazard Pointer) SMR
 #include <cds/init.h>   // for cds::Initialize and cds::Terminate
+#include <gtest/gtest.h>
 
 using std::for_each;
 using std::mem_fn;

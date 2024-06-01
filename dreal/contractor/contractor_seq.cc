@@ -27,8 +27,7 @@ namespace dreal {
 ContractorSeq::ContractorSeq(vector<Contractor> contractors,
                              const Config& config)
     : ContractorCell{Contractor::Kind::SEQ,
-                     DynamicBitset(ComputeInputSize(contractors)),
-                     config},
+                     DynamicBitset(ComputeInputSize(contractors)), config},
       contractors_{std::move(contractors)} {
   DREAL_ASSERT(!contractors_.empty());
   DynamicBitset& input{mutable_input()};
