@@ -162,6 +162,10 @@ mkdir ibex && tar xzf ibex.tar.gz -C ibex --strip-components 1
   # IBEX bundles waf 2.0.12, which predates Python 3.11/3.12 (it uses the
   # removed 'rU' file mode and the `imp` module). Unpack it and patch it.
   "${WAF_PYTHON}" ./waf --version >/dev/null 2>&1 || true  # unpacks waflib
+  # waf's "prefork" runner pickles os.environ and falls back to a plain
+  # subprocess only on TypeError/AttributeError. Python 3.14 raises
+  # PicklingError instead, so every command "fails". Disable prefork.
+  export WAF_NO_PREFORK=1
   sed -i.bak \
     -e "s/'rU'/'r'/g" \
     -e "s/^import os,re,imp,sys$/import os,re,sys/" \
