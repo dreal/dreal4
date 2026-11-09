@@ -4,8 +4,14 @@ _DEFAULT_STATIC = False
 
 def _run_pkg_config(repository_ctx, command_line, pkg_config_paths):
     """Run command_line with PKG_CONFIG_PATH = pkg_config_paths and return its
-    tokenized output."""
-    pkg_config_path = ":".join(pkg_config_paths)
+    tokenized output.
+
+    The host's PKG_CONFIG_PATH (if any) is searched before pkg_config_paths so
+    that prerequisites installed in a custom prefix (e.g., wheel builds) are
+    found."""
+    host_path = repository_ctx.os.environ.get("PKG_CONFIG_PATH", "")
+    pkg_config_path = ":".join(
+        [p for p in host_path.split(":") if p] + pkg_config_paths)
     result = repository_ctx.execute(command_line,
                                     environment = {
                                         "PKG_CONFIG_PATH": pkg_config_path,
@@ -201,6 +207,7 @@ pkg_config_repository = repository_rule(
     },
     environ = [
         "PATH",
+        "PKG_CONFIG_PATH",
     ],
     local = True,
     implementation = _impl,

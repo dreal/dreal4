@@ -1,0 +1,73 @@
+name: Wheels
+
+# Builds self-contained wheels (native dependencies bundled by auditwheel /
+# delocate) for CPython 3.12-3.14 on Linux and macOS, tests each one in a clean
+# environment, and publishes to PyPI when a GitHub release is published.
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: wheels (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04        # manylinux_2_28 x86_64
+          - os: ubuntu-24.04-arm    # manylinux_2_28 aarch64
+          - os: macos-14            # arm64
+            macosx_deployment_target: "14.0"
+          - os: macos-15-intel      # x86_64
+            macosx_deployment_target: "15.0"
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: remove-bazelisk
+        if: runner.os == 'macOS'
+        run: if command -v bazelisk >/dev/null; then brew uninstall bazelisk || true; fi
+      - name: build wheels
+        uses: pypa/cibuildwheel@v3.2.1
+        env:
+          # Homebrew's GMP is built for the runner's macOS version, so wheels
+          # cannot target an older one.
+          MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macosx_deployment_target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: sdist
+    runs-on: ubuntu-24.04
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: build sdist
+        run: pipx run build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+
+  publish:
+    name: publish to PyPI
+    if: github.event_name == 'release' && github.event.action == 'published'
+    needs: [ build_wheels, build_sdist ]
+    runs-on: ubuntu-24.04
+    environment: pypi
+    permissions:
+      id-token: write  # PyPI trusted publishing.
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: pypa/gh-action-pypi-publish@release/v1

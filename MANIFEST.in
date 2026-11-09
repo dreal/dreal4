@@ -7,6 +7,9 @@ include BUILD.bazel
 include LICENSE
 include README.md
 include WORKSPACE
+include pyproject.toml
+include docs/PYPI_DESCRIPTION.md
+graft scripts/wheels
 
 prune test
 prune dreal/contractor/test

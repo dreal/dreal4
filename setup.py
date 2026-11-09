@@ -14,203 +14,122 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
+"""Builds dReal's Python binding with Bazel.
+
+Project metadata lives in pyproject.toml. This file only adds the native build
+step: `build_py` runs Bazel to produce `_dreal_py.so` and `libdreal_.so` and
+places them in the `dreal` package.
+
+The resulting wheel still links against IBEX, CLP, NLopt and GMP from the build
+machine. Release wheels are built with cibuildwheel, which repairs them with
+auditwheel (Linux) or delocate (macOS) so that those libraries are bundled into
+the wheel and end users need nothing besides `pip install dreal`. See
+`[tool.cibuildwheel]` in pyproject.toml.
+
+Environment variables:
+  BAZEL             Bazel executable (default: `bazel`, then `bazelisk`).
+  DREAL_BAZEL_ARGS  Extra arguments passed to `bazel build`.
+"""
 import os
-import platform
-import setuptools
+import shlex
 import shutil
 import subprocess
 import sys
 
-from distutils.command.build import build as _build
-from distutils.command.sdist import sdist as _sdist
-from distutils.errors import LibError
-from distutils.util import get_platform
-from setuptools.command.bdist_egg import bdist_egg as _bdist_egg
-from setuptools.command.develop import develop as _develop
+import setuptools
+from setuptools.command.build_py import build_py as _build_py
+from setuptools.dist import Distribution
 
 VERSION = '4.21.06.2'.replace(".0", ".")
 ROOT_DIR = os.path.abspath(os.path.dirname(__file__))
-SRC_DIR = os.path.join(ROOT_DIR)
+PKG_DIR = os.path.join(ROOT_DIR, 'dreal')
+
+# Bazel target -> path under bazel-bin.
+NATIVE_LIBS = {
+    '//dreal:_dreal_py.so': os.path.join('dreal', '_dreal_py.so'),
+    '//:libdreal_.so': 'libdreal_.so',
+}
+
+PREREQS_HELP = (
+    "Building dReal from source requires Bazel and dReal's prerequisites "
+    "(IBEX, CLP, NLopt, GMP, bison, flex). scripts/wheels/install_deps.sh "
+    "builds them on manylinux and macOS; on Ubuntu you can also use "
+    "setup/ubuntu/<version>/install_prereqs.sh. Prebuilt wheels on PyPI bundle "
+    "these libraries and need none of them.")
 
 
-def _build_dreal():
-    new_env = os.environ.copy()
-    new_env["PYTHON_BIN_PATH"] = sys.executable
-    if subprocess.call([
-            'bazel', 'build', '//dreal:_dreal_py.so',
-            '--cxxopt=-DDREAL_CHECK_INTERRUPT', '--python_path={}'.format(
-                sys.executable),
-    ],
-                       env=new_env) != 0:
-        raise LibError("Unable to build dReal.\n" +
-                       "Please visit https://pypi.org/project/dreal and " +
-                       "follow the instructions to install the prerequisites.")
+def _find_bazel():
+    candidates = [os.environ['BAZEL']] if 'BAZEL' in os.environ else [
+        'bazel', 'bazelisk']
+    for candidate in candidates:
+        path = shutil.which(candidate)
+        if path:
+            return path
+    raise RuntimeError('Bazel not found.\n' + PREREQS_HELP)
 
 
-def _copy_bins():
-    shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'dreal', '_dreal_py.so'),
-                os.path.join(ROOT_DIR, 'dreal'))
-    os.chmod(os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so'), 436)
-    shutil.copy(os.path.join(SRC_DIR, 'bazel-bin', 'libdreal_.so'),
-                os.path.join(ROOT_DIR, 'dreal'))
-    os.chmod(os.path.join(ROOT_DIR, 'dreal', 'libdreal_.so'), 436)
+def _build_native():
+    bazel = _find_bazel()
+    env = dict(os.environ, PYTHON_BIN_PATH=sys.executable)
+    common = ['--repo_env=PYTHON_BIN_PATH=' + sys.executable]
+    extra = shlex.split(os.environ.get('DREAL_BAZEL_ARGS', ''))
+    try:
+        subprocess.run([bazel, 'build', *common, *NATIVE_LIBS,
+                        '--cxxopt=-DDREAL_CHECK_INTERRUPT', *extra],
+                       cwd=ROOT_DIR, env=env, check=True)
+        bazel_bin = subprocess.run(
+            [bazel, 'info', *common, *extra, 'bazel-bin'],
+            cwd=ROOT_DIR, env=env, check=True, stdout=subprocess.PIPE,
+            universal_newlines=True).stdout.strip()
+    except subprocess.CalledProcessError:
+        raise RuntimeError('Unable to build dReal.\n' + PREREQS_HELP)
+
+    for src in NATIVE_LIBS.values():
+        dst = os.path.join(PKG_DIR, os.path.basename(src))
+        if os.path.lexists(dst):
+            os.remove(dst)  # Bazel outputs are read-only.
+        shutil.copyfile(os.path.join(bazel_bin, src), dst)
+        os.chmod(dst, 0o755)
+
     if sys.platform == 'darwin':
-        dst_full = os.path.join(ROOT_DIR, 'dreal', '_dreal_py.so')
-        subprocess.check_call(
-            ["install_name_tool",
-             "-id",
-             os.path.join('@rpath', "_dreal_py.so"),
-             dst_full])
-        file_output = subprocess.check_output(["otool",
-                                               "-L",
-                                               dst_full]).decode("utf-8")
-        for line in file_output.splitlines():
-            # keep only file path, remove version information.
-            relative_path = line.split(' (')[0].strip()
-            # If path is relative, it needs to be replaced by absolute path.
-            if "@loader_path" not in relative_path:
-                continue
-            if "libdreal_.so" in relative_path:
-                subprocess.check_call(
-                    ["install_name_tool",
-                     "-change", relative_path,
-                     os.path.join('@loader_path', "libdreal_.so"),
-                     dst_full])
+        _fix_macos_install_names()
 
 
-class build(_build):
+def _fix_macos_install_names():
+    """Makes _dreal_py.so load libdreal_.so from its own directory."""
+    dst = os.path.join(PKG_DIR, '_dreal_py.so')
+    subprocess.check_call(
+        ['install_name_tool', '-id', '@rpath/_dreal_py.so', dst])
+    output = subprocess.check_output(['otool', '-L', dst],
+                                     universal_newlines=True)
+    for line in output.splitlines()[1:]:
+        path = line.split(' (')[0].strip()
+        if path.endswith('libdreal_.so') and \
+                path != '@loader_path/libdreal_.so':
+            subprocess.check_call([
+                'install_name_tool', '-change', path,
+                '@loader_path/libdreal_.so', dst
+            ])
+
+
+class build_py(_build_py):
     def run(self):
-        self.execute(_build_dreal, (), msg="Building dReal")
-        self.execute(_copy_bins, (), msg="Copying binaries")
-        _build.run(self)
+        self.execute(_build_native, (), msg='Building dReal with Bazel')
+        _build_py.run(self)
 
 
-class develop(_develop):
-    def run(self):
-        self.execute(_build_dreal, (), msg="Building dReal")
-        self.execute(_copy_bins, (), msg="Copying binaries")
-        _develop.run(self)
+class BinaryDistribution(Distribution):
+    """Marks the wheel as platform- and CPython-version-specific.
 
+    The native libraries are built by Bazel rather than as setuptools
+    extensions, so tell setuptools that the package has extension modules.
+    """
+    def has_ext_modules(self):
+        return True
 
-class bdist_egg(_bdist_egg):
-    def run(self):
-        self.run_command('build')
-        _bdist_egg.run(self)
-
-
-class sdist(_sdist):
-    def run(self):
-        self.run_command('build')
-        _sdist.run(self)
-
-
-long_description = """dReal4: SMT Solver for Nonlinear Theories of Reals
-
-Please visit https://github.com/dreal/dreal4.
-
-
-Precompiled Wheels
-------------------
-
-We provide precompiled distributions (`.whl`) for the following environments:
-
- - macOS 13 / 12 / 11 + CPython 3
- - Linux + CPython 3.7 / 3.8 / 3.9 / 3.10
-
-You still need to install dReal prerequisites such as IBEX and CLP in
-your system. To install them, please follow the instructions below:
-
-macOS 13 / 12 / 11
-
-    brew tap robotlocomotion/director
-    brew tap dreal/dreal
-    brew install dreal --only-dependencies
-
-Ubuntu 22.04 / 20.04
-
-    curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/`lsb_release -r -s`/install.sh | sudo bash
-
-
-Build from Source
------------------
-
-If `pip` fails to find a precompiled distribution, it fetches dReal
-source and build it from scratch. You need to install the required
-packages to do so. To install them, please follow the instructions
-below:
-
-macOS 13 / 12 / 11
-
-    brew tap robotlocomotion/director
-    brew tap dreal/dreal
-    brew install dreal --only-dependencies --build-from-source
-
-Ubuntu 22.04 / 20.04
-
-    curl -fsSL https://raw.githubusercontent.com/dreal/dreal4/master/setup/ubuntu/`lsb_release -r -s`/install_prereqs.sh | sudo bash
-
-"""
-
-if 'bdist_wheel' in sys.argv and '--plat-name' not in sys.argv:
-    idx = sys.argv.index('bdist_wheel') + 1
-    sys.argv.insert(idx, '--plat-name')
-    name = get_platform()
-    if 'linux' in name:
-        # linux_* platform tags are disallowed because the python
-        # ecosystem is fubar linux builds should be built in the
-        # centos 5 vm for maximum compatibility see
-        # https://github.com/pypa/manylinux see also
-        # https://github.com/angr/angr-dev/blob/master/admin/bdist.py
-        sys.argv.insert(idx + 1, 'manylinux1_' + platform.machine())
-    elif 'mingw' in name:
-        if platform.architecture()[0] == '64bit':
-            sys.argv.insert(idx + 1, 'win_amd64')
-        else:
-            sys.argv.insert(idx + 1, 'win32')
-    else:
-        # https://www.python.org/dev/peps/pep-0425/
-        sys.argv.insert(idx + 1, name.replace('.', '_').replace('-', '_'))
-
-    # Make a wheel which is specific to the minor version of Python
-    # For example, "cp35".
-    #
-    # Note: We assume that it's using cpython.
-    if not any(arg.startswith('--python-tag') for arg in sys.argv):
-        python_tag = "cp%d%d" % (sys.version_info.major,
-                                 sys.version_info.minor)
-        sys.argv.extend(['--python-tag', python_tag])
 
 setuptools.setup(
-    name='dreal',  # Required
-    version=VERSION,  # Required
-    description='SMT Solver for Nonlinear Theories of Reals',  # Optional
-    long_description=long_description,  # Optional
-    long_description_content_type='text/markdown',  # Optional (see note above)
-    url='https://github.com/dreal/dreal4',  # Optional
-    author='Soonho Kong',  # Optional
-    author_email='soonho.kong@gmail.com',  # Optional
-    classifiers=[  # Optional
-        'License :: OSI Approved :: Apache Software License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Operating System :: POSIX :: Linux',
-        'Operating System :: MacOS',
-    ],
-    keywords=['dreal', 'smt', 'theorem', 'prover'],  # Optional
-    packages=['dreal'],
-    include_package_data=True,
-    package_data={  # Optional
-        'dreal': ['_dreal_py.so', 'libdreal_.so'],
-    },
-    project_urls={  # Optional
-        'Bug Reports': 'https://github.com/dreal/dreal4/issues',
-        'Source': 'https://github.com/dreal/dreal4',
-    },
-    cmdclass={'build': build,
-              'develop': develop,
-              'sdist': sdist,
-              'bdist_egg': bdist_egg},
+    version=VERSION,
+    distclass=BinaryDistribution,
+    cmdclass={'build_py': build_py},
 )
