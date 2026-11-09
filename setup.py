@@ -72,6 +72,11 @@ def _build_native():
     bazel = _find_bazel()
     env = dict(os.environ, PYTHON_BIN_PATH=sys.executable)
     common = ['--repo_env=PYTHON_BIN_PATH=' + sys.executable]
+    if sys.platform == 'darwin' and os.environ.get('MACOSX_DEPLOYMENT_TARGET'):
+        # Bazel ignores MACOSX_DEPLOYMENT_TARGET and defaults to the SDK's
+        # version, which delocate then rejects.
+        common.append('--macos_minimum_os=' +
+                      os.environ['MACOSX_DEPLOYMENT_TARGET'])
     extra = shlex.split(os.environ.get('DREAL_BAZEL_ARGS', ''))
     try:
         subprocess.run([bazel, 'build', *common, *NATIVE_LIBS,
