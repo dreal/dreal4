@@ -47,7 +47,8 @@ WAF_PYTHON="${WAF_PYTHON:-python3}"
 
 # --- System packages and Bazel --------------------------------------------
 if [[ "${OS}" == "Linux" ]]; then
-  dnf install -y gmp-devel bison flex pkgconfig zlib-devel patch
+  # Everything comes from the base repos; skip EPEL (flaky mirrors).
+  dnf install -y --disablerepo="epel*" gmp-devel bison flex pkgconfig zlib-devel patch
   case "${ARCH}" in
     x86_64)
       BAZEL_PLATFORM=linux-x86_64
