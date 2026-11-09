@@ -180,6 +180,26 @@ mkdir ibex && tar xzf ibex.tar.gz -C ibex --strip-components 1
   # GCC >= 13 <limits> (__float128). GNU mode never defines __STRICT_ANSI__.
   sed -i.bak -e 's/-std=c++11/-std=gnu++14/g' \
     wscript plugins/optim/wscript plugins/solver/wscript
+  # filib picks its rounding-mode code at compile time: x86 uses SSE, other
+  # CPUs need <fenv.h>, which it only uses if __STDC_IEC_559__ is defined.
+  # glibc defines it, Apple's toolchain does not, so on macOS arm64 filib
+  # silently fell back to *no* directed rounding (unsound intervals; dReal's
+  # Minimize tests fail). Use <fenv.h> on Apple platforms too.
+  FILIB=filibsrc-3.0.2.2
+  (
+    cd plugins/interval_lib_filib/3rd
+    mkdir filib.tmp
+    tar xzf "${FILIB}.tar.gz" -C filib.tmp
+    for f in rounding_control_double.hpp rounding_control_float.hpp; do
+      sed -i.bak \
+        -e 's/^#elif defined(__STDC_IEC_559__)$/#elif defined(__STDC_IEC_559__) || defined(__APPLE__)/' \
+        "filib.tmp/${FILIB}/rounding_control/${f}"
+      rm "filib.tmp/${FILIB}/rounding_control/${f}.bak"
+      grep -q '|| defined(__APPLE__)' "filib.tmp/${FILIB}/rounding_control/${f}"
+    done
+    tar czf "${FILIB}.tar.gz" -C filib.tmp "${FILIB}"
+    rm -rf filib.tmp
+  )
   # On macOS, IBEX hard-codes /usr/local/bin/pkg-config (Intel Homebrew) and
   # runs it with an environment that has no PATH, so it must stay absolute.
   sed -i.bak -e "s|\[\"/usr/local/bin/pkg-config\"\]|[\"$(command -v pkg-config)\"]|" \
