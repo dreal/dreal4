@@ -151,16 +151,13 @@ def _get_python_include(repository_ctx, python_bin):
             python_bin,
             "-Wignore",
             "-c",
-            "import importlib; " +
-            "import importlib.util; " +
-            "print(importlib.import_module('distutils.sysconfig').get_python_inc() " +
-            "if importlib.util.find_spec('distutils.sysconfig') " +
-            "else importlib.import_module('sysconfig').get_path('include'))",
+            # dReal: Use sysconfig (Python >= 3.2). distutils was removed in
+            # Python 3.12, and find_spec('distutils.sysconfig') raises then.
+            "import sysconfig; print(sysconfig.get_path('include'))",
         ],
         error_msg = "Problem getting python include path.",
         error_details = ("Is the Python binary path set up right? " +
-                         "(See ./configure or " + PYTHON_BIN_PATH + ".) " +
-                         "Is distutils installed?"),
+                         "(See ./configure or " + PYTHON_BIN_PATH + ".)"),
     )
     return result.stdout.splitlines()[0]
 
