@@ -179,8 +179,9 @@ mkdir ibex && tar xzf ibex.tar.gz -C ibex --strip-components 1
   # GCC >= 13 <limits> (__float128). GNU mode never defines __STRICT_ANSI__.
   sed -i.bak -e 's/-std=c++11/-std=gnu++14/g' \
     wscript plugins/optim/wscript plugins/solver/wscript
-  # On macOS, IBEX hard-codes /usr/local/bin/pkg-config (Intel Homebrew).
-  sed -i.bak -e 's|\["/usr/local/bin/pkg-config"\]|["pkg-config"]|' \
+  # On macOS, IBEX hard-codes /usr/local/bin/pkg-config (Intel Homebrew) and
+  # runs it with an environment that has no PATH, so it must stay absolute.
+  sed -i.bak -e "s|\[\"/usr/local/bin/pkg-config\"\]|[\"$(command -v pkg-config)\"]|" \
     plugins/lp_lib_clp/wscript
   # `-I${PREFIX}/include`: IBEX includes "coin/ClpSimplex.hpp" but only gets
   # `-I${PREFIX}/include/coin` from clp.pc (it relies on /usr/include).
