@@ -1982,15 +1982,15 @@ public:
     return *this;
   }
 
-  /// Constructs the value in-place, destroying the current one if there is
-  /// one.
-  template <class... Args> T &emplace(Args &&... args) noexcept {
-    static_assert(std::is_constructible<T, Args &&...>::value,
-                  "T must be constructible with Args");
-
-    *this = nullopt;
-    this->construct(std::forward<Args>(args)...);
-    return value();
+  /// Rebinds this optional to `u`.
+  ///
+  /// dReal: The original version called `this->construct(...)`, which does
+  /// not exist in this specialization. Clang >= 19 rejects that even when
+  /// `emplace` is never instantiated.
+  template <class U> T &emplace(U &u) noexcept {
+    static_assert(std::is_convertible<U *, T *>::value, "T& must bind to U&");
+    m_value = std::addressof(u);
+    return *m_value;
   }
 
   void swap(optional &rhs) noexcept { std::swap(m_value, rhs.m_value); }
