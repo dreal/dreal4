@@ -40,12 +40,15 @@ Python Binding
 Some of the functionality of dReal is accessible via Python3. To
 install the binding, run the following:
 ```bash
-pip3 install dreal
+pip3 install dreal   # or: uv add dreal
 ```
 
-Note that you still need to install dReal prerequisites such as IBEX
-and CLP in your system. Please follow [the
-instructions](https://github.com/dreal/dreal4#install-prerequsites).
+Prebuilt wheels for CPython 3.12-3.14 on Linux (x86_64, aarch64;
+glibc >= 2.28) and macOS (arm64, x86_64) bundle IBEX, CLP, NLopt and
+the other native dependencies, so nothing else needs to be installed.
+On other platforms, `pip` builds from source, which requires [the
+prerequisites](https://github.com/dreal/dreal4#install-prerequsites)
+and Bazel.
 
 
 To test the Python binding, run `python3` in a terminal and type the

@@ -1,0 +1,61 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dreal"
+dynamic = ["version"]  # See VERSION in setup.py.
+description = "SMT Solver for Nonlinear Theories of Reals"
+readme = { file = "docs/PYPI_DESCRIPTION.md", content-type = "text/markdown" }
+license = { text = "Apache-2.0" }
+authors = [{ name = "Soonho Kong", email = "soonho.kong@gmail.com" }]
+# Prebuilt wheels: CPython 3.12-3.14 (see [tool.cibuildwheel]). Older
+# versions can still build from source.
+requires-python = ">=3.8"
+keywords = ["dreal", "smt", "theorem", "prover"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+]
+
+[project.urls]
+Homepage = "https://github.com/dreal/dreal4"
+"Bug Reports" = "https://github.com/dreal/dreal4/issues"
+Source = "https://github.com/dreal/dreal4"
+
+[tool.setuptools]
+packages = ["dreal"]
+include-package-data = false
+
+[tool.setuptools.package-data]
+dreal = ["_dreal_py.so", "libdreal_.so"]
+
+# Self-contained wheels: `pip install dreal` / `uv add dreal` with no system
+# prerequisites. Run with `cibuildwheel` (see .github/workflows/wheels.yml).
+[tool.cibuildwheel]
+build = "cp312-* cp313-* cp314-*"
+skip = "*-musllinux_* cp3??t-*"
+build-frontend = "build"
+# Test the installed wheel outside the source tree, so `import dreal` can only
+# come from the wheel.
+test-command = "python {project}/scripts/wheels/smoke_test.py"
+
+[tool.cibuildwheel.linux]
+manylinux-x86_64-image = "manylinux_2_28"
+manylinux-aarch64-image = "manylinux_2_28"
+before-all = "bash scripts/wheels/install_deps.sh"
+environment = { DREAL_DEPS_PREFIX = "/opt/dreal-deps", PKG_CONFIG_PATH = "/opt/dreal-deps/lib/pkgconfig:/opt/dreal-deps/share/pkgconfig" }
+# Copies IBEX, CLP, CoinUtils, NLopt, GMP, ... into the wheel (dreal.libs/).
+repair-wheel-command = "LD_LIBRARY_PATH=/opt/dreal-deps/lib auditwheel repair -w {dest_dir} {wheel}"
+
+[tool.cibuildwheel.macos]
+before-all = "bash scripts/wheels/install_deps.sh"
+environment = { DREAL_DEPS_PREFIX = "$HOME/dreal-deps", PKG_CONFIG_PATH = "$HOME/dreal-deps/lib/pkgconfig:$HOME/dreal-deps/share/pkgconfig" }
+repair-wheel-command = "DYLD_LIBRARY_PATH=$HOME/dreal-deps/lib delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel}"

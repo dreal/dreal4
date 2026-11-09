@@ -16,8 +16,7 @@ RUN apt-get update \
       && bazel build //:archive \
       && tar xfz bazel-bin/archive.tar.gz --strip-components 3 -C /usr \
 # Install Python3 Binding
-      && python3 setup.py bdist_wheel \
-      && pip3 install ./dist/dreal-*-cp38-none-manylinux1_x86_64.whl \
+      && python3 -m pip install . \
       && bazel clean --expunge \
 # Clean up
       && cd / \
