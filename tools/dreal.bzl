@@ -140,6 +140,10 @@ def dreal_pybind_library(
             "@dreal//tools:linux": [
                 "-Wl,%s" % (_make_search_paths("$$ORIGIN", levels_to_root),),
             ],
+            # Python symbols are resolved by the interpreter at import time.
+            # (Previously this only came in via a `-lpython` in some
+            # dependency's .pc file, see pkg_config.bzl.)
+            "@dreal//tools:apple": ["-Wl,-undefined,dynamic_lookup"],
             "@//conditions:default": [],
         }),
         linkshared = 1,
