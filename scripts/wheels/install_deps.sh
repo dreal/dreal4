@@ -181,6 +181,16 @@ mkdir ibex && tar xzf ibex.tar.gz -C ibex --strip-components 1
   # `-I${PREFIX}/include`: IBEX includes "coin/ClpSimplex.hpp" but only gets
   # `-I${PREFIX}/include/coin` from clp.pc (it relies on /usr/include).
   # `-include cstdint`: GCC >= 13 no longer pulls it in transitively.
+  # On failure, show the logs: waf only prints "see config.log", and the
+  # third-party configure scripts it runs (e.g. filib) log there too.
+  dump_logs() {
+    set +x
+    find . -name config.log -print | while read -r log; do
+      echo "===== ${log} (last 200 lines) ====="
+      tail -n 200 "${log}"
+    done
+    return 1
+  }
   CXXFLAGS="-I${PREFIX}/include -include cstdint ${CXXFLAGS:-}" "${WAF_PYTHON}" ./waf configure \
     --prefix="${PREFIX}" \
     --enable-shared \
@@ -190,9 +200,9 @@ mkdir ibex && tar xzf ibex.tar.gz -C ibex --strip-components 1
     --interval-lib=filib \
     --lp-lib=clp \
     --clp-path="${PREFIX}" \
-    ${IBEX_EXTRA_ARGS[@]+"${IBEX_EXTRA_ARGS[@]}"}
+    ${IBEX_EXTRA_ARGS[@]+"${IBEX_EXTRA_ARGS[@]}"} || dump_logs
   # IBEX's build is not parallel-safe (ibex-team/ibex-lib#286).
-  "${WAF_PYTHON}" ./waf install -j1
+  "${WAF_PYTHON}" ./waf install -j1 || dump_logs
 )
 
 if [[ "${OS}" == "Darwin" ]]; then
